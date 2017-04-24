@@ -13,17 +13,17 @@ $body$
                 que solo tiene el privilegio de correr esta funcion
  AUTOR: 		KPLIAN(rac)
  FECHA:			26/07/2010
- COMENTARIOS:
+ COMENTARIOS:	
 ***************************************************************************
  HISTORIA DE MODIFICACIONES:
 
- DESCRIPCION:
- AUTOR:
- FECHA:
+ DESCRIPCION:	
+ AUTOR:			
+ FECHA:			
 ***************************************************************************/
 
 DECLARE
-
+ 
 v_consulta              varchar;
 v_parametros            record;
 v_mensaje_error         text;
@@ -43,12 +43,12 @@ v_resp varchar;
 BEGIN
      v_nombre_funcion:='segu.ft_usuario_sel';
      v_parametros:=pxp.f_get_record(par_tabla);
-
-/*******************************
+     
+/*******************************    
  #TRANSACCION:  SEG_VALUSU_SEL
  #DESCRIPCION:	consulta los datos del usario segun contrasena y login
- #AUTOR:		KPLIAN(rac)
- #FECHA:		26/07/2010
+ #AUTOR:		KPLIAN(rac)	
+ #FECHA:		26/07/2010	
 ***********************************/
 
      if(par_transaccion='SEG_VALUSU_SEL')then
@@ -57,24 +57,24 @@ BEGIN
 
                v_consulta:='SELECT u.id_usuario,
                                    u.cuenta,
-                                   u.contrasena
-                            FROM segu.tusuario u
+                                   u.contrasena 
+                            FROM segu.tusuario u  
                             WHERE u.cuenta='''||v_parametros.login || '''
-                            and u.contrasena=''' || v_parametros.password || '''
-                            and u.fecha_caducidad>=now()::date
+                            and u.contrasena=''' || v_parametros.password || ''' 
+                            and u.fecha_caducidad>=now()::date 
                             and u.estado_reg=''activo''';
 
                return v_consulta;
-
+               
           END;
-/*******************************
+/*******************************    
  #TRANSACCION:  SEG_USUARI_SEL
  #DESCRIPCION:	Listar usuarios activos de sistema
- #AUTOR:		KPLIAN(rac)
- #FECHA:		26/07/2010
+ #AUTOR:		KPLIAN(rac)	
+ #FECHA:		26/07/2010	
 ***********************************/
-
-     elsif(par_transaccion='SEG_USUARI_SEL')then
+          
+       elsif(par_transaccion='SEG_USUARI_SEL')then
 
           --consulta:=';
           BEGIN
@@ -93,19 +93,19 @@ BEGIN
                                    CLASIF.descripcion,
                                    pxp.text_concat(UR.id_rol::text) as id_roles,
                                    USUARI.autentificacion,
-                                   grup.id_grupo
+                                   ug.id_grupo
                             FROM segu.tusuario USUARI
                                  INNER JOIN segu.vpersona PERSON on PERSON.id_persona = USUARI.id_persona
                                  LEFT JOIN segu.tclasificador CLASIF on CLASIF.id_clasificador =
-                                 USUARI.id_clasificador
-                                 LEFT JOIN segu.tusuario_rol UR on ur.estado_reg= ''activo''
+                                 USUARI.id_clasificador 
+                                 LEFT JOIN segu.tusuario_rol UR on ur.estado_reg= ''activo'' 
                                  and ur.id_usuario = usuari.id_usuario
                                  LEFT join segu.tusuario_grupo_ep ug on ug.id_usuario = USUARI.id_usuario
-                                 LEFT join param.vgrupos grup on ug.id_grupo  =  grup.id_grupo
+                                 
                             WHERE USUARI.estado_reg = ''activo'' and ';
-
+                           
                v_consulta:=v_consulta||v_parametros.filtro;
-
+              
                v_consulta:=v_consulta||'      GROUP BY USUARI.id_usuario,
                                                USUARI.id_clasificador,
                                                USUARI.cuenta,
@@ -120,20 +120,19 @@ BEGIN
                                                PERSON.nombre,
                                                CLASIF.descripcion,
                                                USUARI.autentificacion,
-                                               grup.id_grupo';
+                                               ug.id_grupo';
              v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
 
-				raise notice 'que esta pasando: %',v_consulta;
+			
                return v_consulta;
 
 
          END;
-
-/*******************************
+/*******************************    
  #TRANSACCION:  SEG_USUARI_CONT
  #DESCRIPCION:	Contar usuarios activos de sistema
- #AUTOR:		KPLIAN(rac)
- #FECHA:		26/07/2010
+ #AUTOR:		KPLIAN(rac)	
+ #FECHA:		26/07/2010	
 ***********************************/
      elsif(par_transaccion='SEG_USUARI_CONT')then
 
@@ -146,10 +145,28 @@ BEGIN
                               ON PERSON.id_persona=USUARI.id_persona
                             LEFT JOIN segu.tclasificador CLASIF
                               ON CLASIF.id_clasificador=USUARI.id_clasificador
+                              LEFT JOIN segu.tusuario_rol UR on ur.estado_reg= ''activo'' 
+                                 and ur.id_usuario = usuari.id_usuario
                                LEFT join segu.tusuario_grupo_ep ug on ug.id_usuario = USUARI.id_usuario
-                			LEFT join param.vgrupos grup on ug.id_grupo  =  grup.id_grupo
+                			
                             WHERE USUARI.estado_reg=''activo'' AND ';
                v_consulta:=v_consulta||v_parametros.filtro;
+               
+               v_consulta:=v_consulta||'      GROUP BY USUARI.id_usuario,
+                                               USUARI.id_clasificador,
+                                               USUARI.cuenta,
+                                               USUARI.contrasena,
+                                               USUARI.fecha_caducidad,
+                                               USUARI.fecha_reg,
+                                               USUARI.estado_reg,
+                                               USUARI.estilo,
+                                               USUARI.contrasena_anterior,
+                                               USUARI.id_persona,
+                                               PERSON.nombre_completo2,
+                                               PERSON.nombre,
+                                               CLASIF.descripcion,
+                                               USUARI.autentificacion,
+                                               ug.id_grupo';
                return v_consulta;
          END;
 
@@ -157,8 +174,8 @@ BEGIN
          raise exception 'No existe la opcion';
 
      end if;
-
-
+          
+    
 
 EXCEPTION
 

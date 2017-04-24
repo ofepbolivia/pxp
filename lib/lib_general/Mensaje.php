@@ -538,7 +538,7 @@ class Mensaje
 
 	
 	function imprimirRespuesta($respuesta,$header=''){
-
+        //var_dump('respuesta'.$header);exit;
 		if($header!=''){
 			switch ($header)
 			{

@@ -65,9 +65,16 @@ class CorreoExterno
     	}   
         
     }
-    
-    
-    
+
+    function addBCC($dir_destinatario,$nom_destinatario=''){
+        if ($_SESSION["_ESTADO_SISTEMA"] == 'desarrollo' && isset($_SESSION["_MAIL_PRUEBAS"])) {
+            $this->mail->AddBCC($_SESSION["_MAIL_PRUEBAS"], 'Prueba de Correo Pxp');
+        } else {
+            $this->mail->AddBCC($dir_destinatario, $nom_destinatario);
+        }
+
+    }
+
     function addAdjunto($archivo,$name = ''){
         if ($name == '')
         	$this->mail->AddAttachment($archivo);    

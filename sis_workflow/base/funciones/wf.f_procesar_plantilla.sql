@@ -8,8 +8,8 @@ CREATE OR REPLACE FUNCTION wf.f_procesar_plantilla (
   p_id_funcionario_actual integer = NULL::integer,
   p_id_depto_actual integer = NULL::integer
 )
-  RETURNS text AS
-  $body$
+RETURNS text AS
+$body$
 /*
 Autor:  Rensi Arteaga Copari  KPLIAN
 Fecha 15/04/2014
@@ -114,9 +114,10 @@ BEGIN
                  --  RECUPERAMOS LOS NOMBRES DE LAS PALABRAS CLAVE DE LA PLANTILLA QUE
                  --  HACEN REFERENCIA A LA TABLA DE TIPO PROCESO
                  -------------------------------------------------------------------------
-                 
+                
                  IF  v_registros.tabla != '' and v_registros.tabla is not null THEN
                       LOOP
+                      
                             --resetemaos el sw de busquedas
                             v_sw_busqueda = FALSE; 
                             
@@ -134,12 +135,12 @@ BEGIN
                             
                             
                             IF(v_columna != '' and v_columna is not null )  THEN
+                            	
                                v_columna_nueva = array_append(v_columna_nueva,v_columna);
                                --marcamos la bancera para seguir buscando
                                v_sw_busqueda = TRUE;	
                                
                             END IF;
-                            
                             
                             --si no se agrego nada mas tenemos la busqueda
                             IF not v_sw_busqueda THEN
@@ -176,7 +177,7 @@ BEGIN
                   
                   
                   */
-                  
+                
                   v_OBS				= p_obs ;
                   v_PROCESO_MACRO   = v_registros.nombre_proceso_macro;
                   v_TIPO_PROCESO    = v_registros.nombre;
@@ -211,7 +212,7 @@ BEGIN
                   left join param.tdepto      d on d.id_depto = ew.id_depto
                   where ew.id_estado_wf = p_id_estado_anterior;
                   
-                  
+                   
                   select                     
                     f.desc_funcionario1                    
                   into                   
@@ -256,12 +257,11 @@ BEGIN
                   v_columnas_consulta=replace(v_columnas_consulta,'{','');
                   v_columnas_consulta=replace(v_columnas_consulta,'}','');
                   
-                 
-                 
+                  
+                 --raise notice 'v_columnas_consulta % v_registros.tabla % p_id_proceso_wf %',v_columnas_consulta,  v_registros.tabla, p_id_proceso_wf;
                  --  solo si existe tabla de referencia
                 IF  v_registros.tabla != '' and v_registros.tabla is not null and v_columnas_consulta != '' and v_columnas_consulta is not null THEN
                       
-                	
                       execute  'select '||v_columnas_consulta ||
                                  ' from '||v_registros.tabla|| ' where '
                                 ||v_registros.tabla||'.id_proceso_wf='|| p_id_proceso_wf ||'' into v_tabla;
@@ -274,7 +274,7 @@ BEGIN
                        --------------------------------------------------
                        v_i = 1;
                        v_tabla_hstore =  hstore(v_tabla);
-                       
+                      
                        IF v_tabla is null  THEN
                          v_validar_nulo = FALSE;
                        END IF;

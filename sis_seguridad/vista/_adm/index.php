@@ -62,7 +62,9 @@ if(!isset($_SESSION["_SESION"])){
 		    }   
     </style>
     <link rel="stylesheet" type="text/css" href="../../../lib/imagenes/font-awesome-4.2.0/css/font-awesome.css"/>
+
     <link rel="stylesheet" type="text/css" href="../../../lib/ux/ux.HtmlEditor/resources/css/htmleditorplugins.css"/>
+    <link rel="stylesheet" type="text/css" href="../../../lib/ext3/examples/ux/css/MultiSelect.css"/>
 	<!-- GC -->
 </head>
 <body  style="background:#ffffff url('<?php echo $_SESSION['_DIR_BACKGROUND_LOGIN']?>') no-repeat center center;">
@@ -154,6 +156,10 @@ if(!isset($_SESSION["_SESION"])){
     <script type='text/javascript' charset="UTF-8" src="../../../lib/ux/ux.HtmlEditor/src/Ext.ux.form.HtmlEditor.UndoRedo.js"></script>
     <script type='text/javascript' charset="UTF-8" src="../../../lib/ux/ux.HtmlEditor/src/Ext.ux.form.HtmlEditor.Heading.js"></script>
     <script type='text/javascript' charset="UTF-8" src="../../../lib/ux/ux.HtmlEditor/src/Ext.ux.form.HtmlEditor.Plugins.js"></script>
+
+    <script type='text/javascript' charset="UTF-8" src="../../../lib/ext3/examples/ux/MultiSelect.js"></script>
+    <script type='text/javascript' charset="UTF-8" src="../../../lib/ext3/examples/ux/ItemSelector.js"></script>
+
 
     <?php
      echo "<script type=\"text/javascript\" charset=\"UTF-8\" src=\"resources/Phx.CP.main.php?nueva_sesion=false&estado_sesion=".$estado_sesion."\"></script>";  

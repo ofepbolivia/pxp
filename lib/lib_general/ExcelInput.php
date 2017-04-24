@@ -139,7 +139,9 @@ class ExcelInput{
 
         $objFunc=new MODColumnasArchivoExcel($objParam);
         $res = $objFunc->listarColumnasArchivoExcelporCodigoArchivo();
+
         $this->setArrayColumnas($res->datos);
+        return $res;
     }
 
     function configuracionArchivoInicial($codigo){
@@ -163,7 +165,7 @@ class ExcelInput{
         $objFunc=new MODPlantillaArchivoExcel($objParam);
         $res = $objFunc->listarPlantillaArchivoExcel();
         $plantilla = $res->datos;
-
+        
         //var_dump($res); exit;
         $this->setNombreHoja($plantilla[0]['hoja_excel']);
         $this->setFilaInicio($plantilla[0]['fila_inicio']);

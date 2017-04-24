@@ -12,13 +12,13 @@ $body$
  DESCRIPCION:   Funcion que devuelve conjuntos de registros de las consultas relacionadas con la tabla 'param.tgrupo'
  AUTOR: 		 (admin)
  FECHA:	        22-04-2013 14:20:57
- COMENTARIOS:
+ COMENTARIOS:	
 ***************************************************************************
  HISTORIAL DE MODIFICACIONES:
 
- DESCRIPCION:
- AUTOR:
- FECHA:
+ DESCRIPCION:	
+ AUTOR:			
+ FECHA:		
 ***************************************************************************/
 
 DECLARE
@@ -27,21 +27,21 @@ DECLARE
 	v_parametros  		record;
 	v_nombre_funcion   	text;
 	v_resp				varchar;
-
+			    
 BEGIN
 
 	v_nombre_funcion = 'param.ft_grupo_sel';
     v_parametros = pxp.f_get_record(p_tabla);
 
-	/*********************************
+	/*********************************    
  	#TRANSACCION:  'PM_GRU_SEL'
  	#DESCRIPCION:	Consulta de datos
- 	#AUTOR:		admin
+ 	#AUTOR:		admin	
  	#FECHA:		22-04-2013 14:20:57
 	***********************************/
 
 	if(p_transaccion='PM_GRU_SEL')then
-
+     				
     	begin
     		--Sentencia de la consulta
 			v_consulta:='select
@@ -59,9 +59,9 @@ BEGIN
 						from param.tgrupo gru
 						inner join segu.tusuario usu1 on usu1.id_usuario = gru.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = gru.id_usuario_mod
-                        inner join segu.tusuario_grupo_ep uep on uep.id_grupo = gru.id_grupo
+                        left join segu.tusuario_grupo_ep uep on uep.id_grupo = gru.id_grupo
 				        where  ';
-
+			
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
             v_consulta:=v_consulta||' GROUP BY gru.id_grupo,
@@ -78,13 +78,13 @@ BEGIN
 
 			--Devuelve la respuesta
 			return v_consulta;
-
+						
 		end;
 
-	/*********************************
+	/*********************************    
  	#TRANSACCION:  'PM_GRU_CONT'
  	#DESCRIPCION:	Conteo de registros
- 	#AUTOR:		admin
+ 	#AUTOR:		admin	
  	#FECHA:		22-04-2013 14:20:57
 	***********************************/
 
@@ -96,24 +96,24 @@ BEGIN
 					    from param.tgrupo gru
 					    inner join segu.tusuario usu1 on usu1.id_usuario = gru.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = gru.id_usuario_mod
-					    where ';
-
-			--Definicion de la respuesta
+ 						where ';
+			
+			--Definicion de la respuesta		    
 			v_consulta:=v_consulta||v_parametros.filtro;
 
 			--Devuelve la respuesta
 			return v_consulta;
 
 		end;
-
+					
 	else
-
+					     
 		raise exception 'Transaccion inexistente';
-
+					         
 	end if;
-
+					
 EXCEPTION
-
+					
 	WHEN OTHERS THEN
 			v_resp='';
 			v_resp = pxp.f_agrega_clave(v_resp,'mensaje',SQLERRM);

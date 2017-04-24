@@ -2,8 +2,7 @@ CREATE OR REPLACE FUNCTION segu.f_grant_all_privileges (
   p_user text,
   p_esquema text
 )
-RETURNS void
-AS 
+RETURNS void AS
 $body$
 /**************************************************************************
  SISTEMA ENDESIS - SISTEMA DE SSS
@@ -57,9 +56,9 @@ BEGIN
    ELSE
    
   
-  
-       x='GRANT ALL PRIVILEGES ON SCHEMA "'||p_esquema||'" TO "'||p_user'"';   
-       RAISE NOTICE  '%',x;
+ 
+       x='GRANT ALL PRIVILEGES ON SCHEMA "'||p_esquema||'" TO "'||p_user || '"';   
+       
        EXECUTE (x);
        
        
@@ -92,7 +91,8 @@ BEGIN
    END LOOP;
 END;
 $body$
-    LANGUAGE plpgsql;
---
--- Definition for function f_importar_menu (OID = 305032) : 
---
+LANGUAGE 'plpgsql'
+VOLATILE
+CALLED ON NULL INPUT
+SECURITY INVOKER
+COST 100;

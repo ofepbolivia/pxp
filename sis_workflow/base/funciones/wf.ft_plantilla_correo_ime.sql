@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION wf.ft_plantilla_correo_ime (
   p_administrador integer,
   p_id_usuario integer,
@@ -70,7 +68,10 @@ BEGIN
             mensaje_link_acuse,
             mandar_automaticamente,
             funcion_creacion_correo,
-            funcion_acuse_recibo
+            funcion_acuse_recibo,
+            
+            cc,
+            bcc
           	) values(
 			v_parametros.id_tipo_estado,
 			v_parametros.regla,
@@ -92,8 +93,10 @@ BEGIN
             v_parametros.mensaje_link_acuse,
             v_parametros.mandar_automaticamente,
             v_parametros.funcion_acuse_recibo,
-            v_parametros.funcion_creacion_correo
-							
+            v_parametros.funcion_creacion_correo,
+            
+			string_to_array(v_parametros.cc, ','),
+            string_to_array(v_parametros.bcc, ',')				
 			
 			
 			)RETURNING id_plantilla_correo into v_id_plantilla_correo;
@@ -134,7 +137,9 @@ BEGIN
             mensaje_link_acuse = v_parametros.mensaje_link_acuse,
             mandar_automaticamente = v_parametros.mandar_automaticamente,
             funcion_acuse_recibo = v_parametros.funcion_acuse_recibo,
-            funcion_creacion_correo = v_parametros.funcion_creacion_correo
+            funcion_creacion_correo = v_parametros.funcion_creacion_correo,
+            cc = string_to_array(v_parametros.cc, ','),
+            bcc = string_to_array(v_parametros.bcc, ',')
 			where id_plantilla_correo=v_parametros.id_plantilla_correo;
                
 			--Definicion de la respuesta

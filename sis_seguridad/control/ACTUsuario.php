@@ -16,7 +16,7 @@ class ACTUsuario extends ACTbase{
 		$this->objParam->defecto('ordenacion','desc_person');
 		$this->objParam->defecto('dir_ordenacion','asc');
         if($this->objParam->getParametro('id_grupo')!=''){
-            $this->objParam->addFiltro("grup.id_grupo = ".$this->objParam->getParametro('id_grupo'));
+            $this->objParam->addFiltro("ug.id_grupo = ".$this->objParam->getParametro('id_grupo'));
         }
 			
 		if ($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){

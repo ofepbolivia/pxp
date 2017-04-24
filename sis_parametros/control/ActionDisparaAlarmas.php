@@ -116,7 +116,25 @@ include_once(dirname(__FILE__).'/../../sis_parametros/modelo/MODAlarma.php');
 								echo '--------';
 								
 								$value = trim($value);
-			            		$correo->addDestinatario($value,$value);
+								//bloque if/elseif me permite verificar si existe correos con copia y copia oculta.
+                                //los correos con copia estan entre "()", copia oculta entre "[]"
+                                if (preg_match('/\([A-Za-z0-9]+/', $value)){
+                                    $procesar = explode(';',trim($value, '()'));
+                                    foreach($procesar as $value) {
+                                        $value = trim($value);
+                                        $correo->addCC($value, $value);
+                                    }
+
+                                }else if (preg_match('/\[[A-Za-z0-9]+/', $value)){
+                                    $procesar = explode(';',trim($value, '[]'));
+                                    foreach($procesar as $value) {
+                                        $value = trim($value);
+                                        $correo->addBCC($value, $value);
+                                    }
+                                }// en caso de no existir el modo copia realiza un envio solo en el modo Para
+                                else {
+                                    $correo->addDestinatario($value, $value);
+                                }
 								if (!PHPMailer::validateAddress($value)) {
 						            throw new phpmailerException("Email address " . $value . " is invalid -- aborting!");
 						        }
