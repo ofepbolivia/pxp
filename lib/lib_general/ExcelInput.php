@@ -165,8 +165,11 @@ class ExcelInput{
         $objFunc=new MODPlantillaArchivoExcel($objParam);
         $res = $objFunc->listarPlantillaArchivoExcel();
         $plantilla = $res->datos;
+
+        if(count($plantilla)==0){
+            throw new Exception('No se parametrizo la plantilla de archivo para '.$codigo);
+        }
         
-        //var_dump($res); exit;
         $this->setNombreHoja($plantilla[0]['hoja_excel']);
         $this->setFilaInicio($plantilla[0]['fila_inicio']);
         $this->setFilaFin($plantilla[0]['fila_fin']);
@@ -264,7 +267,9 @@ class ExcelInput{
                                     $valorColumna = $celda->getValue();
                                 }
                             }
-                            if ($valorColumna == null && $worksheet->getCellByColumnAndRow($columna['numero_columna'], $i)->getValue() == null)
+                            if ($worksheet->getCellByColumnAndRow($columna[0], $i)->getValue() == null
+                                  && $worksheet->getCellByColumnAndRow($columna[1], $i)->getValue() == null
+                                  && $worksheet->getCellByColumnAndRow($columna[2], $i)->getValue() == null)
                                 break;
                             $arrayFila[$columna['nombre_columna_tabla']]= $valorColumna;
                         }
