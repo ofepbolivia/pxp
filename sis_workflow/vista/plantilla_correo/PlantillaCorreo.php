@@ -186,7 +186,11 @@ Phx.vista.PlantillaCorreo=Ext.extend(Phx.gridInterfaz,{
             grid:true,
             form:true
         },
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> dbb4c72fdbfc6ec991d94fa5d8064bd0305f785c
 		{
        			config:{
        				name:'documentos',

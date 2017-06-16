@@ -166,6 +166,91 @@ Phx.vista.TipoArchivo=Ext.extend(Phx.gridInterfaz,{
 			form: true
 		},
 
+        {
+            config: {
+                name: 'extensiones_permitidas',
+                fieldLabel: 'Extensiones Permitidas',
+                typeAhead: true,
+                allowBlank: false,
+                triggerAction: 'all',
+                emptyText: 'Seleccione Opcion...',
+                selectOnFocus: true,
+                width: 250,
+                mode: 'local',
+                //('doc','pdf','docx','jpg','jpeg','bmp','gif','png','PDF','DOC','DOCX','xls','xlsx','XLS','XLSX','rar'),
+
+                store: new Ext.data.ArrayStore({
+                    fields: ['ID', 'valor'],
+                    data: [
+                        ['doc', 'doc'],
+                        ['docx', 'docx'],
+                        ['pdf', 'pdf'],
+                        ['jpg', 'jpg'],
+                        ['jpeg', 'jpeg'],
+                        ['bmp', 'bmp'],
+                        ['gif', 'gif'],
+                        ['png', 'png'],
+                        ['PDF', 'PDF'],
+                        ['DOC', 'DOC'],
+                        ['DOCX', 'DOCX'],
+                        ['xls', 'xls'],
+                        ['xlsx', 'xlsx'],
+                        ['XLS', 'XLS'],
+                        ['XLSX', 'XLSX'],
+                        ['rar', 'rar'],
+                        ['mp4', 'mp4'],
+                        ['MP4', 'MP4'],
+                    ]
+                }),
+                valueField: 'ID',
+                displayField: 'valor',
+
+                enableMultiSelect:true
+            },
+            type:'AwesomeCombo',
+            //valorInicial: 'imagen',
+            filters: {pfiltro: 'tipar.extensiones_permitidas', type: 'string'},
+            id_grupo: 0,
+            grid: true,
+            form: true
+        },
+
+        {
+            config:{
+                name: 'tamano',
+                fieldLabel: 'Tamaño en Megas',
+                allowBlank: false,
+                anchor: '80%',
+                gwidth: 100,
+                maxLength:1179654,
+                decimalPrecision:0
+            },
+            type:'NumberField',
+            filters:{pfiltro:'tipar.tamano',type:'numeric'},
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
+
+
+
+        {
+            config:{
+                name: 'ruta_guardar',
+                fieldLabel: 'Ruta Para Guardar (Puede ser vacio)',
+                allowBlank: true,
+                anchor: '80%',
+                gwidth: 100,
+                maxLength:255
+            },
+            type:'TextField',
+            filters:{pfiltro:'tipar.nombre',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
+
+
 		{
 			config:{
 				name: 'estado_reg',
@@ -297,7 +382,10 @@ Phx.vista.TipoArchivo=Ext.extend(Phx.gridInterfaz,{
 		{name:'id_usuario_mod', type: 'numeric'},
 		{name:'usr_reg', type: 'string'},
 		{name:'usr_mod', type: 'string'},
-		
+		{name:'extensiones_permitidas', type: 'string'},
+		{name:'ruta_guardar', type: 'string'},
+		{name:'tamano', type: 'string'},
+
 	],
 	sortInfo:{
 		field: 'id_tipo_archivo',
@@ -319,6 +407,10 @@ Phx.vista.TipoArchivo=Ext.extend(Phx.gridInterfaz,{
 		rec.datos_extras_tabla = 'ttipo_archivo';
 		//enviamos el codigo ya que una tabla puede tener varios archivos diferentes como ci,pasaporte,contrato,slider,fotos,etc
 		rec.datos_extras_codigo = 'archivo prueba';
+
+		//esto es cuando queremos darle una ruta personalizada
+		//rec.datos_extras_ruta_personalizada = './../../../uploaded_files/favioVideos/videos/';
+
 		Phx.CP.loadWindows('../../../sis_parametros/vista/archivo/Archivo.php',
 			'Archivo',
 			{

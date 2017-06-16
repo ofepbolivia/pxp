@@ -265,13 +265,15 @@ class MODbase extends driver
 	 */
 	function setFile($nombre, $variable_id, $blank = true, $tamano = '', $tipo_archivo = null, $folder = '',$subfijo=''){
 		//obtenemos el tipo de la base de datos
-		
+
 		$this->validacion->validar($nombre, $this->arregloFiles[$nombre], 'bytea', $blank, $tamano, null, $tipo_archivo);
+        
 		$upload_folder =  './../../../uploaded_files/' . $this->objParam->getSistema() . '/' .
 								 $this->objParam->getClase() . '/' ;
 		if ($folder != '') {
 			$upload_folder .= $folder . '/';
 		}
+
 		//nombre del archivo enviado por el cliente
 		$filename = $this->arregloFiles[$nombre]['name'];
 		//extension del archivo
@@ -575,9 +577,34 @@ class MODbase extends driver
 
 		$img_destino = imagecreatetruecolor($ancho_origen,$alto_origen);
 
-		imagecopyresized($img_destino,$img_origen,0,0,0,0,$ancho_origen,$alto_origen,imagesx($img_origen),imagesy($img_origen));
-		imagejpeg($img_destino,$ruta_destino.$nombre_img.'.'.$extension_de_la_imagen);
-		
+
+
+         switch ($extension_de_la_imagen) {
+             case 'jpg' :
+                 imagecopyresized($img_destino,$img_origen,0,0,0,0,$ancho_origen,$alto_origen,imagesx($img_origen),imagesy($img_origen));
+
+                 imagejpeg($img_destino,$ruta_destino.$nombre_img.'.'.$extension_de_la_imagen);
+
+                 break;
+             case 'png' :
+
+                 imagealphablending($img_destino, FALSE);
+                 imagesavealpha($img_destino, TRUE);
+                 imagecopyresized($img_destino,$img_origen,0,0,0,0,$ancho_origen,$alto_origen,imagesx($img_origen),imagesy($img_origen));
+                 imagepng($img_destino,$ruta_destino.$nombre_img.'.'.$extension_de_la_imagen);
+
+                 /*imagealphablending($img_destino, false);
+                 imagesavealpha($img_destino,true);
+                 $transparent = imagecolorallocatealpha($img_destino, 255, 255, 255, 127);
+                 imagefilledrectangle($img_destino, 0, 0, $nWidth, $nHeight, $transparent);
+                 imagepng($img_destino,$ruta_destino.$nombre_img.'.'.$extension_de_la_imagen);*/
+
+
+                 break;
+
+         }
+
+
 	 }
 
 
