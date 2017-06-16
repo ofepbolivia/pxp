@@ -5,6 +5,9 @@
  Autor:	Kplian (RCM)
  Fecha:	01/07/2010
  */
+
+use WebSocket\Client;
+
 abstract class ACTbase
 {
 	protected $objParam;
@@ -53,6 +56,20 @@ abstract class ACTbase
 		//var_dump($this->objParam->getParametro("codigo_tipo_documento")); exit;
 		return $modelObj;
 		
+	}
+
+	function dispararEventoWS($send){
+
+
+
+
+
+        $client = new Client("ws://localhost:8080");
+
+
+
+        $client->send(json_encode($send));
+
 	}
 	
 }
