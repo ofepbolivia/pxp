@@ -49,6 +49,57 @@ Ext.state.LocalProvider = Ext.extend(Ext.state.Provider, {
     }
 });
 
+Ext.ux.clone =  function(item, cloneDom) {
+            if (item == null) {
+                return item;
+            }
+ 
+            // DOM nodes 
+            // TODO proxy this to Ext.Element.clone to handle automatic id attribute changing 
+            // recursively 
+            if (cloneDom !== false && item.nodeType && item.cloneNode) {
+                return item.cloneNode(true);
+            }
+ 
+            var type = toString.call(item),
+                i, j, k, clone, key;
+ 
+            // Date 
+            if (type === '[object Date]') {
+                return new Date(item.getTime());
+            }
+ 
+            // Array 
+            if (type === '[object Array]') {
+                i = item.length;
+ 
+                clone = [];
+ 
+                while (i--) {
+                    clone[i] = Ext.clone(item[i], cloneDom);
+                }
+            }
+            // Object 
+            else if (type === '[object Object]' && item.constructor === Object) {
+                clone = {};
+ 
+                for (key in item) {
+                    clone[key] = Ext.clone(item[key], cloneDom);
+                }
+ 
+                if (enumerables) {
+                    for (j = enumerables.length; j--;) {
+                        k = enumerables[j];
+                        if (item.hasOwnProperty(k)) {
+                            clone[k] = item[k];
+                        }
+                    }
+                }
+            }
+ 
+            return clone || item;
+        };
+
 ///////////////////////////////
 //		CLASE MENU		  	//
 //////////////////////////////
@@ -855,6 +906,15 @@ Phx.CP=function(){
 
                     },3000);
                 });
+                
+            //RAC se incluyen imagenes /SVG 
+            //23/07/2017      
+            window.Images = ['arrow', 'default', 'animal', 'bicycle', 'boat', 'bus', 'car', 'crane', 'helicopter',
+                          'motorcycle', 'offroad', 'person', 'pickup', 'plane', 'ship', 'tractor', 'truck', 'van'];
+        
+            for (i = 0; i < window.Images.length; i++) {
+               this.addSvgFile('../../../lib/images/svg/' + window.Images[i] + '.svg', window.Images[i] + 'Svg');
+            }
 
         },
         //para capturar variables enviadas por get
@@ -1743,6 +1803,8 @@ Phx.CP=function(){
             }
             return arr;
         },
+        
+        
 
         /***********************************************
          *  WebSocket por favio figueroa
@@ -1809,7 +1871,7 @@ Phx.CP=function(){
                 Phx.CP.webSocket.conn.onerror = function (e,a) {
 
                     if(Phx.CP.webSocket.habilitado = 'no'){
-                        alert('webscket no esta escuchando contáctate con el administrador')
+                        console.log('webscket no esta escuchando contáctate con el administrador')
                     }
                 };
 
@@ -1868,7 +1930,17 @@ Phx.CP=function(){
 
             },
 
+        },
+        
+        addSvgFile:  function (file, id) {
+            var svg = document.createElement('object');
+            svg.setAttribute('id', id);
+            svg.setAttribute('data', file);
+            svg.setAttribute('type', 'image/svg+xml');
+            svg.setAttribute('style', 'visibility:hidden;position:absolute;left:-100px;');
+            return document.body.appendChild(svg);
         }
+        
 
 
     }
