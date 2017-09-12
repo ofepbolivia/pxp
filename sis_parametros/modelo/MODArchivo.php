@@ -216,7 +216,7 @@ class MODArchivo extends MODbase{
             }
 
 
-
+            
 
 
             $tipo_archivo_nombre = $tipo_archivo[0]['tipo_archivo'];
