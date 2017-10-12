@@ -4,9 +4,8 @@ CREATE OR REPLACE FUNCTION orga.ft_uo_funcionario_ime (
   par_tabla varchar,
   par_transaccion varchar
 )
-
-  RETURNS varchar AS
-  $body$
+RETURNS varchar AS
+$body$
   /**************************************************************************
    FUNCION: 		orga.ft_uofunc_ime
    DESCRIPCIÓN:   modificaciones de funciones
@@ -34,6 +33,10 @@ CREATE OR REPLACE FUNCTION orga.ft_uo_funcionario_ime (
     --10abr12
     v_respuesta_sinc       varchar;
     v_id_uo_funcionario     integer;
+    v_mail_resp				varchar;
+    v_cargo					record;
+    v_id_alarma				integer;
+    v_id_gestion			integer;
 
 
   BEGIN
@@ -75,6 +78,29 @@ CREATE OR REPLACE FUNCTION orga.ft_uo_funcionario_ime (
         id_uo=v_parametros.id_uo and estado_reg='activo') then
            raise exception 'Insercion no realizada. El funcionacio ya esta asignado a la unidad';
         end if;*/
+        v_mail_resp = pxp.f_get_variable_global('orga_mail_resp_cargo_presupuesto');
+        
+        select po_id_gestion from into v_id_gestion 
+        param.f_get_periodo_gestion(v_parametros.fecha_asignacion);
+        
+        if (v_mail_resp is not null and v_mail_resp != '' ) then
+        	if(not exists (select 1 
+            	from orga.tcargo_presupuesto cp
+                where estado_reg = 'activo' and cp.id_cargo = v_parametros.id_cargo
+                and cp.id_gestion = v_id_gestion) ) then
+                
+                select *,tc.codigo as tipo_contrato into v_cargo
+                from orga.tcargo
+                inner join orga.ttipo_contrato tc on tc.id_tipo_contrato = c.id_tipo_contrato
+                where c.id_cargo = v_parametros.id_cargo;
+                
+                if (v_cargo.tipo_contrato in ('PLA','EVE')) then
+                	v_id_alarma = (select param.f_inserta_alarma_dblink (1,'Cargo asignado sin asignacion presupuestaria',
+                    		'El cargo ' || v_cargo.nombre || '  con numero de item ' || v_cargo.codigo || ' e identificador ' || v_cargo.id_cargo || ' , no tiene relacion presupuestaria y ha sido asignado a un empleado. Favor realizar la asignacion',
+                            v_mail_resp));
+            	end if;
+            end if;
+        end if;
 
         if (v_parametros.fecha_finalizacion is not null and v_parametros.fecha_finalizacion <= v_parametros.fecha_asignacion)then
           raise exception 'La fecha de finalización no puede ser menor o igual a la fecha de asignación';
@@ -218,7 +244,7 @@ CREATE OR REPLACE FUNCTION orga.ft_uo_funcionario_ime (
 
 
   END;
-  $body$
+$body$
 LANGUAGE 'plpgsql'
 VOLATILE
 CALLED ON NULL INPUT
