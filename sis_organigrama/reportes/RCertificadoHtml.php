@@ -3,15 +3,15 @@ require_once(dirname(__FILE__).'/../../lib/tcpdf/tcpdf_barcodes_2d.php');
 class RCertificadoHtml{
     var $html;
     function generarHtml ($datos) {
-      
+
         setlocale(LC_ALL,"es_ES@euro","es_ES","esp");
         if ($datos['genero'] == 'Sr'){
-            $tipo = 'al interesado';
+            $tipo = 'del interesado';
             $gen = 'el';
             $tra = 'trabajor';
             $tipol = 'al interesado';
         }else{
-            $tipo = 'a la interesada';
+            $tipo = 'de la interesada';
             $gen = 'la';
             $tra = 'trabajadora';
             $tipol = 'a la interesada';
@@ -29,29 +29,37 @@ class RCertificadoHtml{
 					  <link rel="stylesheet" href="../../../sis_ventas_facturacion/control/print.css" type="text/css" media="print" charset="utf-8">
 					</head>
 					<body>
-					<br>
+		<br>
+		<br>
+		<br><br><br>
+';
+        if ($datos['tipo_certificado'] =='General') {
+            $this->html .= '			
 <br>
-<table style="width: 100%;" border="0" >
+<br>
+<br>';
+        }
+        $this->html.='<table style="width: 100%;" border="0" >
 <tbody>
 <tr>
 <td style="width: 130px;">&nbsp;</td>
-<td><p style="text-align: center;"> <FONT FACE="Century Gothic" SIZE=6 ><u><b>CERTIFICADO</b></u></FONT></p></td>
+<td><p style="text-align: center;"> <FONT FACE="Century Gothic" SIZE=4 ><u><b>CERTIFICADO</b></u></FONT></p></td>
 <td style="width: 50px;">&nbsp;</td>
 </tr>
 <tr>
 <td >&nbsp;</td>
-<td><p style="text-align: justify"> <FONT FACE="Century Gothic" >La suscrita Lic. '.$datos['jefa_recursos'].' <b>Jefe de Recursos Humanos</b> de la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA", a solicitud '.$tipo.'</FONT></p>
+<td><p style="text-align: justify"> <FONT FACE="Century Gothic" SIZE=3 >La suscrita Lic. '.$datos['jefa_recursos'].' <b>Jefe de Recursos Humanos</b> de la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA", a solicitud '.$tipo.'</FONT></p>
 </td>
 <td>&nbsp;</td>
 </tr>
 <tr>
 <td>&nbsp;</td>
-<td><FONT FACE="Century Gothic" ><b>CERTIFICA:</b></FONT></td>
+<td><FONT FACE="Century Gothic" SIZE=3><b>CERTIFICA:</b></FONT></td>
 <td>&nbsp;</td>
 </tr>
 <tr>
 <td>&nbsp;</td>
-<td><p style="text-align: justify"><FONT FACE="Century Gothic" >Que, de la revisión de la carpeta que cursa en el Área de Recursos Humanos, se evidencia que '.$gen.' <b>'.$datos['genero'].'. '.$datos['nombre_funcionario'].'</b> con C.I. '.$datos['ci'].' '.$datos['expedicion'].', ingresó a la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA"
+<td><p style="text-align: justify"><FONT FACE="Century Gothic" SIZE=3 >Que, de la revisión de la carpeta que cursa en el Área de Recursos Humanos, se evidencia que '.$gen.' <b>'.$datos['genero'].'. '.$datos['nombre_funcionario'].'</b> con C.I. '.$datos['ci'].' '.$datos['expedicion'].', ingresó a la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA"
          el '.$this->fechaLiteral($datos['fecha_contrato']).', y actualmente ejerce el cargo de <b>'.$datos['nombre_cargo'].'</b>, dependiente de la '.$datos['nombre_unidad'].', con una remuneración mensual de Bs. '.number_format($datos['haber_basico'],2,",",".") .'.- ('.$datos['haber_literal'].' Bolivianos).</FONT></p>
 </td>
 <td>&nbsp;</td>
@@ -60,7 +68,7 @@ class RCertificadoHtml{
             $this->html .= '<tr>
 <td>&nbsp;</td>
 <td align="justify">
-<FONT FACE="Century Gothic">Asimismo a solicitud expresa se informa que '.$gen.' '.$tra.' ha percibido en los últimos tres meses por concepto de viáticos un promedio mensual de '.number_format($datos['importe_viatico'],2,",",".").'.- ('.$datos['literal_importe_viatico'].' Bolivianos) aclarándose que el <b>Viático</b> es la suma que reconoce la empresa a la persona comisionada, <b>para cubrir gastos del viaje.</b></FONT>
+<FONT FACE="Century Gothic" SIZE=3>Asimismo a solicitud expresa se informa que '.$gen.' '.$tra.' ha percibido en los últimos tres meses por concepto de viáticos un promedio mensual de '.number_format($datos['importe_viatico'],2,",",".").'.- ('.$datos['literal_importe_viatico'].' Bolivianos) aclarándose que el <b>Viático</b> es la suma que reconoce la empresa a la persona comisionada, <b>para cubrir gastos del viaje.</b></FONT>
 </td>
 <td>&nbsp;</td>
 </tr>';
@@ -68,7 +76,7 @@ class RCertificadoHtml{
 
         $this->html.='<tr>
 <td>&nbsp;</td>
-<td align="justify"><FONT FACE="Century Gothic">Es cuando se certifica, para fines de derecho que convengan '.$tipol.'.<br><br>Cochabamba '.$this->fechaLiteral($datos['fecha_solicitud']).'.</FONT>
+<td align="justify"><FONT FACE="Century Gothic" SIZE=3>Es cuando se certifica, para fines de derecho que convengan '.$tipol.'.<br><br>Cochabamba '.$this->obtenerFechaEnLetra($datos['fecha_solicitud']).'.</FONT>
 </td>
 <td>&nbsp;</td>
 </tr>
@@ -77,16 +85,16 @@ class RCertificadoHtml{
 <table style="width: 100%;" border="0">
 <tbody>
 <tr style="height: 80px;">
-<td >&nbsp;</td>
+
 <td></td>
-<td align="right"><img src = "../../../sis_organigrama/media/firma.png" align= "right " width="120" height="120" title="impreso"/></td>
-<td align="left">'.$barcodeobj->getBarcodeSVGcode(2, 2, 'black').' </td>
+<td align="right"></td>
+<td align="center"  ><img src = "../../../sis_organigrama/media/firma.png" align= "right " width="160" height="120" title="impreso"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$barcodeobj->getBarcodeSVGcode(2, 2, 'black').'</td>
 </tr>
 <tr style="height: 38px;">
-<td style="height: 38px; width: 14.3061%;">&nbsp;</td>
-<td align="center"><FONT FACE="Century Gothic" SIZE=1 >GAG/'.$datos['iniciales'].'<br/>Cc/Arch</FONT>
-<td style="height: 38px; width: 34%;">&nbsp;</td>
-<td style="height: 38px; width: 10%;">&nbsp;</td>
+
+<td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="height: 38px; width: 34%;"><FONT FACE="Century Gothic" SIZE=1 >GAG/'.$datos['iniciales'].'<br/>Cc/Arch</FONT></td>
+<td align="right"> </td>
 </tr>
 </tbody>
 </table>
@@ -122,6 +130,14 @@ class RCertificadoHtml{
         setlocale(LC_ALL,"es_ES@euro","es_ES","esp");
         $fecha = strftime("%d de %B de %Y", strtotime($va));
         return $fecha;
+    }
+    function obtenerFechaEnLetra($fecha){
+        setlocale(LC_ALL,"es_ES@euro","es_ES","esp");
+        $dia= date("d", strtotime($fecha));
+        $anno = date("Y", strtotime($fecha));
+        $mes = array('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
+        $mes = $mes[(date('m', strtotime($fecha))*1)-1];
+        return $dia.' de '.$mes.' del '.$anno;
     }
 }
 ?>

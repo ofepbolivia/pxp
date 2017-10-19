@@ -13,13 +13,13 @@ Class RCertificadoDOC {
 
     function write($fileName) {
         if ($this->dataSource[0]['genero'] == 'Sr'){
-            $tipo = 'al interesado';
+            $tipo = 'del interesado';
             $gen = 'el';
             $tipol = 'al interesado';
             $tra = 'trabajor';
         }else{
             $gen = 'la';
-            $tipo = 'a la interesada';
+            $tipo = 'de la interesada';
             $tipol = 'a la interesada';
             $tra = 'trabajadora';
         }
@@ -46,7 +46,7 @@ Class RCertificadoDOC {
         $templateProcessor->setValue('MONTO', number_format($this->dataSource[0]['haber_basico'],2,",","."));
         $templateProcessor->setValue('INICIALES', $this->dataSource[0]['iniciales']);
         $templateProcessor->setValue('LITERAL', $this->dataSource[0]['haber_literal']);
-        $templateProcessor->setValue('FECHA_SOLICITUD', $this->fechaLiteral($this->dataSource[0]['fecha_solicitud']));
+        $templateProcessor->setValue('FECHA_SOLICITUD', $this->obtenerFechaEnLetra($this->dataSource[0]['fecha_solicitud']));
         if($this->dataSource[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses'){
             $templateProcessor->setValue('TRABAJADORA', $tra);
             $templateProcessor->setValue('VIATICO', number_format($this->dataSource[0]['importe_viatico'],2,",","."));
@@ -68,6 +68,14 @@ Class RCertificadoDOC {
         setlocale(LC_ALL,"es_ES@euro","es_ES","esp");
         $fecha = strftime("%d de %B de %Y", strtotime($va));
         return $fecha;
+    }
+    function obtenerFechaEnLetra($fecha){
+        setlocale(LC_ALL,"es_ES@euro","es_ES","esp");
+        $dia= date("d", strtotime($fecha));
+        $anno = date("Y", strtotime($fecha));
+        $mes = array('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
+        $mes = $mes[(date('m', strtotime($fecha))*1)-1];
+        return $dia.' de '.$mes.' del '.$anno;
     }
     function codigoQr ($cadena,$ruta){
         $barcodeobj = new TCPDF2DBarcode($cadena, 'QRCODE,M');

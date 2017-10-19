@@ -8,9 +8,9 @@ class RCertificadoPDF extends  ReportePDF{
         //$this->Image($img_file, 7, 10, 90, 500, '', '', '', false, 300, '', false, false, 0);
        // $this->Image($img_agua, 130, 150, 80, 80, '', '', '', false, 300, '', false, false, 0);
         if ($this->datos[0]['genero'] == 'Sr'){
-            $tipo = 'al interesado';
+            $tipo = 'del interesado';
         }else{
-            $tipo = 'a la interesada';
+            $tipo = 'de la interesada';
         }
         $this->SetFont('times', '', 15);
         $html = '<p align="center"><b><u>CERTIFICADO</u></b></p>';
@@ -68,7 +68,7 @@ class RCertificadoPDF extends  ReportePDF{
         if ($this->datos[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses') {
             $this->writeHTML($viaticos);
         }
-        $fecha='<p style="font-family:Century Gothic, serif; font-style:italic;text-align: justify">Es cuando se certifica, para fines de derecho que convengan '.$tipol.'.</p><p style="font-family:Century Gothic, serif; font-style:italic;text-align: justify">Cochabamba '.$this->fechaLiteral($this->datos[0]['fecha_solicitud']).'.</p>';
+        $fecha='<p style="font-family:Century Gothic, serif; font-style:italic;text-align: justify">Es cuando se certifica, para fines de derecho que convengan '.$tipol.'.</p><p style="font-family:Century Gothic, serif; font-style:italic;text-align: justify">Cochabamba '.$this->obtenerFechaEnLetra($this->datos[0]['fecha_solicitud']).'.</p>';
         $this->writeHTML($fecha);
 
     }
@@ -76,6 +76,14 @@ class RCertificadoPDF extends  ReportePDF{
         setlocale(LC_ALL,"es_ES@euro","es_ES","esp");
         $fecha = strftime("%d de %B de %Y", strtotime($va));
         return $fecha;
+    }
+    function obtenerFechaEnLetra($fecha){
+        setlocale(LC_ALL,"es_ES@euro","es_ES","esp");
+        $dia= date("d", strtotime($fecha));
+        $anno = date("Y", strtotime($fecha));
+        $mes = array('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
+        $mes = $mes[(date('m', strtotime($fecha))*1)-1];
+        return $dia.' de '.$mes.' del '.$anno;
     }
     function generarReporte() {
         $this->SetMargins(50,40,25);
