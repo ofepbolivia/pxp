@@ -30,7 +30,6 @@ class RCertificadoHtml{
 					</head>
 					<body>
 		<br>
-		<br>
 		<br><br><br>
 ';
         if ($datos['tipo_certificado'] =='General') {
@@ -42,13 +41,13 @@ class RCertificadoHtml{
         $this->html.='<table style="width: 100%;" border="0" >
 <tbody>
 <tr>
-<td style="width: 130px;">&nbsp;</td>
+<td style="width: 160px;">&nbsp;</td>
 <td><p style="text-align: center;"> <FONT FACE="Century Gothic" SIZE=4 ><u><b>CERTIFICADO</b></u></FONT></p></td>
 <td style="width: 50px;">&nbsp;</td>
 </tr>
 <tr>
 <td >&nbsp;</td>
-<td><p style="text-align: justify"> <FONT FACE="Century Gothic" SIZE=3 >La suscrita Lic. '.$datos['jefa_recursos'].' <b>Jefe de Recursos Humanos</b> de la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA", a solicitud '.$tipo.'</FONT></p>
+<td><p style="text-align: justify"> <FONT FACE="Century Gothic" style="font-size: 12pt;" >La suscrita Lic. '.$datos['jefa_recursos'].' <b>Jefe de Recursos Humanos</b> de la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA", a solicitud '.$tipo.'</FONT></p>
 </td>
 <td>&nbsp;</td>
 </tr>
@@ -59,8 +58,8 @@ class RCertificadoHtml{
 </tr>
 <tr>
 <td>&nbsp;</td>
-<td><p style="text-align: justify"><FONT FACE="Century Gothic" SIZE=3 >Que, de la revisión de la carpeta que cursa en el Área de Recursos Humanos, se evidencia que '.$gen.' <b>'.$datos['genero'].'. '.$datos['nombre_funcionario'].'</b> con C.I. '.$datos['ci'].' '.$datos['expedicion'].', ingresó a la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA"
-         el '.$this->fechaLiteral($datos['fecha_contrato']).', y actualmente ejerce el cargo de <b>'.$datos['nombre_cargo'].'</b>, dependiente de la '.$datos['nombre_unidad'].', con una remuneración mensual de Bs. '.number_format($datos['haber_basico'],2,",",".") .'.- ('.$datos['haber_literal'].' Bolivianos).</FONT></p>
+<td><p style="text-align: justify"><FONT FACE="Century Gothic" style="font-size: 12pt;" >Que, de la revisión de la carpeta que cursa en el Área de Recursos Humanos, se evidencia que '.$gen.' <b>'.$datos['genero'].'. '.$datos['nombre_funcionario'].'</b> con C.I. '.$datos['ci'].' '.$datos['expedicion'].', ingresó a la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA"
+         el '.$this->obtenerFechaEnLetra($datos['fecha_contrato']).', y actualmente ejerce el cargo de <b>'.$datos['nombre_cargo'].'</b>, dependiente de la '.$datos['nombre_unidad'].', con una remuneración mensual de Bs. '.number_format($datos['haber_basico'],2,",",".") .'.- ('.$datos['haber_literal'].' Bolivianos).</FONT></p>
 </td>
 <td>&nbsp;</td>
 </tr>';
@@ -68,7 +67,7 @@ class RCertificadoHtml{
             $this->html .= '<tr>
 <td>&nbsp;</td>
 <td align="justify">
-<FONT FACE="Century Gothic" SIZE=3>Asimismo a solicitud expresa se informa que '.$gen.' '.$tra.' ha percibido en los últimos tres meses por concepto de viáticos un promedio mensual de '.number_format($datos['importe_viatico'],2,",",".").'.- ('.$datos['literal_importe_viatico'].' Bolivianos) aclarándose que el <b>Viático</b> es la suma que reconoce la empresa a la persona comisionada, <b>para cubrir gastos del viaje.</b></FONT>
+<FONT FACE="Century Gothic" style="font-size: 12pt;">Asimismo a solicitud expresa se informa que '.$gen.' '.$tra.' ha percibido en los últimos tres meses por concepto de viáticos un promedio mensual de '.number_format($datos['importe_viatico'],2,",",".").'.- ('.$datos['literal_importe_viatico'].' Bolivianos) aclarándose que el <b>Viático</b> es la suma que reconoce la empresa a la persona comisionada, <b>para cubrir gastos del viaje.</b></FONT>
 </td>
 <td>&nbsp;</td>
 </tr>';
@@ -76,7 +75,7 @@ class RCertificadoHtml{
 
         $this->html.='<tr>
 <td>&nbsp;</td>
-<td align="justify"><FONT FACE="Century Gothic" SIZE=3>Es cuando se certifica, para fines de derecho que convengan '.$tipol.'.<br><br>Cochabamba '.$this->obtenerFechaEnLetra($datos['fecha_solicitud']).'.</FONT>
+<td align="justify"><FONT FACE="Century Gothic" style="font-size: 12pt;">Es cuando se certifica, para fines de derecho que convengan '.$tipol.'.<br><br>Cochabamba '.$this->obtenerFechaEnLetra($datos['fecha_solicitud']).'.</FONT>
 </td>
 <td>&nbsp;</td>
 </tr>
@@ -87,13 +86,13 @@ class RCertificadoHtml{
 <tr style="height: 80px;">
 
 <td></td>
-<td align="right"></td>
+<td align="left"><FONT FACE="Century Gothic" SIZE=1 >GAG/'.$datos['iniciales'].'<br/>Cc/Arch</FONT></td>
 <td align="center"  ><img src = "../../../sis_organigrama/media/firma.png" align= "right " width="160" height="120" title="impreso"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$barcodeobj->getBarcodeSVGcode(2, 2, 'black').'</td>
 </tr>
-<tr style="height: 38px;">
+<tr style="height: 50px;">
 
-<td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-<td style="height: 38px; width: 34%;"><FONT FACE="Century Gothic" SIZE=1 >GAG/'.$datos['iniciales'].'<br/>Cc/Arch</FONT></td>
+<td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="center: 38px; width: 20%;"></td>
 <td align="right"> </td>
 </tr>
 </tbody>
