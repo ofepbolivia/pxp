@@ -24,11 +24,20 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 			handler: this.subirArchivosMultiples
 		});
 
+        this.addButton('Valores', {
+            argument: {imprimir: 'Valores'},
+            text: '<i class="fa fa-form fa-2x"></i> Valores', iconCls:'' ,
+            disabled: true,
+            handler: this.valores
+        });
 
 
 
 
-		this.grid.addListener('cellclick', this.oncellclick,this);
+
+
+
+        this.grid.addListener('cellclick', this.oncellclick,this);
 
 		this.id_ = config.datos_extras_id;
 		this.tabla_ = config.datos_extras_tabla;
@@ -97,7 +106,8 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 			filters:{pfiltro:'tipar.nombre',type:'string'},
 			id_grupo:1,
 			grid:true,
-			form:true
+			form:true,
+            bottom_filter : true
 		},
 		{
 			config:{
@@ -128,8 +138,10 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 			filters:{pfiltro:'arch.nombre_descriptivo',type:'string'},
 			id_grupo:1,
 			grid:true,
-			form:true
-		},
+			form:true,
+
+
+        },
 
 		{
 			config:{
@@ -433,7 +445,7 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 
 	],
 	sortInfo:{
-		field: 'id_tipo_archivo',
+		field: 'tipar.orden',
 		direction: 'ASC'
 	},
 	bdel:true,
@@ -457,6 +469,14 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
         }else{
             this.getBoton('del').disable();
         }
+
+
+        if(data.id_archivo > 0){
+            this.getBoton('Valores').enable();
+        }else{
+            this.getBoton('Valores').disable();
+        }
+
         return tb
     },
     onButtonDel:function () {
@@ -567,6 +587,30 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
         collapsed: true,
 		cls:'ArchivoHistorico'
 	},
+
+    tabsouth:[
+        {
+            url:'../../../sis_parametros/vista/field_tipo_archivo/FieldTipoArchivoValor.php',
+            title:'Valores',
+            height:'40%',
+            cls:'FieldTipoArchivoValor'
+        }
+
+    ],
+
+    valores: function () {
+
+        var rec = this.sm.getSelected();
+        console.log(rec);
+
+        Phx.CP.loadWindows('../../../sis_parametros/vista/field_valor_archivo/frmValor.php',
+            'Valores',
+            {
+                width: 350,
+                height: 300
+            }, rec, this.idContenedor, 'frmValor');
+    }
+
 
 
 
