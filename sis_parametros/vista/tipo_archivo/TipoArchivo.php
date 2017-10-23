@@ -362,7 +362,23 @@ header("content-type: text/javascript; charset=UTF-8");
                     id_grupo: 1,
                     grid: true,
                     form: false
-                }
+                },
+                {
+                    config: {
+                        name: 'orden',
+                        fieldLabel: 'Orden',
+                        allowBlank: false,
+                        anchor: '80%',
+                        gwidth: 100,
+                        maxLength: 1179654,
+                        decimalPrecision: 0
+                    },
+                    type: 'NumberField',
+                    filters: {pfiltro: 'tipar.orden', type: 'numeric'},
+                    id_grupo: 1,
+                    grid: true,
+                    form: true
+                },
             ],
             tam_pag: 50,
             title: 'Tipo Archivo',
@@ -390,6 +406,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name: 'extensiones_permitidas', type: 'string'},
                 {name: 'ruta_guardar', type: 'string'},
                 {name: 'tamano', type: 'string'},
+                {name: 'orden', type: 'string'},
 
             ],
             sortInfo: {
@@ -458,6 +475,12 @@ header("content-type: text/javascript; charset=UTF-8");
                     title: 'Campos',
                     width: '40%',
                     cls: 'TipoArchivoCampo'
+                },
+                {
+                    url: '../../../sis_parametros/vista/field_tipo_archivo/FieldTipoArchivo.php',
+                    title: 'Field Tipo Archivo',
+                    width: '40%',
+                    cls: 'FieldTipoArchivo'
                 },
 
 
