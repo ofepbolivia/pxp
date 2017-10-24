@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__).'/../../lib/tcpdf/tcpdf_barcodes_2d.php');
+require_once(dirname(__FILE__) . '/../../lib/tcpdf/tcpdf_barcodes_2d.php');
 class RCertificadoHtml{
     var $html;
     function generarHtml ($datos) {
@@ -19,7 +19,10 @@ class RCertificadoHtml{
 
         $cadena = 'Numero Tramite: '.$datos['nro_tramite']."\n".'Fecha Solicitud: '.$datos['fecha_solicitud']."\n".'Funcionario: '.$datos['nombre_funcionario']."\n".'Firmado Por: '.$datos['jefa_recursos']."\n".'Emitido Por: '.$datos['fun_imitido'];
         $barcodeobj = new TCPDF2DBarcode($cadena, 'QRCODE,M');
-        $this->html.='<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+
+
+
+            $this->html.='<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
 					   "http://www.w3.org/TR/html4/strict.dtd">
 					<html>
 					<head>
@@ -86,12 +89,12 @@ class RCertificadoHtml{
 <tr style="height: 80px;">
 
 <td></td>
-<td align="left"><FONT FACE="Century Gothic" SIZE=1 >GAG/'.$datos['iniciales'].'<br/>Cc/Arch</FONT></td>
-<td align="center"  ><img src = "../../../sis_organigrama/media/firma.png" align= "right " width="160" height="120" title="impreso"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$barcodeobj->getBarcodeSVGcode(2, 2, 'black').'</td>
+<td align="left"> <img src = "../../../reportes_generados/'.$this->codigoQr ($cadena,$datos['nro_tramite']).'" align= "right " width="90" height="90" title="impreso"/><br><br><FONT FACE="Century Gothic" SIZE=1 >GAG/'.$datos['iniciales'].'<br/>Cc/Arch</FONT></td>
+<td align="center"  ><img src = "../../../sis_organigrama/media/firma.png" align= "right " width="160" height="120" title="impreso"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 </tr>
 <tr style="height: 50px;">
 
-<td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 <td style="center: 38px; width: 20%;"></td>
 <td align="right"> </td>
 </tr>
@@ -137,6 +140,21 @@ class RCertificadoHtml{
         $mes = array('Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre');
         $mes = $mes[(date('m', strtotime($fecha))*1)-1];
         return $dia.' de '.$mes.' del '.$anno;
+    }
+    function codigoQr ($cadena,$ruta){
+        $barcodeobj = new TCPDF2DBarcode($cadena, 'QRCODE,M');
+
+        $png = $barcodeobj->getBarcodePngData($w = 8, $h = 8, $color = array(0, 0, 0));
+        $im = imagecreatefromstring($png);
+        if ($im !== false) {
+            header('Content-Type: image/png');
+            imagepng($im, dirname(__FILE__) . "/../../../reportes_generados/".$ruta.".png");
+            imagedestroy($im);
+        } else {
+            echo 'An error occurred.';
+        }
+        $url = $ruta.".png";
+        return $url;
     }
 }
 ?>
