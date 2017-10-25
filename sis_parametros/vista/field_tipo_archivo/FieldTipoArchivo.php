@@ -108,7 +108,7 @@ Phx.vista.FieldTipoArchivo=Ext.extend(Phx.gridInterfaz,{
                 triggerAction: 'all',
                 lazyRender: true,
                 mode: 'local',
-                store: ['TextField', 'ComboBox','DateField'],
+                store: ['TextField', 'ComboBox','DateField','TextArea'],
                 width: 200
             },
             type: 'ComboBox',

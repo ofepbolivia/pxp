@@ -93,12 +93,17 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 				fieldLabel: 'Nombre',
 				allowBlank: true,
 				anchor: '80%',
-				gwidth: 100,
+				gwidth: 230,
 				maxLength:255,
                 renderer:function (value, p, record, rowIndex, colIndex){
 
 
-                   return value;
+				    if(record.data.id_archivo == null){
+                        p.style=(record.data.obligatorio == 'si')?'color:red; font-weight: bold; ':'';
+
+                    }
+
+                    return value;
 
                 },
 			},
@@ -112,7 +117,7 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'tabla',
-				fieldLabel: 'tabla',
+				fieldLabel: 'Tabla',
 				allowBlank: false,
 				anchor: '80%',
 				gwidth: 100,
@@ -121,14 +126,14 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 			type:'TextField',
 			filters:{pfiltro:'arch.tabla',type:'string'},
 			id_grupo:1,
-			grid:true,
+			grid:false,
 			form:true
 		},
 
 		{
 			config:{
 				name: 'nombre_descriptivo',
-				fieldLabel: 'nombre_descriptivo',
+				fieldLabel: 'Nombre Descriptivo',
 				allowBlank: false,
 				anchor: '80%',
 				gwidth: 100,
@@ -137,7 +142,7 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 			type:'TextField',
 			filters:{pfiltro:'arch.nombre_descriptivo',type:'string'},
 			id_grupo:1,
-			grid:true,
+			grid:false,
 			form:true,
 
 
@@ -205,7 +210,7 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'folder',
-				fieldLabel: 'folder',
+				fieldLabel: 'Folder',
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
@@ -214,13 +219,13 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 				type:'TextField',
 				filters:{pfiltro:'arch.folder',type:'string'},
 				id_grupo:1,
-				grid:true,
+				grid:false,
 				form:true
 		},
 		{
 			config:{
 				name: 'extension',
-				fieldLabel: 'extension',
+				fieldLabel: 'Extension',
 				allowBlank: false,
 				anchor: '80%',
 				gwidth: 100,
@@ -235,7 +240,7 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'id_tabla',
-				fieldLabel: 'id_tabla',
+				fieldLabel: 'Id Tabla',
 				allowBlank: false,
 				anchor: '80%',
 				gwidth: 100,
@@ -244,14 +249,14 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 			type:'TextField',
 			filters:{pfiltro:'arch.id_tabla',type:'string'},
 			id_grupo:1,
-			grid:true,
+			grid:false,
 			form:true
 		},
 
 		{
 			config:{
 				name: 'nombre_archivo',
-				fieldLabel: 'nombre_archivo',
+				fieldLabel: 'Nombre Archivo',
 				allowBlank: false,
 				anchor: '80%',
 				gwidth: 100,
@@ -260,7 +265,7 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 				type:'TextField',
 				filters:{pfiltro:'arch.nombre_archivo',type:'string'},
 				id_grupo:1,
-				grid:true,
+				grid:false,
 				form:true
 		},
 		{
@@ -303,13 +308,13 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 			type: 'ComboBox',
 			id_grupo: 0,
 			filters: {pfiltro: 'movtip.nombre',type: 'string'},
-			grid: true,
+			grid: false,
 			form: true
 		},
 		{
 			config:{
 				name: 'fecha_reg',
-				fieldLabel: 'Fecha creación',
+				fieldLabel: 'Fecha Creación',
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
@@ -442,6 +447,7 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 		{name:'codigo', type: 'string'},
 		{name:'multiple', type: 'string'},
 		{name:'nombre_descriptivo', type: 'string'},
+		{name:'obligatorio', type: 'string'},
 
 	],
 	sortInfo:{

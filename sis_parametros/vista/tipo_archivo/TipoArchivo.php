@@ -131,7 +131,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         fieldLabel: 'Nombre',
                         allowBlank: false,
                         anchor: '80%',
-                        gwidth: 100,
+                        gwidth: 230,
                         maxLength: 255
                     },
                     type: 'TextField',
@@ -212,6 +212,34 @@ header("content-type: text/javascript; charset=UTF-8");
                     type: 'AwesomeCombo',
                     //valorInicial: 'imagen',
                     filters: {pfiltro: 'tipar.extensiones_permitidas', type: 'string'},
+                    id_grupo: 0,
+                    grid: true,
+                    form: true
+                },
+
+
+                {
+                    config: {
+                        name: 'obligatorio',
+                        fieldLabel: 'Obligatorio',
+                        typeAhead: true,
+                        allowBlank: false,
+                        triggerAction: 'all',
+                        emptyText: 'Seleccione Opcion...',
+                        selectOnFocus: true,
+                        width: 250,
+                        mode: 'local',
+                        store: new Ext.data.ArrayStore({
+                            fields: ['ID', 'valor'],
+                            data: [['si', 'Si'],
+                                ['no', 'No']]
+                        }),
+                        valueField: 'ID',
+                        displayField: 'valor'
+                    },
+                    type: 'ComboBox',
+                    valorInicial: 'no',
+                    filters: {pfiltro: 'tipar.obligatorio', type: 'string'},
                     id_grupo: 0,
                     grid: true,
                     form: true
@@ -407,6 +435,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name: 'ruta_guardar', type: 'string'},
                 {name: 'tamano', type: 'string'},
                 {name: 'orden', type: 'string'},
+                {name: 'obligatorio', type: 'string'},
 
             ],
             sortInfo: {

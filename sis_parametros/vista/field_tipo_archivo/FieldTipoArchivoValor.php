@@ -46,25 +46,11 @@ header("content-type: text/javascript; charset=UTF-8");
                     form:true
                 },
 
-                {
-                    config:{
-                        name: 'estado_reg',
-                        fieldLabel: 'Estado Reg.',
-                        allowBlank: true,
-                        anchor: '80%',
-                        gwidth: 100,
-                        maxLength:10
-                    },
-                    type:'TextField',
-                    filters:{pfiltro:'fitiar.estado_reg',type:'string'},
-                    id_grupo:1,
-                    grid:true,
-                    form:false
-                },
+
                 {
                     config:{
                         name: 'nombre',
-                        fieldLabel: 'nombre',
+                        fieldLabel: 'Nombre',
                         allowBlank: true,
                         anchor: '80%',
                         gwidth: 100,
@@ -72,6 +58,22 @@ header("content-type: text/javascript; charset=UTF-8");
                     },
                     type:'TextField',
                     filters:{pfiltro:'fitiar.nombre',type:'string'},
+                    id_grupo:1,
+                    grid:false,
+                    form:true
+                },
+
+                {
+                    config:{
+                        name: 'descripcion',
+                        fieldLabel: 'Descripcion',
+                        allowBlank: true,
+                        anchor: '80%',
+                        gwidth: 230,
+                        maxLength:255
+                    },
+                    type:'TextField',
+                    filters:{pfiltro:'fitiar.descripcion',type:'string'},
                     id_grupo:1,
                     grid:true,
                     form:true
@@ -83,13 +85,24 @@ header("content-type: text/javascript; charset=UTF-8");
                         fieldLabel: 'Valor',
                         allowBlank: true,
                         anchor: '80%',
-                        gwidth: 100,
+                        gwidth: 300,
                         maxLength:255,
-                        /*renderer:function (value,p,record){
+                        renderer:function (value,p,record){
 
 
+                            if(record.data.tipo == 'DateField' && value != ''){
+                                var d = new Date(value);
+                                value = d.getDate()+"/"+(d.getMonth()+1) +"/"+d.getFullYear();
+                            }
 
-                         }*/
+                            if(record.data.tipo == 'TextArea' && value != ''){
+                                p.css = 'multilineColumn';
+                                return String.format('{0}', value);
+                            }
+
+                            return value;
+
+                         }
                     },
                     type:'TextField',
                     filters:{pfiltro:'fitiar.valor',type:'string'},
@@ -99,21 +112,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     form:true
                 },
 
-                {
-                    config:{
-                        name: 'descripcion',
-                        fieldLabel: 'descripcion',
-                        allowBlank: true,
-                        anchor: '80%',
-                        gwidth: 100,
-                        maxLength:255
-                    },
-                    type:'TextField',
-                    filters:{pfiltro:'fitiar.descripcion',type:'string'},
-                    id_grupo:1,
-                    grid:true,
-                    form:true
-                },
+
 
                 {
                     config: {
@@ -134,7 +133,21 @@ header("content-type: text/javascript; charset=UTF-8");
                     form: true,
                     grid: true
                 },
-
+                {
+                    config:{
+                        name: 'estado_reg',
+                        fieldLabel: 'Estado Reg.',
+                        allowBlank: true,
+                        anchor: '80%',
+                        gwidth: 100,
+                        maxLength:10
+                    },
+                    type:'TextField',
+                    filters:{pfiltro:'fitiar.estado_reg',type:'string'},
+                    id_grupo:1,
+                    grid:true,
+                    form:false
+                },
 
                 {
                     config:{
