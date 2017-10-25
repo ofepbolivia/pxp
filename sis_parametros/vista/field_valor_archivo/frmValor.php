@@ -320,6 +320,27 @@ header("content-type: text/javascript; charset=UTF-8");
                                 form:true
                             });
 
+                        }else if( rec[i].data.tipo == 'TextArea'){
+
+
+                            this.Atributos.push({
+                                config:{
+                                    name: rec[i].data.nombre,
+                                    fieldLabel: rec[i].data.descripcion,
+                                    qtip:'',
+                                    allowBlank: false,
+                                    anchor: '100%',
+                                    gwidth: 100,
+                                    width: 250,
+                                    maxLength:500
+                                },
+                                type:'TextArea',
+
+                                id_grupo:2,
+                                grid:false,
+                                form:true
+                            });
+
                         }else if(rec[i].data.tipo == 'ComboBox'){
 
                             this.Atributos.push({

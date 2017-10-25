@@ -2062,3 +2062,11 @@ CREATE TABLE param.tfield_valor_archivo(
 
 
 
+/***********************************I-SCP-FFP-PARAM-0-24/10/2017*****************************************/
+
+ALTER TABLE param.ttipo_archivo ADD obligatorio VARCHAR(255) NULL;
+
+/***********************************F-SCP-FFP-PARAM-0-24/10/2017*****************************************/
+
+
+
