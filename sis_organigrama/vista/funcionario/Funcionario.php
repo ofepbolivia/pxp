@@ -50,6 +50,30 @@ Phx.vista.funcionario=function(config){
 	   			form:true
 			},
 
+            {
+                config:{
+                    fieldLabel: "Foto",
+                    gwidth: 130,
+                    inputType:'file',
+                    name: 'foto',
+                    //allowBlank:true,
+                    buttonText: '',
+                    maxLength:150,
+                    anchor:'100%',
+                    renderer:function (value, p, record){
+						return String.format('{0}', "<div style='text-align:center'><img src = './../../../uploaded_files/sis_parametros/Archivo/" + record.data.nombre_archivo + "."+record.data.extension+"' align='center' width='70' height='70'/></div>");
+                    },
+                    buttonCfg: {
+                        iconCls: 'upload-icon'
+                    }
+                },
+                type:'Field',
+                sortable:false,
+                id_grupo:0,
+                grid:true,
+                form:false
+            },
+
 	       	{
 	       		config:{
 	       			fieldLabel: "Código",
@@ -67,6 +91,23 @@ Phx.vista.funcionario=function(config){
 	       		grid:true,
 	       		form:true
 	       	},
+			{
+				config:{
+					name: 'id_biometrico',
+					fieldLabel: 'ID Biométrico',
+					allowBlank: true,
+					anchor: '100%',
+					disabled: true,
+					style: 'color: blue; background-color: yellow;',
+					gwidth: 100,
+					maxLength:15
+				},
+				type:'NumberField',
+				filters:{pfiltro:'FUNCIO.id_biometrico',type:'string'},
+				id_grupo:1,
+				grid:true,
+				form:true
+			},
 	       	{
 	       		config:{
 	       			name:'estado_civil',
@@ -413,23 +454,7 @@ Phx.vista.funcionario=function(config){
 	       		grid:true,
 	       		form:true
 	       	},
-			{
-				config:{
-					name: 'id_biometrico',
-					fieldLabel: 'ID Biométrico',
-					allowBlank: true,
-					anchor: '100%',
-					disabled: true,
-					style: 'color: blue; background-color: yellow;',
-					gwidth: 100,
-					maxLength:15
-				},
-				type:'NumberField',
-				filters:{pfiltro:'FUNCIO.id_biometrico',type:'string'},
-				id_grupo:1,
-				grid:true,
-				form:true
-			},
+
 			{
 				config:{
 					name: 'usr_reg',
@@ -500,11 +525,11 @@ Phx.vista.funcionario=function(config){
 
 
 	this.addButton('archivo', {
-		text: 'Archivos Func.',
+		text: 'Adjuntar Archivo',
 		iconCls: 'bfolder',
 		disabled: false,
 		handler: this.archivo,
-		tooltip: '<b>Archivos Funcionario</b><br><b>Nos permite visualizar los archivos de un funcionario.</b>'
+		tooltip: '<b>Adjuntar Archivo</b><br><b>Nos permite adjuntar documentos de un funcionario.</b>'
 	});
 
         
@@ -601,10 +626,12 @@ Ext.extend(Phx.vista.funcionario,Phx.gridInterfaz,{
 	'horario2',
 	'horario3',
 	'horario4',
-	{name:'id_biometrico', type: 'numeric'}
+	{name:'id_biometrico', type: 'numeric'},
+	{name:'nombre_archivo', type: 'string'},
+	{name:'extension', type: 'string'},
 	],
 	sortInfo:{
-		field: 'PERSON.nombre_completo1',
+		field: 'PERSON.nombre_completo2',
 		direction: 'ASC'
 	},
 	
@@ -666,9 +693,7 @@ Ext.extend(Phx.vista.funcionario,Phx.gridInterfaz,{
 
     archivo: function () {
 
-
         var rec = this.getSelectedData();
-		console.log(rec);
         //enviamos el id seleccionado para cual el archivo se deba subir
         rec.datos_extras_id = rec.id_funcionario;
         //enviamos el nombre de la tabla
@@ -682,8 +707,8 @@ Ext.extend(Phx.vista.funcionario,Phx.gridInterfaz,{
         Phx.CP.loadWindows('../../../sis_parametros/vista/archivo/Archivo.php',
             'Archivo',
             {
-                width: 900,
-                height: 400
+                width: '80%',
+                height: '100%'
             }, rec, this.idContenedor, 'Archivo');
 
     },

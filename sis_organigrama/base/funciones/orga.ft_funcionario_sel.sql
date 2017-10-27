@@ -80,13 +80,16 @@ $body$
                             PERSON2.nacionalidad,
                             PERSON2.discapacitado,
                             PERSON2.carnet_discapacitado,
-                            FUNCIO.id_biometrico
+                            FUNCIO.id_biometrico,
+                            tar.nombre_archivo,
+                            tar.extension
                             FROM orga.tfuncionario FUNCIO
                             INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona
                             INNER JOIN SEGU.tpersona PERSON2 ON PERSON2.id_persona=FUNCIO.id_persona
                             LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
                             inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
 						    left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
+						    left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10
                             WHERE ';
 
 
@@ -130,6 +133,7 @@ $body$
                             LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
                             inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
 						    left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
+						    left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10
                             WHERE ';
         v_consulta:=v_consulta||v_parametros.filtro;
         if (pxp.f_existe_parametro(par_tabla, 'tipo') and

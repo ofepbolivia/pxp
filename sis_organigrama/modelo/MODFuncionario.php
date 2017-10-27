@@ -57,6 +57,8 @@ class MODFuncionario extends MODbase{
 		$this->captura('discapacitado','varchar');
 		$this->captura('carnet_discapacitado','varchar');
 		$this->captura('id_biometrico','int4');
+		$this->captura('nombre_archivo','varchar');
+		$this->captura('extension','varchar');
 
 		
 		//Ejecuta la funcion

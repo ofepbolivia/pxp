@@ -13,7 +13,7 @@ class ACTFuncionario extends ACTbase{
 		//el objeto objParam contiene todas la variables recibidad desde la interfaz
 		
 		// parametros de ordenacion por defecto
-		$this->objParam->defecto('ordenacion','PERSON.nombre_completo1');
+		$this->objParam->defecto('ordenacion','PERSON.nombre_completo2');
 		$this->objParam->defecto('dir_ordenacion','asc');
 		$this->objParam->addFiltro("FUNCIO.estado_reg = ''activo''");		
 	
