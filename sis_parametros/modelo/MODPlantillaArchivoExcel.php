@@ -18,6 +18,8 @@ class MODPlantillaArchivoExcel extends MODbase{
 		$this->procedimiento='param.ft_plantilla_archivo_excel_sel';
 		$this->transaccion='PM_ARXLS_SEL';
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
+
+        $this->tipo_conexion='seguridad';
 				
 		//Definicion de la lista del resultado del query
 		$this->captura('id_plantilla_archivo_excel','int4');

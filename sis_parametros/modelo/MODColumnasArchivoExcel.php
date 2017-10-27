@@ -19,6 +19,8 @@ class MODColumnasArchivoExcel extends MODbase{
 		$this->transaccion='PM_COLXLS_SEL';
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
 
+
+
 		$this->setParametro('id_plantilla_archivo_excel', 'id_plantilla_archivo_excel', 'int4');
 				
 		//Definicion de la lista del resultado del query
@@ -55,6 +57,8 @@ class MODColumnasArchivoExcel extends MODbase{
 		$this->procedimiento='param.ft_columnas_archivo_excel_sel';
 		$this->transaccion='PM_COLXLSCOD_SEL';
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
+
+        $this->tipo_conexion='seguridad';
 
 		$this->setParametro('codigo', 'codigo', 'varchar');
 

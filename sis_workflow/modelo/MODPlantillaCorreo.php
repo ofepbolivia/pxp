@@ -1,24 +1,24 @@
 <?php
 /**
-*@package pXP
-*@file gen-MODPlantillaCorreo.php
-*@author  (jrivera)
-*@date 20-08-2014 21:52:38
-*@description Clase que envia los parametros requeridos a la Base de datos para la ejecucion de las funciones, y que recibe la respuesta del resultado de la ejecucion de las mismas
-*/
+ *@package pXP
+ *@file gen-MODPlantillaCorreo.php
+ *@author  (jrivera)
+ *@date 20-08-2014 21:52:38
+ *@description Clase que envia los parametros requeridos a la Base de datos para la ejecucion de las funciones, y que recibe la respuesta del resultado de la ejecucion de las mismas
+ */
 
 class MODPlantillaCorreo extends MODbase{
-	
+
 	function __construct(CTParametro $pParam){
 		parent::__construct($pParam);
 	}
-			
+
 	function listarPlantillaCorreo(){
 		//Definicion de variables para ejecucion del procedimientp
 		$this->procedimiento='wf.ft_plantilla_correo_sel';
 		$this->transaccion='WF_PCORREO_SEL';
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
-				
+
 		//Definicion de la lista del resultado del query
 		$this->captura('id_plantilla_correo','int4');
 		$this->captura('id_tipo_estado','int4');
@@ -37,13 +37,13 @@ class MODPlantillaCorreo extends MODbase{
 		$this->captura('usr_reg','varchar');
 		$this->captura('usr_mod','varchar');
 		$this->captura('asunto','varchar');
-				
+
 		$this->captura('requiere_acuse','varchar');
 		$this->captura('mensaje_acuse','varchar');
 		$this->captura('url_acuse','varchar');
 		$this->captura('mensaje_link_acuse','varchar');
 		$this->captura('mandar_automaticamente','varchar');
-		
+
 		$this->captura('funcion_acuse_recibo','varchar');
 		$this->captura('funcion_creacion_correo','varchar');
 
@@ -53,17 +53,17 @@ class MODPlantillaCorreo extends MODbase{
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
-		
+
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
-			
+
 	function insertarPlantillaCorreo(){
 		//Definicion de variables para ejecucion del procedimiento
 		$this->procedimiento='wf.ft_plantilla_correo_ime';
 		$this->transaccion='WF_PCORREO_INS';
 		$this->tipo_procedimiento='IME';
-				
+
 		//Define los parametros para la funcion
 		$this->setParametro('id_tipo_estado','id_tipo_estado','int4');
 		$this->setParametro('regla','regla','text');
@@ -75,7 +75,7 @@ class MODPlantillaCorreo extends MODbase{
 		$this->setParametro('asunto','asunto','varchar');
 		$this->setParametro('requiere_acuse','requiere_acuse','varchar');
 		$this->setParametro('mensaje_acuse','mensaje_acuse','varchar');
-		$this->setParametro('url_acuse','url_acuse','codigo_html');	
+		$this->setParametro('url_acuse','url_acuse','codigo_html');
 		$this->setParametro('mensaje_link_acuse','mensaje_link_acuse','varchar');
 		$this->setParametro('mandar_automaticamente','mandar_automaticamente','varchar');
 		$this->setParametro('funcion_acuse_recibo','funcion_acuse_recibo','varchar');
@@ -90,13 +90,13 @@ class MODPlantillaCorreo extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
-			
+
 	function modificarPlantillaCorreo(){
 		//Definicion de variables para ejecucion del procedimiento
 		$this->procedimiento='wf.ft_plantilla_correo_ime';
 		$this->transaccion='WF_PCORREO_MOD';
 		$this->tipo_procedimiento='IME';
-				
+
 		//Define los parametros para la funcion
 		$this->setParametro('id_plantilla_correo','id_plantilla_correo','int4');
 		$this->setParametro('id_tipo_estado','id_tipo_estado','int4');
@@ -109,7 +109,7 @@ class MODPlantillaCorreo extends MODbase{
 		$this->setParametro('asunto','asunto','varchar');
 		$this->setParametro('requiere_acuse','requiere_acuse','varchar');
 		$this->setParametro('mensaje_acuse','mensaje_acuse','varchar');
-		$this->setParametro('url_acuse','url_acuse','varchar');	
+		$this->setParametro('url_acuse','url_acuse','varchar');
 		$this->setParametro('mensaje_link_acuse','mensaje_link_acuse','varchar');
 		$this->setParametro('mandar_automaticamente','mandar_automaticamente','varchar');
 		$this->setParametro('funcion_acuse_recibo','funcion_acuse_recibo','varchar');
@@ -125,13 +125,13 @@ class MODPlantillaCorreo extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
-			
+
 	function eliminarPlantillaCorreo(){
 		//Definicion de variables para ejecucion del procedimiento
 		$this->procedimiento='wf.ft_plantilla_correo_ime';
 		$this->transaccion='WF_PCORREO_ELI';
 		$this->tipo_procedimiento='IME';
-				
+
 		//Define los parametros para la funcion
 		$this->setParametro('id_plantilla_correo','id_plantilla_correo','int4');
 
@@ -142,6 +142,6 @@ class MODPlantillaCorreo extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
-			
+
 }
 ?>

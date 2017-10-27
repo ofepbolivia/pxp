@@ -14,10 +14,10 @@ $body$
       BEGIN
         if (pxp.f_get_variable_global('plani_carga_presupuesto_from_uo') = 'si') then
           if (NEW.fecha_ini is null) then
-         
+
             v_fecha_ini = now()::date;
           else
-          	  
+
             v_fecha_ini = NEW.fecha_ini;
           end if;
 
@@ -25,8 +25,8 @@ $body$
           select g.id_gestion ,g.gestion,('01/01/'||g.gestion)::date into v_id_gestion,v_gestion,v_fecha_ini
           from param.tgestion g
           where to_char(v_fecha_ini,'YYYY')::varchar = g.gestion::varchar;
-          
-          
+
+
 
           select pre.id_presupuesto into v_id_centro_costo
           from pre.vpresupuesto_cc pre

@@ -77,8 +77,7 @@ class CorreoExterno
         }
 
     }
-    
-    
+
     function addAdjunto($archivo,$name = ''){
         if ($name == '')
         	$this->mail->AddAttachment($archivo);    

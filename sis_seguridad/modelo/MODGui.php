@@ -51,6 +51,7 @@
 					
 		
 		$this->armarConsulta();
+        
 		$this->ejecutarConsulta();
 		return $this->respuesta;	
 		
