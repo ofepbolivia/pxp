@@ -521,3 +521,29 @@ CREATE TRIGGER tcargo_tr
   EXECUTE PROCEDURE orga.f_tr_cargo();
 
 /*********************************F-DEP-JRR-ORGA-0-16/03/2017***********************************/
+
+/*********************************I-DEP-FEA-ORGA-0-31/10/2017***********************************/
+CREATE OR REPLACE VIEW orga.vfuncionario_biometrico (
+    id_funcionario,
+    id_biometrico,
+    desc_funcionario1,
+    desc_funcionario2,
+    num_doc,
+    ci,
+    codigo,
+    estado_reg,
+    fecha_ingreso)
+AS
+ SELECT funcio.id_funcionario,
+    funcio.id_biometrico,
+    person.nombre_completo1 AS desc_funcionario1,
+    person.nombre_completo2 AS desc_funcionario2,
+    person.num_documento AS num_doc,
+    person.ci,
+    funcio.codigo,
+    funcio.estado_reg,
+    funcio.fecha_ingreso
+   FROM orga.tfuncionario funcio
+     JOIN segu.vpersona person ON funcio.id_persona = person.id_persona;
+
+/*********************************F-DEP-FEA-ORGA-0-31/10/2017***********************************/

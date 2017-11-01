@@ -103,8 +103,9 @@ Phx.vista.funcionario=function(config){
 					maxLength:15
 				},
 				type:'NumberField',
+				bottom_filter : true,
 				filters:{pfiltro:'FUNCIO.id_biometrico',type:'string'},
-				id_grupo:1,
+				id_grupo:0,
 				grid:true,
 				form:true
 			},
