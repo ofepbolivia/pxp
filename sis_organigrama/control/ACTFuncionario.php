@@ -6,6 +6,7 @@
  Autor:	Kplian
  Fecha:	01/07/2010
  */
+
 class ACTFuncionario extends ACTbase{    
 
 	function listarFuncionario(){
@@ -303,8 +304,20 @@ class ACTFuncionario extends ACTbase{
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
 
-	
+	function listarDocumentos(){
+		$this->objParam->defecto('ordenacion','tf.desc_funcionario2');
+		$this->objParam->defecto('dir_ordenacion','asc');
 
+		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+			$this->objReporte = new Reporte($this->objParam,$this);
+			$this->res = $this->objReporte->generarReporteListado('MODFuncionario','listarDocumentos');
+		} else{
+			$this->objFunc=$this->create('MODFuncionario');
+
+			$this->res=$this->objFunc->listarDocumentos($this->objParam);
+		}
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
 }
 
 ?>

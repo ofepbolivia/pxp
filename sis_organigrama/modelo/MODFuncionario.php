@@ -297,5 +297,63 @@ class MODFuncionario extends MODbase{
         return $this->respuesta;
     }
 
+	function listarDocumentos(){
+		//Definicion de variables para ejecucion del procedimientp
+		$this->procedimiento='orga.ft_funcionario_sel';
+		$this->transaccion='ORGA_FUN_DOC_SEL';
+		$this->tipo_procedimiento='SEL';//tipo de transaccion
+
+		//Definicion de la lista del resultado del query
+		$this->captura('desc_funcionario','varchar');
+		$this->captura('id_funcionario','int4');
+		$this->captura('id_biometrico','int4');
+		$this->captura('ci','varchar');
+		$this->captura('fotografia','varchar');
+		$this->captura('diploma_academico','varchar');
+		$this->captura('titulo_bachiller','varchar');
+		$this->captura('titulo_profesional','varchar');
+		$this->captura('titulo_maestria','varchar');
+		$this->captura('titulo_doctorado','varchar');
+		$this->captura('certificado_egreso','varchar');
+		$this->captura('carnet_identidad','varchar');
+		$this->captura('certificado_nacimiento','varchar');
+		$this->captura('certificado_matrimonio','varchar');
+		$this->captura('libreta_militar','varchar');
+		$this->captura('aviso_afiliacion','varchar');
+		$this->captura('examen_pre','varchar');
+		$this->captura('carnet_asegurado','varchar');
+		$this->captura('carnet_discapacidad','varchar');
+		$this->captura('felcc','varchar');
+		$this->captura('felcn','varchar');
+		$this->captura('declaracion_jurada','varchar');
+		$this->captura('sipasse','varchar');
+		$this->captura('dj_parentesco','varchar');
+		$this->captura('dj_percepciones','varchar');
+		$this->captura('memorandum_designacion','varchar');
+		$this->captura('memorandum_contrato','varchar');
+		$this->captura('declaracion_herederos','varchar');
+		$this->captura('finiquito','varchar');
+		$this->captura('carta_despido','varchar');
+		$this->captura('conclusion_contrato','varchar');
+		$this->captura('desvinculacion_prueba','varchar');
+		$this->captura('otro_retiro','varchar');
+		$this->captura('aviso_bajaf','varchar');
+		$this->captura('sumario','varchar');
+		$this->captura('pendientes_extrabajadores','varchar');
+
+		$this->captura('cargo','varchar');
+		$this->captura('url_foto','varchar');
+		$this->captura('fecha_ingreso','date');
+
+
+		//Ejecuta la instruccion
+		$this->armarConsulta();
+		//echo($this->consulta);exit;
+		$this->ejecutarConsulta();
+
+		//Devuelve la respuesta
+		return $this->respuesta;
+	}
+
 }
 ?>
