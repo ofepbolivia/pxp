@@ -439,8 +439,8 @@ class MODValidacion
 			}
 			else{
 				//si no es imagen segun el tipo verifica extenciones
-				
-				if (!in_array($fileexte, $tipo_archivo)) {
+
+				if (!in_array(strtoupper($fileexte), array_map('strtoupper', $tipo_archivo))) {
 					throw new Exception("Tipo de archivo no permitido");	
 				}
 				 

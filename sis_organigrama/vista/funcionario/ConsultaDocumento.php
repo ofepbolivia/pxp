@@ -24,6 +24,7 @@ header("content-type: text/javascript; charset=UTF-8");
             this.tbar.items.items[1].menu.items.items.splice(1,1);
             this.tbar.items.items[1].text = 'Exportar CSV';
             this.init();
+
             this.addButton('archivo', {
                 text: 'Adjuntar Archivo',
                 iconCls: 'bfolder',
@@ -31,6 +32,8 @@ header("content-type: text/javascript; charset=UTF-8");
                 handler: this.archivo,
                 tooltip: '<b>Adjuntar Archivo</b><br><b>Nos permite adjuntar documentos de un funcionario.</b>'
             });
+
+            
             this.load({params: {start: 0, limit: this.tam_pag}});
 
 
@@ -952,6 +955,7 @@ header("content-type: text/javascript; charset=UTF-8");
         sortInfo:{
             field: 'tf.desc_funcionario2',
             direction: 'ASC'
+
         },
 
         preparaMenu: function(n)
@@ -991,7 +995,6 @@ header("content-type: text/javascript; charset=UTF-8");
                     width: '80%',
                     height: '100%'
                 }, rec, this.idContenedor, 'Archivo');
-
         }
     });
 </script>
