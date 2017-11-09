@@ -173,6 +173,12 @@ class ACTCertificadoPlanilla extends ACTbase{
         $this->res->setDatos($temp);
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
+    function controlImpreso()
+    {
+        $this->objFunc=$this->create('MODCertificadoPlanilla');
+        $this->res=$this->objFunc->controlImpreso($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 
 }
 

@@ -58,6 +58,7 @@ DECLARE
     v_count			integer;
     v_valor			integer;
     v_funcionario	varchar;
+    v_impreso 		varchar;
 
 BEGIN
 
@@ -436,8 +437,38 @@ BEGIN
                 return v_resp;
 
         end;
+    /*********************************
+ 	#TRANSACCION:  'OR_ANTE_CON'
+ 	#DESCRIPCION:	Control Impreso certificado de trabajo
+ 	#AUTOR:		MMV
+ 	#FECHA:		06-06-2017 17:32:59
+	***********************************/
+    elseif(p_transaccion='OR_ANTE_CON') then
+    	begin
 
+        select cp.impreso
+        into
+        v_impreso
+        from orga.tcertificado_planilla cp
+        where cp.id_certificado_planilla = v_parametros.id_certificado_planilla;
 
+        if (v_impreso = 'si')then
+        v_impreso = 'no';
+        else
+        v_impreso = 'si';
+        end if;
+
+        update orga.tcertificado_planilla set
+        impreso = v_impreso
+        where id_certificado_planilla = v_parametros.id_certificado_planilla;
+
+ 		v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Revision con exito (id_certificado_planilla'||v_parametros.id_certificado_planilla||')');
+        v_resp = pxp.f_agrega_clave(v_resp,'id_certificado_planilla',v_parametros.id_certificado_planilla::varchar);
+
+		--Devuelve la respuesta
+        return v_resp;
+
+	end;
 	else
 
     	raise exception 'Transaccion inexistente: %',p_transaccion;

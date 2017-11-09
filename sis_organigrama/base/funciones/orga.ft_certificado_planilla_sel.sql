@@ -93,7 +93,8 @@ BEGIN
                               pe.ci,
                               round(es.haber_basico + round(plani.f_evaluar_antiguedad(plani.f_get_fecha_primer_contrato_empleado(fun.id_uo_funcionario, fun.id_funcionario, fun.fecha_asignacion), planc.fecha_solicitud::date, fon.antiguedad_anterior), 2)) as haber_basico,
                               pe.expedicion,
-                              planc.impreso
+                              planc.impreso,
+                              planc.impreso as control
                               from orga.tcertificado_planilla planc
                               inner join segu.tusuario usu1 on usu1.id_usuario = planc.id_usuario_reg
                               inner join orga.vfuncionario_cargo fun on fun.id_funcionario = planc.id_funcionario and (fun.fecha_finalizacion is null or fun.fecha_finalizacion >= now())
@@ -229,7 +230,7 @@ BEGIN
                                '''||COALESCE (v_fun_emetido,'NA')||'''::varchar as fun_imitido,
                                c.estado
                               from orga.tcertificado_planilla c
-                              inner join orga.vfuncionario_cargo  fu on fu.id_funcionario = c.id_funcionario and fu.fecha_finalizacion is null
+                              inner join orga.vfuncionario_cargo  fu on fu.id_funcionario = c.id_funcionario and( fu.fecha_finalizacion is null or  fu.fecha_finalizacion >= now())
                               inner join orga.tcargo ca on ca.id_cargo = fu.id_cargo
                               inner join orga.tescala_salarial es on es.id_escala_salarial = ca.id_escala_salarial
                               inner join orga.tfuncionario fun on fun.id_funcionario = fu.id_funcionario
@@ -296,7 +297,7 @@ BEGIN
                                '''||COALESCE (v_fun_emetido,'NA')||'''::varchar as fun_imitido,
                                c.estado
                               from orga.tcertificado_planilla c
-                              inner join orga.vfuncionario_cargo  fu on fu.id_funcionario = c.id_funcionario and fu.fecha_finalizacion is null
+                              inner join orga.vfuncionario_cargo  fu on fu.id_funcionario = c.id_funcionario and( fu.fecha_finalizacion is null or  fu.fecha_finalizacion >= now())
                               inner join orga.tcargo ca on ca.id_cargo = fu.id_cargo
                               inner join orga.tescala_salarial es on es.id_escala_salarial = ca.id_escala_salarial
                               inner join orga.tfuncionario fun on fun.id_funcionario = fu.id_funcionario

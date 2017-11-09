@@ -48,35 +48,6 @@ header("content-type: text/javascript; charset=UTF-8");
             return tb;
         },
 
-        imprimirNota: function(){
-            var rec = this.sm.getSelected(),
-                data = rec.data,
-                me = this;
-            if(confirm("¿Esta seguro de Imprimir el Certificado?") ){
-                Phx.CP.loadingShow();
-                Ext.Ajax.request({
-                    url : '../../sis_organigrama/control/CertificadoPlanilla/reporteCertificadoHtml',
-                    params : {
-                        'id_proceso_wf' : data.id_proceso_wf,
-                        'impreso':'si'
-                    },
-                    success : me.successExportHtml,
-                    failure : me.conexionFailure,
-                    timeout : me.timeout,
-                    scope : me
-                });
-            }
-
-            this.load({params:{start:0, limit:this.tam_pag}});
-        },
-        successExportHtml: function (resp) {
-            Phx.CP.loadingHide();
-            var objRes = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
-            var objetoDatos = (objRes.ROOT == undefined)?objRes.datos:objRes.ROOT.datos;
-            var wnd = window.open("about:blank", "", "_blank");
-            wnd.document.write(objetoDatos.html);
-
-        },
         bnew:false,
         bedit:false,
         bdel:false

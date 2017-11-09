@@ -45,6 +45,7 @@ class MODCertificadoPlanilla extends MODbase{
         $this->captura('haber_basico','numeric');
         $this->captura('expedicion','varchar');
         $this->captura('impreso','varchar');
+        $this->captura('control','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -255,6 +256,23 @@ class MODCertificadoPlanilla extends MODbase{
         //Ejecuta la instruccion
         $this->armarConsulta();
         $this->ejecutarConsulta();
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
+    function controlImpreso()
+    {
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento = 'orga.ft_certificado_planilla_ime';
+        $this->transaccion = 'OR_ANTE_CON';
+        $this->tipo_procedimiento = 'IME';
+
+        //Define los parametros para la funcion
+        $this->setParametro('id_certificado_planilla', 'id_certificado_planilla', 'int4');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
         //Devuelve la respuesta
         return $this->respuesta;
     }
