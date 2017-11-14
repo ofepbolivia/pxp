@@ -256,49 +256,6 @@ header("content-type: text/javascript; charset=UTF-8");
                             var id_combobox = rec[i].data.id_combobox;
                             console.log('nombre',nombre_atributo);
 
-                            this.Atributos.push({
-                                config: {
-                                    name: nombre_atributo,
-                                    fieldLabel: rec[i].data.descripcion,
-                                    allowBlank: true,
-                                    emptyText: 'Elija una '+nombre_atributo+'...',
-                                    store: new Ext.data.JsonStore({
-                                        url: '../../sis_mercado/control/Combodet/listarCombodet',
-                                        id: 'id_combodet',
-                                        root: 'datos',
-                                        sortInfo: {
-                                            field: 'nombre',
-                                            direction: 'ASC'
-                                        },
-                                        totalProperty: 'total',
-                                        fields: ['id_combodet', 'nombre'],
-                                        remoteSort: true,
-                                        baseParams: {par_filtro: 'movtip.nombre#movtip.codigo',id_combobox:id_combobox}
-                                    }),
-                                    valueField: 'id_combodet',
-                                    displayField: 'nombre',
-                                    gdisplayField:  nombre_atributo,
-                                    hiddenName: nombre_atributo,
-                                    forceSelection: true,
-                                    typeAhead: false,
-                                    triggerAction: 'all',
-                                    lazyRender: true,
-                                    mode: 'remote',
-                                    pageSize: 15,
-                                    queryDelay: 1000,
-                                    anchor: '100%',
-                                    gwidth: 150,
-                                    minChars: 2,
-
-                                },
-                                type: 'ComboBox',
-                                id_grupo: 1,
-                                filters:{pfiltro:nombre_atributo,type:'string'},
-                                id_grupo:1,
-                                egrid:true,
-                                grid:true,
-                                form:true
-                            });
 
                         }else if( rec[i].data.tipo == 'DateField'){
 
@@ -354,7 +311,7 @@ header("content-type: text/javascript; charset=UTF-8");
                                         gdisplayField : 'tipo',
                                         gwidth : 200,
                                         anchor : '100%',
-                                        valueField: 'codigo',
+                                        valueField: 'descripcion',
                                         baseParams : {
                                         cod_subsistema : 'PARAM',
                                             catalogo_tipo : rec[i].data.nombre
@@ -475,9 +432,9 @@ header("content-type: text/javascript; charset=UTF-8");
 
 
             title:'Mediciones del Equipo',
-            ActSave:'../../sis_mercado/control/Item/insertarfrmValor',
+            /*ActSave:'../../sis_mercado/control/Item/insertarfrmValor',
             ActDel:'../../sis_mercado/control/Item/eliminarItem',
-            ActList:'../../sis_mercado/control/Item/listarfrmValor',
+            ActList:'../../sis_mercado/control/Item/listarfrmValor',*/
             bdel:true,
             bsave:true,
             bnew:true,
