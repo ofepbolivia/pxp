@@ -871,15 +871,15 @@ Phx.CP=function(){
             else{
                 //si usuario tiene alertas iniciamos la ventana
                 if(Phx.CP.config_ini.cont_alertas > 0){
-
-                    this.loadWindows('../../../sis_parametros/vista/alarma/AlarmaFuncionario.php','Alarmas',{
-                            width:900,
-                            height:400,
-                            modal:false,
-                            auxNoClose: true
-                        },
-                        { id_usuario: Phx.CP.config_ini.id_usuario },
-                        'Phx.CP','AlarmaFuncionario');
+                        //comentado 15/02/2018
+                      /*  this.loadWindows('../../../sis_parametros/vista/alarma/AlarmaFuncionario.php', 'Alarmas', {
+                                width: 900,
+                                height: 400,
+                                modal: false,
+                                auxNoClose: true
+                            },
+                            {id_usuario: Phx.CP.config_ini.id_usuario},
+                            'Phx.CP', 'AlarmaFuncionario');*/
 
 
 					/*
