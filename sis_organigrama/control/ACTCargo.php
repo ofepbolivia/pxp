@@ -95,6 +95,21 @@ class ACTCargo extends ACTbase{
 		$this->res=$this->objFunc->eliminarCargo($this->objParam);
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
+
+	function listarPresupuestoCargo(){
+		$this->objParam->defecto('ordenacion','id_cargo');
+		$this->objParam->defecto('dir_ordenacion','asc');
+
+		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+			$this->objReporte = new Reporte($this->objParam,$this);
+			$this->res = $this->objReporte->generarReporteListado('MODCargo','listarPresupuestoCargo');
+		} else{
+			$this->objFunc=$this->create('MODCargo');
+
+			$this->res=$this->objFunc->listarPresupuestoCargo($this->objParam);
+		}
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
 			
 }
 
