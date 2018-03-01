@@ -8,10 +8,10 @@ RETURNS varchar AS
 $body$
 /**************************************************************************
  FUNCION: 		segu.ft_rol_sel
- DESCRIPCION:   
+ DESCRIPCION:
  AUTOR: 		KPLIAN(jrr)
- FECHA:	
- COMENTARIOS:	
+ FECHA:
+ COMENTARIOS:
 ***************************************************************************/
 DECLARE
 
@@ -44,7 +44,7 @@ BEGIN
           --consulta:=';
           BEGIN
 
-               v_consulta:='SELECT 
+               v_consulta:='SELECT
                             roll.id_rol,
                             roll.descripcion,
                             roll.fecha_reg,
@@ -77,11 +77,11 @@ BEGIN
                return v_consulta;
          END;
 
-       /*******************************    
+       /*******************************
        #TRANSACCION:  SEG_EXPROL_SEL
        #DESCRIPCION:	Listado de gui_rol de un subsistema para exportar
-       #AUTOR:		Jaime Rivera Rojas	
-       #FECHA:		20/12/2012	
+       #AUTOR:		Jaime Rivera Rojas
+       #FECHA:		20/12/2012
       ***********************************/
 
 
@@ -90,7 +90,7 @@ BEGIN
           --consulta:=';
           BEGIN
 
-               v_consulta:='SELECT 
+               v_consulta:='SELECT
                             ''rol''::varchar,
                             roll.descripcion,
                             roll.rol,
@@ -98,18 +98,56 @@ BEGIN
                             roll.estado_reg
                         FROM segu.trol roll
                         INNER join segu.tsubsistema subsis
-                        on subsis.id_subsistema=roll.id_subsistema 
-                       
+                        on subsis.id_subsistema=roll.id_subsistema
+
                         WHERE roll.id_subsistema = '|| v_parametros.id_subsistema;
-               if (v_parametros.todo = 'no') then                   
+               if (v_parametros.todo = 'no') then
                		v_consulta = v_consulta || ' and roll.modificado is null ';
                end if;
                v_consulta = v_consulta || ' order by roll.id_rol ASC';
-               
+
                return v_consulta;
 
 
          END;
+            /*******************************
+       #TRANSACCION:  SEG_USROL_SEL
+       #DESCRIPCION:	Listado de gui_rol de un subsistema para exportar
+       #AUTOR:		MMV
+       #FECHA:		20/12/2012
+      ***********************************/
+       elseif(p_transaccion='SEG_USROL_SEL')then
+
+          BEGIN
+
+          v_consulta:='select  	ts.id_rol,
+								p.nombre_completo1 as nombre
+								from segu.tusuario us
+                                inner join segu.tusuario_rol ro on ro.id_usuario = us.id_usuario and ro.estado_reg = ''activo''
+                                inner join segu.trol ts on ts.id_rol =ro.id_rol and ts.estado_reg = ''activo''
+                                inner join segu.vpersona p on p.id_persona = us.id_persona
+                                where';
+
+          v_consulta:=v_consulta||v_parametros.filtro;
+          v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
+		  raise notice 'con %',v_consulta;
+          return v_consulta;
+       end;
+       elsif(p_transaccion='SEG_USROL_CONT')then
+
+
+          BEGIN
+
+               v_consulta:='select  count(	ts.id_rol)
+								from segu.tusuario us
+                                inner join segu.tusuario_rol ro on ro.id_usuario = us.id_usuario and ro.estado_reg = ''activo''
+                                inner join segu.trol ts on ts.id_rol =ro.id_rol and ts.estado_reg = ''activo''
+                                inner join segu.vpersona p on p.id_persona = us.id_persona
+                                where';
+               v_consulta:=v_consulta||v_parametros.filtro;
+               return v_consulta;
+         END;
+
 
      else
          raise exception 'No existe la opcion';

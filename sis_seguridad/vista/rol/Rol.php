@@ -42,19 +42,19 @@ var FormatoVista=function (value,p,record){return value?value.dateFormat('d/m/Y'
 
 		},
 		type:'Field',
-		form:true 
-		
+		form:true
+
 	},
 	 {
 		config:{
 			fieldLabel: "Nombre",
 			gwidth: 200,
 			name: 'rol',
-			allowBlank:false,	
+			allowBlank:false,
 			maxLength:100,
 			minLength:1,/*aumentar el minimo*/
 			anchor:'80%'
-			
+
 		},
 		type:'TextField',
 		filters:{type:'string'},
@@ -68,14 +68,14 @@ var FormatoVista=function (value,p,record){return value?value.dateFormat('d/m/Y'
 			fieldLabel: "Descripcion",
 			gwidth: 300,
 			name: 'descripcion',
-			allowBlank:true,	
+			allowBlank:true,
 			maxLength:100,
 			minLength:1,/*aumentar el minimo*/
 			anchor:'80%'
-			
+
 		},
 		type:'TextArea',
-		
+
 		filters:{type:'string'},
 		id_grupo:0,
 		 bottom_filter:true,
@@ -91,9 +91,9 @@ var FormatoVista=function (value,p,record){return value?value.dateFormat('d/m/Y'
 				valueField: 'id_subsistema',
 				displayField: 'nombre',
 				gdisplayField:'desc_subsis',
-					
+
 				hiddenName: 'id_subsistema',
-				
+
 				forceSelection:true,
 				typeAhead: true,
     			triggerAction: 'all',
@@ -108,11 +108,11 @@ var FormatoVista=function (value,p,record){return value?value.dateFormat('d/m/Y'
 			},
 			type:'ComboBox',
 			id_grupo:0,
-			filters:{	
+			filters:{
 		        pfiltro:'subsis.nombre',
 				type:'string'
 			},
-			
+
 			grid:true,
 			form:true
 	}
@@ -120,13 +120,13 @@ var FormatoVista=function (value,p,record){return value?value.dateFormat('d/m/Y'
 
 	Phx.vista.rol.superclass.constructor.call(this,config);
 	this.init();
-	
+
 	/*this.addButton('Procedimiento',{handler:hijo,disabled:false,tooltip: '<b>Procedimiento</b><br/>'});
-			
+
 		function hijo(){
-			_CP.loadWindows('../../../sis_seguridad/vista/rol_procedimiento/rol_procedimiento.php','Rol Procedimiento',{width:800,height:500},this.sm.getSelected().data,this.idContenedor);	
+			_CP.loadWindows('../../../sis_seguridad/vista/rol_procedimiento/rol_procedimiento.php','Rol Procedimiento',{width:800,height:500},this.sm.getSelected().data,this.idContenedor);
 		}*/
-	
+
 	this.load({params:{start:0, limit:50}})
 
 
@@ -158,7 +158,7 @@ Ext.extend(Phx.vista.rol,Phx.gridInterfaz,{
 
 	/*east:{
 		  url:'../../../sis_seguridad/vista/gui_rol/GuiRol.php',
-		  title:'Procedimientos', 
+		  title:'Procedimientos',
 		  width:400,
 		  cls:'gui_rol'
 		 },*/
@@ -169,14 +169,13 @@ Ext.extend(Phx.vista.rol,Phx.gridInterfaz,{
 			title:'Procedimientos',
 			width:400,
 			cls:'gui_rol'
-		}
-		/*,
+		},
 		{
-			url:'../../../sis_seguridad/vista/usuario_rol/RolUsuario.php',
+			url:'../../../sis_seguridad/vista/rol/UsuarioRol.php',
 			title:'Usuarios',
 			width:400,
-			cls:'rol_usuario'
-		}*/
+			cls:'UsuarioRol'
+		}
 	],
 
 	//sobre carga de funcion
