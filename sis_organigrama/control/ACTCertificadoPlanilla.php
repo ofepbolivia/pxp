@@ -23,6 +23,9 @@ class ACTCertificadoPlanilla extends ACTbase{
             if ($this->objParam->getParametro('pes_estado') == 'emitido') {
                 $this->objParam->addFiltro("planc.estado in (''emitido'')");
             }
+						if ($this->objParam->getParametro('pes_estado') == 'anulado') {
+								$this->objParam->addFiltro("planc.estado in (''anulado'')");
+						}
         }
        if ($this->objParam->getParametro('tipo_interfaz') == 'CertificadoEmitido'){
 
@@ -36,19 +39,20 @@ class ACTCertificadoPlanilla extends ACTbase{
 			$this->res = $this->objReporte->generarReporteListado('MODCertificadoPlanilla','listarCertificadoPlanilla');
 		} else{
 			$this->objFunc=$this->create('MODCertificadoPlanilla');
-			
+
 			$this->res=$this->objFunc->listarCertificadoPlanilla($this->objParam);
 		}
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
-				
+
 	function insertarCertificadoPlanilla(){
 
 	   /* if ($this->objParam->getParametro('tipo_certificado') != 'Con viáticos de los últimos tres meses'
             or $this->objParam->getParametro('tipo_certificado') != 'General'){
             throw new Exception('Error no existe el tipo de certificado.');
         }*/
-
+       // var_dump('noe ',$this->objParam->getParametro('tipo_certificado'));exit;
+               
 	    if($this->objParam->getParametro('tipo_certificado') == 'Con viáticos de los últimos tres meses') {
 
             $data = array("empleadoID" => $this->objParam->getParametro('id_funcionario'));
@@ -91,9 +95,9 @@ class ACTCertificadoPlanilla extends ACTbase{
             $this->res->imprimirRespuesta($this->res->generarJson());
         }
 	}
-						
+
 	function eliminarCertificadoPlanilla(){
-			$this->objFunc=$this->create('MODCertificadoPlanilla');	
+			$this->objFunc=$this->create('MODCertificadoPlanilla');
 		$this->res=$this->objFunc->eliminarCertificadoPlanilla($this->objParam);
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}

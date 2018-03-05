@@ -51,7 +51,8 @@ header("content-type: text/javascript; charset=UTF-8");
         },
         gruposBarraTareas:[
             {name:'borrador',title:'<H1 align="center"><i class="fa fa-list-ul"></i> Borrador</h1>',grupo:0,height:0},
-            {name:'emitido',title:'<H1 align="center"><i class="fa fa-list-ul"></i> Emitido</h1>',grupo:2,height:0}
+            {name:'emitido',title:'<H1 align="center"><i class="fa fa-list-ul"></i> Emitido</h1>',grupo:2,height:0},
+            {name:'anulado',title:'<H1 align="center"><i class="fa fa-list-ul"></i> Anulado</h1>',grupo:3,height:0}
         ],
 
         actualizarSegunTab: function(name, indice){
@@ -67,8 +68,8 @@ header("content-type: text/javascript; charset=UTF-8");
         },
         beditGroups: [0,2],
         bdelGroups:  [0,2],
-        bactGroups:  [0,2],
-        bexcelGroups: [0,2],
+        bactGroups:  [0,2,3],
+        bexcelGroups: [0,2,3],
         oncellclick : function(grid, rowIndex, columnIndex, e) {
             var record = this.store.getAt(rowIndex),
                 fieldName = grid.getColumnModel().getDataIndex(columnIndex); // Get field name
@@ -114,4 +115,3 @@ header("content-type: text/javascript; charset=UTF-8");
         }
     }
 </script>
-

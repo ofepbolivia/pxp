@@ -86,7 +86,8 @@ BEGIN
         into
         v_count
 		from orga.tcertificado_planilla c
-		where c.id_funcionario = v_parametros.id_funcionario;
+		where c.id_funcionario = v_parametros.id_funcionario
+        and EXTRACT( YEAR FROM c.fecha_solicitud) = EXTRACT(YEAR FROM current_date);
 
         select desc_funcionario1
         into
@@ -223,10 +224,51 @@ BEGIN
 	elsif(p_transaccion='OR_PLANC_ELI')then
 
 		begin
-			--Sentencia de la eliminacion
-			delete from orga.tcertificado_planilla
-            where id_certificado_planilla=v_parametros.id_certificado_planilla;
+			 select 	ma.id_proceso_wf,
+        		ma.id_estado_wf,
+                ma.estado
+                into
+                v_id_proceso_wf,
+                v_id_estado_wf,
+        		v_codigo_estado
+        from orga.tcertificado_planilla ma
+        where ma.id_certificado_planilla = v_parametros.id_certificado_planilla;
 
+        select
+        	te.id_tipo_estado
+        into
+        	v_id_tipo_estado
+        from wf.tproceso_wf pw
+        inner join wf.ttipo_proceso tp on pw.id_tipo_proceso = tp.id_tipo_proceso
+        inner join wf.ttipo_estado te on te.id_tipo_proceso = tp.id_tipo_proceso and te.codigo = 'anulado'
+        where pw.id_proceso_wf = v_id_proceso_wf;
+
+
+        if v_id_tipo_estado is null  then
+        	raise exception 'No se parametrizo el estado "anulado" ';
+        end if;
+          -- pasamos la solicitud  al siguiente anulado
+           v_id_estado_actual =  wf.f_registra_estado_wf(	v_id_tipo_estado,
+           													v_id_funcionario,
+                                                          	v_id_estado_wf,
+            												v_id_proceso_wf,
+                                                           	p_id_usuario,
+                                                           	v_parametros._id_usuario_ai,
+            											   	v_parametros._nombre_usuario_ai,
+                                                           	v_id_depto,
+                                                           	'Certificado Anulado');
+
+
+        -- actualiza estado en la solicitud
+        update orga.tcertificado_planilla set
+                 id_estado_wf =  v_id_estado_actual,
+                 estado = 'anulado',
+                 id_usuario_mod=p_id_usuario,
+                 fecha_mod=now(),
+                 estado_reg='inactivo',
+                 id_usuario_ai = v_parametros._id_usuario_ai,
+                 usuario_ai = v_parametros._nombre_usuario_ai
+               where id_certificado_planilla = v_parametros.id_certificado_planilla;
             --Definicion de la respuesta
             v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Certificado Planilla eliminado(a)');
             v_resp = pxp.f_agrega_clave(v_resp,'id_certificado_planilla',v_parametros.id_certificado_planilla::varchar);
@@ -284,7 +326,7 @@ BEGIN
              v_clase = '';
              v_parametros_ad = '';
              v_tipo_noti = 'notificacion';
-             v_titulo  = 'Emetido';
+             v_titulo  = 'Emitido';
 
 
              IF   v_codigo_estado_siguiente not in('borrador')   THEN
@@ -430,7 +472,7 @@ BEGIN
 
                 END IF;
 
-                v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Se realizo volvio al anterior estado)');
+                v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Se volvio al anterior estado)');
                 v_resp = pxp.f_agrega_clave(v_resp,'operacion','cambio_exitoso');
 
               --Devuelve la respuesta
