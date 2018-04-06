@@ -230,8 +230,8 @@ Phx.vista.CargoPresupuesto=Ext.extend(Phx.gridInterfaz,{
 		direction: 'ASC'
 	},
 	bdel:true,
-	bedit:false,
-	bsave:true,
+	bedit:true,
+	bsave:false,
 	onReloadPage:function(m){
 			this.maestro=m;			
 			this.load({params:{start:0, limit:this.tam_pag,id_cargo:this.maestro.id_cargo,id_gestion:this.cmbGestion.getValue()}});			

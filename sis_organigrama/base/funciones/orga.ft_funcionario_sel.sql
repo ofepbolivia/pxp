@@ -487,6 +487,32 @@ $body$
 
         return v_consulta;
       END;
+    /*******************************
+     #TRANSACCION:  ORGA_REP_DOC_SEL
+     #DESCRIPCION:	Reporte de documento que tiene un funcionario.
+     #AUTOR:		Franklin Espinoza A. (fea)
+     #FECHA:		02-04-2018
+    ***********************************/
+    elsif(par_transaccion='ORGA_REP_DOC_SEL')then
+      BEGIN
+
+        v_consulta = 'select
+        			 (''(''||tuo.codigo||'')''||tuo.nombre_unidad)::varchar as gerencia,
+                     tf.desc_funcionario2::varchar AS desc_funcionario,
+        			 tf.id_funcionario,
+                     tf.ci,
+                     tc.nombre as cargo,
+                     tf.fecha_ingreso,
+                     orga.f_get_documentos_func(tf.id_funcionario) as documento
+					 from orga.vfuncionario_biometrico tf
+                     inner JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario and (current_date <= uof.fecha_finalizacion or  uof.fecha_finalizacion is null)
+                     inner JOIN orga.tuo tuo on tuo.id_uo = orga.f_get_uo_gerencia(uof.id_uo,uof.id_funcionario,current_date)
+     				 inner JOIN orga.tcargo tc ON tc.id_cargo = uof.id_cargo
+                     where tf.estado_reg = ''activo'' and tc.estado_reg = ''activo''
+                     order by gerencia,desc_funcionario ';
+		    raise notice 'v_consulta: %',v_consulta;
+        return v_consulta;
+      END;
     else
       raise exception 'No existe la opcion';
 

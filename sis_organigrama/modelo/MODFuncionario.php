@@ -355,5 +355,29 @@ class MODFuncionario extends MODbase{
 		return $this->respuesta;
 	}
 
+    function reporteDocumentos(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='orga.ft_funcionario_sel';
+        $this->transaccion='ORGA_REP_DOC_SEL';
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+
+        //Definicion de la lista del resultado del query
+        $this->captura('gerencia','varchar');
+        $this->captura('desc_funcionario','varchar');
+        $this->captura('id_funcionario','int4');
+        $this->captura('ci','varchar');
+        $this->captura('cargo','varchar');
+        $this->captura('fecha_ingreso','date');
+        $this->captura('documento','varchar');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        //echo($this->consulta);exit;
+        $this->ejecutarConsulta();
+
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
+
 }
 ?>
