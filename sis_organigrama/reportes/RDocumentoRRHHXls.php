@@ -190,26 +190,26 @@ class RDocumentoRRHHXls
 
             if($value['documento'] == '[]'){
                 //var_dump($value['id_funcionario']);
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(7, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(8, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(9, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(10, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(11, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(12, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(13, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(14, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(15, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(16, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(17, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(18, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(19, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(20, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(21, $fila, "pendiente");
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(22, $fila, "pendiente");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(7, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(8, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(9, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(10, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(11, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(12, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(13, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(14, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(15, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(16, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(17, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(18, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(19, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(20, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(21, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(22, $fila, "sin registrar");
             }else {
                 $this->docexcel->getActiveSheet()->getStyle('D'.$fila.':W'.$fila)->getAlignment()->setWrapText(true);
 
@@ -222,9 +222,9 @@ class RDocumentoRRHHXls
                         $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4, $fila, $obj->TIT_BACHILLER->entidad_emisora);
                         $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $fila, $obj->TIT_BACHILLER->numero);
                     } else {
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3, $fila, "pendiente");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4, $fila, "pendiente");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $fila, "pendiente");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3, $fila, "sin registrar");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4, $fila, "sin registrar");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $fila, "sin registrar");
                     }
 
                     if($obj->TIT_PROF){
@@ -235,11 +235,11 @@ class RDocumentoRRHHXls
                         $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(10, $fila, $obj->TIT_PROF->nivel_academico);
 
                     }else{
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6, $fila, "pendiente");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(7, $fila, "pendiente");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(8, $fila, "pendiente");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(9, $fila, "pendiente");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(10, $fila, "pendiente");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6, $fila, "sin registrar");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(7, $fila, "sin registrar");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(8, $fila, "sin registrar");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(9, $fila, "sin registrar");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(10, $fila, "sin registrar");
                     }
 
                     if($obj->CERT_EGRESO){
@@ -249,11 +249,11 @@ class RDocumentoRRHHXls
                         $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(14, $fila, $obj->CERT_EGRESO->nivel_academico);
                         $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(15, $fila, $obj->CERT_EGRESO->observaciones);
                     }else{
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(11, $fila, "pendiente");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(12, $fila, "pendiente");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(13, $fila, "pendiente");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(14, $fila, "pendiente");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(15, $fila, "pendiente");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(11, $fila, "sin registrar");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(12, $fila, "sin registrar");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(13, $fila, "sin registrar");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(14, $fila, "sin registrar");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(15, $fila, "sin registrar");
                     }
 
                     if($obj->TIT_MAES){
@@ -262,10 +262,10 @@ class RDocumentoRRHHXls
                         $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(18, $fila, date_format(date_create($obj->CERT_EGRESO->fecha_emision),'d/m/Y'));
                         $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(19, $fila, $obj->TIT_MAES->entidad_emisora);
                     }else{
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(16, $fila, "pendiente");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(17, $fila, "pendiente");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(18, $fila, "pendiente");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(19, $fila, "pendiente");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(16, $fila, "sin registrar");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(17, $fila, "sin registrar");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(18, $fila, "sin registrar");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(19, $fila, "sin registrar");
                     }
 
                     if($obj->LIB_MIL){
@@ -273,9 +273,9 @@ class RDocumentoRRHHXls
                         $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(21, $fila, $obj->LIB_MIL->numero_serie);
                         $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(22, $fila, $obj->LIB_MIL->escala);
                     }else{
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(20, $fila, "pendiente");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(21, $fila, "pendiente");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(22, $fila, "pendiente");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(20, $fila, "sin registrar");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(21, $fila, "sin registrar");
+                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(22, $fila, "sin registrar");
                     }
 
                 }
