@@ -27,22 +27,60 @@ header("content-type: text/javascript; charset=UTF-8");
         ],
 
         actualizarSegunTab: function(name, indice){
-            if(name == 'con_presupuesto'){
-                this.store.baseParams.presupuesto = name;
+            this.presupuesto = name;
+            if(this.presupuesto == 'con_presupuesto'){
+                this.store.baseParams.presupuesto = this.presupuesto;
             }else{
-                this.store.baseParams.presupuesto = name;
+                this.store.baseParams.presupuesto = this.presupuesto;
             }
-
-            this.load({params:{start:0, limit:this.tam_pag}});
+            //this.store.baseParams.activo = this.activo;
+            this.load({params:{start:0, limit:50}});
         },
         constructor:function(config){
+            this.activo = 'activo';
+            this.presupuesto = 'con_prespuesto';
+            this.tbarItems = ['-',
+                {
+                    text:'<b>INACTIVOS</b>',
+                    enableToggle: true,
+                    pressed: false,
+                    toggleHandler : function(btn,pressed){
 
+                        if(pressed){
+                            this.activo = 'inactivo';
+                            btn.setText('<b>ACTIVOS</b>');
+                        }
+                        else{
+                            this.activo = 'activo'
+                            btn.setText('<b>INACTIVOS</b>');
+                        }
+                        this.store.baseParams.activo = this.activo;
+                        //this.store.baseParams.presupuesto = this.presupuesto;
+                        this.load({params:{start:0, limit:50}});
+
+                    },
+                    scope: this
+                },'-'
+
+            ];
             this.maestro=config;
             //llama al constructor de la clase padre
             Phx.vista.AsigPresupuestoCargo.superclass.constructor.call(this,config);
-            this.store.baseParams.presupuesto = 'con_prespuesto';
+            this.store.baseParams.presupuesto = this.presupuesto;
+            this.store.baseParams.activo = this.activo;
             this.init();
-            this.iniciarEventos();
+            //this.iniciarEventos();
+
+            /*this.store.baseParams.id_uo = this.maestro.id_uo;
+            if (this.maestro.fecha) {
+                this.store.baseParams.fecha = this.maestro.fecha;
+            }
+            if (this.maestro.tipo) {
+                this.store.baseParams.tipo = this.maestro.tipo;
+            }*/
+            this.load({params:{start:0, limit:50}});
+
+
             this.addButton('btnCostos',
                 {
                     grupo:[0,1],
@@ -53,15 +91,30 @@ header("content-type: text/javascript; charset=UTF-8");
                     tooltip: 'Centros de Costo asociados al cargo'
                 }
             );
-            this.store.baseParams.id_uo = this.maestro.id_uo;
-            if (this.maestro.fecha) {
-                this.store.baseParams.fecha = this.maestro.fecha;
-            }
-            if (this.maestro.tipo) {
-                this.store.baseParams.tipo = this.maestro.tipo;
-            }
-            this.load({params:{start:0, limit:50}});
         },
+
+        cmbActivos: new Ext.form.ComboBox({
+            name: 'activos',
+            id: 'gestion_reg',
+            fieldLabel: 'Activos',
+            allowBlank: true,
+            emptyText:'Gestion...',
+            blankText: 'Año',
+            store : new Ext.data.ArrayStore({
+                fields : ['clave', 'valor'],
+                data : [['activos', 'Activos'], ['inactivos', 'Inactivos']]
+            }),
+            valueField : 'clave',
+            displayField : 'valor',
+            hiddenName: 'clave',
+            mode:'local',
+            pageSize:50,
+            queryDelay:500,
+            listWidth:'230',
+            hidden:false,
+            width:80,
+            resizable: true
+        }),
 
         Atributos:[
             {
@@ -84,7 +137,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 type:'Field',
                 form:true
             },
-            {
+            /*{
                 //configuracion del componente
                 config:{
                     fieldLabel: 'Identificador',
@@ -95,6 +148,21 @@ header("content-type: text/javascript; charset=UTF-8");
                 filters:{pfiltro:'cargo.id_cargo',type:'numeric'},
                 grid:true,
                 bottom_filter: true
+            },*/
+
+            {
+                config:{
+                    name: 'identificador',
+                    fieldLabel: 'Identificador',
+                    allowBlank: true,
+                    anchor: '100%',
+                    gwidth: 200
+                },
+                type:'TextField',
+                filters:{pfiltro:'cargo.id_cargo',type:'string'},
+                id_grupo:1,
+                grid:true,
+                form:false
             },
             {
                 config:{
@@ -120,49 +188,23 @@ header("content-type: text/javascript; charset=UTF-8");
                 form:false,
                 bottom_filter:true
             },
+
             {
-                config: {
-                    name: 'nombre',
+                config:{
+                    name: 'cargo',
                     fieldLabel: 'Nombre Cargo',
-                    allowBlank: false,
-                    emptyText: 'Elija una opción...',
-                    store: new Ext.data.JsonStore({
-                        url: '../../sis_organigrama/control/TemporalCargo/listarTemporalCargo',
-                        id: 'id_temporal_cargo',
-                        root: 'datos',
-                        sortInfo: {
-                            field: 'nombre',
-                            direction: 'ASC'
-                        },
-                        totalProperty: 'total',
-                        fields: ['id_temporal_cargo', 'nombre'],
-                        remoteSort: true,
-                        baseParams: {par_filtro: 'cargo.nombre'}
-                    }),
-                    valueField: 'nombre',
-                    displayField: 'nombre',
-                    gdisplayField: 'nombre',
-                    hiddenName: 'nombre',
-                    forceSelection: false,
-                    typeAhead: false,
-                    triggerAction: 'all',
-                    lazyRender: true,
-                    mode: 'remote',
-                    pageSize: 15,
-                    queryDelay: 1000,
+                    allowBlank: true,
                     anchor: '100%',
                     gwidth: 200,
-                    minChars: 2,
                     renderer : function(value, p, record) {
-                        return String.format('{0}', "<div style='color: brown'><b>"+record.data['nombre']+"</b></div>");
+                        return String.format('{0}', "<div style='color: brown'><b>"+record.data['cargo']+"</b></div>");
                     }
                 },
-                type: 'ComboBox',
-                id_grupo: 0,
-                filters: {pfiltro: 'cargo.nombre',type: 'string'},
-                grid: true,
-                form: true,
-                bottom_filter: true
+                type:'TextField',
+                filters:{pfiltro:'cargo.nombre',type:'string'},
+                id_grupo:1,
+                grid:true,
+                form:false
             },
             {
                 config:{
@@ -508,7 +550,7 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:'id_temporal_cargo', type: 'numeric'},
             {name:'id_escala_salarial', type: 'numeric'},
             {name:'codigo', type: 'string'},
-            {name:'nombre', type: 'string'},
+            {name:'cargo', type: 'string'},
             {name:'nombre_tipo_contrato', type: 'string'},
             {name:'codigo_tipo_contrato', type: 'string'},
             {name:'nombre_escala', type: 'string'},
@@ -523,14 +565,14 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:'usr_reg', type: 'string'},
             {name:'usr_mod', type: 'string'},
             {name:'acefalo', type: 'string'},
-            {name:'identificador', type: 'numeric'},
+            {name:'identificador', type: 'string'},
             {name:'desc_func', type: 'string'},
             {name:'fecha_asignacion', type: 'date',dateFormat:'Y-m-d'},
             {name:'fecha_finalizacion',type: 'date',dateFormat:'Y-m-d'},
 
         ],
         sortInfo:{
-            field: 'id_cargo',
+            field: 'desc_func',
             direction: 'ASC'
         },
         bdel:true,

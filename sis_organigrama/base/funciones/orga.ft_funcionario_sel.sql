@@ -65,10 +65,10 @@ $body$
                             PERSON.nombre_completo2 AS desc_person,
                             usu1.cuenta as usr_reg,
 						    usu2.cuenta as usr_mod,
-                            PERSON.ci, 
+                            PERSON.ci,
                             PERSON.num_documento,
-                            PERSON.telefono1, 
-                            PERSON.celular1, 
+                            PERSON.telefono1,
+                            PERSON.celular1,
                             PERSON.correo,
                             FUNCIO.telefono_ofi,
                             FUNCIO.antiguedad_anterior,
@@ -175,7 +175,7 @@ $body$
                             pxp.list_unique(ni.numero)::varchar
                             FROM orga.tfuncionario FUNCIO
                             INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona
-                            INNER JOIN orga.tuo_funcionario uofun on 
+                            INNER JOIN orga.tuo_funcionario uofun on
                             	uofun.id_funcionario = FUNCIO.id_funcionario and uofun.estado_reg = ''activo'' and
                                 uofun.fecha_asignacion <= now()::date and uofun.tipo = ''oficial'' and
                                 (uofun.fecha_finalizacion >= now()::date or uofun.fecha_finalizacion is null)
@@ -194,7 +194,7 @@ $body$
                             	ofi.id_oficina = car.id_oficina
                             LEFT JOIN param.tlugar lug on lug.id_lugar = ofi.id_lugar
                             INNER JOIN orga.tuo uo on uo.id_uo = orga.f_get_uo_gerencia(uofun.id_uo,NULL,NULL)
-                            
+
                             WHERE ';
 
 
@@ -202,7 +202,7 @@ $body$
         v_consulta := v_consulta || v_parametros.filtro;
         v_consulta := v_consulta ||  ' GROUP BY FUNCIO.id_funcionario,
                             PERSON.nombre_completo1,
-                            CAR.nombre,                            
+                            CAR.nombre,
                             FUNCIO.email_empresa,
                             PERSON.nombre,
                             PERSON.ap_paterno,
@@ -233,15 +233,15 @@ $body$
 
         v_consulta:='SELECT
                				count(FUNCIO.id_funcionario)
-                                                        
+
                             FROM orga.tfuncionario FUNCIO
                             INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona
-                            INNER JOIN orga.tuo_funcionario uofun on 
+                            INNER JOIN orga.tuo_funcionario uofun on
                             	uofun.id_funcionario = FUNCIO.id_funcionario and uofun.estado_reg = ''activo'' and
-                                uofun.fecha_asignacion <= now()::date and 
+                                uofun.fecha_asignacion <= now()::date and
                                 (uofun.fecha_finalizacion >= now()::date or uofun.fecha_finalizacion is null)
                             INNER JOIN orga.tcargo car on car.id_cargo = uofun.id_cargo
-                            
+
                             WHERE ';
 
 
@@ -267,20 +267,20 @@ $body$
         v_consulta:='SELECT
                				FUNCIO.id_funcionario,
                             FUNCIO.desc_funcionario1::varchar,
-                            CAR.nombre,                            
+                            CAR.nombre,
                             F.email_empresa
-                            
+
                             FROM orga.vfuncionario FUNCIO
-                            
+
                             INNER JOIN orga.tfuncionario F ON F.id_funcionario=FUNCIO.id_funcionario
                             INNER JOIN SEGU.tpersona PERSON ON PERSON.id_persona=F.id_persona
-                            INNER JOIN orga.tuo_funcionario uofun on 
-                            	uofun.id_funcionario = FUNCIO.id_funcionario and 
+                            INNER JOIN orga.tuo_funcionario uofun on
+                            	uofun.id_funcionario = FUNCIO.id_funcionario and
                                 uofun.tipo = ''oficial'' and
                                 uofun.estado_reg = ''activo'' and
-                                uofun.fecha_asignacion <= now()::date and 
+                                uofun.fecha_asignacion <= now()::date and
                                 (uofun.fecha_finalizacion >= now()::date or uofun.fecha_finalizacion is null)
-                            INNER JOIN orga.tcargo car on car.id_cargo = uofun.id_cargo                            
+                            INNER JOIN orga.tcargo car on car.id_cargo = uofun.id_cargo
                             WHERE ';
 
 
@@ -308,16 +308,16 @@ $body$
 
         v_consulta:='SELECT
                				count(FUNCIO.id_funcionario)
-                                                        
+
                             FROM orga.vfuncionario FUNCIO
                             INNER JOIN orga.tfuncionario F ON F.id_funcionario=FUNCIO.id_funcionario
                             INNER JOIN SEGU.tpersona PERSON ON PERSON.id_persona=F.id_persona
-                            INNER JOIN orga.tuo_funcionario uofun on 
+                            INNER JOIN orga.tuo_funcionario uofun on
                             	uofun.id_funcionario = FUNCIO.id_funcionario and uofun.estado_reg = ''activo'' and
-                                uofun.fecha_asignacion <= now()::date and 
+                                uofun.fecha_asignacion <= now()::date and
                                 (uofun.fecha_finalizacion >= now()::date or uofun.fecha_finalizacion is null)
-                            INNER JOIN orga.tcargo car on car.id_cargo = uofun.id_cargo      
-                            
+                            INNER JOIN orga.tcargo car on car.id_cargo = uofun.id_cargo
+
                             WHERE ';
 
 
@@ -333,7 +333,7 @@ $body$
      #TRANSACCION:  RH_FUNCIOCAR_SEL
      #DESCRIPCION:	Listado de funcionarios con cargos historicos
      #AUTOR:		KPLIAN (RAC)
-     #FECHA:		29/10/11	
+     #FECHA:		29/10/11
     ***********************************/
     elseif(par_transaccion='RH_FUNCIOCAR_SEL')then
 
@@ -367,8 +367,8 @@ $body$
                             FUNCAR.id_oficina,
                             FUNCAR.lugar_nombre,
                             FUNCAR.oficina_nombre
-                            
-                            FROM orga.vfuncionario_cargo_lugar FUNCAR 
+
+                            FROM orga.vfuncionario_cargo_lugar FUNCAR
                             WHERE '||v_filadd;
 
 
@@ -400,7 +400,7 @@ $body$
 
         v_consulta:='SELECT
                                   count(id_uo_funcionario)
-                            FROM orga.vfuncionario_cargo_lugar FUNCAR 
+                            FROM orga.vfuncionario_cargo_lugar FUNCAR
                             WHERE '||v_filadd;
         v_consulta:=v_consulta||v_parametros.filtro;
         return v_consulta;
@@ -513,6 +513,22 @@ $body$
 		    raise notice 'v_consulta: %',v_consulta;
         return v_consulta;
       END;
+    /*********************************
+ 	#TRANSACCION:  'RH_URL_IMG_SEL'
+ 	#DESCRIPCION:	url de la fotografia de un funcionario
+ 	#AUTOR:		franklin.espinoza
+ 	#FECHA:		20-09-2017 20:55:18
+	***********************************/
+
+	elsif(p_transaccion='RH_URL_IMG_SEL')then
+
+    	begin
+        	v_consulta = 'select (''https://erp.obairlines.bo/uploaded_files''||substr(tar.folder,11)||tar.nombre_archivo||''.''||tar.extension)::varchar
+					  	  from orga.tfuncionario tf
+					  	  inner join param.tarchivo tar on tar.id_tabla = tf.id_funcionario and tar.id_tipo_archivo = 10
+					  	  where tf.id_funcionario = '||v_parametros.id_funcionario||' and tar.estado_reg = ''activo''';
+        	return v_consulta;
+        end;
     else
       raise exception 'No existe la opcion';
 

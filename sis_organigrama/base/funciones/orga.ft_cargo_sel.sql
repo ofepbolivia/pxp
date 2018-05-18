@@ -4,8 +4,8 @@ CREATE OR REPLACE FUNCTION orga.ft_cargo_sel (
   p_tabla varchar,
   p_transaccion varchar
 )
-  RETURNS varchar AS
-  $body$
+RETURNS varchar AS
+$body$
   /**************************************************************************
    SISTEMA:		Organigrama
    FUNCION: 		orga.ft_cargo_sel
@@ -29,6 +29,10 @@ CREATE OR REPLACE FUNCTION orga.ft_cargo_sel (
     v_resp				varchar;
     v_ids_cargo			varchar;
 
+	v_condicion			varchar;
+    v_id_gestion 		integer;
+
+    v_activo			varchar;
   BEGIN
 
     v_nombre_funcion = 'orga.ft_cargo_sel';
@@ -44,6 +48,7 @@ CREATE OR REPLACE FUNCTION orga.ft_cargo_sel (
     if(p_transaccion='OR_CARGO_SEL')then
 
       begin
+
         --Sentencia de la consulta
         v_consulta:='select
 						cargo.id_cargo,
@@ -101,10 +106,10 @@ CREATE OR REPLACE FUNCTION orga.ft_cargo_sel (
 
       end;
 
-    /*********************************    
+    /*********************************
  	#TRANSACCION:  'OR_CARGOACE_SEL'
  	#DESCRIPCION:	Consulta de cargos acefalos
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		14-01-2014 19:16:06
 	***********************************/
 
@@ -172,6 +177,141 @@ CREATE OR REPLACE FUNCTION orga.ft_cargo_sel (
         return v_consulta;
 
       end;
+    /*********************************
+     #TRANSACCION:  'OR_PRE_CARGO_SEL'
+     #DESCRIPCION:	Listado de todos los cargos
+     #AUTOR:		f.e.a
+     #FECHA:		14-02-2017 19:16:06
+    ***********************************/
+
+    elsif(p_transaccion='OR_PRE_CARGO_SEL')then
+
+      begin
+
+        if(pxp.f_existe_parametro(p_tabla,'activo'))then
+        	if v_parametros.activo = 'activo' then
+        		v_activo = '(tuo.fecha_finalizacion is null or current_date<=tuo.fecha_finalizacion)';
+            else
+            	v_activo = '(tuo.fecha_finalizacion < current_date)';
+        	end if;
+        end if;
+
+      	v_condicion = 'true';
+      	if(pxp.f_existe_parametro(p_tabla,'presupuesto'))then
+        	if (v_parametros.presupuesto = 'con_presupuesto') then
+            	v_condicion = '(tcp.id_cargo_presupuesto is not null and tcp.id_ot is not null)';
+            elsif(v_parametros.presupuesto = 'sin_presupuesto')then
+            	v_condicion = '(tcp.id_cargo_presupuesto is null or tcp.id_ot is null)';
+            end if;
+        end if;
+
+        select tg.id_gestion
+        into v_id_gestion
+        from param.tgestion tg
+        where tg.gestion = EXTRACT('year' from current_date);
+        --Sentencia de la consulta
+        v_consulta:='select
+						cargo.id_cargo,
+						cargo.id_uo,
+						cargo.id_tipo_contrato,
+						cargo.id_lugar,
+						cargo.id_temporal_cargo,
+						cargo.id_escala_salarial,
+						cargo.codigo,
+						cargo.nombre as cargo,
+						cargo.fecha_ini,
+						cargo.estado_reg,
+						cargo.fecha_fin,
+						cargo.fecha_reg,
+						cargo.id_usuario_reg,
+						cargo.fecha_mod,
+						cargo.id_usuario_mod,
+						usu1.cuenta as usr_reg,
+						usu2.cuenta as usr_mod,
+
+						tipcon.nombre as nombre_tipo_contrato,
+						escsal.nombre as nombre_escala,
+						ofi.nombre as nombre_oficina,
+						(case when (orga.f_get_empleado_x_item(cargo.id_cargo)  is null and cargo.fecha_fin is null) then
+						  ''ACEFALO''
+						else
+						  ''ASIGNADO''
+						end)::varchar as acefalo,
+						cargo.id_oficina,
+						cargo.id_cargo::varchar as identificador,
+						tipcon.codigo as codigo_tipo_contrato,
+                        vf.desc_funcionario1::varchar as desc_func,
+                        tuo.fecha_asignacion,
+                        tuo.fecha_finalizacion
+						from orga.tcargo cargo
+						inner join segu.tusuario usu1 on usu1.id_usuario = cargo.id_usuario_reg
+						left join segu.tusuario usu2 on usu2.id_usuario = cargo.id_usuario_mod
+						inner join orga.ttipo_contrato tipcon on tipcon.id_tipo_contrato = cargo.id_tipo_contrato
+						inner join orga.tescala_salarial escsal on escsal.id_escala_salarial = cargo.id_escala_salarial
+						INNER join orga.toficina ofi on ofi.id_oficina = cargo.id_oficina
+                        inner join orga.tuo_funcionario tuo on tuo.id_cargo = cargo.id_cargo and '||v_activo||'
+                        inner join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
+                        left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = '||v_id_gestion||'
+				        where cargo.estado_reg = ''activo'' and '||v_condicion||' and ';
+
+        --Definicion de la respuesta
+        v_consulta:=v_consulta||v_parametros.filtro;
+        v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
+		raise notice 'v_consulta: %', v_consulta;
+        --Devuelve la respuesta
+        return v_consulta;
+
+      end;
+    /*********************************
+     #TRANSACCION:  'OR_PRE_CARGO_CONT'
+     #DESCRIPCION:	Conteo de registros
+     #AUTOR:		F.E.A
+     #FECHA:		14-02-2018 19:16:06
+    ***********************************/
+    elsif(p_transaccion='OR_PRE_CARGO_CONT')then
+      begin
+
+
+       if(pxp.f_existe_parametro(p_tabla,'activo'))then
+        	if v_parametros.activo = 'activo' then
+        		v_activo = '(tuo.fecha_finalizacion is null or current_date<=tuo.fecha_finalizacion)';
+            else
+            	v_activo = 'tuo.fecha_finalizacion < current_date';
+        	end if;
+        end if;
+
+      	v_condicion = 'true';
+      	if(pxp.f_existe_parametro(p_tabla,'presupuesto'))then
+        	if (v_parametros.presupuesto = 'con_presupuesto') then
+            	v_condicion = '(tcp.id_cargo_presupuesto is not null and tcp.id_ot is not null)';
+            elsif(v_parametros.presupuesto = 'sin_presupuesto')then
+            	v_condicion = '(tcp.id_cargo_presupuesto is null or tcp.id_ot is null)';
+            end if;
+        end if;
+
+        select tg.id_gestion
+        into v_id_gestion
+        from param.tgestion tg
+        where tg.gestion = EXTRACT('year' from current_date);
+        --Sentencia de la consulta de conteo de registros
+        v_consulta:='select count(cargo.id_cargo)
+					    from orga.tcargo cargo
+						inner join segu.tusuario usu1 on usu1.id_usuario = cargo.id_usuario_reg
+						left join segu.tusuario usu2 on usu2.id_usuario = cargo.id_usuario_mod
+						inner join orga.ttipo_contrato tipcon on tipcon.id_tipo_contrato = cargo.id_tipo_contrato
+						inner join orga.tescala_salarial escsal on escsal.id_escala_salarial = cargo.id_escala_salarial
+						INNER join orga.toficina ofi on ofi.id_oficina = cargo.id_oficina
+                        inner join orga.tuo_funcionario tuo on tuo.id_cargo = cargo.id_cargo and '||v_activo||'
+                        inner join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
+                        left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = '||v_id_gestion||'
+				        where cargo.estado_reg = ''activo'' and '||v_condicion||' and ';
+
+        --Definicion de la respuesta
+        v_consulta:=v_consulta||v_parametros.filtro;
+        raise notice 'v_consulta: %', v_consulta;
+        --Devuelve la respuesta
+        return v_consulta;
+      end;
 
     else
 
@@ -188,7 +328,7 @@ CREATE OR REPLACE FUNCTION orga.ft_cargo_sel (
       v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
       raise exception '%',v_resp;
   END;
-  $body$
+$body$
 LANGUAGE 'plpgsql'
 VOLATILE
 CALLED ON NULL INPUT

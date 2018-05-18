@@ -340,6 +340,18 @@ class ACTFuncionario extends ACTbase{
         $this->mensajeExito->setArchivoGenerado($nombreArchivo);
         $this->mensajeExito->imprimirRespuesta($this->mensajeExito->generarJson());
     }
+
+    function urlFotoFuncionario(){
+        $this->objFunc=$this->create('MODFuncionario');
+        $this->res=$this->objFunc->urlFotoFuncionario($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
+    function urlFotoFuncionarioByUsuario(){
+        $this->objFunc=$this->create('MODFuncionario');
+        $this->res=$this->objFunc->urlFotoFuncionarioByUsuario($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 }
 
 ?>

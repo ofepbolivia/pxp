@@ -27,6 +27,7 @@ Phx.vista.CargoPresupuesto=Ext.extend(Phx.gridInterfaz,{
 		},this);
 		
 		this.cmbGestion.store.load({params:{start:0, limit:this.tam_pag}, scope:this,callback: function (arr,op,suc) {
+		    //console.log('presupuestos:  ',arr);
 			this.cmbGestion.setValue(arr[0].data.id_gestion);
 			this.Cmp.id_centro_costo.store.baseParams.id_gestion = this.cmbGestion.getValue();
 			this.Cmp.id_centro_costo.modificado = true;
@@ -79,15 +80,15 @@ Phx.vista.CargoPresupuesto=Ext.extend(Phx.gridInterfaz,{
                 fieldLabel: 'Orden Trabajo',
                 sysorigen:'sis_contabilidad',
                 origen:'OT',
-                allowBlank:true,
+                allowBlank:false,
                 gwidth:200,
-                baseParams:{par_filtro:'desc_orden#motivo_orden'},
+                baseParams:{par_filtro:'desc_orden#motivo_orden#codigo'},
                 renderer:function(value, p, record){return String.format('{0}', record.data['desc_orden']);}
 
             },
             type:'ComboRec',
             id_grupo:0,
-            filters:{pfiltro:'ot.motivo_orden#ot.desc_orden',type:'string'},
+            filters:{pfiltro:'ot.motivo_orden#ot.desc_orden#ot.codigo',type:'string'},
             grid:true,
             form:true
         },
