@@ -6,6 +6,7 @@
  Autor:	Kplian
  Fecha:	01/07/2010
  */
+require_once(dirname(__FILE__).'/../reportes/RDocumentoRRHHXls.php');
 
 class ACTFuncionario extends ACTbase{    
 
@@ -318,6 +319,39 @@ class ACTFuncionario extends ACTbase{
 		}
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
+
+    //(f.e.a) reporte excel de los documentos de un funcionario
+    function reporteDocumentos(){
+
+        $this->objFunc=$this->create('MODFuncionario');
+        $dataSource=$this->objFunc->reporteDocumentos();
+        $this->dataSource=$dataSource->getDatos();
+        $titulo_archivo = 'Reporte Documentos RRHH';
+        $nombreArchivo = uniqid(md5(session_id()).$titulo_archivo).'.xls';
+        $this->objParam->addParametro('nombre_archivo',$nombreArchivo);
+        $this->objParam->addParametro('titulo_archivo',$titulo_archivo);
+        $this->objParam->addParametro('datos',$this->dataSource);
+
+        $this->objReporte = new RDocumentoRRHHXls($this->objParam);
+        $this->objReporte->generarReporte();
+
+        $this->mensajeExito=new Mensaje();
+        $this->mensajeExito->setMensaje('EXITO','Reporte.php','Reporte generado', 'Se generó con éxito el reporte: '.$nombreArchivo,'control');
+        $this->mensajeExito->setArchivoGenerado($nombreArchivo);
+        $this->mensajeExito->imprimirRespuesta($this->mensajeExito->generarJson());
+    }
+
+    function urlFotoFuncionario(){
+        $this->objFunc=$this->create('MODFuncionario');
+        $this->res=$this->objFunc->urlFotoFuncionario($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
+    function urlFotoFuncionarioByUsuario(){
+        $this->objFunc=$this->create('MODFuncionario');
+        $this->res=$this->objFunc->urlFotoFuncionarioByUsuario($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 }
 
 ?>

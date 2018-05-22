@@ -30,7 +30,15 @@ header("content-type: text/javascript; charset=UTF-8");
                 iconCls: 'bfolder',
                 disabled: false,
                 handler: this.archivo,
-                tooltip: '<b>Adjuntar Archivo</b><br><b>Nos permite adjuntar documentos de un funcionario.</b>'
+                tooltip: '<b>Adjuntar Archivo</b><br>Nos permite adjuntar documentos de un funcionario.'
+            });
+
+            this.addButton('rep_archivo', {
+                text: 'Rep. Archivos',
+                iconCls: 'bprint_good',
+                disabled: false,
+                handler: this.repArchivo,
+                tooltip: '<b>Imprimir Reporte</b><br>Genera reporte de los documentos de un funcionario.'
             });
 
             
@@ -963,6 +971,7 @@ header("content-type: text/javascript; charset=UTF-8");
             var tb =this.tbar;
 
             this.getBoton('archivo').setDisabled(false);
+            //this.getBoton('rep_archivo').setDisabled(false);
             Phx.vista.ConsultaDocumento.superclass.preparaMenu.call(this,n);
             
         },
@@ -972,6 +981,7 @@ header("content-type: text/javascript; charset=UTF-8");
             if(tb){
 
                 this.getBoton('archivo').disable();
+                //this.getBoton('rep_archivo').disable();
             }
             return tb
         },
@@ -995,6 +1005,18 @@ header("content-type: text/javascript; charset=UTF-8");
                     width: '80%',
                     height: '100%'
                 }, rec, this.idContenedor, 'Archivo');
+        },
+
+        repArchivo : function () {
+            Phx.CP.loadingShow();
+            Ext.Ajax.request({
+                url:'../../sis_organigrama/control/Funcionario/reporteDocumentos',
+                params:{'id_usuario':0},
+                success:this.successExport,
+                failure: this.conexionFailure,
+                timeout:this.timeout,
+                scope:this
+            });
         }
     });
 </script>

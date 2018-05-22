@@ -161,10 +161,12 @@ class MODCargo extends MODbase{
 		$this->transaccion='OR_PRE_CARGO_SEL';
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
 
-		$this->setParametro('tipo','tipo','varchar');
-		$this->setParametro('fecha','fecha','date');
-		$this->setParametro('id_uo','id_uo','integer');
+		$this->setCount(true);
+		//$this->setParametro('tipo','tipo','varchar');
+		//$this->setParametro('fecha','fecha','date');
+		//$this->setParametro('id_uo','id_uo','integer');
 		$this->setParametro('presupuesto','presupuesto','varchar');
+		$this->setParametro('activo','activo','varchar');
 
 		//Definicion de la lista del resultado del query
 		$this->captura('id_cargo','int4');
@@ -174,10 +176,11 @@ class MODCargo extends MODbase{
 		$this->captura('id_temporal_cargo','int4');
 		$this->captura('id_escala_salarial','int4');
 		$this->captura('codigo','varchar');
-		$this->captura('nombre','varchar');
+		$this->captura('cargo','varchar');
 		$this->captura('fecha_ini','date');
 		$this->captura('estado_reg','varchar');
 		$this->captura('fecha_fin','date');
+
 		$this->captura('fecha_reg','timestamp');
 		$this->captura('id_usuario_reg','int4');
 		$this->captura('fecha_mod','timestamp');
@@ -190,14 +193,14 @@ class MODCargo extends MODbase{
 		$this->captura('nombre_oficina','varchar');
 		$this->captura('acefalo','varchar');
 		$this->captura('id_oficina','int4');
-		$this->captura('identificador','int4');
+		$this->captura('identificador','varchar');
 		$this->captura('codigo_tipo_contrato','varchar');
 		$this->captura('desc_func','varchar');
 		$this->captura('fecha_asignacion','date');
 		$this->captura('fecha_finalizacion','date');
 		
 		//Ejecuta la instruccion
-		$this->armarConsulta();
+		$this->armarConsulta();//echo($this->consulta);exit;
 		$this->ejecutarConsulta();
 
 		//Devuelve la respuesta
