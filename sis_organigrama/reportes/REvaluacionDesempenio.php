@@ -3,7 +3,7 @@ class REvaluacionDesempenio extends  ReportePDF{
 
     function Header(){
         $this->Ln(15);
-        $url_imagen = dirname(__FILE__) . '/../../pxp/lib/images/Logo-BoA.png';
+        $url_imagen = dirname(__FILE__) . '/../../lib/images/Logo-BoA.png';
 
         $f_actual = date_format(date_create($this->datos[0]["fecha_solicitud"]), 'd/m/Y');
         $nro_cite_dce = $this->datos[0]["cite"];

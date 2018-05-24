@@ -32,7 +32,7 @@ class REvaluacionGerencia extends  ReportePDF{
     }
     function  reporteGeneralPrimer($genero,$nombre_funcioario,$cargo_evaluado,$gestion,$recomendacion,$nota,$cite){
 
-        $url_imagen = dirname(__FILE__) . '/../../pxp/lib/images/Logo-BoA.png';
+        $url_imagen = dirname(__FILE__) . '/../../lib/images/Logo-BoA.png';
 
         $f_actual = date_format(date_create($this->datos[0]["fecha_solicitud"]), 'd/m/Y');
         $nro_cite_dce = $cite;
