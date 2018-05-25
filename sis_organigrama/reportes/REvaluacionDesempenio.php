@@ -43,12 +43,14 @@ EOF;
     }
     public function Footer()
     {
-        $f_actual = date_format(date_create($this->datos[0]["fecha_solicitud"]), 'd/m/Y');
-        $this->SetY(-15);
+        $this->SetY(-40);
         $this->SetFont('helvetica', 'I', 6);
         $this->Cell(0, 0, 'RCC/gag', 0, 1, 'L');
         $this->Cell(0, 0, 'Cc:AH', 0, 0, 'L');
-        $html = 'Numero Tramite: '.$this->datos[0]['nro_tramite']."\n".'Fecha Solicitud: '.$f_actual."\n".'Funcionario: '.$this->datos[0]['nombre_funcioario']."\n".'Firmado Por: '.$this->datos[0]['jefa_recursos']."\n".'Emitido Por: '.$this->datos[0]['fun_imitido'];
+        $this->Image(dirname(__FILE__) . '/../reportes/firmavb1.jpg', 25, 250, 23);
+
+        $html = $_SERVER['HTTP_HOST'].'/'.ltrim($_SESSION["_FOLDER"], '/').'sis_memos/control/Memo.php?proceso='.$this->objParam->getParametro('id_proceso_wf');
+
         $style = array(
             'border' => 2,
             'vpadding' => 'auto',
@@ -133,18 +135,17 @@ EOF;
 
 
     }
-    function firmas  (){
+    function firmas (){
 
-        $url_imagen = dirname(__FILE__) . '/../reportes/firmavb1.jpg';
-        $url_imagen2 = dirname(__FILE__) . '/../reportes/firma.png';
+        $url_imagen2 = dirname(__FILE__) . '/../reportes/firmarGerencia.png';
+        $this->Ln(20);
         $html = <<<EOF
             <table style="height: 140px;" width="407">
 <tbody>
 <tr>
-<td style="width: 195px;"> <br>
-	<img src="$url_imagen"  ></td>
+<td style="width: 195px;"> <br></td>
 <td style="width: 196px;">    <br>
-	<img src="$url_imagen2" width="130" height="130"></td>
+	<img src="$url_imagen2" ></td>
 </tr>
 </tbody>
 </table>
@@ -153,7 +154,6 @@ EOF;
 
 
         $this->writeHTML($html);
-
     }
     function generarReporte() {
 
