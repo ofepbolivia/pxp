@@ -104,7 +104,7 @@ BEGIN
                
                v_consulta:='select count(p.id_persona)
                				FROM segu.vpersona p 
-                          	inner join segu.tpersona per on per.id_persona = p.id_persona 
+                          	inner join segu.tpersona per on per.id_persona = p.id_persona                            
                           	WHERE ';
                v_consulta:=v_consulta||v_parametros.filtro;
                return v_consulta;
@@ -122,18 +122,21 @@ BEGIN
           --  Se arma la consulta de personas
           BEGIN
           
-               v_consulta:='SELECT p.id_persona,
+               v_consulta:='SELECT 
+                             p.id_persona,
                              p.apellido_materno AS ap_materno,
                              p.apellido_paterno AS ap_paterno,
                              p.nombre,
-                             (((COALESCE(p.nombre, '''' ::character varying) ::text || '' '' ::text) ||
+                             per.nombre_completo1,
+                             per.nombre_completo2,
+                             /*(((COALESCE(p.nombre, '''' ::character varying) ::text || '' '' ::text) ||
                               COALESCE(p.apellido_paterno, '''' ::character varying) ::text) || '' ''
                                ::text) || COALESCE(p.apellido_materno, '''' ::character varying)
                                 ::text AS nombre_completo1,
                              (((COALESCE(p.apellido_paterno, '''' ::character varying) ::text || '' ''
                               ::text) || COALESCE(p.apellido_materno, '''' ::character varying) ::text
                               ) || '' '' ::text) || COALESCE(p.nombre, '''' ::character varying) ::text
-                               AS nombre_completo2,
+                               AS nombre_completo2,*/
                              p.ci,
                              p.correo,
                              p.celular1,
@@ -144,9 +147,21 @@ BEGIN
                              p.extension,
                              p.tipo_documento,
                              p.expedicion,
-                             p.foto
+                             p.foto,
                              
-                          FROM segu.tpersona p WHERE ';
+                             p.direccion,
+							 p.carnet_discapacitado,
+                             p.nacionalidad,
+                             p.genero,               
+                             p.estado_civil,
+                             p.discapacitado,
+                             p.fecha_nacimiento,
+                             lu.id_lugar,
+                             lu.nombre AS lugar
+                          FROM segu.tpersona p
+                          left join param.tlugar lu on lu.id_lugar = p.id_lugar
+                          inner join segu.vpersona per on per.id_persona = p.id_persona
+                           WHERE ';
                           
                          
                v_consulta:=v_consulta||v_parametros.filtro;
@@ -171,7 +186,7 @@ BEGIN
                              p.extension,
                              p.foto
                           FROM segu.tpersona p 
-                          inner join segu.tusuario u on u.id_persona = p.id_persona    
+                          inner join segu.tusuario u on u.id_persona = p.id_persona                              
                           WHERE u.id_usuario='||v_parametros.id_usuario;
              
                 raise notice '%',v_consulta;
@@ -195,7 +210,10 @@ BEGIN
           BEGIN
                
                v_consulta:='select count(p.id_persona)
-               from segu.tpersona p where ';
+               from segu.tpersona p
+               left join param.tlugar lu on lu.id_lugar = p.id_lugar
+               inner join segu.vpersona per on per.id_persona = p.id_persona
+               where ';
                v_consulta:=v_consulta||v_parametros.filtro;
                return v_consulta;
          END;
