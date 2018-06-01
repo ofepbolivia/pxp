@@ -154,7 +154,8 @@ header("content-type: text/javascript; charset=UTF-8");
                     filters:{pfiltro:'planc.nro_tramite',type:'string'},
                     id_grupo:1,
                     grid:true,
-                    form:false
+                    form:false,
+                    bottom_filter:true,
 
                 },
                 {

@@ -16,7 +16,7 @@ class ACTCargo extends ACTbase{
 		
 		if ($this->objParam->getParametro('id_uo') != '') {
 			$this->objParam->addFiltro("cargo.id_uo = ". $this->objParam->getParametro('id_uo'));
-		}		
+		}
 				
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
 			$this->objReporte = new Reporte($this->objParam,$this);
@@ -97,8 +97,8 @@ class ACTCargo extends ACTbase{
 	}
 
 	function listarPresupuestoCargo(){
-		$this->objParam->defecto('ordenacion','id_cargo');
-		$this->objParam->defecto('dir_ordenacion','asc');
+		/*$this->objParam->defecto('ordenacion','id_cargo');
+		$this->objParam->defecto('dir_ordenacion','asc');*/
 
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
 			$this->objReporte = new Reporte($this->objParam,$this);
