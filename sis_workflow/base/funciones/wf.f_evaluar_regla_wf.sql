@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION wf.f_evaluar_regla_wf (
   p_id_usuario integer,
   p_id_proceso_wf integer,
@@ -77,7 +75,7 @@ BEGIN
                                                      p_id_estado_anterior, 
                                                      p_obs);
                    
-                  
+                  raise notice '%',v_template_evaluado;
                                                      
                    --evaluamos la plantilla  y retornamos el resutlado
                    v_template_evaluado = replace('select '||v_template_evaluado, '"', '''');
