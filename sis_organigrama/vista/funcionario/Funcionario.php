@@ -10,11 +10,340 @@
 header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
-    Phx.vista.funcionario=function(config){
+    Phx.vista.funcionario=Ext.extend(Phx.gridInterfaz,{
+
+        constructor: function(config) {
+            this.maestro = config;
+
+            Phx.vista.funcionario.superclass.constructor.call(this,config);
+
+            this.init();
+
+            /*this.store.baseParams.estado_func = 'activo';
+            this.load({params:{start:0, limit:50}});*/
+
+            this.addButton('btnCuenta',
+                {
+                    text: 'Cuenta Bancaria',
+                    iconCls: 'blist',
+                    disabled: true,
+                    handler: this.onBtnCuenta,
+                    tooltip: 'Cuenta Bancaria del Empleado'
+                });
+
+            this.addButton('btnFunEspecialidad',
+                {
+                    text: 'Especialidad',
+                    iconCls: 'blist',
+                    disabled: true,
+                    handler: this.onBtnFunEspe,
+                    tooltip: 'Especialidad del Empleado'
+                });
+
+
+            this.addButton('archivo', {
+                text: 'Adjuntar Archivo',
+                iconCls: 'bfolder',
+                disabled: false,
+                handler: this.archivo,
+                tooltip: '<b>Adjuntar Archivo</b><br><b>Nos permite adjuntar documentos de un funcionario.</b>'
+            });
+
+            this.iniciarEventos();
+
+        },
+        bnewGroups:[0],
+        beditGroups:[0,1],
+        bdelGroups:[0],
+        bactGroups:[0,1],
+        bexcelGroups:[0,1],
+        gruposBarraTareas: [
+            {name:  'activo', title: '<h1 style="text-align: center; color: green;">ACTIVOS</h1>',grupo: 0, height: 0} ,
+            {name: 'inactivo', title: '<h1 style="text-align: center; color: red;">INACTIVOS</h1>', grupo: 1, height: 1}
+        ],
+        actualizarSegunTab: function(name, indice){
+            /*if(name == 'activo')
+                this.store.baseParams.estado_func = 'activo';
+            else*/
+            console.log('entradita', name);
+            this.store.baseParams.estado_func = name;
+            this.load({params: {start: 0, limit: 50}});
+        },
+
+        onButtonNew:function() {
+            Phx.vista.funcionario.superclass.onButtonNew.call(this);
+            this.getComponente('id_persona').enable();
+
+            this.getComponente('codigo').setVisible(false);
+            this.getComponente('id_biometrico').setVisible(false);
+            this.getComponente('email_empresa').setVisible(false);
+
+            this.getComponente('estado_reg').setVisible(false);
+
+        },
+        onButtonEdit:function() {
+
+            Phx.vista.funcionario.superclass.onButtonEdit.call(this);
+            //this.Atributos[this.getIndAtributo('estado_reg')].form=true;
+            //this.getComponente('id_persona').disable();
+            this.getComponente('codigo').setVisible(false);
+            this.getComponente('id_biometrico').setVisible(false);
+            this.getComponente('email_empresa').setVisible(false);
+            this.getComponente('estado_reg').setVisible(true);
+
+        },
+
+        onSubmit: function (o,x, force) {
+
+            Phx.vista.funcionario.superclass.onSubmit.call(this, o);
+        },
+
+
+        iniciarEventos: function(){
+            //f.e.a(eventos recientes)
+            //begin
+            this.getComponente('genero').on('select',function (combo, record, index ) {
+                if(combo.value == 'masculino'){
+                    this.getComponente('nacionalidad').setValue('BOLIVIANO');
+                }else{
+                    this.getComponente('nacionalidad').setValue('BOLIVIANA');
+                }
+            }, this);
+
+            this.getComponente('fecha_nacimiento').on('beforerender',function (combo) {
+                var fecha_actual = new Date();
+                fecha_actual.setMonth(fecha_actual.getMonth() - 216);
+                this.getComponente('fecha_nacimiento').setMaxValue(fecha_actual);
+            }, this);
+
+            this.getComponente('discapacitado').on('select',function (combo, record, index ) {
+                if(combo.value == 'si'){
+                    this.getComponente('carnet_discapacitado').setVisible(true);
+                }else{
+                    this.getComponente('carnet_discapacitado').setVisible(false);
+                }
+            }, this);
+
+            this.getComponente('id_persona').on('select',function(c,record,n){
+                console.log('R',record.data);
+                /*if (this.register != 'update') {
+                    this.getComponente('rotulo_comercial').setValue(r.data.nombre_completo1);
+                }*/
+                //console.log('store grilla', this.store.data);
+                /*var jsonData = Ext.encode(Ext.pluck(this.store.data.items, 'id'));
+                console.log('jsonData', jsonData);*/
+                /*this.registro = {};
+                Ext.each(this.store.data.items, function(person, index) {
+
+                    if(person.id == record.data.id_persona)
+                        this.registro = person;
+
+                });*/
+
+                /*Ext.Ajax.request({
+                    url:'../../sis_organigrama/control/Funcionario/getDatosFuncionario',
+                    params:{
+                        id_persona: record.data.id_persona
+                    },
+                    success:function(resp){
+                        var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+                        console.log('respuesta solicitud', reg);
+                        //this.Cmp.id_oficina_registro_incidente.setValue(reg.ROOT.datos.id_oficina);
+
+
+                    },
+                    failure: this.conexionFailure,
+                    timeout:this.timeout,
+                    scope:this
+                });*/
+
+                this.getComponente('nombre').setValue(record.data.nombre);
+                this.getComponente('ap_paterno').setValue(record.data.ap_paterno);
+                this.getComponente('ap_materno').setValue(record.data.ap_materno);
+                this.getComponente('fecha_nacimiento').setValue(record.data.fecha_nacimiento);
+                this.getComponente('genero').setValue(record.data.genero);
+                this.getComponente('nacionalidad').setValue(record.data.nacionalidad);
+                this.getComponente('id_lugar').setValue(record.data.id_lugar);
+                this.getComponente('id_lugar').setRawValue(record.data.nombre_lugar);
+
+                this.getComponente('ci').setValue(record.data.ci);
+                this.getComponente('expedicion').setValue(record.data.expedicion);
+                this.getComponente('estado_civil').setValue(record.data.estado_civil);
+                this.getComponente('discapacitado').setValue(record.data.discapacitado);
+                this.getComponente('carnet_discapacitado').setValue(record.data.carnet_discapacitado);
+
+                this.getComponente('direccion').setValue(record.data.direccion);
+                this.getComponente('correo').setValue(record.data.correo);
+                this.getComponente('celular1').setValue(record.data.celular1);
+                this.getComponente('celular2').setValue(record.data.celular2);
+                this.getComponente('telefono1').setValue(record.data.telefono1);
+                this.getComponente('telefono2').setValue(record.data.telefono2);
+                //this.register='before_registered';
+
+                //console.log('store antes',this.getComponente('id_lugar').getStore());
+                //this.getComponente('id_lugar').enable();
+                //this.getComponente('id_lugar').clearValue();
+                //this.getComponente('id_lugar').store.load({baseParams:{par_filtro:'lug.nombre',es_regional:'si'}});
+                //console.log('store despues',this.getComponente('id_lugar').getStore());
+                //this.getComponente('id_lugar').select(record.data.id_lugar);
+
+
+                /*this.getComponente('id_lugar').getStore().on('beforeload', function(combo, options){
+                    console.log('cargando store', combo, options)
+                    //this.getComponente('id_lugar').setValue(items[0].get(combo.valueField));
+                });*/
+
+            },this);
 
 
 
-        this.Atributos=[
+            //end
+
+            if (this.maestro.fecha) {
+                this.store.baseParams.fecha = config.fecha;
+            }
+            if (this.maestro.tipo) {
+                this.store.baseParams.tipo = config.tipo;
+            }
+
+            if (this.maestro.id_uo) {
+                this.store.baseParams.id_uo = config.id_uo;
+            }
+
+            /*var txt_ci=this.getComponente('ci');
+            var txt_correo=this.getComponente('correo');
+            var txt_telefono=this.getComponente('telefono');
+            this.getComponente('id_persona').on('select',onPersona);*/
+        },
+
+        Grupos: [
+            {
+                layout: 'column',
+                //bodyStyle: 'padding-right:10px;',
+                labelWidth: 80,
+                labelAlign: 'top',
+                border: false,
+                items: [
+                    {
+                        columnWidth: .25,
+                        border: false,
+                        layout: 'fit',
+                        bodyStyle: 'padding-right:10px;',
+                        items: [
+                            {
+                                xtype: 'fieldset',
+                                title: 'DATOS FUNCIONARIO',
+
+                                autoHeight: true,
+                                items: [
+                                    {
+                                        layout: 'form',
+                                        anchor: '100%',
+                                        //bodyStyle: 'padding-right:10px;',
+                                        border: false,
+                                        padding: '0 5 0 5',
+                                        //bodyStyle: 'padding-left:5px;',
+                                        id_grupo: 1,
+                                        items: []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        xtype: 'fieldset',
+                        title: 'PERSONA',
+                        layout: 'column',
+                        columnWidth: .75,
+                        border: true,
+                        //bodyStyle: 'padding-right:10px;',
+                        padding: '0 10 0 10',
+                        items: [
+                            {
+                                columnWidth: .33,
+                                border: false,
+                                layout: 'fit',
+                                bodyStyle: 'padding-right:10px;',
+                                items: [
+                                    {
+                                        xtype: 'fieldset',
+                                        title: 'DATOS IDENTIFICACIÓN',
+
+                                        autoHeight: true,
+                                        items: [
+                                            {
+                                                layout: 'form',
+                                                anchor: '100%',
+                                                //bodyStyle: 'padding-right:10px;',
+                                                border: false,
+                                                padding: '0 5 0 5',
+                                                //bodyStyle: 'padding-left:5px;',
+                                                id_grupo: 2,
+                                                items: []
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                columnWidth: .33,
+                                border: false,
+                                layout: 'fit',
+                                bodyStyle: 'padding-right:10px;',
+                                items: [
+                                    {
+                                        xtype: 'fieldset',
+                                        title: 'DATOS CIVILES',
+
+                                        autoHeight: true,
+                                        items: [
+                                            {
+                                                layout: 'form',
+                                                anchor: '100%',
+                                                //bodyStyle: 'padding-right:10px;',
+                                                border: false,
+                                                padding: '0 5 0 5',
+                                                //bodyStyle: 'padding-left:5px;',
+                                                id_grupo: 3,
+                                                items: []
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                columnWidth: .34,
+                                border: false,
+                                layout: 'fit',
+                                bodyStyle: 'padding-right:10px;',
+                                items: [
+                                    {
+                                        xtype: 'fieldset',
+                                        title: 'DATOS DE UBICACIÓN',
+
+                                        autoHeight: true,
+                                        items: [
+                                            {
+                                                layout: 'form',
+                                                anchor: '100%',
+                                                //bodyStyle: 'padding-right:10px;',
+                                                border: false,
+                                                padding: '0 5 0 5',
+                                                //bodyStyle: 'padding-left:5px;',
+                                                id_grupo: 4,
+                                                items: []
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+
+        Atributos:[
             {
                 // configuracion del componente
                 config:{
@@ -32,14 +361,39 @@ header("content-type: text/javascript; charset=UTF-8");
                     name:'id_persona',
                     origen:'PERSONA',
                     tinit:true,
-                    fieldLabel:'Nombre funcionario',
+                    allowBlank: true,
+                    fieldLabel:'Nombre Persona',
                     gdisplayField:'desc_person',//mapea al store del grid
                     anchor: '100%',
                     gwidth:200,
-                    renderer:function (value, p, record){return String.format('{0}', record.data['desc_person']);}
+                    store: new Ext.data.JsonStore({
+                        url: '../../sis_seguridad/control/Persona/listarPersona',
+                        id: 'id_persona',
+                        root: 'datos',
+                        sortInfo:{
+                            field: 'nombre_completo1',
+                            direction: 'ASC'
+                        },
+                        totalProperty: 'total',
+                        fields: ['id_persona','nombre_completo1','ci','tipo_documento','num_documento','expedicion','nombre','ap_paterno','ap_materno',
+                            'correo','celular1','telefono1','telefono2','celular2',{name:'fecha_nacimiento', type: 'date', dateFormat:'Y-m-d'},
+                            'genero','direccion','id_lugar', 'estado_civil', 'discapacitado', 'carnet_discapacitado','nacionalidad', 'nombre_lugar'],
+                        // turn on remote sorting
+                        remoteSort: true,
+                        baseParams: {par_filtro:'p.nombre_completo1#p.ci', es_funcionario:'si'}
+                    }),
+                    renderer:function (value, p, record){return String.format('{0}', record.data['desc_person']);},
+                    tpl: new Ext.XTemplate([
+                        '<tpl for=".">',
+                        '<div class="x-combo-list-item">',
+                        '<div class="awesomecombo-item {checked}">',
+                        '<p><b>{nombre_completo1}</b></p>',
+                            '</div><p><b>CI:</b> <span style="color: green;">{ci} {expedicion}</span></p>',
+                        '</div></tpl>'
+                    ]),
                 },
                 type:'ComboRec',
-                id_grupo:0,
+                id_grupo:1,
                 bottom_filter : true,
                 filters:{
                     pfiltro:'PERSON.nombre_completo2',
@@ -72,7 +426,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type:'Field',
                 sortable:false,
-                id_grupo:0,
+                id_grupo:1,
                 grid:true,
                 form:false
             },
@@ -82,15 +436,20 @@ header("content-type: text/javascript; charset=UTF-8");
                     fieldLabel: "Código",
                     gwidth: 120,
                     name: 'codigo',
-                    allowBlank:false,
+                    allowBlank:true,
                     maxLength:100,
                     minLength:1,
-                    anchor:'100%'
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: black; font-weight: bold;">{0}</div>', value);
+                    }
                 },
                 type:'TextField',
                 filters:{pfiltro:'FUNCIO.codigo',type:'string'},
                 bottom_filter : true,
-                id_grupo:0,
+                id_grupo:1,
                 grid:true,
                 form:true
             },
@@ -101,41 +460,112 @@ header("content-type: text/javascript; charset=UTF-8");
                     allowBlank: true,
                     anchor: '100%',
                     disabled: true,
-                    style: 'color: blue; background-color: yellow;',
+                    style: 'color: blue; background-color: orange;',
                     gwidth: 100,
-                    maxLength:15
+                    maxLength:15,
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: black; font-weight: bold;">{0}</div>', value);
+                    }
                 },
                 type:'NumberField',
                 bottom_filter : true,
                 filters:{pfiltro:'FUNCIO.id_biometrico',type:'string'},
-                id_grupo:0,
+                id_grupo:1,
                 grid:true,
+                form:true
+            },
+
+
+            {
+                config:{
+                    fieldLabel: "Correo Empresarial",
+                    gwidth: 140,
+                    name: 'email_empresa',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'TextField',
+                filters:{type:'string'},
+                id_grupo:1,
+                bottom_filter : true,
+                grid:true,
+                form:true
+            },
+
+            //PERSONA
+            {
+                config:{
+                    fieldLabel: "Nombre",
+                    gwidth: 130,
+                    name: 'nombre',
+                    allowBlank:false,
+                    maxLength:150,
+                    minLength:2,
+                    anchor:'100%'
+                },
+                type:'TextField',
+                filters:{type:'string'},
+                //bottom_filter : true,
+                id_grupo:2,
+                grid:false,
                 form:true
             },
             {
                 config:{
-                    name:'estado_civil',
-                    fieldLabel:'Estado Civil',
+                    fieldLabel: "Apellido Paterno",
+                    gwidth: 130,
+                    name: 'ap_paterno',
+                    allowBlank:false,
+                    maxLength:150,
+
+                    anchor:'100%'
+                },
+                type:'TextField',
+                filters:{pfiltro:'p.apellido_paterno',type:'string'},
+                //bottom_filter : true,
+                id_grupo:2,
+                grid:false,
+                form:true
+            },
+            {
+                config:{
+                    fieldLabel: "Apellido Materno",
+                    gwidth: 130,
+                    name: 'ap_materno',
                     allowBlank:true,
-                    emptyText:'Estado...',
-
-                    typeAhead: true,
-                    triggerAction: 'all',
-                    lazyRender:true,
-                    mode: 'local',
-                    store:['soltero','casado','divorciado','viudo']
-
+                    maxLength:150,
+                    anchor:'100%'
                 },
-                type:'ComboBox',
-                id_grupo:0,
-                filters:{
-                    type: 'list',
-                    options: ['soltero','casado','divorciado','viudo']
+                type:'TextField',
+                filters:{pfiltro:'p.apellido_materno',type:'string'},//p.apellido_paterno
+                //bottom_filter : true,
+                id_grupo:2,
+                grid:false,
+                form:true
+            },
+            {
+                config:{
+                    fieldLabel: "Fecha de Nacimiento",
+                    gwidth: 120,
+                    name: 'fecha_nacimiento',
+                    allowBlank:false,
+                    maxLength:100,
+                    minLength:1,
+                    format:'d/m/Y',
+                    anchor:'100%',
+                    renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
                 },
+                type:'DateField',
+                filters:{type:'date'},
+                id_grupo:2,
                 grid:true,
                 form:true
             },
-
             {
                 config:{
                     name:'genero',
@@ -151,7 +581,7 @@ header("content-type: text/javascript; charset=UTF-8");
 
                 },
                 type:'ComboBox',
-                id_grupo:0,
+                id_grupo:2,
                 filters:{
                     type: 'list',
                     options: ['masculino','femenino']
@@ -159,22 +589,20 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid:true,
                 form:true
             },
-
             {
                 config:{
-                    fieldLabel: "Fecha de Nacimiento",
+                    fieldLabel: "Nacionalidad",
                     gwidth: 120,
-                    name: 'fecha_nacimiento',
+                    name: 'nacionalidad',
                     allowBlank:false,
-                    maxLength:100,
+                    maxLength:200,
                     minLength:1,
-                    format:'d/m/Y',
-                    anchor:'100%',
-                    renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+                    anchor:'100%'
                 },
-                type:'DateField',
-                filters:{type:'date'},
-                id_grupo:0,
+                type:'TextField',
+                filters:{type:'string'},
+                //bottom_filter : true,
+                id_grupo:2,
                 grid:true,
                 form:true
             },
@@ -215,27 +643,103 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type:'ComboBox',
                 filters:{pfiltro:'lug.nombre',type:'string'},
-                id_grupo:0,
+                id_grupo:2,
                 grid:true,
+                form:true
+            },
+
+            {
+                config:{
+                    name:'tipo_documento',
+                    fieldLabel:'Tipo Documento',
+                    allowBlank:true,
+                    emptyText:'Tipo Doc...',
+
+                    typeAhead: true,
+                    triggerAction: 'all',
+                    lazyRender:true,
+                    mode: 'local',
+                    store:['documento_identidad','pasaporte']
+
+                },
+                type:'ComboBox',
+                id_grupo:3,
+                filters:{
+                    type: 'list',
+                    options: ['documento_identidad','pasaporte'],
+                },
+                grid:true,
+                valorInicial:'documento_identidad',
                 form:true
             },
             {
                 config:{
-                    fieldLabel: "Nacionalidad",
+                    fieldLabel: "Nro. Documento",
                     gwidth: 120,
-                    name: 'nacionalidad',
+                    name: 'ci',
                     allowBlank:false,
-                    maxLength:200,
+                    maxLength:20,
                     minLength:1,
                     anchor:'100%'
                 },
                 type:'TextField',
-                filters:{type:'string'},
+                filters:{pfiltro:'PERSON.ci',
+                    type:'string'},
+                id_grupo:3,
                 bottom_filter : true,
-                id_grupo:0,
                 grid:true,
                 form:true
             },
+
+            {
+                config:{
+                    name:'expedicion',
+                    fieldLabel:'Expedido en',
+                    allowBlank:true,
+                    emptyText:'Expedido en...',
+
+                    typeAhead: true,
+                    triggerAction: 'all',
+                    lazyRender:true,
+                    mode: 'local',
+                    store:['CB','LP','BN','CJ','PT','CH','TJ','SC','OR','OTRO']
+
+                },
+                type:'ComboBox',
+                id_grupo:3,
+                filters:{
+                    type: 'list',
+                    options: ['CB','LP','BN','CJ','PT','CH','TJ','SC','OR','OTRO'],
+                },
+                grid:true,
+                //valorInicial:'expedicion',
+                form:true
+            },
+            {
+                config:{
+                    name:'estado_civil',
+                    fieldLabel:'Estado Civil',
+                    allowBlank:true,
+                    emptyText:'Estado...',
+
+                    typeAhead: true,
+                    triggerAction: 'all',
+                    lazyRender:true,
+                    mode: 'local',
+                    store:['soltero','casado','divorciado','viudo']
+
+                },
+                type:'ComboBox',
+                id_grupo:3,
+                filters:{
+                    type: 'list',
+                    options: ['soltero','casado','divorciado','viudo']
+                },
+                grid:true,
+                form:true
+            },
+
+
             {
                 config:{
                     name:'discapacitado',
@@ -251,7 +755,7 @@ header("content-type: text/javascript; charset=UTF-8");
 
                 },
                 type:'ComboBox',
-                id_grupo:0,
+                id_grupo:3,
                 filters:{
                     type: 'list',
                     options:['no','si']
@@ -274,27 +778,9 @@ header("content-type: text/javascript; charset=UTF-8");
                 type:'TextField',
                 filters:{type:'string'},
                 bottom_filter : true,
-                id_grupo:0,
+                id_grupo:3,
                 grid:true,
                 form:true
-            },
-            {
-                config:{
-                    fieldLabel: "CI",
-                    gwidth: 120,
-                    name: 'ci',
-                    allowBlank:false,
-                    maxLength:20,
-                    minLength:1,
-                    anchor:'100%'
-                },
-                type:'TextField',
-                filters:{pfiltro:'PERSON.ci',
-                    type:'string'},
-                id_grupo:0,
-                bottom_filter : true,
-                grid:true,
-                form:false
             },
 
             {
@@ -308,27 +794,11 @@ header("content-type: text/javascript; charset=UTF-8");
                     anchor:'100%'
                 },
                 type:'NumberField',
-                id_grupo:0,
+                id_grupo:1,
                 grid:true,
                 form:true
             },
-            {
-                config:{
-                    fieldLabel: "Correo Empresarial",
-                    gwidth: 120,
-                    name: 'email_empresa',
-                    allowBlank:true,
-                    maxLength:100,
-                    minLength:1,
-                    anchor:'100%'
-                },
-                type:'TextField',
-                filters:{type:'string'},
-                id_grupo:0,
-                bottom_filter : true,
-                grid:true,
-                form:true
-            },
+
             {
                 config:{
                     name: 'telefono_ofi',
@@ -341,7 +811,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type:'TextField',
                 filters:{type:'string'},
-                id_grupo:0,
+                id_grupo:1,
                 grid:true,
                 form:true
             },
@@ -357,13 +827,57 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type:'TextField',
                 filters:{type:'string'},
-                id_grupo:0,
+                id_grupo:1,
+                grid:true,
+                form:true
+            },
+
+            {
+                config:{
+                    fieldLabel: "Fecha de Ingreso",
+                    gwidth: 120,
+                    name: 'fecha_ingreso',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    format:'d/m/Y',
+                    anchor:'100%',
+                    renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+                },
+                type:'DateField',
+                filters:{type:'date'},
+                id_grupo:1,
                 grid:true,
                 form:true
             },
             {
                 config:{
-                    fieldLabel: "Teléfono Domicilio",
+                    name:'es_tutor',
+                    fieldLabel:'Es Tutor',
+                    allowBlank:true,
+                    emptyText:'Es Tutor...',
+
+                    typeAhead: true,
+                    triggerAction: 'all',
+                    lazyRender:true,
+                    mode: 'local',
+                    store:['si','no']
+
+                },
+                type:'ComboBox',
+                id_grupo:1,
+                filters:{
+                    type: 'list',
+                    options: ['si','no'],
+                },
+                grid:true,
+                valorInicial:'no',
+                form:true
+            },
+
+            {
+                config:{
+                    fieldLabel: "Teléfono 1",
                     gwidth: 120,
                     name: 'telefono1',
                     allowBlank:true,
@@ -373,13 +887,13 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type:'NumberField',
                 filters:{type:'string'},
-                id_grupo:0,
+                id_grupo:4,
                 grid:true,
-                form:false
+                form:true
             },
             {
                 config:{
-                    fieldLabel: "Celular",
+                    fieldLabel: "Celular 1",
                     gwidth: 120,
                     name: 'celular1',
                     allowBlank:true,
@@ -390,9 +904,9 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type:'NumberField',
                 filters:{type:'string'},
-                id_grupo:0,
+                id_grupo:4,
                 grid:true,
-                form:false
+                form:true
             },
             {
                 config:{
@@ -410,10 +924,58 @@ header("content-type: text/javascript; charset=UTF-8");
                     pfiltro: 'person.correo',
                     type:'string'
                 },
-                id_grupo:0,
+                id_grupo:4,
                 bottom_filter : true,
                 grid:true,
-                form:false
+                form:true
+            },
+            {
+                config:{
+                    fieldLabel: "Telefono 2",
+                    gwidth: 120,
+                    name: 'telefono2',
+                    allowBlank:true,
+                    maxLength:15,
+                    minLength:5,
+                    anchor:'100%'
+                },
+                type:'TextField',
+                filters:{type:'string'},
+                id_grupo:4,
+                grid:true,
+                form:true
+            },
+            {
+                config:{
+                    fieldLabel: "Celular 2",
+                    gwidth: 120,
+                    name: 'celular2',
+                    allowBlank:true,
+                    maxLength:15,
+                    minLength:5,
+                    anchor:'100%'
+                },
+                type:'TextField',
+                filters:{type:'string'},
+                id_grupo:4,
+                grid:true,
+                form:true
+            },
+            {
+                config:{
+                    fieldLabel: "Dirección",
+                    gwidth: 80,
+                    name: 'direccion',
+                    allowBlank:true,
+                    maxLength:10000,
+                    minLength:5,
+                    anchor:'100%'
+                },
+                type:'TextArea',
+                filters:{type:'string'},
+                id_grupo:4,
+                grid:true,
+                form:true
             },
             {
                 config:{
@@ -427,7 +989,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type:'DateField',
                 filters:{pfiltro:'ins.fecha_reg',type:'date'},
-                id_grupo:1,
+                id_grupo:0,
                 grid:true,
                 form:false
             },
@@ -435,7 +997,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 config:{
                     name:'estado_reg',
                     fieldLabel:'Estado',
-                    allowBlank:false,
+                    allowBlank:true,
                     emptyText:'Estado...',
 
                     typeAhead: true,
@@ -443,12 +1005,11 @@ header("content-type: text/javascript; charset=UTF-8");
                     lazyRender:true,
                     mode: 'local',
                     valueField: 'estado_reg',
-                    // displayField: 'descestilo',
                     store:['activo','inactivo']
 
                 },
                 type:'ComboBox',
-                id_grupo:0,
+                id_grupo:1,
                 filters:{
                     type: 'list',
                     pfiltro:'FUNCIO.estado_reg',
@@ -470,7 +1031,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type:'TextField',
                 filters:{pfiltro:'usu1.cuenta',type:'string'},
-                id_grupo:1,
+                id_grupo:0,
                 grid:true,
                 form:false
             },
@@ -485,7 +1046,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type:'DateField',
                 filters:{pfiltro:'ins.fecha_mod',type:'date'},
-                id_grupo:1,
+                id_grupo:0,
                 grid:true,
                 form:false
             },
@@ -500,95 +1061,20 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type:'TextField',
                 filters:{pfiltro:'usu2.cuenta',type:'string'},
-                id_grupo:1,
+                id_grupo:0,
                 grid:true,
                 form:false
             }
 
 
-        ];
+        ],
 
-        Phx.vista.funcionario.superclass.constructor.call(this,config);
-        this.addButton('btnCuenta',
-            {
-                text: 'Cuenta Bancaria',
-                iconCls: 'blist',
-                disabled: true,
-                handler: this.onBtnCuenta,
-                tooltip: 'Cuenta Bancaria del Empleado'
-            });
-
-        this.addButton('btnFunEspecialidad',
-            {
-                text: 'Especialidad',
-                iconCls: 'blist',
-                disabled: true,
-                handler: this.onBtnFunEspe,
-                tooltip: 'Especialidad del Empleado'
-            });
-
-
-        this.addButton('archivo', {
-            text: 'Adjuntar Archivo',
-            iconCls: 'bfolder',
-            disabled: false,
-            handler: this.archivo,
-            tooltip: '<b>Adjuntar Archivo</b><br><b>Nos permite adjuntar documentos de un funcionario.</b>'
-        });
-
-
-        this.init();
-
-        //f.e.a(eventos recientes)
-        //begin
-        this.getComponente('genero').on('select',function (combo, record, index ) {
-            if(combo.value == 'masculino'){
-                this.getComponente('nacionalidad').setValue('BOLIVIANO');
-            }else{
-                this.getComponente('nacionalidad').setValue('BOLIVIANA');
-            }
-        }, this);
-
-        this.getComponente('fecha_nacimiento').on('beforerender',function (combo) {
-            var fecha_actual = new Date();
-            fecha_actual.setMonth(fecha_actual.getMonth() - 216);
-            this.getComponente('fecha_nacimiento').setMaxValue(fecha_actual);
-        }, this);
-
-        this.getComponente('discapacitado').on('select',function (combo, record, index ) {
-            if(combo.value == 'si'){
-                this.getComponente('carnet_discapacitado').setVisible(true);
-            }else{
-                this.getComponente('carnet_discapacitado').setVisible(false);
-            }
-        }, this);
-        //end
-
-        var txt_ci=this.getComponente('ci');
-        var txt_correo=this.getComponente('correo');
-        var txt_telefono=this.getComponente('telefono');
-        this.getComponente('id_persona').on('select',onPersona);
-
-        function onPersona(c,r,e){
+        /*onPersona: function(c,r,e){
             txt_ci.setValue(r.data.ci);
             txt_correo.setValue(r.data.correo);
             txt_telefono.setValue(r.data.telefono);
-        }
-        if (config.fecha) {
-            this.store.baseParams.fecha = config.fecha;
-        }
-        if (config.tipo) {
-            this.store.baseParams.tipo = config.tipo;
-        }
+        },*/
 
-        if (config.id_uo) {
-            this.store.baseParams.id_uo = config.id_uo;
-        }
-        this.load({params:{start:0, limit:50}});
-
-    }
-
-    Ext.extend(Phx.vista.funcionario,Phx.gridInterfaz,{
         title:'Funcionarios',
         ActSave:'../../sis_organigrama/control/Funcionario/guardarFuncionario',
         ActDel:'../../sis_organigrama/control/Funcionario/eliminarFuncionario',
@@ -633,6 +1119,15 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:'id_biometrico', type: 'numeric'},
             {name:'nombre_archivo', type: 'string'},
             {name:'extension', type: 'string'},
+            'telefono2',
+            'celular2',
+            'nombre',
+            'ap_paterno',
+            'ap_materno',
+            'tipo_documento',
+            'expedicion',
+            'direccion',
+            'es_tutor',
         ],
         sortInfo:{
             field: 'PERSON.nombre_completo2',
@@ -650,8 +1145,8 @@ header("content-type: text/javascript; charset=UTF-8");
          */
         bdel:true,
         bsave:false,
-        fwidth: 500,
-        fheight: 480,
+        fwidth: '90%',
+        fheight: '95%',
         onBtnCuenta: function(){
             var rec = {maestro: this.sm.getSelected().data}
 
@@ -680,15 +1175,13 @@ header("content-type: text/javascript; charset=UTF-8");
                 'FuncionarioEspecialidad');
         },
 
-        preparaMenu:function()
-        {
+        preparaMenu:function() {
             this.getBoton('btnCuenta').enable();
             this.getBoton('btnFunEspecialidad').enable();
             this.getBoton('archivo').enable();
             Phx.vista.funcionario.superclass.preparaMenu.call(this);
         },
-        liberaMenu:function()
-        {
+        liberaMenu:function() {
             this.getBoton('btnCuenta').disable();
             this.getBoton('btnFunEspecialidad').disable();
             this.getBoton('archivo').disable();
@@ -715,9 +1208,9 @@ header("content-type: text/javascript; charset=UTF-8");
                     height: '100%'
                 }, rec, this.idContenedor, 'Archivo');
 
-        }
+        },
 
 
 
-    })
+    });
 </script>
