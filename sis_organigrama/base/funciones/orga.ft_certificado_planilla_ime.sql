@@ -76,7 +76,7 @@ BEGIN
 	if(p_transaccion='OR_PLANC_INS')then
 
         begin
-
+ 
         select v.valor
         into
         v_valor
@@ -97,12 +97,18 @@ BEGIN
         from orga.vfuncionario
         where id_funcionario = v_parametros.id_funcionario;
         
-	if (v_parametros.factura ='') then
-        if v_valor = v_count then
-        raise exception 'El Funcionario %, sobrepaso el limite maximo de certificados emitidos por gestion = %.',v_funcionario,v_valor;
-        end if ;
-	end if;        
-
+  if(pxp.f_existe_parametro(p_tabla,'factura'))then
+             
+        if (v_parametros.factura ='') then
+            if v_valor = v_count then
+            raise exception 'El Funcionario %, sobrepaso el limite maximo de certificados emitidos por gestion = %.',v_funcionario,v_valor;
+            end if ;
+        end if; 
+    else 
+          if v_valor = v_count then
+              raise exception 'El Funcionario %, sobrepaso el limite maximo de certificados emitidos por gestion = %.',v_funcionario,v_valor;
+          end if;            
+  end if;
 
         --Gestion para WF
     	   SELECT g.id_gestion
@@ -141,7 +147,8 @@ BEGIN
                  v_codigo_tipo_proceso);
 
 
-
+	if(pxp.f_existe_parametro(p_tabla,'factura'))then
+    
         	--Sentencia de la insercion
         	insert into orga.tcertificado_planilla(
 			tipo_certificado,
@@ -178,6 +185,42 @@ BEGIN
 			v_id_estado_wf,
             v_parametros.factura
 			)RETURNING id_certificado_planilla into v_id_certificado_planilla;
+	ELSE
+        	--Sentencia de la insercion
+        	insert into orga.tcertificado_planilla(
+			tipo_certificado,
+			fecha_solicitud,
+			id_funcionario,
+			estado_reg,
+			importe_viatico,
+			id_usuario_ai,
+			fecha_reg,
+			usuario_ai,
+			id_usuario_reg,
+			fecha_mod,
+			id_usuario_mod,
+            nro_tramite,
+            estado,
+            id_proceso_wf,
+            id_estado_wf
+          	) values(
+			v_parametros.tipo_certificado,
+			v_parametros.fecha_solicitud,
+			v_parametros.id_funcionario,
+			'activo',
+			COALESCE (v_parametros.importe_viatico,0),
+			v_parametros._id_usuario_ai,
+			now(),
+			v_parametros._nombre_usuario_ai,
+			p_id_usuario,
+			null,
+			null,
+            v_nro_tramite,
+            v_codigo_estado,
+            v_id_proceso_wf,
+			v_id_estado_wf
+			)RETURNING id_certificado_planilla into v_id_certificado_planilla;
+	end if;                        
 
 			--Definicion de la respuesta
 			v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Certificado Planilla almacenado(a) con exito (id_certificado_planilla'||v_id_certificado_planilla||')');
