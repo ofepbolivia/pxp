@@ -33,8 +33,16 @@ class ACTFuncionario extends ACTbase{
 
         if($this->objParam->getParametro('estado_func')=='activo'){
             $this->objParam->addFiltro("FUNCIO.estado_reg = ''activo''");
-        }else{
+        }else if($this->objParam->getParametro('estado_func')=='inactivo'){
             $this->objParam->addFiltro("FUNCIO.estado_reg = ''inactivo''");
+        }else{
+            $this->objParam->addFiltro("FUNCIO.estado_reg = ''activo''");
+        }
+        //(FEA)Filtro Correos
+        if($this->objParam->getParametro('correo_func')=='sin_correo'){
+            $this->objParam->addFiltro("(FUNCIO.email_empresa = '''' or FUNCIO.email_empresa is null)");
+        }else if($this->objParam->getParametro('correo_func')=='con_correo'){
+            $this->objParam->addFiltro("(FUNCIO.email_empresa != '''' or FUNCIO.email_empresa is not null)");
         }
 
         //crea el objetoFunSeguridad que contiene todos los metodos del sistema de seguridad

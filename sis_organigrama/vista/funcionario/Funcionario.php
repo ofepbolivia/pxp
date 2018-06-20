@@ -103,7 +103,7 @@ header("content-type: text/javascript; charset=UTF-8");
             //f.e.a(eventos recientes)
             //begin
             this.getComponente('genero').on('select',function (combo, record, index ) {
-                if(combo.value == 'masculino'){
+                if(combo.value == 'varon'){
                     this.getComponente('nacionalidad').setValue('BOLIVIANO');
                 }else{
                     this.getComponente('nacionalidad').setValue('BOLIVIANA');
@@ -577,14 +577,14 @@ header("content-type: text/javascript; charset=UTF-8");
                     triggerAction: 'all',
                     lazyRender:true,
                     mode: 'local',
-                    store:['masculino','femenino']
+                    store:['varon','mujer']
 
                 },
                 type:'ComboBox',
                 id_grupo:2,
                 filters:{
                     type: 'list',
-                    options: ['masculino','femenino']
+                    options: ['varon','mujer']
                 },
                 grid:true,
                 form:true
