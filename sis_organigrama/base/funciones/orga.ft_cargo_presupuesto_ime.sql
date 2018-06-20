@@ -113,8 +113,12 @@ BEGIN
 	elsif(p_transaccion='OR_CARPRE_MOD')then
 
 		begin
-        
-        	if (pxp.f_get_variable_global('orga_exigir_ot') = 'si') then
+        	
+        	select cc.id_gestion into v_id_gestion
+        	from param.tcentro_costo cc
+        	where id_centro_costo = v_parametros.id_centro_costo;
+        	
+            if (pxp.f_get_variable_global('orga_exigir_ot') = 'si') then
             	if (v_parametros.id_ot is null) then
                 	raise exception 'Debe registrar la OT ya que es un campo obligatorio';
                 end if;
@@ -124,7 +128,7 @@ BEGIN
 			--Sentencia de la modificacion
 			update orga.tcargo_presupuesto set
 			id_cargo = v_parametros.id_cargo,
-			id_gestion = v_parametros.id_gestion,
+			id_gestion = v_id_gestion,
 			id_centro_costo = v_parametros.id_centro_costo,
 			porcentaje = v_parametros.porcentaje,
 			fecha_ini = v_parametros.fecha_ini,

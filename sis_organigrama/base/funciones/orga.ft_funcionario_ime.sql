@@ -44,8 +44,11 @@ v_parametros_ad				varchar;
 v_acceso_directo			varchar;
 v_id_biometrico       integer;
 
+v_persona					record;
+v_codigo_empleado 			varchar;
+v_id_persona				integer;
 BEGIN
-
+	raise exception 'Informar del incidente al administrador';
      v_nombre_funcion:='orga.ft_funcionario_ime';
      v_parametros:=pxp.f_get_record(par_tabla);
 
@@ -60,49 +63,153 @@ BEGIN
 
 
           BEGIN
+			  v_id_persona = v_parametros.id_persona;
+              if(v_parametros.id_persona is null)then
+              --CI
+          		if exists(select 1 from segu.tpersona
+          					where ci = v_parametros.ci) then
+          			raise exception 'Este número de Carnet de Identidad ya fue registrado';
+          		end if;
+          		--Nombre completo
+          		if exists(select 1 from segu.tpersona
+          					where upper(nombre) = upper(v_parametros.nombre)
+          					and upper(apellido_paterno) = upper(v_parametros.ap_paterno)
+          					and upper(apellido_materno) = upper(v_parametros.ap_materno)) then
+          			raise exception 'Persona ya registrada';
+          		end if;
 
 
+               	insert into segu.tpersona (
+                               nombre,
+                               apellido_paterno,
+                               apellido_materno,
+                               fecha_nacimiento,
+                               genero,
+                               nacionalidad,
+                               id_lugar,
+                               tipo_documento,
+                               ci,
+                               expedicion,
+                               estado_civil,
+                               discapacitado,
+                               carnet_discapacitado,
+                               correo,
+                               celular1,
+               				   telefono1,
+                               telefono2,
+                               celular2,
+                               direccion
+                              )
+               	values(
+                      upper(v_parametros.nombre),
+                      upper(v_parametros.ap_paterno),
+                      upper(v_parametros.ap_materno),
+                      v_parametros.fecha_nacimiento,
+                      v_parametros.genero,
+                      v_parametros.nacionalidad,
+                      v_parametros.id_lugar,
+                      v_parametros.tipo_documento,
+                      v_parametros.ci,
+                      v_parametros.expedicion,
+                      v_parametros.estado_civil,
+                      v_parametros.discapacitado,
+                      case when v_parametros.discapacitado = 'no' then null else v_parametros.carnet_discapacitado end,
+                      v_parametros.correo,
+                      v_parametros.celular1,
+                      v_parametros.telefono1,
+                      v_parametros.telefono2,
+                      v_parametros.celular2,
+                      v_parametros.direccion
+                      ) RETURNING id_persona INTO v_id_persona;
+               end if;
                --insercion de nuevo FUNCIONARIO
                if exists (select 1 from orga.tfuncionario where codigo=v_parametros.codigo and estado_reg='activo') then
                   raise exception 'Insercion no realizada. CODIGO EN USO';
                end if;
 
-               if exists(select 1 from orga.tfuncionario where id_persona=v_parametros.id_persona and estado_reg='activo') then
+               if exists(select 1 from orga.tfuncionario where id_persona=v_id_persona and estado_reg='activo') then
                   raise exception 'Insercion no realizada. Esta persona ya está registrada como funcionario';
                end if;
-
+               --Obtener el correlativo biometrico.
                SELECT nextval('orga.tfuncionario_id_biometrico_seq') INTO v_id_biometrico;
+			   -- Update datos civiles Persona si es Natural.
+               if(v_parametros.id_persona is not null)then
+                 update segu.tpersona set
+                          nombre = upper(v_parametros.nombre),
+                          apellido_paterno = upper(v_parametros.ap_paterno),
+                          apellido_materno = upper(v_parametros.ap_materno),
+                          fecha_nacimiento = v_parametros.fecha_nacimiento,
+                          genero = v_parametros.genero,
+                          nacionalidad = v_parametros.nacionalidad,
+                          id_lugar = v_parametros.id_lugar,
+                          tipo_documento = v_parametros.tipo_documento,
+                          ci = v_parametros.ci,
+                          expedicion = v_parametros.expedicion,
+                          estado_civil = v_parametros.estado_civil,
+                          discapacitado = v_parametros.discapacitado,
+                          carnet_discapacitado = v_parametros.carnet_discapacitado,
+                          correo = v_parametros.correo,
+                          celular1 = v_parametros.celular1,
+                          telefono1 = v_parametros.telefono1,
+                          telefono2 = v_parametros.telefono2,
+                          celular2 = v_parametros.celular2,
+                          direccion = v_parametros.direccion
+                 where id_persona = v_parametros.id_persona;
+              end if;
 
-               update segu.tpersona
-               	set estado_civil = v_parametros.estado_civil,
-               	genero = v_parametros.genero,
-               	fecha_nacimiento = v_parametros.fecha_nacimiento,
-               	id_lugar = v_parametros.id_lugar,
-               	nacionalidad = v_parametros.nacionalidad,
-               	discapacitado = v_parametros.discapacitado,
-               	carnet_discapacitado = v_parametros.carnet_discapacitado
-               where id_persona = v_parametros.id_persona;
-
+			  select tp.apellido_materno, tp.apellido_paterno, tp.nombre
+                 into v_persona
+                 from segu.tpersona tp
+                 where tp.id_persona = v_id_persona;
+                 --Generamos codigo que es utilizado para seguro de un empleado
+                 if (v_parametros.genero = 'masculino') then
+                    v_codigo_empleado = to_char(v_parametros.fecha_nacimiento,'YY-MMDD-') ||
+                                (case when v_persona.apellido_paterno is null or trim(both ' ' from v_persona.apellido_paterno) = '' then
+                                            substr(v_persona.apellido_materno, 1 , 2)
+                                       when v_persona.apellido_materno is null or trim(both ' ' from v_persona.apellido_materno) = '' then
+                                            substr(v_persona.apellido_paterno, 1 , 2)
+                                       else
+                                            substr(v_persona.apellido_paterno, 1 , 1) || substr(v_persona.apellido_materno, 1 , 1)
+                                      end) ||
+                                substr(v_persona.nombre, 1 , 1);
+                  else
+                      v_codigo_empleado = to_char(v_parametros.fecha_nacimiento,'YY-') ||
+                                  ((to_char(v_parametros.fecha_nacimiento,'MM')::integer) + 50 ) :: varchar || to_char(v_parametros.fecha_nacimiento,'DD-') ||
+                                  (case when v_persona.apellido_paterno is null or trim(both ' ' from v_persona.apellido_paterno) = '' then
+                                              substr(v_persona.apellido_materno, 1 , 2)
+                                         when v_persona.apellido_materno is null or trim(both ' ' from v_persona.apellido_materno) = '' then
+                                              substr(v_persona.apellido_paterno, 1 , 2)
+                                         else
+                                              substr(v_persona.apellido_paterno, 1 , 1) || substr(v_persona.apellido_materno, 1 , 1)
+                                        end) ||
+                                        substr(v_persona.nombre, 1 , 1);
+                  end if;
                INSERT INTO orga.tfuncionario(
-		               codigo, id_persona,
+		               codigo,
+                       id_persona,
 		               estado_reg,
 		               fecha_reg,
 		               id_usuario_reg,
+                       fecha_ingreso,
 		               email_empresa,
-		               interno,		              
+		               interno,
 		               telefono_ofi,
 		               antiguedad_anterior,
-                   id_biometrico)
+					   id_biometrico,
+                       es_tutor)
                values(
-                      v_parametros.codigo,
-                      v_parametros.id_persona,
-                      'activo',now()::date,
-                      par_id_usuario,
-                      v_parametros.id_persona,
-                      v_parametros.interno,                      
-                      v_parametros.telefono_ofi,
-                      v_parametros.antiguedad_anterior,
-                      v_id_biometrico)
+                      v_codigo_empleado,
+                        v_id_persona,
+                        'activo',
+                        now(),
+                        par_id_usuario,
+                         v_parametros.fecha_ingreso,
+                        v_parametros.email_empresa,
+                        v_parametros.interno,
+                        v_parametros.telefono_ofi,
+                        v_parametros.antiguedad_anterior,
+                        v_id_biometrico,
+                        v_parametros.es_tutor)
                RETURNING id_funcionario into v_id_funcionario;
 
 
@@ -134,14 +241,26 @@ BEGIN
                   raise exception 'Insercion no realizada. Esta persona ya está registrada como funcionario';
                end if;
 
-                update segu.tpersona
-               	set estado_civil = v_parametros.estado_civil,
-               	genero = v_parametros.genero,
-               	fecha_nacimiento = v_parametros.fecha_nacimiento,
-               	id_lugar = v_parametros.id_lugar,
-               	nacionalidad = v_parametros.nacionalidad,
-               	discapacitado = v_parametros.discapacitado,
-               	carnet_discapacitado = v_parametros.carnet_discapacitado
+                update segu.tpersona set
+                    nombre = upper(v_parametros.nombre),
+                    apellido_paterno = upper(v_parametros.ap_paterno),
+                    apellido_materno = upper(v_parametros.ap_materno),
+                    fecha_nacimiento = v_parametros.fecha_nacimiento,
+                    genero = v_parametros.genero,
+                    nacionalidad = v_parametros.nacionalidad,
+                    id_lugar = v_parametros.id_lugar,
+                    tipo_documento = v_parametros.tipo_documento,
+                    ci = v_parametros.ci,
+                    expedicion = v_parametros.expedicion,
+                    estado_civil = v_parametros.estado_civil,
+                    discapacitado = v_parametros.discapacitado,
+                    carnet_discapacitado = v_parametros.carnet_discapacitado,
+                    correo = v_parametros.correo,
+                    celular1 = v_parametros.celular1,
+                    telefono1 = v_parametros.telefono1,
+                    telefono2 = v_parametros.telefono2,
+                    celular2 = v_parametros.celular2,
+                    direccion = v_parametros.direccion
                where id_persona = v_parametros.id_persona;
 
                 update orga.tfuncionario set
@@ -150,10 +269,11 @@ BEGIN
                     id_persona=v_parametros.id_persona,
                     estado_reg=v_parametros.estado_reg,
                     email_empresa=v_parametros.email_empresa,
-                    interno=v_parametros.interno,                    
+                    interno=v_parametros.interno,
                     fecha_mod=now()::date,
                     telefono_ofi= v_parametros.telefono_ofi,
-                    antiguedad_anterior =  v_parametros.antiguedad_anterior
+                    antiguedad_anterior =  v_parametros.antiguedad_anterior,
+                    es_tutor = v_parametros.es_tutor
                 where id_funcionario=v_parametros.id_funcionario;
 
                v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Funcionario modificado con exito '||v_parametros.id_funcionario);

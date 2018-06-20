@@ -16,6 +16,7 @@ header("content-type: text/javascript; charset=UTF-8");
         title: 'Certificado',
         nombreVista: 'CertificadoPlanilla',
         constructor: function (config) {
+		this.tbarItems = ['-',this.cmbGestion,'-'];        	
             this.Atributos.unshift({
                 config: {
                     name: 'control',
@@ -43,7 +44,10 @@ header("content-type: text/javascript; charset=UTF-8");
             Phx.vista.CertificadoPlanilla.superclass.constructor.call(this, config);
             this.grid.addListener('cellclick', this.oncellclick,this);
             this.store.baseParams={tipo_interfaz:this.nombreVista};
+            this.cmbGestion.on('select',this.capturarEventos, this);
             this.store.baseParams.pes_estado = 'borrador';
+            var date = new Date();
+            this.store.baseParams.gestion = date.getFullYear();
             this.load({params:{start:0, limit:this.tam_pag}});
             this.getBoton('ant_estado').setVisible(false);
             this.getBoton('btnImprimir').setVisible(false);
@@ -112,6 +116,21 @@ header("content-type: text/javascript; charset=UTF-8");
                 this.getBoton('btnImprimir').disable();
             }
             return tb;
-        }
+        },
+    cmbGestion : new Ext.form.ComboBox({
+        name:'gestion',
+        store:['2018','2017','2016'],
+        typeAhead: true,
+        value: '2018',
+        mode: 'local',
+        triggerAction: 'all',
+        emptyText:'Géstion...',
+        selectOnFocus:true,
+        width:135,
+    }),
+    capturarEventos: function () {         	
+        this.store.baseParams.gestion=this.cmbGestion.getValue();     
+        this.load({params:{start:0, limit:this.tam_pag}});
+    },        
     }
 </script>

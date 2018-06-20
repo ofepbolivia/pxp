@@ -17,21 +17,23 @@ class ACTCertificadoPlanilla extends ACTbase{
 
         if($this->objParam->getParametro('tipo_interfaz') == 'CertificadoPlanilla') {
 
-            if ($this->objParam->getParametro('pes_estado') == 'borrador') {
-                $this->objParam->addFiltro("planc.estado in (''borrador'')");
+            if ($this->objParam->getParametro('pes_estado') == 'borrador') {            	
+                $this->objParam->addFiltro("planc.estado in (''borrador'') and
+                extract(year from planc.fecha_reg) = ". $this->objParam->getParametro('gestion'));
             }
             if ($this->objParam->getParametro('pes_estado') == 'emitido') {
-                $this->objParam->addFiltro("planc.estado in (''emitido'')");
+                $this->objParam->addFiltro("planc.estado in (''emitido'') and 
+				extract(year from planc.fecha_reg) = ". $this->objParam->getParametro('gestion'));                
             }
-						if ($this->objParam->getParametro('pes_estado') == 'anulado') {
-								$this->objParam->addFiltro("planc.estado in (''anulado'')");
-						}
-        }
+			if ($this->objParam->getParametro('pes_estado') == 'anulado') {
+				$this->objParam->addFiltro("planc.estado in (''anulado'') and 
+				extract(year from planc.fecha_reg) = ". $this->objParam->getParametro('gestion'));				
+			}					
+	        }
        if ($this->objParam->getParametro('tipo_interfaz') == 'CertificadoEmitido'){
-
-
-            $this->objParam->addFiltro("planc.estado in (''emitido'')");
-
+			      	            
+                $this->objParam->addFiltro("planc.estado in (''emitido'') and 
+                extract(year from planc.fecha_reg)=".$this->objParam->getParametro('gestion'));						 			                          
         }
 		$this->objParam->defecto('dir_ordenacion','asc');
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
@@ -53,7 +55,8 @@ class ACTCertificadoPlanilla extends ACTbase{
         }*/
        // var_dump('noe ',$this->objParam->getParametro('tipo_certificado'));exit;
                
-	    if($this->objParam->getParametro('tipo_certificado') == 'Con viáticos de los últimos tres meses') {
+	    if(($this->objParam->getParametro('tipo_certificado') == 'Con viáticos de los últimos tres meses')||
+		($this->objParam->getParametro('tipo_certificado') == 'Con viáticos de los últimos tres meses(Factura)')) {
 
             $data = array("empleadoID" => $this->objParam->getParametro('id_funcionario'));
             $data_string = json_encode($data);
