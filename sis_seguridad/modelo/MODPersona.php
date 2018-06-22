@@ -38,10 +38,14 @@ class MODPersona extends MODbase{
 		$this->captura('direccion','varchar');
 		$this->captura('tipo_documento','varchar');
 		$this->captura('expedicion','varchar');
+		
+
 
 		//Ejecuta la funcion
 		$this->armarConsulta();
+		//var_dump($this->consulta());exit;
 		$this->ejecutarConsulta();
+		
 
 		return $this->respuesta;
 
@@ -76,12 +80,23 @@ class MODPersona extends MODbase{
 		$this->captura('extension','varchar');
 		$this->captura('tipo_documento','varchar');
 		$this->captura('expedicion','varchar');
+		
+
 		//nombre varialbe de envio, tipo dato, columna que serra el nombre foto retorno, ruta para guardar archivo, crear miniatura, almacenar en sesion, nombre variale sesion			
 		
 		$this->captura('foto','bytea','id_persona','extension','sesion','foto');
 		//$this->captura('foto','bytea','id_persona','extension','archivo','../../sis_seguridad/control/foto_persona/');
 		//$this->captura('foto','bytea','id_persona','extension','archivo','./');
-		
+
+		$this->captura('direccion','varchar');
+		$this->captura('carnet_discapacitado','varchar');
+		$this->captura('nacionalidad','varchar');
+		$this->captura('genero','varchar');
+		$this->captura('estado_civil','varchar');
+		$this->captura('discapacitado','varchar');
+		$this->captura('fecha_nacimiento','date');
+		$this->captura('id_lugar','integer');
+		$this->captura('lugar','varchar');		
 		 
 		//Ejecuta la funcion
 		$this->armarConsulta();
@@ -124,23 +139,28 @@ class MODPersona extends MODbase{
 		$this->procedimiento='segu.ft_persona_ime';// nombre procedimiento almacenado
 		$this->transaccion='SEG_PERSON_INS';//nombre de la transaccion
 		$this->tipo_procedimiento='IME';//tipo de transaccion
-		
-		
-		
-		//Define los parametros para la funcion	
-			
+						
+		//Define los parametros para la funcion		
+		$this->setParametro('nombre','nombre','varchar');			
 		$this->setParametro('ap_materno','ap_materno','varchar');
-		$this->setParametro('ap_paterno','ap_paterno','varchar');
-		$this->setParametro('nombre','nombre','varchar');
+		$this->setParametro('ap_paterno','ap_paterno','varchar');		
 		$this->setParametro('ci','ci','varchar');
 		$this->setParametro('correo','correo','varchar');
 		$this->setParametro('celular1','celular1','varchar');
 		$this->setParametro('telefono1','telefono1','varchar');
 		$this->setParametro('telefono2','telefono2','varchar');
-		$this->setParametro('celular2','celular2','varchar');
-		
+		$this->setParametro('celular2','celular2','varchar');		
 		$this->setParametro('tipo_documento','tipo_documento','varchar');
 		$this->setParametro('expedicion','expedicion','varchar');
+		$this->setParametro('fecha_nacimiento','fecha_nacimiento','date');
+		$this->setParametro('genero','genero','varchar');
+		$this->setParametro('direccion','direccion','varchar');
+		$this->setParametro('id_lugar','id_lugar','int4');
+		//$this->setParametro('lugar','lugar','varchar');
+		$this->setParametro('estado_civil','estado_civil','varchar');
+		$this->setParametro('nacionalidad','nacionalidad','varchar');
+		$this->setParametro('discapacitado','discapacitado','varchar');
+		$this->setParametro('carnet_discapacitado','carnet_discapacitado','varchar');	
 		
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -162,7 +182,7 @@ class MODPersona extends MODbase{
 
 		
 		//Define los parametros para la funcion	
-		$this->setParametro('id_persona','id_persona','integer');	
+		$this->setParametro('id_persona','id_persona','int4');	
 		$this->setParametro('ap_materno','ap_materno','varchar');
 		$this->setParametro('ap_paterno','ap_paterno','varchar');
 		$this->setParametro('nombre','nombre','varchar');
@@ -175,9 +195,17 @@ class MODPersona extends MODbase{
 		
 		$this->setParametro('tipo_documento','tipo_documento','varchar');
 		$this->setParametro('expedicion','expedicion','varchar');
-
 		
-		
+		$this->setParametro('fecha_nacimiento','fecha_nacimiento','date');
+		$this->setParametro('genero','genero','varchar');
+		$this->setParametro('direccion','direccion','varchar');
+		$this->setParametro('id_lugar','id_lugar','int4');
+		//$this->setParametro('lugar','lugar','varchar');
+		$this->setParametro('estado_civil','estado_civil','varchar');
+		$this->setParametro('nacionalidad','nacionalidad','varchar');
+		$this->setParametro('discapacitado','discapacitado','varchar');
+		$this->setParametro('carnet_discapacitado','carnet_discapacitado','varchar');		
+				
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 				

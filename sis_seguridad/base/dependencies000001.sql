@@ -681,3 +681,17 @@ ALTER TABLE segu.tpersona
 /***********************************I-DEP-JRR-SEGU-0-16/03/2017*****************************************/
 ALTER TABLE segu.tusuario ENABLE ALWAYS TRIGGER trigger_usuario;
 /***********************************F-DEP-JRR-SEGU-0-16/03/2017*****************************************/
+
+/***********************************I-DEP-BVP-SEGU-1-30/05/2018*****************************************/
+CREATE TRIGGER tpersona_tr
+  AFTER INSERT OR UPDATE OR DELETE 
+  ON segu.tpersona FOR EACH ROW 
+  EXECUTE PROCEDURE migra.f_tri_tsg_persona_tpersona();
+/***********************************F-DEP-BVP-SEGU-1-30/05/2018*****************************************/
+ 
+/***********************************I-DEP-BVP-SEGU-2-30/05/2018*****************************************/
+CREATE TRIGGER tusuario_tr
+  AFTER INSERT OR UPDATE OR DELETE 
+  ON segu.tusuario FOR EACH ROW 
+  EXECUTE PROCEDURE migra.f_tri_tsg_usuario_tusuario();
+/***********************************F-DEP-BVP-SEGU-2-30/05/2018*****************************************/ 

@@ -95,16 +95,17 @@ class RDocumentoRRHHXls
                 )
             ));
 
-        $this->docexcel->getActiveSheet()->getStyle('A1:W2')->applyFromArray($styleTitulos);
+        $this->docexcel->getActiveSheet()->getStyle('A1:X2')->applyFromArray($styleTitulos);
 
         $this->docexcel->getActiveSheet()->mergeCells('A1:A2');
         $this->docexcel->getActiveSheet()->mergeCells('B1:B2');
         $this->docexcel->getActiveSheet()->mergeCells('C1:C2');
-        $this->docexcel->getActiveSheet()->mergeCells('D1:F1');
-        $this->docexcel->getActiveSheet()->mergeCells('G1:K1');
-        $this->docexcel->getActiveSheet()->mergeCells('L1:P1');
-        $this->docexcel->getActiveSheet()->mergeCells('Q1:T1');
-        $this->docexcel->getActiveSheet()->mergeCells('U1:W1');
+        $this->docexcel->getActiveSheet()->mergeCells('D1:D2');
+        $this->docexcel->getActiveSheet()->mergeCells('E1:G1');
+        $this->docexcel->getActiveSheet()->mergeCells('H1:L1');
+        $this->docexcel->getActiveSheet()->mergeCells('M1:Q1');
+        $this->docexcel->getActiveSheet()->mergeCells('R1:U1');
+        $this->docexcel->getActiveSheet()->mergeCells('V1:X1');
 
         //*************************************Cabecera*****************************************
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[0])->setWidth(7);
@@ -113,73 +114,77 @@ class RDocumentoRRHHXls
         $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(1,1,'GERENCIA');
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[2])->setWidth(40);
         $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(2,1,'NOMBRE Y APELLIDO');
-
-
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[3])->setWidth(20);
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3,1,'TITULO DE BACHILLER');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3,2,'FECHA DE EMISION');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4,2,'ENTIDAD EMISORA');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5,2,'NUMERO DE SERIE');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3,1,'CI');
+
+
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[4])->setWidth(20);
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4,1,'TITULO DE BACHILLER');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4,2,'FECHA DE EMISION');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5,2,'ENTIDAD EMISORA');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6,2,'NUMERO DE SERIE');
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[5])->setWidth(20);
-
-
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[6])->setWidth(20);
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6,1,'TITULO PROFESIONAL');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6,2,'FECHA DE EMISION');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(7,2,'ENTIDAD EMISORA');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(8,2,'NUMERO DE SERIE');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(9,2,'CARRERA ');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(10,2,'NIVEL ACADEMICO');
+
+
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[7])->setWidth(20);
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(7,1,'TITULO PROFESIONAL');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(7,2,'FECHA DE EMISION');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(8,2,'ENTIDAD EMISORA');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(9,2,'NUMERO DE SERIE');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(10,2,'CARRERA ');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(11,2,'NIVEL ACADEMICO');
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[8])->setWidth(20);
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[9])->setWidth(20);
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[10])->setWidth(20);
-
-
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[11])->setWidth(20);
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(11,1,'CERTIFICADO EGRESO');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(11,2,'FECHA DE EMISION');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(12,2,'ENTIDAD EMISORA');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(13,2,'CARRERA ');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(14,2,'NIVEL ACADEMICO');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(15,2,'OBSERVACIONES');
+
+
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[12])->setWidth(20);
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(12,1,'CERTIFICADO EGRESO');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(12,2,'FECHA DE EMISION');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(13,2,'ENTIDAD EMISORA');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(14,2,'CARRERA ');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(15,2,'NIVEL ACADEMICO');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(16,2,'OBSERVACIONES');
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[13])->setWidth(20);
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[14])->setWidth(20);
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[15])->setWidth(20);
-
-
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[16])->setWidth(20);
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(16,1,'TITULO MAESTRIA');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(16,2,'NOMBRE DE LA MAESTRIA');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(17,2,'NUMERO DE SERIE');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(18,2,'FECHA DE EMISION');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(19,2,'ENTIDAD EMISORA');
+
+
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[17])->setWidth(20);
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(17,1,'TITULO MAESTRIA');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(17,2,'NOMBRE DE LA MAESTRIA');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(18,2,'NUMERO DE SERIE');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(19,2,'FECHA DE EMISION');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(20,2,'ENTIDAD EMISORA');
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[18])->setWidth(20);
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[19])->setWidth(20);
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[20])->setWidth(20);
 
 
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[20])->setWidth(20);
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(20,1,'LIBRETA DE SERVICIO MILITAR');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(20,2,'NUMERO DE MATRICULA');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(21,2,'NUMERO DE SERIE');
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(22,2,'ESCALA');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(21,1,'LIBRETA DE SERVICIO MILITAR');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(21,2,'NUMERO DE MATRICULA');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(22,2,'NUMERO DE SERIE');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(23,2,'ESCALA');
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[21])->setWidth(20);
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[22])->setWidth(20);
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[23])->setWidth(20);
         //*************************************Fin Cabecera*****************************************
         $fila = 3;
         $contador = 1;
         $tamano = count($datos)+2;
         $this->docexcel->getActiveSheet()->freezePaneByColumnAndRow(0,3);
 
-        $this->docexcel->getActiveSheet()->getStyle('D1:F2')->getFill()->getStartColor()->setRGB('4682b4');
-        $this->docexcel->getActiveSheet()->getStyle('G1:K2')->getFill()->getStartColor()->setRGB('6f9dc4');
-        $this->docexcel->getActiveSheet()->getStyle('L1:P2')->getFill()->getStartColor()->setRGB('98B9D5');
-        $this->docexcel->getActiveSheet()->getStyle('Q1:T2')->getFill()->getStartColor()->setRGB('C1D5E6');
-        $this->docexcel->getActiveSheet()->getStyle('U1:W2')->getFill()->getStartColor()->setRGB('EAF1F6');
-        $this->docexcel->getActiveSheet()->getStyle('D3:W'.$tamano)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $this->docexcel->getActiveSheet()->getStyle('E1:G2')->getFill()->getStartColor()->setRGB('4682b4');
+        $this->docexcel->getActiveSheet()->getStyle('H1:L2')->getFill()->getStartColor()->setRGB('6f9dc4');
+        $this->docexcel->getActiveSheet()->getStyle('M1:Q2')->getFill()->getStartColor()->setRGB('98B9D5');
+        $this->docexcel->getActiveSheet()->getStyle('R1:U2')->getFill()->getStartColor()->setRGB('C1D5E6');
+        $this->docexcel->getActiveSheet()->getStyle('V1:X2')->getFill()->getStartColor()->setRGB('EAF1F6');
+        $this->docexcel->getActiveSheet()->getStyle('E3:X'.$tamano)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
         /////////////////////***********************************Detalle***********************************************
         foreach($datos as $value) {
 
@@ -187,10 +192,10 @@ class RDocumentoRRHHXls
             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(0,$fila,$contador);
             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(1,$fila,$value['gerencia']);
             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(2,$fila,$value['desc_funcionario']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3,$fila,$value['ci']);
 
             if($value['documento'] == '[]'){
-                //var_dump($value['id_funcionario']);
-                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3, $fila, "sin registrar");
+
                 $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4, $fila, "sin registrar");
                 $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $fila, "sin registrar");
                 $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6, $fila, "sin registrar");
@@ -210,79 +215,92 @@ class RDocumentoRRHHXls
                 $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(20, $fila, "sin registrar");
                 $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(21, $fila, "sin registrar");
                 $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(22, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(23, $fila, "sin registrar");
             }else {
-                $this->docexcel->getActiveSheet()->getStyle('D'.$fila.':W'.$fila)->getAlignment()->setWrapText(true);
+
+                $this->docexcel->getActiveSheet()->getStyle('E'.$fila.':X'.$fila)->getAlignment()->setWrapText(true);
 
 
                 $valores = json_decode(preg_replace('[\n|\r|\n\r]', '', $value['documento']));
+
                 foreach ($valores as $obj) {
 
-                    if ($obj->TIT_BACHILLER) {
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3, $fila, date_format(date_create($obj->TIT_BACHILLER->fecha),'d/m/Y'));
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4, $fila, $obj->TIT_BACHILLER->entidad_emisora);
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $fila, $obj->TIT_BACHILLER->numero);
-                    } else {
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3, $fila, "sin registrar");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4, $fila, "sin registrar");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $fila, "sin registrar");
+                    if (key($obj) == 'TIT_BACHILLER') {
+                        if($obj->TIT_BACHILLER->fecha != '' || $obj->TIT_BACHILLER->entidad_emisora != '' || $obj->TIT_BACHILLER->numero != '' ) {
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4, $fila, date_format(date_create($obj->TIT_BACHILLER->fecha), 'd/m/Y'));
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $fila, $obj->TIT_BACHILLER->entidad_emisora);
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6, $fila, $obj->TIT_BACHILLER->numero);
+                        }else{
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6, $fila, "sin registrar");
+                        }
+
                     }
 
-                    if($obj->TIT_PROF){
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6, $fila, date_format(date_create($obj->TIT_PROF->fecha_emision),'d/m/Y'));
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(7, $fila, $obj->TIT_PROF->entidad_emisora);
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(8, $fila, $obj->TIT_PROF->numero);
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(9, $fila, $obj->TIT_PROF->carrera);
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(10, $fila, $obj->TIT_PROF->nivel_academico);
-
-                    }else{
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6, $fila, "sin registrar");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(7, $fila, "sin registrar");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(8, $fila, "sin registrar");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(9, $fila, "sin registrar");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(10, $fila, "sin registrar");
+                    if(key($obj) == 'TIT_PROF'){
+                        if($obj->TIT_PROF->fecha_emision != '' || $obj->TIT_PROF->entidad_emisora != '' || $obj->TIT_PROF->numero != '' || $obj->TIT_PROF->carrera != '' || $obj->TIT_PROF->nivel_academico != '') {
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(7, $fila, date_format(date_create($obj->TIT_PROF->fecha_emision), 'd/m/Y'));
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(8, $fila, $obj->TIT_PROF->entidad_emisora);
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(9, $fila, $obj->TIT_PROF->numero);
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(10, $fila, $obj->TIT_PROF->carrera);
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(11, $fila, $obj->TIT_PROF->nivel_academico);
+                        }else{
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(7, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(8, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(9, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(10, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(11, $fila, "sin registrar");
+                        }
                     }
 
-                    if($obj->CERT_EGRESO){
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(11, $fila, date_format(date_create($obj->CERT_EGRESO->fecha_emision),'d/m/Y'));
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(12, $fila, $obj->CERT_EGRESO->entidad_emisora);
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(13, $fila, $obj->CERT_EGRESO->carrera);
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(14, $fila, $obj->CERT_EGRESO->nivel_academico);
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(15, $fila, $obj->CERT_EGRESO->observaciones);
-                    }else{
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(11, $fila, "sin registrar");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(12, $fila, "sin registrar");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(13, $fila, "sin registrar");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(14, $fila, "sin registrar");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(15, $fila, "sin registrar");
+                    if(key($obj) =='CERT_EGRESO'){
+                        if($obj->CERT_EGRESO->fecha_emision != '' || $obj->CERT_EGRESO->entidad_emisora != '' || $obj->CERT_EGRESO->carrera != '' || $obj->CERT_EGRESO->nivel_academico != '' || $obj->CERT_EGRESO->observaciones != '') {
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(12, $fila, date_format(date_create($obj->CERT_EGRESO->fecha_emision), 'd/m/Y'));
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(13, $fila, $obj->CERT_EGRESO->entidad_emisora);
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(14, $fila, $obj->CERT_EGRESO->carrera);
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(15, $fila, $obj->CERT_EGRESO->nivel_academico);
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(16, $fila, $obj->CERT_EGRESO->observaciones);
+                        }else{
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(12, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(13, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(14, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(15, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(16, $fila, "sin registrar");
+                        }
                     }
 
-                    if($obj->TIT_MAES){
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(16, $fila, $obj->TIT_MAES->nombre_maestria);
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(17, $fila, $obj->TIT_MAES->nro_serie);
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(18, $fila, date_format(date_create($obj->CERT_EGRESO->fecha_emision),'d/m/Y'));
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(19, $fila, $obj->TIT_MAES->entidad_emisora);
-                    }else{
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(16, $fila, "sin registrar");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(17, $fila, "sin registrar");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(18, $fila, "sin registrar");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(19, $fila, "sin registrar");
+                    if(key($obj) == 'TIT_MAES'){
+                        if($obj->TIT_MAES->nombre_maestria != '' || $obj->TIT_MAES->nro_serie != '' || $obj->TIT_MAES->fecha_emision != '' || $obj->TIT_MAES->entidad_emisora != '') {
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(17, $fila, $obj->TIT_MAES->nombre_maestria);
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(18, $fila, $obj->TIT_MAES->nro_serie);
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(19, $fila, date_format(date_create($obj->TIT_MAES->fecha_emision), 'd/m/Y'));
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(20, $fila, $obj->TIT_MAES->entidad_emisora);
+                        }else{
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(17, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(18, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(19, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(20, $fila, "sin registrar");
+                        }
                     }
 
-                    if($obj->LIB_MIL){
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(20, $fila, $obj->LIB_MIL->numero_matricula);
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(21, $fila, $obj->LIB_MIL->numero_serie);
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(22, $fila, $obj->LIB_MIL->escala);
-                    }else{
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(20, $fila, "sin registrar");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(21, $fila, "sin registrar");
-                        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(22, $fila, "sin registrar");
+                    if(key($obj) == 'LIB_MIL'){
+                        if($obj->LIB_MIL->numero_matricula != '' || $obj->LIB_MIL->numero_serie != '' || $obj->LIB_MIL->escala != '') {
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(21, $fila, $obj->LIB_MIL->numero_matricula);
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(22, $fila, $obj->LIB_MIL->numero_serie);
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(23, $fila, $obj->LIB_MIL->escala);
+                        }else{
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(21, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(22, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(23, $fila, "sin registrar");
+                        }
                     }
 
                 }
             }
             $fila++;
             $contador++;
-        }//exit;
+        }
         //************************************************Fin Detalle***********************************************
 
     }

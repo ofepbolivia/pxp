@@ -59,6 +59,15 @@ class MODFuncionario extends MODbase{
         $this->captura('id_biometrico','int4');
         $this->captura('nombre_archivo','varchar');
         $this->captura('extension','varchar');
+        $this->captura('telefono2','varchar');
+        $this->captura('celular2','varchar');
+        $this->captura('nombre','varchar');
+        $this->captura('ap_materno','varchar');
+        $this->captura('ap_paterno','varchar');
+        $this->captura('tipo_documento','varchar');
+        $this->captura('expedicion','varchar');
+        $this->captura('direccion','varchar');
+        $this->captura('es_tutor','varchar');
 
 
         //Ejecuta la funcion
@@ -204,8 +213,8 @@ class MODFuncionario extends MODbase{
         $this->setParametro('codigo','codigo','varchar');
         $this->setParametro('id_persona','id_persona','integer');
         $this->setParametro('correo','correo','varchar');
-        $this->setParametro('celular','celular','varchar');
-        $this->setParametro('telefono','telefono','varchar');
+        //$this->setParametro('celular','celular','varchar');
+        //$this->setParametro('telefono','telefono','varchar');
         $this->setParametro('documento','documento','integer');
         $this->setParametro('estado_reg','estado_reg','varchar');
         $this->setParametro('fecha_ingreso','fecha_ingreso','date');
@@ -221,6 +230,21 @@ class MODFuncionario extends MODbase{
         $this->setParametro('nacionalidad','nacionalidad','varchar');
         $this->setParametro('discapacitado','discapacitado','varchar');
         $this->setParametro('carnet_discapacitado','carnet_discapacitado','varchar');
+        $this->setParametro('es_tutor','es_tutor','varchar');
+
+        $this->setParametro('ap_materno','ap_materno','varchar');
+        $this->setParametro('ap_paterno','ap_paterno','varchar');
+        $this->setParametro('nombre','nombre','varchar');
+        $this->setParametro('ci','ci','varchar');
+
+        $this->setParametro('celular1','celular1','varchar');
+        $this->setParametro('telefono1','telefono1','varchar');
+        $this->setParametro('telefono2','telefono2','varchar');
+        $this->setParametro('celular2','celular2','varchar');
+
+        $this->setParametro('tipo_documento','tipo_documento','varchar');
+        $this->setParametro('expedicion','expedicion','varchar');
+        $this->setParametro('direccion','direccion','varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -241,8 +265,8 @@ class MODFuncionario extends MODbase{
         $this->setParametro('codigo','codigo','varchar');
         $this->setParametro('id_persona','id_persona','integer');
         $this->setParametro('correo','correo','varchar');
-        $this->setParametro('celular','celular','varchar');
-        $this->setParametro('telefono','telefono','varchar');
+        //$this->setParametro('celular','celular','varchar');
+        //$this->setParametro('telefono','telefono','varchar');
         $this->setParametro('documento','documento','integer');
         $this->setParametro('estado_reg','estado_reg','varchar');
         $this->setParametro('fecha_ingreso','fecha_ingreso','date');
@@ -258,6 +282,21 @@ class MODFuncionario extends MODbase{
         $this->setParametro('nacionalidad','nacionalidad','varchar');
         $this->setParametro('discapacitado','discapacitado','varchar');
         $this->setParametro('carnet_discapacitado','carnet_discapacitado','varchar');
+        $this->setParametro('es_tutor','es_tutor','varchar');
+
+        $this->setParametro('ap_materno','ap_materno','varchar');
+        $this->setParametro('ap_paterno','ap_paterno','varchar');
+        $this->setParametro('nombre','nombre','varchar');
+        $this->setParametro('ci','ci','varchar');
+
+        $this->setParametro('celular1','celular1','varchar');
+        $this->setParametro('telefono1','telefono1','varchar');
+        $this->setParametro('telefono2','telefono2','varchar');
+        $this->setParametro('celular2','celular2','varchar');
+
+        $this->setParametro('tipo_documento','tipo_documento','varchar');
+        $this->setParametro('expedicion','expedicion','varchar');
+        $this->setParametro('direccion','direccion','varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();

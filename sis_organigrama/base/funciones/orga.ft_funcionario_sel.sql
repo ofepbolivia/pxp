@@ -33,7 +33,6 @@ $body$
     v_id_funcionario	integer;
     v_ids_funcionario	varchar;
 
-
   BEGIN
 
     v_parametros:=pxp.f_get_record(par_tabla);
@@ -82,14 +81,23 @@ $body$
                             PERSON2.carnet_discapacitado,
                             FUNCIO.id_biometrico,
                             tar.nombre_archivo,
-                            tar.extension
+                            tar.extension,
+                            PERSON.telefono2,
+                            PERSON.celular2,
+                            PERSON.nombre,
+                            PERSON.ap_materno,
+                            PERSON.ap_paterno,
+                            PERSON2.tipo_documento,
+                            PERSON2.expedicion,
+                            PERSON2.direccion,
+                            FUNCIO.es_tutor
                             FROM orga.tfuncionario FUNCIO
                             INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona
                             INNER JOIN SEGU.tpersona PERSON2 ON PERSON2.id_persona=FUNCIO.id_persona
                             LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
                             inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
 						    left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
-						    left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10
+						    left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10 and tar.id_archivo_fk is null
                             WHERE ';
 
 
@@ -108,7 +116,7 @@ $body$
         end if;
 
         v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
-
+		RAISE NOTICE 'v_consulta: %',v_consulta;
         return v_consulta;
 
 
@@ -159,7 +167,7 @@ $body$
       --consulta:=';
       BEGIN
 
-        v_consulta:='SELECT
+        v_consulta='SELECT
                				FUNCIO.id_funcionario,
                             PERSON.nombre_completo1::varchar,
                             CAR.nombre,
@@ -199,8 +207,8 @@ $body$
 
 
 
-        v_consulta := v_consulta || v_parametros.filtro;
-        v_consulta := v_consulta ||  ' GROUP BY FUNCIO.id_funcionario,
+        v_consulta = v_consulta || v_parametros.filtro;
+        v_consulta = v_consulta ||  ' GROUP BY FUNCIO.id_funcionario,
                             PERSON.nombre_completo1,
                             CAR.nombre,
                             FUNCIO.email_empresa,
@@ -376,7 +384,7 @@ $body$
         v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
 
 
-
+		raise notice 'v_consulta %', v_consulta;
         return v_consulta;
 
 
@@ -459,9 +467,9 @@ $body$
 					 from orga.vfuncionario_biometrico tf
 					 left join param.tarchivo tar on tar.id_tabla = tf.id_funcionario
 					 left join param.ttipo_archivo tta on tta.id_tipo_archivo = tar.id_tipo_archivo
-                     left JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario
+                     left JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario and (current_date <= uof.fecha_finalizacion or  uof.fecha_finalizacion is null)
      				 left JOIN orga.tcargo tc ON tc.id_cargo = uof.id_cargo
-                     where tf.estado_reg = ''activo'' and ';
+                     where tf.estado_reg = ''activo'' and tc.estado_reg = ''activo'' and ';
         v_consulta:=v_consulta||v_parametros.filtro;
         v_consulta:=v_consulta||'group by tf.id_funcionario, tf.id_biometrico, tf.desc_funcionario2, tf.ci, tc.nombre, tf.fecha_ingreso order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
 		raise notice 'v_consulta: %',v_consulta;
@@ -480,7 +488,7 @@ $body$
 					 from orga.vfuncionario_biometrico tf
 					 left join param.tarchivo tar on tar.id_tabla = tf.id_funcionario
 					 left join param.ttipo_archivo tta on tta.id_tipo_archivo = tar.id_tipo_archivo
-                     left JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario
+                     left JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario and (current_date <= uof.fecha_finalizacion or  uof.fecha_finalizacion is null)
      				 left JOIN orga.tcargo tc ON tc.id_cargo = uof.id_cargo
                      where tf.estado_reg = ''activo'' and ';
         v_consulta:=v_consulta||v_parametros.filtro;
@@ -510,7 +518,7 @@ $body$
      				 inner JOIN orga.tcargo tc ON tc.id_cargo = uof.id_cargo
                      where tf.estado_reg = ''activo'' and tc.estado_reg = ''activo''
                      order by gerencia,desc_funcionario ';
-		    raise notice 'v_consulta: %',v_consulta;
+		raise notice 'v_consulta: %',v_consulta;
         return v_consulta;
       END;
     /*********************************
@@ -519,14 +527,36 @@ $body$
  	#AUTOR:		franklin.espinoza
  	#FECHA:		20-09-2017 20:55:18
 	***********************************/
-
-	elsif(p_transaccion='RH_URL_IMG_SEL')then
+	elsif(par_transaccion='RH_URL_IMG_SEL')then
 
     	begin
-        	v_consulta = 'select (''https://erp.obairlines.bo/uploaded_files''||substr(tar.folder,11)||tar.nombre_archivo||''.''||tar.extension)::varchar
+        	v_consulta = 'select (''erp.obairlines.bo''||substr(tar.folder,11)||tar.nombre_archivo||''.''||tar.extension)::varchar
+					  	  from orga.tfuncionario tf
+					  	  inner join param.tarchivo tar on tar.id_tabla = tf.id_funcionario and tar.id_tipo_archivo = 10 and tar.id_archivo_fk  is null
+					  	  where tf.id_funcionario = '||v_parametros.id_funcionario||' and tar.estado_reg = ''activo''';
+        	return v_consulta;
+        end;
+    /*********************************
+ 	#TRANSACCION:  'ORGA_URL_IMG_U_SEL'
+ 	#DESCRIPCION:	url de la fotografia de un funcionario
+ 	#AUTOR:		franklin.espinoza
+ 	#FECHA:		20-09-2017 20:55:18
+	***********************************/
+
+	elsif(par_transaccion='ORGA_URL_IMG_U_SEL')then
+
+    	begin
+
+        SELECT tf.id_funcionario
+        into v_id_funcionario
+        FROM segu.tusuario tu
+        INNER JOIN orga.tfuncionario tf on tf.id_persona = tu.id_persona
+		WHERE tu.id_usuario =v_parametros.id_usuario ;
+        --raise exception 'v_id_funcionario: %',v_id_funcionario
+        	v_consulta = 'select (''http://172.17.58.12:/datasys/erp_produccion/uploaded_files''||substr(tar.folder,11)||tar.nombre_archivo||''.''||tar.extension)::varchar
 					  	  from orga.tfuncionario tf
 					  	  inner join param.tarchivo tar on tar.id_tabla = tf.id_funcionario and tar.id_tipo_archivo = 10
-					  	  where tf.id_funcionario = '||v_parametros.id_funcionario||' and tar.estado_reg = ''activo''';
+					  	  where tf.id_funcionario = '||v_id_funcionario||' and tar.estado_reg = ''activo''';
         	return v_consulta;
         end;
     else

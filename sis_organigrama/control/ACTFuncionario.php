@@ -17,7 +17,7 @@ class ACTFuncionario extends ACTbase{
 		// parametros de ordenacion por defecto
 		$this->objParam->defecto('ordenacion','PERSON.nombre_completo2');
 		$this->objParam->defecto('dir_ordenacion','asc');
-		$this->objParam->addFiltro("FUNCIO.estado_reg = ''activo''");		
+		//$this->objParam->addFiltro("FUNCIO.estado_reg = ''activo''");
 	
 	   
         //si aplicar filtro de usuario, fitlramos el listado segun el funionario del usuario
@@ -30,8 +30,22 @@ class ACTFuncionario extends ACTbase{
 										FROM orga.f_get_funcionarios_x_usuario_asistente(now()::date, " .
 																						 $_SESSION["ss_id_usuario"] . ") AS (id_funcionario INTEGER)) ");
 		}
-			
-		//crea el objetoFunSeguridad que contiene todos los metodos del sistema de seguridad
+
+        if($this->objParam->getParametro('estado_func')=='activo'){
+            $this->objParam->addFiltro("FUNCIO.estado_reg = ''activo''");
+        }else if($this->objParam->getParametro('estado_func')=='inactivo'){
+            $this->objParam->addFiltro("FUNCIO.estado_reg = ''inactivo''");
+        }else{
+            $this->objParam->addFiltro("FUNCIO.estado_reg = ''activo''");
+        }
+        //(FEA)Filtro Correos
+        if($this->objParam->getParametro('correo_func')=='sin_correo'){
+            $this->objParam->addFiltro("(FUNCIO.email_empresa = '''' or FUNCIO.email_empresa is null)");
+        }else if($this->objParam->getParametro('correo_func')=='con_correo'){
+            $this->objParam->addFiltro("(FUNCIO.email_empresa != '''' or FUNCIO.email_empresa is not null)");
+        }
+
+        //crea el objetoFunSeguridad que contiene todos los metodos del sistema de seguridad
 		if ($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
 			$this->objReporte=new Reporte($this->objParam, $this);
 			$this->res=$this->objReporte->generarReporteListado('MODFuncionario','listarFuncionario');
@@ -80,6 +94,10 @@ class ACTFuncionario extends ACTbase{
 
 			$this->objParam->addFiltro("FUNCIO.id_funcionario = ".$this->objParam->getParametro('id_funcionario')." ");
 		}
+
+        if($this->objParam->getParametro('id_persona') != ''){
+            $this->objParam->addFiltro("FUNCIO.id_persona= ".$this->objParam->getParametro('id_persona'));
+        }
 
 
 		//si aplicar filtro de usuario, fitlramos el listado segun el funionario del usuario
@@ -245,7 +263,7 @@ class ACTFuncionario extends ACTbase{
 
 	
 	function guardarFuncionario(){
-	
+	    //var_dump('llega control guardar');exit;
 		//crea el objetoFunSeguridad que contiene todos los metodos del sistema de seguridad
 		$this->objFunSeguridad=$this->create('MODFuncionario');
 		
@@ -352,6 +370,7 @@ class ACTFuncionario extends ACTbase{
         $this->res=$this->objFunc->urlFotoFuncionarioByUsuario($this->objParam);
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
+
 }
 
 ?>

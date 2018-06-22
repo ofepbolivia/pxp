@@ -48,11 +48,9 @@ header("content-type: text/javascript; charset=UTF-8");
 
                         if(pressed){
                             this.activo = 'inactivo';
-                            btn.setText('<b>ACTIVOS</b>');
                         }
                         else{
                             this.activo = 'activo'
-                            btn.setText('<b>INACTIVOS</b>');
                         }
                         this.store.baseParams.activo = this.activo;
                         //this.store.baseParams.presupuesto = this.presupuesto;

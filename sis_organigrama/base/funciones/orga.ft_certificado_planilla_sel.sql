@@ -62,10 +62,7 @@ BEGIN
           elsif (v_parametros.tipo_interfaz ='CertificadoPlanilla')then
 			v_filtro = ' 0=0 and ';
           elsif (v_parametros.tipo_interfaz = 'CertificadoEmitido') THEN
-         v_filtro ='planc.estado in (''emitido'') and (select wfe.id_funcionario
-                                                                from wf.testado_wf wfe
-                                                                inner join wf.ttipo_estado ta on ta.id_tipo_estado = wfe.id_tipo_estado
-                                                                where wfe.id_proceso_wf = planc.id_proceso_wf and ta.codigo <> ''borrador'') ='||v_usuario.id_funcionario||' and';
+         v_filtro ='planc.estado in (''emitido'') and w.id_funcionario ='||v_usuario.id_funcionario||' and';
      END IF;
 		--Sentencia de la consulta
 			v_consulta:='select
@@ -94,14 +91,16 @@ BEGIN
                               round(es.haber_basico + round(plani.f_evaluar_antiguedad(plani.f_get_fecha_primer_contrato_empleado(fun.id_uo_funcionario, fun.id_funcionario, fun.fecha_asignacion), planc.fecha_solicitud::date, fon.antiguedad_anterior), 2)) as haber_basico,
                               pe.expedicion,
                               planc.impreso,
-                              planc.impreso as control
+                              planc.impreso as control,
+                              planc.nro_factura as factura
                               from orga.tcertificado_planilla planc
                               inner join segu.tusuario usu1 on usu1.id_usuario = planc.id_usuario_reg
-                              inner join orga.vfuncionario_cargo fun on fun.id_funcionario = planc.id_funcionario and (fun.fecha_finalizacion is null or fun.fecha_finalizacion >= now())
+                              inner join orga.vfuncionario_cargo fun on fun.id_funcionario = planc.id_funcionario and (fun.fecha_finalizacion is null or fun.fecha_finalizacion >= now() or fun.fecha_finalizacion >= ''20/12/2017'')
                               inner join orga.tcargo car on car.id_cargo = fun.id_cargo and (car.fecha_fin is null or car.fecha_fin >= now()) and car.estado_reg = ''activo''
                               inner join orga.tescala_salarial es on es.id_escala_salarial =car.id_escala_salarial
                               inner join orga.tfuncionario fon on fon.id_funcionario = planc.id_funcionario
                               inner join segu.tpersona pe on pe .id_persona = fon.id_persona
+                              inner join wf.testado_wf w on w.id_estado_wf = planc.id_estado_wf
                               left join segu.tusuario usu2 on usu2.id_usuario = planc.id_usuario_mod
                               where  '||v_filtro;
 
@@ -137,21 +136,19 @@ BEGIN
           elsif (v_parametros.tipo_interfaz ='CertificadoPlanilla')then
 			v_filtro = ' 0=0 and ';
           elsif (v_parametros.tipo_interfaz = 'CertificadoEmitido') THEN
-         v_filtro ='planc.estado in (''emitido'') and (select wfe.id_funcionario
-                                                                from wf.testado_wf wfe
-                                                                inner join wf.ttipo_estado ta on ta.id_tipo_estado = wfe.id_tipo_estado
-                                                                where wfe.id_proceso_wf = planc.id_proceso_wf and ta.codigo <> ''borrador'') ='||v_usuario.id_funcionario||' and';
+         v_filtro ='planc.estado in (''emitido'') and w.id_funcionario ='||v_usuario.id_funcionario||' and';
      END IF;
 			--Sentencia de la consulta de conteo de registros
 			v_consulta:='select count(id_certificado_planilla)
 
                       from orga.tcertificado_planilla planc
                             inner join segu.tusuario usu1 on usu1.id_usuario = planc.id_usuario_reg
-                            inner join orga.vfuncionario_cargo fun on fun.id_funcionario = planc.id_funcionario and (fun.fecha_finalizacion is null or fun.fecha_finalizacion >= now())
+                            inner join orga.vfuncionario_cargo fun on fun.id_funcionario = planc.id_funcionario and (fun.fecha_finalizacion is null or fun.fecha_finalizacion >= now() or fun.fecha_finalizacion >= ''20/12/2017'')
                             inner join orga.tcargo car on car.id_cargo = fun.id_cargo and (car.fecha_fin is null or car.fecha_fin >= now()) and car.estado_reg = ''activo''
                             inner join orga.tescala_salarial es on es.id_escala_salarial =car.id_escala_salarial
                             inner join orga.tfuncionario fon on fon.id_funcionario = planc.id_funcionario
                             inner join segu.tpersona pe on pe .id_persona = fon.id_persona
+                            inner join wf.testado_wf w on w.id_estado_wf = planc.id_estado_wf
                             left join segu.tusuario usu2 on usu2.id_usuario = planc.id_usuario_mod
 					    where '||v_filtro;
 
@@ -230,7 +227,7 @@ BEGIN
                                '''||COALESCE (v_fun_emetido,'NA')||'''::varchar as fun_imitido,
                                c.estado
                               from orga.tcertificado_planilla c
-                              inner join orga.vfuncionario_cargo  fu on fu.id_funcionario = c.id_funcionario and( fu.fecha_finalizacion is null or  fu.fecha_finalizacion >= now())
+                              inner join orga.vfuncionario_cargo  fu on fu.id_funcionario = c.id_funcionario and( fu.fecha_finalizacion is null or  fu.fecha_finalizacion >= now() or fu.fecha_finalizacion >= ''20/12/2017'')
                               inner join orga.tcargo ca on ca.id_cargo = fu.id_cargo
                               inner join orga.tescala_salarial es on es.id_escala_salarial = ca.id_escala_salarial
                               inner join orga.tfuncionario fun on fun.id_funcionario = fu.id_funcionario

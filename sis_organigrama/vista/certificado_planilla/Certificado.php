@@ -10,16 +10,18 @@
 header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
-    Phx.vista.Certificado=Ext.extend(Phx.gridInterfaz,{
-
+    Phx.vista.Certificado=Ext.extend(Phx.gridInterfaz,{   	
+				momento:'',						
             constructor:function(config){
-                this.maestro=config.maestro;
+                this.maestro=config.maestro; 	                                                      
                 //llama al constructor de la clase padre
                 Phx.vista.Certificado.superclass.constructor.call(this,config);
                 this.init();
                 this.ocultarComponente(this.Cmp.importe_viatico);
+                this.ocultarComponente(this.Cmp.factura);
                 //this.inicarEvento();
-                this.load({params:{start:0, limit:this.tam_pag}});
+                this.iniciarEventos();                        
+                this.load({params:{start:0, limit:this.tam_pag}});				               				            
                 this.addButton('ant_estado',{
                     grupo: [2],//2
                     argument: {estado: 'anterior'},
@@ -62,7 +64,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     disabled:true,
                     handler:diagramGantt,
                     tooltip: '<b>Diagrama Gantt de proceso macro</b>'
-                });
+                });			                                                                      
                 function diagramGantt(){
                     var data=this.sm.getSelected().data.id_proceso_wf;
                     Phx.CP.loadingShow();
@@ -75,8 +77,9 @@ header("content-type: text/javascript; charset=UTF-8");
                         scope:this
                     });
                 }
-            },
-            Grupos: [
+            },                  
+       
+           Grupos: [
                 {
                     layout: 'column',
                     border: false,
@@ -96,11 +99,10 @@ header("content-type: text/javascript; charset=UTF-8");
                                     width: 600,
                                     items: [/*this.compositeFields()*/],
                                     id_grupo: 0
-                                }
+                                },
 
-                            ]
-                        }
-
+                            	]
+                        }                       
                     ]
                 }],
 
@@ -172,13 +174,15 @@ header("content-type: text/javascript; charset=UTF-8");
                             fields: ['ID', 'valor'],
                             data :	[
                                 ['1','General'],
-                                ['2','Con viáticos de los últimos tres meses']
+                                ['3','General(Factura)'],
+                                ['2','Con viáticos de los últimos tres meses'],                                
+                                ['4','Con viáticos de los últimos tres meses(Factura)']
                             ]
                         }),
                         valueField:'valor',
                         displayField:'valor',
                         gwidth:150,
-                        anchor: '60%'
+                        anchor: '70%'
 
                     },
                     type:'ComboBox',
@@ -198,10 +202,10 @@ header("content-type: text/javascript; charset=UTF-8");
 
                     },
                     type:'TextField',
-                    filters:{pfiltro:'planc.nombre_estado',type:'string'},
+                    filters:{pfiltro:'planc.estado',type:'string'},
                     id_grupo:1,
                     grid:true,
-                    form:false
+                    form:false,                    
 
                 },
                 {
@@ -337,6 +341,20 @@ header("content-type: text/javascript; charset=UTF-8");
                     grid: true,
                     form: false
                 },
+		        {
+		            config:{
+		                name: 'factura',
+		                fieldLabel: 'Nro Factura',	                
+		                anchor: '80%',
+		                gwidth: 100
+		            },
+		            type:'NumberField',
+					filters: {pfiltro: 'planc.nro_factura', type: 'string'},		            		            
+		            id_grupo:0,
+		            grid:true,		            
+		            form:true,
+		            bottom_filter:true
+		        },
                 {
                     config: {
                         name: 'importe_viatico',
@@ -494,7 +512,8 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name:'haber_basico', type: 'numeric'},
                 {name:'expedicion', type: 'string'} ,
                 {name:'impreso', type: 'string'},
-                {name:'control', type: 'string'}
+                {name:'control', type: 'string'},
+                {name:'factura', type: 'string'}
 
             ],
             sortInfo:{
@@ -503,6 +522,7 @@ header("content-type: text/javascript; charset=UTF-8");
             },
             bdel:true,
             bsave:false,
+            bedit:false,
             preparaMenu: function(n)
             {	var rec = this.getSelectedData();
                 var tb =this.tbar;
@@ -511,7 +531,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 Phx.vista.Certificado.superclass.preparaMenu.call(this,n);
                 this.getBoton('diagrama_gantt').enable();
                 this.getBoton('sig_estado').enable();
-                this.getBoton('ant_estado').enable();
+                this.getBoton('ant_estado').enable();                
                 //this.getBoton('ant_estado').setVisible(false);
             },
 
@@ -529,6 +549,7 @@ header("content-type: text/javascript; charset=UTF-8");
             },
             loadCheckDocumentosRecWf:function() {
                 var rec=this.sm.getSelected();
+                                
                 rec.data.nombreVista = this.nombreVista;
                 Phx.CP.loadWindows('../../../sis_workflow/vista/documento_wf/DocumentoWf.php',
                     'Chequear documento del WF',
@@ -539,11 +560,11 @@ header("content-type: text/javascript; charset=UTF-8");
                     rec.data,
                     this.idContenedor,
                     'DocumentoWf'
-                )
+               );                                            
             },
             sigEstado: function() {
                 var rec = this.sm.getSelected();
-
+                console.log('ree',rec);				
                 this.objWizard = Phx.CP.loadWindows('../../../sis_workflow/vista/estado_wf/FormEstadoWf.php',
                     'Estado de Wf',
                     {
@@ -554,7 +575,9 @@ header("content-type: text/javascript; charset=UTF-8");
                     {
                         data: {
                             id_estado_wf: rec.data.id_estado_wf,
-                            id_proceso_wf: rec.data.id_proceso_wf
+                            id_proceso_wf: rec.data.id_proceso_wf,
+                            factura:       rec.data.factura,
+                            tipo_certificado:  rec.data.tipo_certificado                                                 
                         }
                     }, this.idContenedor, 'FormEstadoWf',
                     {
@@ -565,10 +588,12 @@ header("content-type: text/javascript; charset=UTF-8");
                         scope: this
                     }
                 );
+                
             },
 
-            onSaveWizard:function(wizard,resp){
-                var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+            onSaveWizard:function(wizard,resp){ 
+            	console.log('sss',resp);           	
+                var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));                
                 Phx.CP.loadingShow();
                 Ext.Ajax.request({
                     url:'../../sis_organigrama/control/CertificadoPlanilla/siguienteEstado',
@@ -579,7 +604,10 @@ header("content-type: text/javascript; charset=UTF-8");
                         id_funcionario_wf:  resp.id_funcionario_wf,
                         id_depto_wf:        resp.id_depto_wf,
                         obs:                resp.obs,
-                        json_procesos:      Ext.util.JSON.encode(resp.procesos)
+                        json_procesos:      Ext.util.JSON.encode(resp.procesos),
+                        factura: 			wizard.data.factura,
+                        tipo_certificado:	wizard.data.tipo_certificado                                 
+                        
                     },
                     success:function (resp) {
                         Phx.CP.loadingHide();
@@ -641,15 +669,32 @@ header("content-type: text/javascript; charset=UTF-8");
                         this.mostrarComponente(this.Cmp.importe_viatico);
                     }
 
-
                 },this);
 
-
             },
+            iniciarEventos:function(){            	            	
+            	this.Cmp.tipo_certificado.on('select',function(combo, record, index){           		         
+            		if(record.data.ID == 3 || record.data.ID == 4){
+            			this.mostrarComponente(this.Cmp.factura);
+            			this.Cmp.factura.allowBlank=false;
+            		}else{
+            			this.ocultarComponente(this.Cmp.factura);
+            		}            		
+            	},this);  			           	                	      	                    	            	            	          	
+            },
+            onButtonEdit: function () {
+                Phx.vista.Certificado.superclass.onButtonEdit.call(this);
+                this.momento = 'edit';
+                if(this.Cmp.factura.value ==''){
+                	this.ocultarComponente(this.Cmp.factura);
+                }else{
+					this.mostrarComponente(this.Cmp.factura);                	
+                }
+            },            
         imprimirNota: function(){
             var rec = this.sm.getSelected(),
-                data = rec.data,
-                me = this;
+                data = rec.data,                
+                me = this;                
             if(confirm("¿Esta seguro de Imprimir el Certificado?") ){
                 Phx.CP.loadingShow();
                 Ext.Ajax.request({

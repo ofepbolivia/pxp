@@ -66,7 +66,8 @@ class RCertificadoHtml{
 </td>
 <td>&nbsp;</td>
 </tr>';
-        if ($datos['tipo_certificado'] =='Con viáticos de los últimos tres meses') {
+        if (($datos['tipo_certificado'] =='Con viáticos de los últimos tres meses') ||
+		($datos['tipo_certificado'] =='Con viáticos de los últimos tres meses(Factura)')) {
             $this->html .= '<tr>
 <td>&nbsp;</td>
 <td align="justify">

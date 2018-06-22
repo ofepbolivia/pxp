@@ -24,7 +24,8 @@ Class RCertificadoDOC {
             $tra = 'trabajadora';
         }
 
-        if($this->dataSource[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses'){
+        if(($this->dataSource[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses') ||
+		($this->dataSource[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses(Factura)')){
             $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(dirname(__FILE__).'/cer_viatico.docx');
         }else{
             $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(dirname(__FILE__).'/cer_general.docx');
@@ -47,7 +48,8 @@ Class RCertificadoDOC {
         $templateProcessor->setValue('INICIALES', $this->dataSource[0]['iniciales']);
         $templateProcessor->setValue('LITERAL', $this->dataSource[0]['haber_literal']);
         $templateProcessor->setValue('FECHA_SOLICITUD', $this->obtenerFechaEnLetra($this->dataSource[0]['fecha_solicitud']));
-        if($this->dataSource[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses'){
+        if(($this->dataSource[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses') ||
+		($this->dataSource[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses(Factura)')){
             $templateProcessor->setValue('TRABAJADORA', $tra);
             $templateProcessor->setValue('VIATICO', number_format($this->dataSource[0]['importe_viatico'],2,",","."));
             $templateProcessor->setValue('VIATICO_LITERAL', $this->dataSource[0]['literal_importe_viatico']);

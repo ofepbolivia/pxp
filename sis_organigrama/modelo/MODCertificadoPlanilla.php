@@ -46,6 +46,7 @@ class MODCertificadoPlanilla extends MODbase{
         $this->captura('expedicion','varchar');
         $this->captura('impreso','varchar');
         $this->captura('control','varchar');
+		$this->captura('factura','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -68,6 +69,8 @@ class MODCertificadoPlanilla extends MODbase{
 		$this->setParametro('id_funcionario','id_funcionario','int4');
 		$this->setParametro('estado_reg','estado_reg','varchar');
 		$this->setParametro('importe_viatico','importe_viatico','numeric');
+		
+		$this->setParametro('factura','factura','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -131,9 +134,11 @@ class MODCertificadoPlanilla extends MODbase{
         $this->setParametro('id_depto_wf', 'id_depto_wf', 'int4');
         $this->setParametro('obs', 'obs', 'text');
         $this->setParametro('json_procesos', 'json_procesos', 'text');
-
+		$this->setParametro('factura','factura','varchar');	
+		$this->setParametro('tipo_certificado','tipo_certificado','varchar');		
+		
         //Ejecuta la instruccion
-        $this->armarConsulta();
+        $this->armarConsulta();		
         $this->ejecutarConsulta();
 
         //Devuelve la respuesta

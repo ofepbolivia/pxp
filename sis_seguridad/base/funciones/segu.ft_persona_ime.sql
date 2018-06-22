@@ -1,11 +1,10 @@
 CREATE OR REPLACE FUNCTION segu.ft_persona_ime (
   par_administrador integer,
   par_id_usuario integer,
-  par_tabla character varying,
-  par_transaccion character varying
+  par_tabla varchar,
+  par_transaccion varchar
 )
-RETURNS varchar
-AS 
+RETURNS varchar AS
 $body$
 /**************************************************************************
  FUNCION: 		segu.ft_persona_ime
@@ -67,7 +66,7 @@ BEGIN
           		if exists(select 1 from segu.tpersona
           					where ci = v_parametros.ci) then
           			raise exception 'Este número de Carnet de Identidad ya fue registrado';
-          		end if;
+          		end if;                
           		--Nombre completo
           		if exists(select 1 from segu.tpersona
           					where upper(nombre) = upper(v_parametros.nombre)
@@ -75,7 +74,6 @@ BEGIN
           					and upper(apellido_materno) = upper(v_parametros.ap_materno)) then
           			raise exception 'Persona ya registrada';
           		end if;
-
                        
                insert into segu.tpersona (
                                nombre,
@@ -88,11 +86,20 @@ BEGIN
                                telefono2,
                                celular2,
                                tipo_documento,
-                               expedicion)
+                               expedicion,
+                               fecha_nacimiento,
+                               genero,
+                               direccion,
+                               id_lugar,
+                               estado_civil,
+                               nacionalidad,
+                               discapacitado,
+                               carnet_discapacitado
+                               )
                values(
-                      v_parametros.nombre,
-                      v_parametros.ap_paterno,
-                      v_parametros.ap_materno,
+                      upper(v_parametros.nombre),
+                      upper(v_parametros.ap_paterno),
+                      upper(v_parametros.ap_materno),
                       v_parametros.ci,
                       v_parametros.correo,
                       v_parametros.celular1,
@@ -100,7 +107,16 @@ BEGIN
                       v_parametros.telefono2,
                       v_parametros.celular2,
                       v_parametros.tipo_documento,
-                      v_parametros.expedicion)  
+                      v_parametros.expedicion,
+                      v_parametros.fecha_nacimiento,
+                      v_parametros.genero,
+                      v_parametros.direccion,
+                      v_parametros.id_lugar,
+                      v_parametros.estado_civil,
+                      v_parametros.nacionalidad,
+                      v_parametros.discapacitado,
+                      v_parametros.carnet_discapacitado
+                      )  
                         
                RETURNING id_persona INTO v_id_persona;
               
@@ -111,8 +127,9 @@ BEGIN
                --raise exception 'lega al final del insert';
                v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Persona insertada con exito '||v_id_persona); 
                v_resp = pxp.f_agrega_clave(v_resp,'id_persona',v_id_persona::varchar);
-
-              
+               v_resp = pxp.f_agrega_clave(v_resp,'v_momento', 'new');
+			
+          return v_resp;
 
          END;
 
@@ -154,7 +171,15 @@ BEGIN
                telefono2=v_parametros.telefono2,
                celular2=v_parametros.celular2,
                tipo_documento	= v_parametros.tipo_documento,
-               expedicion = v_parametros.expedicion
+               expedicion = v_parametros.expedicion,
+               fecha_nacimiento = v_parametros.fecha_nacimiento,
+               genero = v_parametros.genero,
+               direccion = v_parametros.direccion,
+               id_lugar = v_parametros.id_lugar,
+               estado_civil = v_parametros.estado_civil,
+               nacionalidad = v_parametros.nacionalidad,
+               discapacitado = v_parametros.discapacitado,
+               carnet_discapacitado = v_parametros.carnet_discapacitado
                where id_persona=v_parametros.id_persona;
               
                --v_respuesta_sinc:= segu.f_sincroniza_persona_entre_bd(v_parametros.id_persona,'10.172.0.13','5432','db_link','db_link','dbendesis','UPDATE');
@@ -236,7 +261,8 @@ EXCEPTION
 		raise exception '%',v_resp;
 END;
 $body$
-    LANGUAGE plpgsql;
---
--- Definition for function ft_persona_sel (OID = 305077) : 
---
+LANGUAGE 'plpgsql'
+VOLATILE
+CALLED ON NULL INPUT
+SECURITY INVOKER
+COST 100;

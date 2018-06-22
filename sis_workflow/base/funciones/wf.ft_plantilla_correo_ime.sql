@@ -69,6 +69,7 @@ BEGIN
             mandar_automaticamente,
             funcion_creacion_correo,
             funcion_acuse_recibo,
+            
             cc,
             bcc
           	) values(
@@ -91,11 +92,12 @@ BEGIN
             v_parametros.mensaje_acuse,
             v_parametros.mensaje_link_acuse,
             v_parametros.mandar_automaticamente,
-            v_parametros.funcion_creacion_correo,
             v_parametros.funcion_acuse_recibo,
             v_parametros.funcion_creacion_correo,
+            
 			string_to_array(v_parametros.cc, ','),
-            string_to_array(v_parametros.bcc, ',')
+            string_to_array(v_parametros.bcc, ',')				
+			
 			
 			)RETURNING id_plantilla_correo into v_id_plantilla_correo;
 			

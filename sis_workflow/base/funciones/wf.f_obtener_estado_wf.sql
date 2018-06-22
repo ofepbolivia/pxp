@@ -135,8 +135,7 @@ v_nombre_funcion = 'wf.f_obtener_estado_wf';
                         
                         
                    -- raise exception '%',v_registros_prioridades.prioridad;
-                        
-                
+                   
         
                   --  FOR  recorre la aristas con la prioridad indicada
                   FOR v_registros in  (select
@@ -150,7 +149,9 @@ v_nombre_funcion = 'wf.f_obtener_estado_wf';
                                       where      te.id_tipo_proceso = v_id_tipo_proceso  
                                             and  ee.id_tipo_estado_padre = v_id_tipo_estado and ee.estado_reg = 'activo' 
                                             and  ee.prioridad = v_registros_prioridades.prioridad and te.estado_reg = 'activo'
-                                      order by ee.prioridad asc) LOOP        
+                                      order by ee.prioridad asc) LOOP   
+                                     
+                     
                         
                            IF v_registros.regla is NULL or v_registros.regla = '' THEN
                               --  si no hay regla apra evaluar se inserta directo en la tabla
@@ -175,6 +176,10 @@ v_nombre_funcion = 'wf.f_obtener_estado_wf';
                               -- se marca en una bandera que hubo insercion
                               sw_insercion = 'si';
                            ELSE   
+                           		if (p_id_usuario = 83) then
+                    	raise notice 'llega,%,%,%,%',p_id_proceso_wf,v_registros.regla,v_registros.id_tipo_estado,v_id_estado_wf;
+                    end if;   
+                           	  
                                --  si tiene regla se evalua
                                -- si la el resutlado es positivo se inserta en la tabla 
                                IF wf.f_evaluar_regla_wf (
@@ -183,6 +188,7 @@ v_nombre_funcion = 'wf.f_obtener_estado_wf';
                                                      v_registros.regla, --pantilla o funcion de evaluacion
                                                      v_registros.id_tipo_estado, 
                                                      v_id_estado_wf) THEN  
+                                                      
                                 
                                   --  si no hay regla apra evaluar se inserta directo en la tabla
                                    v_consulta=  'INSERT INTO  tt_tipo_estado(

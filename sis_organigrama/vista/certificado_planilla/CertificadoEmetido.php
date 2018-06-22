@@ -15,15 +15,16 @@ header("content-type: text/javascript; charset=UTF-8");
         requireclase: 'Phx.vista.Certificado',
         title: 'CertificadoPlanilla',
         nombreVista: 'CertificadoEmitido',
-        constructor: function (config) {
-
-            Phx.vista.CertificadoEmetido.superclass.constructor.call(this, config);
+        constructor: function (config) {        	   
+       this.tbarItems = ['-',this.cmbGestion,'-'];
+            Phx.vista.CertificadoEmetido.superclass.constructor.call(this, config);            
+            this.cmbGestion.on('select',this.capturarEventos, this);                                                       
             this.store.baseParams={tipo_interfaz:this.nombreVista};
+            var date = new Date();
+            this.store.baseParams.gestion = date.getFullYear();
             this.load({params:{start:0, limit:this.tam_pag}});
 
         },
-
-
         preparaMenu:function(n){
             var data = this.getSelectedData();
             var tb =this.tbar;
@@ -47,6 +48,21 @@ header("content-type: text/javascript; charset=UTF-8");
             }
             return tb;
         },
+    cmbGestion : new Ext.form.ComboBox({
+        name:'gestion',
+        store:['2018','2017','2016'],
+        typeAhead: true,
+        value: '2018',
+        mode: 'local',
+        triggerAction: 'all',
+        emptyText:'Géstion...',
+        selectOnFocus:true,
+        width:135,
+    }),
+    capturarEventos: function () {         	
+        this.store.baseParams.gestion=this.cmbGestion.getValue();     
+        this.load({params:{start:0, limit:this.tam_pag}});
+    },        
 
         bnew:false,
         bedit:false,
