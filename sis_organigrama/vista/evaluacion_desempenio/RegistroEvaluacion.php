@@ -148,8 +148,22 @@ header("content-type: text/javascript; charset=UTF-8");
                 scope: this
             });
         },
+        onButtonCorreoFunc : function () {
+            Phx.CP.loadingShow();
+            var rec=this.sm.getSelected();
+            var ran= this.rango;
+            console.log(ran);
+            Ext.Ajax.request({
+                url:'../../sis_organigrama/control/EvaluacionDesempenio/correoFuncoario',
+                params:{'id_funcionario':rec.data.id_funcionario,'gestion':this.cmbGestion.getValue(),rango:ran},
+                success: this.successSinc,
+                failure: this.conexionFailure,
+                timeout: this.timeout,
+                scope: this
+            });
+        },
         onButtonReporteFun:function(){
-         //   Phx.CP.loadingShow();
+          //  Phx.CP.loadingShow();
             var rec=this.sm.getSelected();
             Ext.Ajax.request({
                 url:'../../sis_organigrama/control/EvaluacionDesempenio/ReporteEvaluacioDesempenio',

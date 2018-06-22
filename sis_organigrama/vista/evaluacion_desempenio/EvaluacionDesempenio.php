@@ -62,15 +62,23 @@ Phx.vista.EvaluacionDesempenio=Ext.extend(Phx.gridInterfaz,{
             handler : this.onButtonReporte,
             tooltip : '<b>Reporte Por Gerencia</b>'
         });
-        this.addButton('Correos',{
+        this.addButton('CorreoCorreos',{
             grupo:[0,1],
-            text :'Enviar Correos',
+            text :'Correo Gerencias',
             iconCls : 'bemail',
             disabled: false,
             handler : this.onButtonCorreos,
-            tooltip : '<b>Enviar Correos</b>'
+            tooltip : '<b>Enviar Correos por Gerencia</b>'
         });
-        this.addButton('btnActEvaluacion',{
+        this.addButton('CorreoFuncionario',{
+            grupo:[0,1],
+            text :'Correo Funcionario',
+            iconCls : 'bemail',
+            disabled: true,
+            handler : this.onButtonCorreoFunc,
+            tooltip : '<b>Enviar Correos por Funcionario</b>'
+        });
+       /* this.addButton('btnActEvaluacion',{
             grupo: [0,1,7],
             text: 'Act. Evaluacion',
             iconCls: 'bdocuments',
@@ -78,7 +86,7 @@ Phx.vista.EvaluacionDesempenio=Ext.extend(Phx.gridInterfaz,{
             handler: this.onButtonAcTEvaluacion,
             tooltip: '<b>Actualizar Evaluacion</b>',
             scope:this
-        });
+        });*/
 
 	},
 
@@ -493,7 +501,7 @@ Phx.vista.EvaluacionDesempenio=Ext.extend(Phx.gridInterfaz,{
         var tb =this.tbar;
 
         //this.getBoton('ReporteFun').setDisabled(false);
-        this.getBoton('btnActEvaluacion').setDisabled(false);
+        this.getBoton('CorreoFuncionario').setDisabled(false);
         this.getBoton('btnChequeoDocumentosWf').setDisabled(false);
         Phx.vista.EvaluacionDesempenio.superclass.preparaMenu.call(this,n);
     },
@@ -502,7 +510,7 @@ Phx.vista.EvaluacionDesempenio=Ext.extend(Phx.gridInterfaz,{
         var tb = Phx.vista.EvaluacionDesempenio.superclass.liberaMenu.call(this);
         if(tb){
             //this.getBoton('ReporteFun').setDisabled(true);
-            this.getBoton('btnActEvaluacion').setDisabled(true);
+            this.getBoton('CorreoFuncionario').setDisabled(true);
             this.getBoton('btnChequeoDocumentosWf').setDisabled(true);
 
         }
