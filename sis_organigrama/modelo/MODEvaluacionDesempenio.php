@@ -366,6 +366,7 @@ class MODEvaluacionDesempenio extends MODbase{
         $this->tipo_procedimiento='IME';
         $this->setCount(false);
         $this->setParametro('id_uo','id_uo','int4');
+        $this->setParametro('id_funcionario','id_funcionario','int4');
         $this->setParametro('gestion','gestion','int4');
         $this->setParametro('rango','rango','varchar');
         $this->setParametro('link','link','varchar');

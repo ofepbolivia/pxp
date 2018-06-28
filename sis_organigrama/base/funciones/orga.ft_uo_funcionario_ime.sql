@@ -90,7 +90,7 @@ $body$
                 and cp.id_gestion = v_id_gestion) ) then
                 
                 select *,tc.codigo as tipo_contrato into v_cargo
-                from orga.tcargo
+                from orga.tcargo c
                 inner join orga.ttipo_contrato tc on tc.id_tipo_contrato = c.id_tipo_contrato
                 where c.id_cargo = v_parametros.id_cargo;
                 

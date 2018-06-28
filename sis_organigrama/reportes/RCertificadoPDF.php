@@ -65,7 +65,8 @@ class RCertificadoPDF extends  ReportePDF{
          el '.$this->fechaLiteral($this->datos[0]['fecha_contrato']).', y actualmente ejerce el cargo de <b>'.$this->datos[0]['nombre_cargo'].'</b>, dependiente de la '.$this->datos[0]['nombre_unidad'].', con una remuneración mensual de Bs. '.number_format($this->datos[0]['haber_basico'],2,",",".") .'.- ('.$this->datos[0]['haber_literal'].' Bolivianos). </p><br>';
         $this->writeHTML($cuerpo);
         $viaticos='<p style="font-family:Century Gothic, serif; font-style:italic;text-align: justify">Asimismo a solicitud expresa se informa que '.$gen.' '.$tra.' ha percibido en los últimos tres meses por concepto de viáticos un promedio mensual de '.number_format($this->datos[0]['importe_viatico'],2,",",".").'.- ('.$this->datos[0]['literal_importe_viatico'].' Bolivianos) aclarándose que el <b>Viático</b> es la suma que reconoce la empresa a la persona comisionada, <b>para cubrir gastos del viaje.</b></p><br>';
-        if ($this->datos[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses') {
+        if (($this->datos[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses')||
+			($this->datos[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses(Factura)')) {
             $this->writeHTML($viaticos);
         }
         $fecha='<p style="font-family:Century Gothic, serif; font-style:italic;text-align: justify">Es cuando se certifica, para fines de derecho que convengan '.$tipol.'.</p><p style="font-family:Century Gothic, serif; font-style:italic;text-align: justify">Cochabamba '.$this->obtenerFechaEnLetra($this->datos[0]['fecha_solicitud']).'.</p>';

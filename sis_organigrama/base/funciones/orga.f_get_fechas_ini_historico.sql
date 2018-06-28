@@ -20,27 +20,27 @@ $body$
             inner join orga.ttipo_contrato tcon on tcon.id_tipo_contrato=car.id_tipo_contrato
             where ha.estado_reg = ''activo'' and ha.id_funcionario = '||p_id_funcionario||' and tcon.id_tipo_contrato in (1,4) and ha.tipo = ''oficial'' and
             ha.fecha_asignacion <= ''' || p_fecha|| '''::date
-            order by fecha_asignacion desc')loop
+            order by fecha_asignacion desc')loop 
       if (g_fechas = '')then
         g_ultima_fecha_ini = g_registros.fecha_asignacion;
-        if ((g_registros.nro_documento_asignacion is null or g_registros.nro_documento_asignacion != 'reestructuracion')) then
+        if ((g_registros.nro_documento_asignacion is null or g_registros.nro_documento_asignacion != 'reestructuracion')) then raise notice 'if uno';
           g_fechas = to_char(g_registros.fecha_asignacion,'DD/MM/YYYY');
           v_ultimo = 'normal';
-		else
+		else raise notice 'if dos';
           v_ultimo = 'reestructuracion';
           v_fecha_reestructuracion = to_char(g_registros.fecha_asignacion,'DD/MM/YYYY');
-        end if;
-      else
-        if ((g_ultima_fecha_ini - interval '1 day') = g_registros.fecha_finalizacion) then
+        end if; raise notice 'g_fechas if: %', g_fechas;
+      else raise notice 'entra else: %, %',g_registros.fecha_finalizacion,(g_ultima_fecha_ini - interval '1 day'); 
+        if ((g_ultima_fecha_ini::date - interval '1 day') = g_registros.fecha_finalizacion) then raise notice 'else uno';
           g_ultima_fecha_ini = g_registros.fecha_asignacion;
           if (g_registros.nro_documento_asignacion is null or g_registros.nro_documento_asignacion != 'reestructuracion') then
             g_fechas = to_char(g_registros.fecha_asignacion,'DD/MM/YYYY') || ' ' || g_fechas;
 		  	v_ultimo = 'normal';
-          else
+          else raise notice 'else dos';
           	v_ultimo = 'reestructuracion';
             v_fecha_reestructuracion = to_char(g_registros.fecha_asignacion,'DD/MM/YYYY');
           	
-          end if;
+          end if; raise notice 'g_fechas else: %', g_fechas;
         else
           EXIT;
         end if;
@@ -48,8 +48,8 @@ $body$
 
     end loop;
 	if (v_ultimo = 'reestructuracion') then
-    	g_fechas = v_fecha_reestructuracion || ' ' || g_fechas;
-    end if;
+    	g_fechas = v_fecha_reestructuracion || ' ' || g_fechas; raise notice 'g_fechas reestructuracion: %', g_fechas;
+    end if;raise notice 'g_fechas retorno: %', g_fechas; 
     return g_fechas;
   END;
 $body$

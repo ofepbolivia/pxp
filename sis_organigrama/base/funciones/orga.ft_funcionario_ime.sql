@@ -48,7 +48,7 @@ v_persona					record;
 v_codigo_empleado 			varchar;
 v_id_persona				integer;
 BEGIN
-
+	raise exception 'Informar del incidente al administrador';
      v_nombre_funcion:='orga.ft_funcionario_ime';
      v_parametros:=pxp.f_get_record(par_tabla);
 
