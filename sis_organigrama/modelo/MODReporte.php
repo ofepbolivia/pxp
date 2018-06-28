@@ -38,5 +38,34 @@ class MODReporte extends MODbase{
         //Devuelve la respuesta
         return $this->respuesta;
     }
+
+    function reporteCumpleEmpleadosBoa(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='orga.ft_reporte_sel';
+        $this->transaccion='OR_R_CUMPLE_BOA_SEL';
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+
+        $this->setCount(false);
+        $this->setParametro('id_gestion','id_gestion','integer');
+        $this->setParametro('id_periodo','id_periodo','integer');
+        $this->setParametro('orden','orden','varchar');
+
+        //Definicion de la lista del resultado del query
+        $this->captura('nombre_unidad','varchar');
+        $this->captura('desc_func','varchar');
+        $this->captura('f_dia','varchar');
+        $this->captura('fecha_nacimiento','date');
+        $this->captura('nom_cargo','varchar');
+        $this->captura('nom_oficina','varchar');
+        $this->captura('fecha_contrato','date');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        //echo($this->consulta);exit;
+        $this->ejecutarConsulta();
+
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
 }
 ?>

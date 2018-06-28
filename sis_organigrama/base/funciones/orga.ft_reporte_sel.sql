@@ -31,6 +31,7 @@ DECLARE
     v_mes				integer;
     v_fechas			record;
     v_id_gestion 		integer;
+    v_orden				varchar='';
 BEGIN
 
 	v_nombre_funcion = 'orga.ft_reporte_sel';
@@ -86,6 +87,60 @@ BEGIN
 			--Definicion de la respuesta
 			--v_consulta:=v_consulta||v_parametros.filtro;
 			--v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
+			RAISE NOTICE 'v_consulta: %', v_consulta;
+			--Devuelve la respuesta
+			return v_consulta;
+
+		end;
+    /*********************************
+ 	#TRANSACCION:  'OR_R_CUMPLE_BOA_SEL'
+ 	#DESCRIPCION:	reporte de cumpleañeros de funcionarios boa
+ 	#AUTOR:		f.e.a
+ 	#FECHA:		18-05-2018 17:29:14
+	***********************************/
+	elsif(p_transaccion='OR_R_CUMPLE_BOA_SEL')then
+
+    	begin
+
+        	select tp.periodo
+            into v_mes
+			from param.tperiodo tp
+			where tp.id_periodo = v_parametros.id_periodo and tp.id_gestion = v_parametros.id_gestion;
+
+            if v_parametros.orden = 'gerencia' then
+            	v_orden = 'order by uo.nombre_unidad asc';
+            elsif v_parametros.orden = 'nombre_empleado' then
+            	v_orden = 'order by fun.desc_funcionario2 asc';
+            elsif v_parametros.orden = 'fecha_nacimiento' then
+            	v_orden = 'order by  EXTRACT(day FROM per.fecha_nacimiento)::integer asc';
+            end if;
+
+    		--Sentencia de la consulta
+			v_consulta:='select
+                          uo.nombre_unidad::varchar ,
+                          fun.desc_funcionario2::varchar as desc_func,
+                          to_char(per.fecha_nacimiento,''DD/MM'')::varchar as f_dia,
+                          per.fecha_nacimiento,
+                          c.nombre as nom_cargo,
+                          ofi.nombre as nom_oficina,
+                          plani.f_get_fecha_primer_contrato_empleado(uofun.id_uo_funcionario, uofun.id_funcionario, uofun.fecha_asignacion) as fecha_contrato
+
+                        from orga.vfuncionario fun
+                        inner join orga.tfuncionario f on f.id_funcionario = fun.id_funcionario
+                        inner join segu.tpersona per on per.id_persona = f.id_persona
+                        inner join orga.tuo_funcionario uofun on uofun.id_funcionario = fun.id_funcionario
+                        and uofun.fecha_asignacion <= current_date and
+                        (uofun.fecha_finalizacion is null or uofun.fecha_finalizacion>= current_date) and
+                        uofun.estado_reg = ''activo''
+                        inner join orga.tcargo c on c.id_cargo = uofun.id_cargo and c.id_tipo_contrato in (1,4,6,7)
+                        inner join orga.tuo uo on uo.id_uo = orga.f_get_uo_gerencia(uofun.id_uo,NULL,NULL)
+                        left join orga.toficina ofi on ofi.id_oficina = c.id_oficina
+                        where EXTRACT(month FROM per.fecha_nacimiento)::integer = '||v_mes||'
+                        ';
+
+			--Definicion de la respuesta
+			--v_consulta:=v_consulta||v_parametros.filtro;
+			v_consulta:=v_consulta||v_orden;
 			RAISE NOTICE 'v_consulta: %', v_consulta;
 			--Devuelve la respuesta
 			return v_consulta;
