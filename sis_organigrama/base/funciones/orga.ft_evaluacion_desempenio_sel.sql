@@ -171,7 +171,7 @@ BEGIN
                                 de.fecha_solicitud,
                                 '''||COALESCE (v_iniciales,'NA')||'''::varchar as iniciales,
                                '''||COALESCE (v_fun_emetido,'NA')||'''::varchar as fun_imitido,
-                               COALESCE (pruebas.final_palabra(de.recomendacion), '''') as recomendacion,
+                               COALESCE (orga.final_palabra(de.recomendacion), '''') as recomendacion,
                                de.cite,
                                de.correo,
                             	de.fecha_correo,
