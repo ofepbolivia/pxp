@@ -58,7 +58,7 @@ class Respuestas extends MYPDF{
 
         //$this->Ln(15);
         $array = $data;
-        $url_imagen = dirname(__FILE__) . '/../../lib/images/Logo-BoA.png';
+        $url_imagen = dirname(__FILE__) . '/../../lib/imagenes/logos/logo.jpg';
         $f_actual = date_format(date_create($array["fecha_solicitud"]), 'd/m/Y');
         $nro_cite_dce = $array["cite"];
 
@@ -69,14 +69,14 @@ class Respuestas extends MYPDF{
    			border: 1px solid black;
    			border-collapse: collapse;
    			font-family: "Calibri";
-   			font-size: 10pt;
+   			font-size: 9pt;
 		}
 		</style>
 		<body>
 		<table border="1" cellpadding="1">
         	<tr>
             	<th style="width: 25%" align="center" rowspan="3"><img src="$url_imagen" ></th>
-            	<th style="width: 40%" align="center" rowspan="3"><br><h1>MEMORÁNDUM</h1></th>
+            	<th style="width: 44%" align="center" rowspan="3"><br><h1>MEMORÁNDUM</h1></th>
             	<th style="width: 35%" align="center" colspan="2"><p>R-GG-08 <br>Rev.1-Sep/2012</p>
 </th>
         	</tr>
@@ -85,7 +85,7 @@ class Respuestas extends MYPDF{
         	    <td style="width: 25%" align="center"> $nro_cite_dce </td>
         	</tr>
         	<tr>
-        	    <td>Fecha:</td>
+        	    <td align="center" >Fecha:</td>
         	    <td align="center" >$f_actual</td>
         	</tr>
         </table>
@@ -128,11 +128,17 @@ EOF;
         $this->Ln(20);
         $this->SetFont('helvetica','',11);
 
+        if ($array["recomendacion"] != ""){
+            $recomendacion = ' <p>'.$array["recomendacion"].'</p>';
+        }else{
+            $recomendacion ='';
+        }
+
         if ($array["nota"] >= 91 and $array["nota"]<= 100) {
             $this->writeHTML('<p>'.$gen.':</p>
        <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la Evaluación de <b>Desempeño de la Gestión '.$array["gestion"].'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
-                            <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso mis felicitaciones  por su trabajo en Boliviana de Aviación.</p>
-                            <p>'.$array["recomendacion"].'</p>
+                            <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso el agradecimiento y felicitación;  por su trabajo tesonero y compromiso con nuestros valores empresariales.</p>
+                           '.$recomendacion.'
                             <p align="justica">Seguro de que estos resultados obtenidos serán replicados y mejorados en adelante, reciba usted mis consideraciones distinguidas.</p>
                             ',true);
             $this->firmas();
@@ -141,7 +147,7 @@ EOF;
             $this->writeHTML('<p>'.$gen.':</p>
        <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la <b>Evaluación de Desempeño de la Gestión '.$array["gestion"].'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
                             <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso mis felicitaciones  por su trabajo en Boliviana de Aviación.  </p>
-                            <p>'.$array["recomendacion"].'</p>
+                            '.$recomendacion.'
                             <p align="justica">Seguro de que estos resultados obtenidos serán replicados y mejorados en adelante, reciba usted mis consideraciones distinguidas.</p>
                             ',true);
             $this->firmas();
@@ -150,7 +156,7 @@ EOF;
             $this->writeHTML('<p>'.$gen.':</p>
        <p align="justica">De acuerdo a procedimientos establecidos tengo a bien comunicar, que habiéndose realizado la Evaluación de Desempeño de la Gestión '.$array["gestion"].', se evidencia que usted ha obtenido una calificación de <b>suficiente</b> en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
                             <p align="justica">En este sentido, se sugiere tomar en cuenta las siguientes observaciones que reflejan la evaluación del desempeño gestión '.$array["gestion"].', a fin de mejorar su desempeño:  </p>
-                            <p>'.$array["recomendacion"].'</p>
+                            '.$recomendacion.'
                             <p align="justica">Seguro de que estas observaciones serán corregidas oportunamente, reciba usted mis consideraciones distinguidas.</p>
                             ',true);
 
@@ -196,6 +202,6 @@ EOF;
 }
 $b  = new Respuestas();
 $b -> generarReporte($array);
-$b -> Output('memo', 'I');
+$b -> Output('memo.pdf', 'D');
 ?>
 

@@ -175,7 +175,7 @@ class MODEvaluacionDesempenio extends MODbase{
 
 
         //Ejecuta la instruccion
-        $this->armarConsulta();
+        $this->armarConsulta();//echo ($this->consulta); exit;
         $this->ejecutarConsulta();
        // var_dump($this->respuesta); exit;
         //Devuelve la respuesta
