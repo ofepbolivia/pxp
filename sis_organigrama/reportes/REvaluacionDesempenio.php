@@ -49,7 +49,7 @@ EOF;
         $this->Cell(0, 0, 'Cc:AH', 0, 0, 'L');
         $this->Image(dirname(__FILE__) . '/../reportes/firmavb1.jpg', 25, 250, 23);
 
-        $html = $_SERVER['HTTP_HOST'].'/'.ltrim($_SESSION["_FOLDER"], '/').'sis_memos/control/Memo.php?proceso='.$this->objParam->getParametro('id_proceso_wf');
+        $html = $_SERVER['HTTP_HOST'].'/'.ltrim($_SESSION["_FOLDER"], '/').'sis_organigrama/control/Memo.php?proceso='.$this->objParam->getParametro('id_proceso_wf');
 
         $style = array(
             'border' => 2,
@@ -131,7 +131,8 @@ EOF;
         if ($this->datos[0]['nota'] >= 91 and $this->datos[0]['nota']<= 100) {
             $this->writeHTML('<p>'.$gen.':</p>
        <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la Evaluación de <b>Desempeño de la Gestión '.$this->datos[0]['gestion'].'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
-                            <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso mis felicitaciones  por su trabajo en Boliviana de Aviación.</p>
+
+                            <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso el agradecimiento y felicitación;  por su trabajo tesonero y compromiso con nuestros valores empresariales.</p>
                             <p>'.$htmlR.'</p>
                             <p align="justica">Seguro de que estos resultados obtenidos serán replicados y mejorados en adelante, reciba usted mis consideraciones distinguidas.</p>
                             ',true);

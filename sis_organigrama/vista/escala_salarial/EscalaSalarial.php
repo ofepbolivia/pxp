@@ -53,7 +53,8 @@ Phx.vista.EscalaSalarial=Ext.extend(Phx.gridInterfaz,{
 				filters:{pfiltro:'escsal.codigo',type:'string'},
 				id_grupo:1,
 				grid:true,
-				form:true
+				form:true,
+            bottom_filter: true
 		},
 		{
 			config:{
@@ -68,7 +69,8 @@ Phx.vista.EscalaSalarial=Ext.extend(Phx.gridInterfaz,{
 				filters:{pfiltro:'escsal.nombre',type:'string'},
 				id_grupo:1,
 				grid:true,
-				form:true
+				form:true,
+            bottom_filter: true
 		},
 		
 		{
