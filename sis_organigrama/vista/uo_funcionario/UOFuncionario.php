@@ -110,7 +110,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
    			filters:{pfiltro:'funcio.desc_funcionario1',
 				type:'string'
 			},
-   		   
+              bottom_filter: true,
    			grid:true,
    			form:true
    	      },

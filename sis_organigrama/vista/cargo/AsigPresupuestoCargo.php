@@ -22,8 +22,8 @@ header("content-type: text/javascript; charset=UTF-8");
         bexcelGroups: [0,1],
 
         gruposBarraTareas:[
+            {name:'sin_presupuesto',title:'<H1 align="center">Sin Presupuesto</h1>',grupo:1,height:0},
             {name:'con_presupuesto',title:'<H1 align="center">Con Presupuesto</h1>',grupo:0,height:0},
-            {name:'sin_presupuesto',title:'<H1 align="center">Sin Presupuesto</h1>',grupo:1,height:0}
         ],
 
         actualizarSegunTab: function(name, indice){
