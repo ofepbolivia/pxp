@@ -73,7 +73,7 @@ BEGIN
                                   f.desc_funcionario1 as nombre_funcionario,
                                   upper ( evd.cargo_memo)::varchar as nombre_cargo,
                                   evd.gestion,
-                                  evd.recomendacion,
+                                  regexp_replace(regexp_replace(evd.recomendacion, E''<.*?>'', '''', ''g'' ), E''&nbsp;'', '''', ''g'')::varchar as recomendacion,
                                   evd.cite,
                                   evd.revisado,
                                   evd.estado_modificado,
@@ -158,7 +158,7 @@ BEGIN
           end if;
 
 			v_consulta:='select initcap(f.desc_funcionario1) as nombre_funcioario,
-                                initcap (de.cargo_memo)as cargo_evaluado,
+                                upper (de.cargo_memo)as cargo_evaluado,
                                 CASE
                               WHEN pe.genero::text = ANY (ARRAY[''varon''::character varying,''VARON''::character varying, ''Varon''::character varying]::text[]) THEN ''M''::text
                               WHEN pe.genero::text = ANY (ARRAY[''mujer''::character varying,''MUJER''::character varying, ''Mujer''::character varying]::text[]) THEN ''F''::text
@@ -171,7 +171,7 @@ BEGIN
                                 de.fecha_solicitud,
                                 '''||COALESCE (v_iniciales,'NA')||'''::varchar as iniciales,
                                '''||COALESCE (v_fun_emetido,'NA')||'''::varchar as fun_imitido,
-                               de.recomendacion,
+                               COALESCE (pruebas.final_palabra(de.recomendacion), '''') as recomendacion,
                                de.cite,
                                de.correo,
                             	de.fecha_correo,
@@ -182,7 +182,7 @@ BEGIN
                                 '||v_from||'
                                 inner join orga.vfuncionario_persona f on f.id_funcionario = de.id_funcionario
                                 inner join segu.vpersona2 pe on pe.id_persona = f.id_persona
-                                inner join segu.vusuario u on u.id_usuario = de.id_usuario_mod
+                                left join segu.vusuario u on u.id_usuario = de.id_usuario_mod
                                 where de.id_proceso_wf = '||v_parametros.id_proceso_wf;
 			--Devuelve la respuesta
 
@@ -205,7 +205,7 @@ BEGIN
     elsif(p_transaccion='MEM_EVD_REPG')then
 
 		begin
-
+		--raise exception 'id %',v_parametros.id_uo;
         CREATE TEMPORARY TABLE temp_evaluacion (
                                       id_uo integer,
                                       nro_tramite varchar,
@@ -352,6 +352,66 @@ BEGIN
 			v_consulta:=v_consulta||v_parametros.filtro;
             v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
  			raise notice 'consulta %',v_consulta;
+			--Devuelve la respuesta
+			return v_consulta;
+
+		end;
+               
+    /*********************************    
+ 	#TRANSACCION:  'OR_CCO_SEL'
+ 	#DESCRIPCION:	Consulta de datos
+ 	#AUTOR:		miguel.mamani	
+ 	#FECHA:		02-07-2018 05:18:31
+	***********************************/
+
+	elsif(p_transaccion='OR_CCO_SEL')then
+     				
+    	begin
+    		--Sentencia de la consulta
+			v_consulta:='select	    evd.id_evaluacion_desempenio,
+                                    evd.cite,
+                                    evd.estado,
+                                    f.desc_funcionario1 as nombre_funcionario,
+                                    upper ( evd.cargo_memo) as nombre_cargo,
+                                    f.email_empresa,	
+                                    evd.gestion,
+                                    ger.nombre_unidad,
+                                    evd.nota,
+                                    evd.descripcion,
+                                    evd.nro_tramite
+                                    from orga.tevaluacion_desempenio evd
+                                    inner join orga.vfuncionario_cargo f on f.id_funcionario = evd.id_funcionario and (f.fecha_finalizacion is null or f.fecha_asignacion>=now()::date)
+                                    inner join orga.tuo ger ON ger.id_uo = orga.f_get_uo_gerencia(f.id_uo, NULL::integer, NULL::date)
+                                    where';
+			
+			--Definicion de la respuesta
+			v_consulta:=v_consulta||v_parametros.filtro;
+			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
+			raise notice 'cosulta %',v_consulta;
+			--Devuelve la respuesta
+			return v_consulta;
+						
+		end;
+    /*********************************    
+ 	#TRANSACCION:  'OR_CCO_CONT'
+ 	#DESCRIPCION:	Conteo de registros
+ 	#AUTOR:		miguel.mamani	
+ 	#FECHA:		02-07-2018 05:18:31
+	***********************************/
+
+	elsif(p_transaccion='OR_CCO_CONT')then
+
+		begin
+			--Sentencia de la consulta de conteo de registros
+			v_consulta:='select	  count( evd.id_evaluacion_desempenio)
+                                  from orga.tevaluacion_desempenio evd
+                                  inner join orga.vfuncionario_cargo f on f.id_funcionario = evd.id_funcionario and (f.fecha_finalizacion is null or f.fecha_asignacion>=now()::date)
+                                  inner join orga.tuo ger ON ger.id_uo = orga.f_get_uo_gerencia(f.id_uo, NULL::integer, NULL::date)
+                                  where';
+			
+			--Definicion de la respuesta		    
+			v_consulta:=v_consulta||v_parametros.filtro;
+
 			--Devuelve la respuesta
 			return v_consulta;
 

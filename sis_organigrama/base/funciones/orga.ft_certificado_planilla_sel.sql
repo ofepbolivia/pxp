@@ -227,7 +227,7 @@ BEGIN
                                '''||COALESCE (v_fun_emetido,'NA')||'''::varchar as fun_imitido,
                                c.estado
                               from orga.tcertificado_planilla c
-                              inner join orga.vfuncionario_cargo  fu on fu.id_funcionario = c.id_funcionario and( fu.fecha_finalizacion is null or  fu.fecha_finalizacion >= now() or fu.fecha_finalizacion >= ''20/12/2017'')
+                              inner join orga.vfuncionario_cargo  fu on fu.id_funcionario = c.id_funcionario and( fu.fecha_finalizacion is null or  fu.fecha_finalizacion >= now())
                               inner join orga.tcargo ca on ca.id_cargo = fu.id_cargo
                               inner join orga.tescala_salarial es on es.id_escala_salarial = ca.id_escala_salarial
                               inner join orga.tfuncionario fun on fun.id_funcionario = fu.id_funcionario

@@ -92,6 +92,7 @@ $body$
                             PERSON2.direccion,
                             FUNCIO.es_tutor
                             FROM orga.tfuncionario FUNCIO
+                            inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario and (current_date < tuo.fecha_finalizacion or tuo.fecha_finalizacion is null)
                             INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona
                             INNER JOIN SEGU.tpersona PERSON2 ON PERSON2.id_persona=FUNCIO.id_persona
                             LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
@@ -136,6 +137,7 @@ $body$
         v_consulta:='SELECT
                                   count(FUNCIO.id_funcionario)
                             FROM orga.tfuncionario FUNCIO
+                            inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario and (current_date < tuo.fecha_finalizacion or tuo.fecha_finalizacion is null)
                             INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona
                             INNER JOIN SEGU.tpersona PERSON2 ON PERSON2.id_persona=FUNCIO.id_persona
                             LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
