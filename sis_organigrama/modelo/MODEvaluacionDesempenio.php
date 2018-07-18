@@ -175,7 +175,7 @@ class MODEvaluacionDesempenio extends MODbase{
 
 
         //Ejecuta la instruccion
-        $this->armarConsulta();
+        $this->armarConsulta();//echo ($this->consulta); exit;
         $this->ejecutarConsulta();
        // var_dump($this->respuesta); exit;
         //Devuelve la respuesta
@@ -392,6 +392,30 @@ class MODEvaluacionDesempenio extends MODbase{
         //Devuelve la respuesta
         return $this->respuesta;
 
+    }
+    function listarConsultaCorreo(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='orga.ft_evaluacion_desempenio_sel';
+        $this->transaccion='OR_CCO_SEL';
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+
+        //Definicion de la lista del resultado del query
+        $this->captura('id_evaluacion_desempenio','int4');
+        $this->captura('cite','varchar');
+        $this->captura('estado','varchar');
+        $this->captura('nombre_funcionario','text');
+        $this->captura('nombre_cargo','text');
+        $this->captura('email_empresa','varchar');
+        $this->captura('gestion','integer');
+        $this->captura('nombre_unidad','varchar');
+        $this->captura('nota','int4');
+        $this->captura('descripcion','varchar');
+        $this->captura('nro_tramite','varchar');
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+        //Devuelve la respuesta
+        return $this->respuesta;
     }
 			
 }

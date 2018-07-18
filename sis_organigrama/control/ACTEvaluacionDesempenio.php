@@ -343,6 +343,27 @@ class ACTEvaluacionDesempenio extends ACTbase{
         return $ip;
 
     }
+    function listarConsultaCorreo(){
+        $this->objParam->defecto('ordenacion','id_evaluacion_desempenio');
+        $this->objParam->defecto('dir_ordenacion','asc');
+
+        if ($this->objParam->getParametro('pes_estado') == 'enviado') {
+            $this->objParam->addFiltro("evd.estado in (''enviado'')");
+        }
+        if ($this->objParam->getParametro('pes_estado') == 'revisado') {
+            $this->objParam->addFiltro("evd.estado in (''revisado'')");
+        }
+        if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+            $this->objReporte = new Reporte($this->objParam,$this);
+            $this->res = $this->objReporte->generarReporteListado('MODEvaluacionDesempenio','listarConsultaCorreo');
+        } else{
+            $this->objFunc=$this->create('MODEvaluacionDesempenio');
+
+            $this->res=$this->objFunc->listarConsultaCorreo($this->objParam);
+        }
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
 
 }
 ?>
