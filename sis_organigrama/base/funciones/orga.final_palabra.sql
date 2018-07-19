@@ -1,52 +1,45 @@
 CREATE OR REPLACE FUNCTION orga.final_palabra (
-  v_recomendacion varchar
+  texto varchar
 )
 RETURNS varchar AS
 $body$
 DECLARE
-  result 					varchar;
-  reg 						record;
-  reco 						varchar;
-  cont 						integer;
-  i							record;
-  caja						varchar[];
-  v_cantidad				integer;
-  v_resp		            varchar;
-  v_nombre_funcion        	text;
-  v_guion					varchar;
-  v_iniciales				varchar;
-  v_i						integer;
-  total						varchar;
-  espacio					varchar;
-  total1 					varchar;
-  v_punto					varchar;
-	
+reco      				varchar;
+v_iniciales   			varchar;
+resp      				varchar;
+resp1      				varchar;
+resp2      				varchar;
+espacio     			varchar;
+result      			varchar;
+resul					varchar;
+v_i						integer;
+total					varchar;
+linea					varchar;
+data					varchar;
+data1 					varchar;
 BEGIN
-	reco = regexp_replace(regexp_replace(v_recomendacion, E'<.*?>', '', 'g' ), E'&nbsp;', '', 'g'); --eliminar todo html
-    v_guion = replace(reco,'-','');
-    v_punto = replace(v_guion,'•','');
-    v_resp=regexp_replace(v_punto,'[[:space:]][[:space:]]',' ','g');     
-    v_iniciales = REGEXP_REPLACE(v_resp,'[[:digit:]].','','g');
-	v_i = orga.f_punto(v_iniciales);
-    
-    if v_i > 1 then
-    
-     espacio = replace(replace(v_iniciales,chr(10), ' '),chr(13),' ');
-     result =replace(espacio,'.',chr(10));
-     
-    elsif v_i = 1 then    
-    
-     total = replace(replace(replace(replace(v_iniciales,chr(10),' '),chr(11),''),chr(13),''),chr(27),'');
-     result = total;
-     
-    elsif v_i = 0 then
-      total = replace(replace(replace(v_iniciales,chr(11),''),chr(13),''),chr(27),'');
-      --espacio = replace(replace(total,chr(10), ' '),chr(13),'');
-     -- total1 = replace(espacio,chr(10),' ');
-	  result = total;
-     end if;
-     
-   RETURN result;
+v_iniciales = regexp_replace(regexp_replace(texto, E'<.*?>', '', 'g' ), E'&nbsp;', '', 'g'); 
+espacio = regexp_replace(v_iniciales,'[[:space:]][[:space:]]',' ','g');
+resp = REGEXP_REPLACE(espacio,'[[:digit:]]. ','','g');
+resp1 = REGEXP_REPLACE(resp,'[[:digit:]].','','g');
+
+v_i = pruebas.f_punto(resp1);
+
+if v_i > 1 then 
+      result = replace(resp1,'. ','.');
+   	  linea = replace(replace(result,chr(10),''),chr(13),'');
+      data = trim(linea);
+      data1 = replace(data,'. ','.');
+      resul = replace(data1,'.',chr(10));
+
+elsif v_i = 1 then
+     total = replace(replace(replace(replace(resp1,chr(10),' '),chr(11),''),chr(13),''),chr(27),'');
+     resul = total;
+elsif v_i = 0 then 
+      total = replace(replace(replace(resp1,chr(11),''),chr(13),''),chr(27),'');
+	  resul = total;
+end if;           
+return resul;
 END;
 $body$
 LANGUAGE 'plpgsql'

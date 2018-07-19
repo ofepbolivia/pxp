@@ -15,6 +15,7 @@ BEGIN
 dato = REGEXP_REPLACE(texto,'[[:space:]]','','g');
 bus = regexp_split_to_array(dato,E'\\s*');
 cont = array_length(bus,1);
+if cont > 0 then
 for i in 1..cont
 loop
 	guar[o]=bus[i];
@@ -23,6 +24,9 @@ loop
     end if;
     o=o+1;
 end loop;
+else 
+	sum=0;
+end if;
 return sum;
 END;
 $body$

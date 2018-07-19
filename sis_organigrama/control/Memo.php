@@ -37,7 +37,7 @@ class Respuestas extends MYPDF{
         $this->Cell(0, 0, 'Cc:AH', 0, 0, 'L');
         $this->Image(dirname(__FILE__) . '/../reportes/firmavb1.jpg', 25, 250, 23);
 
-        $html = $_SERVER['HTTP_HOST'].'/'.ltrim($_SESSION["_FOLDER"], '/').'sis_memos/control/Memo.php?proceso='.$_GET['proceso'];
+        $html = $_SERVER['HTTP_HOST'].'/'.ltrim($_SESSION["_FOLDER"], '/').'sis_organigrama/control/Memo.php?proceso='.$_GET['proceso'];
 
         $style = array(
             'border' => 2,
@@ -133,12 +133,36 @@ EOF;
         }else{
             $recomendacion ='';
         }
+		$string = $array['recomendacion'];			
+		if($string!=null or $string  != ""){	
+			$tmp_arr1= explode("\n\n",trim($string));		 		
+			$final_arr=array();
+			foreach($tmp_arr1 as $section){					
+			    $final_arr[]= explode("\n",$section);		
+			}	
+			$cont=count($final_arr[0]);	
+			if($cont>1){			
+			$htmlR="";	
+			    $htmlR.="<ol><li>";
+				$htmlR.=implode("</li><li>",$final_arr[0]);			
+				$htmlR.="</li></ol>";			
+			}else if($cont==1){
+			$htmlR="";
+				foreach($final_arr as $section){
+			    $htmlR.="<ol><li>";
+			    $htmlR.=implode("</li><li>",$section);
+			    $htmlR.="</li></ol>";
+			  }		
+			}
+		}else{
+			$htmlR='';
+		}		
 
         if ($array["nota"] >= 91 and $array["nota"]<= 100) {
             $this->writeHTML('<p>'.$gen.':</p>
        <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la Evaluación de <b>Desempeño de la Gestión '.$array["gestion"].'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
                             <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso el agradecimiento y felicitación;  por su trabajo tesonero y compromiso con nuestros valores empresariales.</p>
-                           '.$recomendacion.'
+                           <p p align = "justificar">'.$htmlR.'</p>
                             <p align="justica">Seguro de que estos resultados obtenidos serán replicados y mejorados en adelante, reciba usted mis consideraciones distinguidas.</p>
                             ',true);
             $this->firmas();
@@ -147,7 +171,7 @@ EOF;
             $this->writeHTML('<p>'.$gen.':</p>
        <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la <b>Evaluación de Desempeño de la Gestión '.$array["gestion"].'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
                             <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso mis felicitaciones  por su trabajo en Boliviana de Aviación.  </p>
-                            '.$recomendacion.'
+                            <p p align = "justificar">'.$htmlR.'</p>
                             <p align="justica">Seguro de que estos resultados obtenidos serán replicados y mejorados en adelante, reciba usted mis consideraciones distinguidas.</p>
                             ',true);
             $this->firmas();
@@ -156,7 +180,7 @@ EOF;
             $this->writeHTML('<p>'.$gen.':</p>
        <p align="justica">De acuerdo a procedimientos establecidos tengo a bien comunicar, que habiéndose realizado la Evaluación de Desempeño de la Gestión '.$array["gestion"].', se evidencia que usted ha obtenido una calificación de <b>suficiente</b> en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
                             <p align="justica">En este sentido, se sugiere tomar en cuenta las siguientes observaciones que reflejan la evaluación del desempeño gestión '.$array["gestion"].', a fin de mejorar su desempeño:  </p>
-                            '.$recomendacion.'
+                            <p p align = "justificar">'.$htmlR.'</p>
                             <p align="justica">Seguro de que estas observaciones serán corregidas oportunamente, reciba usted mis consideraciones distinguidas.</p>
                             ',true);
 
