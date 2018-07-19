@@ -60,7 +60,7 @@ EOF;
             'module_width' => 1, // width of a single module in points
             'module_height' => 1 // height of a single module in points
         );
-
+		
         $this->write2DBarcode($html, 'QRCODE,M', 160, 240, 30, 30, $style, 'N');
 
 
@@ -133,7 +133,7 @@ EOF;
        <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la Evaluación de <b>Desempeño de la Gestión '.$this->datos[0]['gestion'].'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
 
                             <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso el agradecimiento y felicitación;  por su trabajo tesonero y compromiso con nuestros valores empresariales.</p>
-                            <p>'.$htmlR.'</p>
+                            <p align="justica">'.$htmlR.'</p>
                             <p align="justica">Seguro de que estos resultados obtenidos serán replicados y mejorados en adelante, reciba usted mis consideraciones distinguidas.</p>
                             ',true);
             $this->firmas();
@@ -142,7 +142,7 @@ EOF;
             $this->writeHTML('<p>'.$gen.':</p>
        <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la <b>Evaluación de Desempeño de la Gestión '.$this->datos[0]['gestion'].'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
                             <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso mis felicitaciones  por su trabajo en Boliviana de Aviación.  </p>
-                            <p>'.$htmlR.'</p>
+                            <p align="justica">'.$htmlR.'</p>
                             <p align="justica">Seguro de que estos resultados obtenidos serán replicados y mejorados en adelante, reciba usted mis consideraciones distinguidas.</p>
                             ',true);
             $this->firmas();
@@ -151,7 +151,7 @@ EOF;
             $this->writeHTML('<p>'.$gen.':</p>
        <p align="justica">De acuerdo a procedimientos establecidos tengo a bien comunicar, que habiéndose realizado la Evaluación de Desempeño de la Gestión '.$this->datos[0]['gestion'].', se evidencia que usted ha obtenido una calificación de <b>suficiente</b> en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
                             <p align="justica">En este sentido, se sugiere tomar en cuenta las siguientes observaciones que reflejan la evaluación del desempeño gestión '.$this->datos[0]['gestion'].', a fin de mejorar su desempeño:  </p>
-                            <p>'.$htmlR.'</p>
+                            <p align="justica">'.$htmlR.'</p>                            
                             <p align="justica">Seguro de que estas observaciones serán corregidas oportunamente, reciba usted mis consideraciones distinguidas.</p>
                             ',true);
 
@@ -164,7 +164,7 @@ EOF;
     function firmas (){
 
         $url_imagen2 = dirname(__FILE__) . '/../reportes/firmarGerencia.png';
-        $this->Ln(20);
+        $this->Ln(5);
         $html = <<<EOF
             <table style="height: 140px;" width="407">
 <tbody>

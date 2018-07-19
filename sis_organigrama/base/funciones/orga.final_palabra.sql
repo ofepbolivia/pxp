@@ -23,7 +23,7 @@ espacio = regexp_replace(v_iniciales,'[[:space:]][[:space:]]',' ','g');
 resp = REGEXP_REPLACE(espacio,'[[:digit:]]. ','','g');
 resp1 = REGEXP_REPLACE(resp,'[[:digit:]].','','g');
 
-v_i = pruebas.f_punto(resp1);
+v_i = orga.f_punto(resp1);
 
 if v_i > 1 then 
       result = replace(resp1,'. ','.');
