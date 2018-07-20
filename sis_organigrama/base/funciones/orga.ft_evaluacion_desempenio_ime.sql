@@ -69,6 +69,9 @@ DECLARE
     v_cargo_actual 				varchar;
     v_plantilla					varchar;
     v_emisor					record;
+    v_codigo 					varchar;
+    v_mensaje					varchar;
+    v_mjs						varchar;
 
 BEGIN
 
@@ -264,12 +267,12 @@ BEGIN
 
 		end;
       /*********************************
- 	#TRANSACCION:  'OR_SIGUE_EMI'
+ 	#TRANSACCION:  'EV_SIGUE_EMI'
  	#DESCRIPCION:	Siguiente e
  	#AUTOR:		MMV
  	#FECHA:		06-06-2017 17:32:59
 	***********************************/
-    elseif(p_transaccion='OR_SIGUE_EMI') then
+    elseif(p_transaccion='EV_SIGUE_EMI') then
     	begin
 
           --recupera el registro de la CVPN
@@ -365,12 +368,12 @@ BEGIN
         end;
 
     /*********************************
- 	#TRANSACCION:  'OR_ANTE_IME'
+ 	#TRANSACCION:  'EV_ANTE_IME'
  	#DESCRIPCION:	Anterior estado
  	#AUTOR:		MMV
  	#FECHA:		06-06-2017 17:32:59
 	***********************************/
-    elseif(p_transaccion='OR_ANTE_IME') then
+    elseif(p_transaccion='EV_ANTE_IME') then
     	begin
 
         	v_operacion = 'anterior';
@@ -711,8 +714,40 @@ BEGIN
 	elsif(p_transaccion='EVD_GE_ACT')then
 
 		begin
+              CREATE TEMPORARY TABLE temp_evaluacion (
+                                      funcionaro varchar
+                                      )ON COMMIT DROP;
+         	v_codigo = v_parametros.funcionarios:: JSON->>'codigo';
+            v_mensaje = v_parametros.funcionarios:: JSON->>'descripcion';
             v_funcionarios = v_parametros.funcionarios:: JSON->>'objeto';
-              --raise exception  'hola %',v_funcionarios;
+            v_codigo = v_parametros.funcionarios:: JSON->>'codigo';
+              IF v_codigo = '0' and  (v_funcionarios is null or v_funcionarios = '')  then
+            	raise exception '%',v_mensaje;
+            end if;
+           
+           
+           IF v_codigo = '0' and v_mensaje = 'Falta evaluar' then
+            	
+                
+    		for v_json IN (SELECT json_array_elements(v_funcionarios :: JSON))
+            loop 
+             v_evaluado = v_json.json_array_elements::json;
+             v_id_funcionario = v_evaluado::json->>'id_funcionario';
+             
+             select f.desc_funcionario1
+              	into v_datos
+             	from orga.vfuncionario f 
+             	where f.id_funcionario = v_id_funcionario;
+                insert  into temp_evaluacion (funcionaro)select v_datos.desc_funcionario1::varchar;
+             end loop;
+             
+            select pxp.list(funcionaro)
+             INTO v_mjs
+             from temp_evaluacion ;
+             raise exception 'Falta evaluar los Funcionaros: %',v_mjs;
+             
+           
+          else -----
 
            for v_json IN (SELECT json_array_elements(v_funcionarios :: JSON))
             loop
@@ -723,7 +758,6 @@ BEGIN
              v_nota = v_evaluado::json->>'nota';
              v_descripcion = v_evaluado::json->>'descripcion';
 
-
             select g.id_gestion, g.gestion
                    into v_gestion, anho
                    from param.tgestion g
@@ -733,7 +767,7 @@ BEGIN
           into v_codigo_tipo_proceso, v_id_proceso_macro
            from  wf.tproceso_macro pm
            inner join wf.ttipo_proceso tp on tp.id_proceso_macro = pm.id_proceso_macro
-           where pm.codigo='EDF' and tp.estado_reg = 'activo' and tp.inicio = 'si' ;
+           where pm.codigo='MED' and tp.estado_reg = 'activo' and tp.inicio = 'si' ;
 
                  -- inciar el tramite en el sistema de WF
            SELECT
@@ -874,7 +908,7 @@ BEGIN
           into v_codigo_tipo_proceso, v_id_proceso_macro
            from  wf.tproceso_macro pm
            inner join wf.ttipo_proceso tp on tp.id_proceso_macro = pm.id_proceso_macro
-           where pm.codigo='EDF' and tp.estado_reg = 'activo' and tp.inicio = 'si' ;
+           where pm.codigo='MED' and tp.estado_reg = 'activo' and tp.inicio = 'si' ;
 
                  -- inciar el tramite en el sistema de WF
            SELECT
@@ -1003,6 +1037,7 @@ BEGIN
           end if;
 
             end loop;
+            end if;
             --Definicion de la respuesta
             v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Exito');
             v_resp = pxp.f_agrega_clave(v_resp,'v_id_uo',v_id_uo::varchar);
@@ -1021,7 +1056,9 @@ BEGIN
 		elsif(p_transaccion='EVD_MEM_COR')then
 
             begin
-        --raise exception 'llega %',v_parametros.link;
+
+    IF  pxp.f_existe_parametro(p_tabla,'id_uo') THEN
+
             for v_registros_cer in (select f.id_funcionario,
             								initcap(f.desc_funcionario1) as nombre_funionaro,
                                             evd.gestion,
@@ -1045,7 +1082,7 @@ BEGIN
                                                                                   evd.nota >= 81 and evd.nota <= 90
                                                                                  else
                                                                                   evd.nota >= 91 and evd.nota <= 100
-                                                                                 end )  and evd.estado = 'enviado' )loop
+                                                                                 end )  )loop
 
 
         select initcap (fun.desc_funcionario1) as nombre_funionaro,
@@ -1056,29 +1093,112 @@ BEGIN
         inner join orga.vfuncionario_persona p on p.id_persona = u.id_persona
         inner join orga.vfuncionario_cargo fun on fun.id_funcionario = p.id_funcionario
         and (fun.fecha_finalizacion is null or fun.fecha_finalizacion >= now()::date)
-        where u.id_usuario = 18 /*p_id_usuario*/;
+        where u.id_usuario = p_id_usuario;
 
-                v_plantilla='<span style="color: #3366ff;"><h1>Evaluacion de Desempeño</h1></span>
-                			<p><span style="color: #3366ff;">' ||v_registros_cer.genero||''||v_registros_cer.nombre_funionaro||'</span></p>
-                            <p><span style="color: #3366ff;">Enviamos para su conocimiento el enlace para ver el Memorándum de <b>Evaluación de Desempeño</b> correspondiente a la <b>gestión '||v_registros_cer.gestion||'</b></span></p>
-                            <p><span style="color: #3366ff;">La lectura y visualizaci&oacute;n de este mensaje tiene caracter obligatorio.</span></p>
-                            <p><a href="http://'||v_parametros.link||'sis_memos/control/Memo.php?proceso='||v_registros_cer.id_proceso_wf||'"><b>Enlace para ver el Memorandum</b></a></p>
-                           	<p><span style="color: #3366ff;">En caso de tener alguna duda  favor remitirse al Departamento de Recursos Humanos y/o a su inmediato superior.</span></p>
-                			<p><span style="color: #3366ff;">Sin otro particular, un cordial saludo.</span></p>
-                            <p><span style="color: #3366ff;">Atentamente.<br>'||v_emisor.nombre_funionaro||'<br>'||v_emisor.nombre_cargo||'<br>Departamento de Recursos Humanos - Boa</span></p>
+                v_plantilla='<p><span style="color: #3E3BF4;">' ||v_registros_cer.genero||''||regexp_replace (v_registros_cer.nombre_funionaro, '[^a-zA-Z0-9]', ' ', 'g')||'</span></p>
+                            <p><span style="color: #3E3BF4;">Enviamos para su conocimiento el enlace para ver el Memorándum de <b>Evaluación de Desempeño</b> correspondiente a la <b>gestión '||v_registros_cer.gestion||'</b></span></p>
+                            <p><span style="color: #3E3BF4;">La lectura y visualizaci&oacute;n de este mensaje tiene caracter obligatorio.</span></p>
+                            <p><a href="http://'||v_parametros.link||'sis_organigrama/control/Memo.php?proceso='||v_registros_cer.id_proceso_wf||'"><b>Enlace para ver el Memorandum</b></a></p>
+                           	<p><span style="color: #3E3BF4;">En caso de tener alguna duda  favor remitirse al Departamento de Recursos Humanos y/o a su inmediato superior.</span></p>
+                			<p><span style="color: #3E3BF4;">Sin otro particular, un cordial saludo.</span></p>
+                            <p><img src="../../../sis_organigrama/media/RRHH.jpeg">';
+
+
+
+             v_id_alarma = (select param.f_inserta_alarma_dblink (p_id_usuario,'Evaluacion de Desempeño Gestión '||v_registros_cer.gestion::varchar,v_plantilla::text,v_registros_cer.email_empresa::varchar));
+
+
+     --- (v_correo = null)then
+    if exists(select 1
+      			from wf.tdocumento_wf dw
+     			where dw.id_proceso_wf = v_registros_cer.id_proceso_wf and
+                 dw.id_tipo_documento = 408) THEN
+
+     else
+     
+        INSERT INTO  wf.tdocumento_wf (
+              id_usuario_reg,
+              fecha_reg,
+              estado_reg,
+              id_tipo_documento,
+              id_proceso_wf,
+              demanda,
+              obs,
+              momento,
+              chequeado
+
+            )
+          VALUES (
+            p_id_usuario,
+            now(),
+            'activo',
+            408::integer,
+            v_registros_cer.id_proceso_wf,
+            'si',
+            'insertado manualmente',
+            'exigir',
+            'no'
+          );
+          
+           update orga.tevaluacion_desempenio set
+                estado = 'enviado',
+                fecha_correo = now()::date,
+                correo = v_registros_cer.email_empresa,
+                id_usuario_mod = p_id_usuario,
+                plantilla = v_plantilla
+                where id_proceso_wf = v_registros_cer.id_proceso_wf;
+     	end if;
+        
+     end loop;
+	ELSE
+
+                            select f.id_funcionario,
+                                    initcap(f.desc_funcionario1) as nombre_funionaro,
+                                    evd.gestion,
+                                    evd.id_proceso_wf,
+                                    f.email_empresa	,
+                                     (CASE
+                                WHEN pe.genero::text = ANY (ARRAY['varon'::character varying,'VARON'::character varying, 'Varon'::character varying]::text[]) THEN 'Estimado: '::text
+                                WHEN pe.genero::text = ANY (ARRAY['mujer'::character varying,'MUJER'::character varying, 'Mujer'::character varying]::text[]) THEN 'Estimada: '::text
+                                ELSE ''::text
+                                END::character varying) AS genero
+                                into
+                                v_registros_cer
+            					from orga.tevaluacion_desempenio evd
+                                inner join orga.vfuncionario_cargo f on f.id_funcionario = evd.id_funcionario and (f.fecha_finalizacion is null or f.fecha_asignacion>=now()::date)
+								inner join orga.vfuncionario_persona p on p.id_funcionario = f.id_funcionario
+        						inner join segu.vpersona2 pe on pe.id_persona = p.id_persona
+                                where evd.id_funcionario = v_parametros.id_funcionario and evd.gestion = v_parametros.gestion;
+		
+        select initcap (fun.desc_funcionario1) as nombre_funionaro,
+        		initcap ( fun.descripcion_cargo) as nombre_cargo
+                into
+                v_emisor
+        from segu.tusuario u
+        inner join orga.vfuncionario_persona p on p.id_persona = u.id_persona
+        inner join orga.vfuncionario_cargo fun on fun.id_funcionario = p.id_funcionario
+        and (fun.fecha_finalizacion is null or fun.fecha_finalizacion >= now()::date)
+        where u.id_usuario = p_id_usuario;
+
+                v_plantilla='<p><span style="color: #150296;">' ||v_registros_cer.genero||''||regexp_replace (v_registros_cer.nombre_funionaro, '[^a-zA-Z0-9]', ' ', 'g')||'</span></p>
+                            <p><span style="color: #150296;">Enviamos para su conocimiento el enlace para ver el Memorándum de <b>Evaluación de Desempeño</b> correspondiente a la <b>gestión '||v_registros_cer.gestion||'</b></span></p>
+                            <p><span style="color: #150296;">La lectura y visualizaci&oacute;n de este mensaje tiene caracter obligatorio.</span></p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://'||v_parametros.link||'sis_organigrama/control/Memo.php?proceso='||v_registros_cer.id_proceso_wf||'"><span style="color: #150296;"><b>Enlace para ver el Memorandum</b></span></a></p>
+                           	<p><span style="color: #150296;">En caso de tener alguna duda  favor remitirse al Departamento de Recursos Humanos y/o a su inmediato superior.</span></p>
+                			<p><span style="color: #150296;">Sin otro particular, un cordial saludo.</span></p>
                             <p><img src="../../../sis_organigrama/media/RRHH.jpeg">';
 
 
 
 
-             v_id_alarma = (select param.f_inserta_alarma_dblink (p_id_usuario,'Evaluacion de Desempeño'::varchar,v_plantilla::text,v_registros_cer.email_empresa::varchar));
+             v_id_alarma = (select param.f_inserta_alarma_dblink (p_id_usuario,'Evaluacion de Desempeño Gestión '||v_registros_cer.gestion::varchar,v_plantilla::text,v_registros_cer.email_empresa::varchar));
 
 
 
      --if (v_correo = null)then
     if exists( 	select 1
       			from wf.tdocumento_wf dw
-     			where dw.id_proceso_wf = v_registros_cer.id_proceso_wf and dw.id_tipo_documento = 407) THEN
+     			where dw.id_proceso_wf = v_registros_cer.id_proceso_wf and dw.id_tipo_documento = 408) THEN
      raise notice 'Ya existe';
 
      else
@@ -1099,14 +1219,14 @@ BEGIN
             p_id_usuario,
             now(),
             'activo',
-            407::integer,
+            408::integer,
             v_registros_cer.id_proceso_wf,
             'si',
             'insertado manualmente',
             'exigir',
             'no'
           );
-     end if;
+     		end if;
 
          update orga.tevaluacion_desempenio set
                 estado = 'enviado',
@@ -1115,8 +1235,10 @@ BEGIN
                 id_usuario_mod = p_id_usuario,
                 plantilla = v_plantilla
                 where id_proceso_wf = v_registros_cer.id_proceso_wf;
-            end loop;
-
+                               
+    
+    
+    END IF;
 
     --Definicion de la respuesta
             v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Exito');
@@ -1146,7 +1268,7 @@ BEGIN
 
             if exists( 	select 1
       			from wf.tdocumento_wf dw
-     			where dw.id_proceso_wf = v_parametros.id_proceso_wf and dw.id_tipo_documento = 407) THEN
+     			where dw.id_proceso_wf = v_parametros.id_proceso_wf and dw.id_tipo_documento = 409) THEN
      raise notice 'Ya existe';
 
      else
@@ -1167,7 +1289,7 @@ BEGIN
             p_id_usuario,
             now(),
             'activo',
-            407::integer,
+            409::integer,
             v_parametros.id_proceso_wf,
             'si',
             'insertado manualmente',

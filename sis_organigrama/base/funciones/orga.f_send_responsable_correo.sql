@@ -4,7 +4,8 @@ CREATE OR REPLACE FUNCTION orga.f_send_responsable_correo (
   p_id_funcionario integer,
   p_fecha_asignacion date,
   p_fecha_finalizacion date,
-  p_id_usuario integer
+  p_id_usuario integer,
+  p_id_cargo integer
 )
 RETURNS boolean AS
 $body$
@@ -24,10 +25,9 @@ BEGIN
 	
     select tcon.codigo, tcon.nombre
 	into v_rec_contrato
-    from orga.tuo_funcionario tuf
-    inner join orga.tcargo tc on tc.id_cargo = tuf.id_cargo
+    from orga.tcargo tc 
     inner join orga.ttipo_contrato tcon on tcon.id_tipo_contrato = tc.id_tipo_contrato
-    where tuf.id_uo_funcionario = p_id_uo_funcionario;
+    where tc.id_cargo = p_id_cargo;
     
     if v_rec_contrato.codigo in ('PLA', 'EVE', 'CONS', 'PEXTE', 'PEXT') then
     	
@@ -61,7 +61,7 @@ BEGIN
                                               '{filtro_directo:{campo:"id_funcionario",valor:"'||p_id_funcionario::varchar||'"}}',
                                               NULL::integer,
                                               'Solicitud Cuenta de Correo ',
-                                              'correos@boa.bo',
+                                              'correos@boa.bo,(franklin.espinoza@boa.bo)',
                                               null, 
                                               null
                                               );

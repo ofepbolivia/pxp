@@ -282,9 +282,10 @@ Phx.vista.EvaluacionDesempenio=Ext.extend(Phx.gridInterfaz,{
                 name: 'recomendacion',
                 fieldLabel: 'Recomendacion',
                 anchor: '90%',
-                gwidth: 220
+                gwidth: 220,
+                height: 300
             },
-            type:'HtmlEditor',
+            type:'TextArea',
             id_grupo:1,
             grid:true,
             form:true
