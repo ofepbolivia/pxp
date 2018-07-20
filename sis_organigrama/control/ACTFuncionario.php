@@ -31,13 +31,30 @@ class ACTFuncionario extends ACTbase{
 																						 $_SESSION["ss_id_usuario"] . ") AS (id_funcionario INTEGER)) ");
 		}
 
-        if($this->objParam->getParametro('estado_func')=='activo'){
-            $this->objParam->addFiltro("FUNCIO.estado_reg = ''activo''");
+        /*if($this->objParam->getParametro('estado_func')=='activo'){
+            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''activo'' and ((select coalesce(tuo.fecha_finalizacion, ''31/12/9999''::date)
+                                                                            from orga.tuo_funcionario tuo
+                                                                            where tuo.id_funcionario = FUNCIO.id_funcionario
+                                                                            order by tuo.fecha_asignacion desc limit 1 )::date > current_date ))");
         }else if($this->objParam->getParametro('estado_func')=='inactivo'){
-            $this->objParam->addFiltro("FUNCIO.estado_reg = ''inactivo''");
+            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''inactivo'' or ((select coalesce(tuo.fecha_finalizacion, ''31/12/9999''::date)
+                                                                             from orga.tuo_funcionario tuo
+                                                                             where tuo.id_funcionario = FUNCIO.id_funcionario
+                                                                             order by tuo.fecha_asignacion desc limit 1 )::date < current_date ))");
         }else{
-            $this->objParam->addFiltro("FUNCIO.estado_reg = ''activo''");
+            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''activo'' and ((select coalesce(tuo.fecha_finalizacion, ''31/12/9999''::date)
+                                                                            from orga.tuo_funcionario tuo
+                                                                            where tuo.id_funcionario = FUNCIO.id_funcionario
+                                                                            order by tuo.fecha_asignacion desc limit 1 )::date > current_date ))");
+        }*/
+        if($this->objParam->getParametro('estado_func')=='activo'){
+            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''activo'' and current_date < coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date))");
+        }else if($this->objParam->getParametro('estado_func')=='inactivo'){
+            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''inactivo'' or tuo.fecha_finalizacion < current_date)");
+        }else{
+            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''activo'' and current_date < coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date))");
         }
+
         //(FEA)Filtro Correos
         if($this->objParam->getParametro('correo_func')=='sin_correo'){
             $this->objParam->addFiltro("(FUNCIO.email_empresa = '''' or FUNCIO.email_empresa is null)");

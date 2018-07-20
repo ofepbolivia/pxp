@@ -430,6 +430,59 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid:true,
                 form:false
             },
+            {
+                config:{
+                    fieldLabel: "Cargo",
+                    gwidth: 200,
+                    name: 'nombre_cargo',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'tca.nombre',type:'string'},
+                bottom_filter : true,
+                id_grupo:1,
+                grid:true,
+                form:true
+            },
+
+            {
+                config:{
+                    name: 'fecha_asignacion',
+                    fieldLabel: 'Fecha Asignación',
+                    allowBlank: true,
+                    anchor: '80%',
+                    gwidth: 100,
+                    renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+                },
+                type:'DateField',
+                filters:{pfiltro:'tuo.fecha_asignacion',type:'date'},
+                id_grupo:0,
+                grid:true,
+                form:false
+            },
+            {
+                config:{
+                    name: 'fecha_finalizacion',
+                    fieldLabel: 'Fecha Finalización.',
+                    allowBlank: true,
+                    anchor: '80%',
+                    gwidth: 100,
+                    renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+                },
+                type:'DateField',
+                filters:{pfiltro:'tuo.fecha_finalizacion',type:'date'},
+                id_grupo:0,
+                grid:true,
+                form:false
+            },
 
             {
                 config:{
@@ -496,6 +549,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid:true,
                 form:true
             },
+
 
             //PERSONA
             {
@@ -1049,6 +1103,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 id_grupo:0,
                 grid:true,
                 form:false
+
             },
             {
                 config:{
@@ -1128,6 +1183,9 @@ header("content-type: text/javascript; charset=UTF-8");
             'expedicion',
             'direccion',
             'es_tutor',
+            {name:'fecha_asignacion', type: 'date', dateFormat:'Y-m-d'},
+            {name:'fecha_finalizacion', type: 'date', dateFormat:'Y-m-d'},
+            'nombre_cargo'
         ],
         sortInfo:{
             field: 'PERSON.nombre_completo2',

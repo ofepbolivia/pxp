@@ -48,7 +48,18 @@ $body$
 
       --consulta:=';
       BEGIN
+      --Creamos una tabla donde obtenemos la ultima asignacion de un funcionario
+       	create temp table tt_orga_filtro (
+          	id_funcionario integer,
+          	id_uo_funcionario integer
+       	)on commit drop;
 
+        v_consulta = 'insert into tt_orga_filtro
+                      select tuo.id_funcionario,  max(tuo.id_uo_funcionario)
+                      from orga.tuo_funcionario tuo
+                      group by  tuo.id_funcionario';
+
+        execute(v_consulta);
         v_consulta:='SELECT
                             FUNCIO.id_funcionario,
                             FUNCIO.codigo,
@@ -90,14 +101,22 @@ $body$
                             PERSON2.tipo_documento,
                             PERSON2.expedicion,
                             PERSON2.direccion,
-                            FUNCIO.es_tutor
+                            FUNCIO.es_tutor,
+                            tuo.fecha_asignacion,
+                            tuo.fecha_finalizacion,
+                            tca.nombre as nombre_cargo
+
                             FROM orga.tfuncionario FUNCIO
+                            inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario AND
+                            tuo.id_uo_funcionario  in (select id_uo_funcionario
+                                                        from tt_orga_filtro)
+                            inner join orga.tcargo tca on tca.id_cargo = tuo.id_cargo
                             INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona
                             INNER JOIN SEGU.tpersona PERSON2 ON PERSON2.id_persona=FUNCIO.id_persona
                             LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
                             inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
 						    left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
-						    left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10 and tar.id_archivo_fk is null
+						    left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10
                             WHERE ';
 
 
@@ -132,10 +151,27 @@ $body$
 
       --consulta:=';
       BEGIN
+      BEGIN
+      --Creamos una tabla donde obtenemos la ultima asignacion de un funcionario
+		  create temp table tt_orga_filtro (
+          	id_funcionario integer,
+          	id_uo_funcionario integer
+       	)on commit drop;
+
+        v_consulta = 'insert into tt_orga_filtro
+                      select tuo.id_funcionario,  max(tuo.id_uo_funcionario)
+                      from orga.tuo_funcionario tuo
+                      group by  tuo.id_funcionario';
+
+        execute(v_consulta);
 
         v_consulta:='SELECT
-                                  count(FUNCIO.id_funcionario)
+         					count(FUNCIO.id_funcionario)
                             FROM orga.tfuncionario FUNCIO
+                            inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario AND
+                            tuo.id_uo_funcionario  in (select id_uo_funcionario
+                                                        from tt_orga_filtro)
+                            inner join orga.tcargo tca on tca.id_cargo = tuo.id_cargo
                             INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona
                             INNER JOIN SEGU.tpersona PERSON2 ON PERSON2.id_persona=FUNCIO.id_persona
                             LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
