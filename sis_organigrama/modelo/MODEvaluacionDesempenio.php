@@ -42,7 +42,8 @@ class MODEvaluacionDesempenio extends MODbase{
 		$this->captura('usr_reg','varchar');
 		$this->captura('usr_mod','varchar');
 		$this->captura('nombre_funcionario','text');
-		$this->captura('cargo_memo','varchar');
+		$this->captura('nombre_cargo_evaluado','varchar');
+		$this->captura('nombre_cargo_actual_memo','varchar');
 		$this->captura('gestion','int4');
 		$this->captura('recomendacion','varchar');
 		$this->captura('cite','varchar');
@@ -154,7 +155,7 @@ class MODEvaluacionDesempenio extends MODbase{
         //$this->setParametro('historico','historico','varchar');
 
         $this->captura('nombre_funcioario','text');
-        $this->captura('cargo_memo','text');
+        $this->captura('cargo_evaluado','text');
         $this->captura('genero','varchar');
         $this->captura('nro_tramite','varchar');
         $this->captura('gestion','int4');

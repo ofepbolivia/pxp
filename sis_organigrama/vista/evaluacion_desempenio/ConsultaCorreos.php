@@ -96,13 +96,13 @@ header("content-type: text/javascript; charset=UTF-8");
             {
                 config:{
                     name: 'nombre_cargo',
-                    fieldLabel: 'Cargo',
+                    fieldLabel: 'Cargo Evaluado',
                     allowBlank: true,
                     anchor: '80%',
                     gwidth: 150
                 },
                 type:'TextField',
-                filters:{pfiltro:'evd.cargo_memo',type:'string'},
+                filters:{pfiltro:'evd.cargo_evaluado',type:'string'},
                 id_grupo:1,
                 grid:true,
                 form:true

@@ -76,13 +76,14 @@ EOF;
             $gen = 'Señora';
         }
 	
-	$string = $this->datos[0]['recomendacion'];			
+	$string = $this->datos[0]['recomendacion'];	
+	//var_dump($string);exit;		
 	if($string!=null){	
 		$tmp_arr1= explode("\n\n",trim($string));		 		
 		$final_arr=array();
 		foreach($tmp_arr1 as $section){		
 		    $final_arr[]= explode("\n",$section);		
-		}	
+		}			
 		$cont=count($final_arr[0]);	
 		if($cont>1){			
 		$htmlR="";	
@@ -99,7 +100,7 @@ EOF;
 		}
 	}else{
 		$htmlR='';
-	}	
+	}		
 	//var_dump($htmlR);exit;	
         $this->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
         $this->SetFont('helvetica','B',11);
@@ -116,7 +117,7 @@ EOF;
         $this->SetFont('helvetica','',11);
         $this->Cell(100, 2,$this->datos[0]['nombre_funcioario'], 0, 2, 'L', false, '', 0, false, 'T', 'C');
         $this->SetFont('helvetica','B',11);
-        $this->Cell(100, 2,$this->datos[0]['cargo_memo'] , 0, 2, 'L', false, '', 0, false, 'T', 'C');
+        $this->Cell(100, 2,$this->datos[0]['cargo_evaluado'] , 0, 2, 'L', false, '', 0, false, 'T', 'C');
         $this->ln();
         $this->Cell(15, 2,'Asunto', 0, 0, 'L', false, '', 0, false, 'T', 'C');
         $this->Cell(25, 2,'  :', 0, 0, 'L', false, '', 0, false, 'T', 'C');

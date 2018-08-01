@@ -33,7 +33,8 @@ if v_i > 1 then
       resul = replace(data1,'.',chr(10));
 
 elsif v_i = 1 then
-     total = replace(replace(replace(replace(resp1,chr(10),' '),chr(11),''),chr(13),''),chr(27),'');
+	 total = replace(resp1,'.','');
+     --total = replace(replace(replace(replace(resp1,chr(10),' '),chr(11),''),chr(13),''),chr(27),'');
      resul = total;
 elsif v_i = 0 then 
       total = replace(replace(replace(resp1,chr(11),''),chr(13),''),chr(27),'');
