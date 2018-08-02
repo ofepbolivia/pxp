@@ -48,14 +48,18 @@ $body$
 
       --consulta:=';
       BEGIN
-      --Creamos una tabla donde obtenemos la ultima asignacion de un funcionario
+	  --Creamos una tabla donde obtenemos la ultima asignacion de un funcionario
        	create temp table tt_orga_filtro (
           	id_funcionario integer,
-          	id_uo_funcionario integer
+          	fecha_asignacion date
        	)on commit drop;
 
-        v_consulta = 'insert into tt_orga_filtro
+        /*v_consulta = 'insert into tt_orga_filtro
                       select tuo.id_funcionario,  max(tuo.id_uo_funcionario)
+                      from orga.tuo_funcionario tuo
+                      group by  tuo.id_funcionario';*/
+                      v_consulta = 'insert into tt_orga_filtro
+                      select  tuo.id_funcionario, max(tuo.fecha_asignacion)
                       from orga.tuo_funcionario tuo
                       group by  tuo.id_funcionario';
 
@@ -104,13 +108,16 @@ $body$
                             FUNCIO.es_tutor,
                             tuo.fecha_asignacion,
                             tuo.fecha_finalizacion,
-                            tca.nombre as nombre_cargo
-
+                            tca.nombre as nombre_cargo,
+                            tof.nombre as nombre_oficina,
+                            tlo.nombre as nombre_lugar_ofi
                             FROM orga.tfuncionario FUNCIO
                             inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario AND
-                            tuo.id_uo_funcionario  in (select id_uo_funcionario
-                                                        from tt_orga_filtro)
+                            tuo.fecha_asignacion  in (select fecha_asignacion
+                                                        from tt_orga_filtro where id_funcionario = FUNCIO.id_funcionario)
                             inner join orga.tcargo tca on tca.id_cargo = tuo.id_cargo
+                            inner join orga.toficina tof on tof.id_oficina = tca.id_oficina
+                            inner join param.tlugar tlo on tlo.id_lugar = tca.id_lugar
                             INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona
                             INNER JOIN SEGU.tpersona PERSON2 ON PERSON2.id_persona=FUNCIO.id_persona
                             LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
@@ -151,15 +158,19 @@ $body$
 
       --consulta:=';
       BEGIN
-      BEGIN
-      --Creamos una tabla donde obtenemos la ultima asignacion de un funcionario
-		  create temp table tt_orga_filtro (
+	  --Creamos una tabla donde obtenemos la ultima asignacion de un funcionario
+		create temp table tt_orga_filtro (
           	id_funcionario integer,
-          	id_uo_funcionario integer
+          	fecha_asignacion date
        	)on commit drop;
 
-        v_consulta = 'insert into tt_orga_filtro
+        /*v_consulta = 'insert into tt_orga_filtro
                       select tuo.id_funcionario,  max(tuo.id_uo_funcionario)
+                      from orga.tuo_funcionario tuo
+                      group by  tuo.id_funcionario';*/
+
+        v_consulta = 'insert into tt_orga_filtro
+                      select  tuo.id_funcionario, max(tuo.fecha_asignacion)
                       from orga.tuo_funcionario tuo
                       group by  tuo.id_funcionario';
 
@@ -168,10 +179,12 @@ $body$
         v_consulta:='SELECT
          					count(FUNCIO.id_funcionario)
                             FROM orga.tfuncionario FUNCIO
-                            inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario AND
-                            tuo.id_uo_funcionario  in (select id_uo_funcionario
-                                                        from tt_orga_filtro)
+                            inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario  AND
+                            tuo.fecha_asignacion  in (select fecha_asignacion
+                                                        from tt_orga_filtro where id_funcionario = FUNCIO.id_funcionario)
                             inner join orga.tcargo tca on tca.id_cargo = tuo.id_cargo
+                            inner join orga.toficina tof on tof.id_oficina = tca.id_oficina
+                            inner join param.tlugar tlo on tlo.id_lugar = tca.id_lugar
                             INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona
                             INNER JOIN SEGU.tpersona PERSON2 ON PERSON2.id_persona=FUNCIO.id_persona
                             LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar

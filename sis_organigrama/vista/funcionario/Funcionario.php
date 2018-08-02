@@ -65,7 +65,7 @@ header("content-type: text/javascript; charset=UTF-8");
             /*if(name == 'activo')
                 this.store.baseParams.estado_func = 'activo';
             else*/
-            console.log('entradita', name);
+            //console.log('entradita', name);
             this.store.baseParams.estado_func = name;
             this.load({params: {start: 0, limit: 50}});
         },
@@ -125,7 +125,7 @@ header("content-type: text/javascript; charset=UTF-8");
             }, this);
 
             this.getComponente('id_persona').on('select',function(c,record,n){
-                console.log('R',record.data);
+                //console.log('R',record.data);
                 /*if (this.register != 'update') {
                     this.getComponente('rotulo_comercial').setValue(r.data.nombre_completo1);
                 }*/
@@ -480,6 +480,52 @@ header("content-type: text/javascript; charset=UTF-8");
                 type:'DateField',
                 filters:{pfiltro:'tuo.fecha_finalizacion',type:'date'},
                 id_grupo:0,
+                grid:true,
+                form:false
+            },
+
+            {
+                config:{
+                    fieldLabel: "Oficina",
+                    gwidth: 200,
+                    name: 'nombre_oficina',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'tof.nombre',type:'string'},
+                bottom_filter : true,
+                id_grupo:1,
+                grid:true,
+                form:false
+            },
+
+            {
+                config:{
+                    fieldLabel: "Lugar Oficina",
+                    gwidth: 200,
+                    name: 'nombre_lugar_ofi',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'tlo.nombre',type:'string'},
+                bottom_filter : true,
+                id_grupo:1,
                 grid:true,
                 form:false
             },
@@ -1185,7 +1231,9 @@ header("content-type: text/javascript; charset=UTF-8");
             'es_tutor',
             {name:'fecha_asignacion', type: 'date', dateFormat:'Y-m-d'},
             {name:'fecha_finalizacion', type: 'date', dateFormat:'Y-m-d'},
-            'nombre_cargo'
+            'nombre_cargo',
+            'nombre_oficina',
+            'nombre_lugar_ofi'
         ],
         sortInfo:{
             field: 'PERSON.nombre_completo2',
