@@ -47,22 +47,23 @@ header("content-type: text/javascript; charset=UTF-8");
                 form: false
             }, {
                     config: {
-                        name: 'correo',
+                        name: 'estado',
                         fieldLabel: 'Correo',
                         allowBlank: true,
                         anchor: '50%',
                         gwidth: 80,
                         maxLength: 3,
                         renderer: function (value, p, record) {
+                        	console.log('envio correo',record.data.estado);
                             var result;
                             if(record.data['estado'] == 'borrador') {
-                                result = "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_email.png' align='center' width='35' height='35' title='impreso'/></div>";
+                                result = String.format('{0}', "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_email.png' align='center' width='35' height='35' title='borrador'/></div>");
 
                             }else if(record.data['estado'] == 'enviado'){
-                                result = "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_mail.png' align='center' width='35' height='35' title='impreso'/></div>";
+                                result =  String.format('{0}', "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_mail.png' align='center' width='35' height='35' title='enviado'/></div>");
                             }
                             else{
-                                result = "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_end.png' align='center' width='35' height='35' title='impreso'/></div>";
+                                result = String.format('{0}', "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_end.png' align='center' width='35' height='35' title='recibido'/></div>");
 
                             }
                             return result;

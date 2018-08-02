@@ -26,7 +26,7 @@ Class RCertificadoDOC {
 
         if(($this->dataSource[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses') ||
 		($this->dataSource[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses(Factura)')){
-            $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(dirname(__FILE__).'/evaluacion_desempenio.docx');
+            $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(dirname(__FILE__).'/cer_viatico.docx');
         }else{
             $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(dirname(__FILE__).'/cer_general.docx');
         }

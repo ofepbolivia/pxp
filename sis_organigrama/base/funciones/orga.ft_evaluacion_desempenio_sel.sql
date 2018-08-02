@@ -71,18 +71,21 @@ BEGIN
                                   usu1.cuenta as usr_reg,
                                   usu2.cuenta as usr_mod,
                                   f.desc_funcionario1 as nombre_funcionario,
-                                  upper ( evd.cargo_memo)::varchar as nombre_cargo,
+                                  upper (evd.cargo_evaluado)::varchar as nombre_cargo_evaluado,
+                                  upper (evd.cargo_actual_memo)::varchar as nombre_cargo_actual_memo,
                                   evd.gestion,
                                   regexp_replace(regexp_replace(evd.recomendacion, E''<.*?>'', '''', ''g'' ), E''&nbsp;'', '''', ''g'')::varchar as recomendacion,
                                   evd.cite,
                                   evd.revisado,
                                   evd.estado_modificado,
-                                  f.email_empresa
+                                  f.email_empresa                                  
                                   from orga.tevaluacion_desempenio evd
-                                  inner join segu.tusuario usu1 on usu1.id_usuario = evd.id_usuario_reg
-                                  inner join orga.vfuncionario_cargo f on f.id_funcionario = evd.id_funcionario and (f.fecha_finalizacion is null or f.fecha_asignacion>=now()::date)
-                                  inner join orga.tuo ger ON ger.id_uo = orga.f_get_uo_gerencia(f.id_uo, NULL::integer, NULL::date)
-                                  left join segu.tusuario usu2 on usu2.id_usuario = evd.id_usuario_mod
+                                  inner join orga.tuo_funcionario fun on fun.id_uo_funcionario=evd.id_uo_funcionario
+                                  inner join orga.tcargo ca on ca.id_temporal_cargo=evd.id_cargo_evaluado
+                                  inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(ca.id_uo,null::integer,null::date)
+                                  inner join segu.tusuario usu1 on usu1.id_usuario=evd.id_usuario_reg
+                                  left join segu.tusuario usu2 on usu2.id_usuario=evd.id_usuario_mod
+                                  inner join orga.vfuncionario_cargo f  on f.id_funcionario=fun.id_funcionario and ca.id_cargo=f.id_cargo
                                   where  ';
 
 			--Definicion de la respuesta
@@ -106,15 +109,18 @@ BEGIN
 		begin
 			--Sentencia de la consulta de conteo de registros
 			v_consulta:='select count(id_evaluacion_desempenio)
-					    from orga.tevaluacion_desempenio evd
-					    inner join segu.tusuario usu1 on usu1.id_usuario = evd.id_usuario_reg
-                        inner join orga.vfuncionario_cargo f on f.id_funcionario = evd.id_funcionario and (f.fecha_finalizacion is null or f.fecha_asignacion>=now()::date)
-                        inner join orga.tuo ger ON ger.id_uo = orga.f_get_uo_gerencia(f.id_uo, NULL::integer, NULL::date)
-						left join segu.tusuario usu2 on usu2.id_usuario = evd.id_usuario_mod
+                      from orga.tevaluacion_desempenio evd
+                                  inner join orga.tuo_funcionario fun on fun.id_uo_funcionario=evd.id_uo_funcionario
+                                  inner join orga.tcargo ca on ca.id_temporal_cargo=evd.id_cargo_evaluado
+                                  inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(ca.id_uo,null::integer,null::date)
+                                  inner join segu.tusuario usu1 on usu1.id_usuario=evd.id_usuario_reg
+                                  left join segu.tusuario usu2 on usu2.id_usuario=evd.id_usuario_mod
+                                  inner join orga.vfuncionario_cargo f  on f.id_funcionario=fun.id_funcionario and ca.id_cargo=f.id_cargo
 					    where ';
 
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
+            
 
 			--Devuelve la respuesta
 			return v_consulta;
@@ -130,7 +136,7 @@ BEGIN
 	elsif(p_transaccion='MEM_EVD_REPO')then
 
 		begin
-
+		
         select orga.f_iniciales_funcionarios(p.desc_funcionario1)
         into
         v_iniciales
@@ -158,7 +164,7 @@ BEGIN
           end if;
 
 			v_consulta:='select initcap(f.desc_funcionario1) as nombre_funcioario,
-                                upper (de.cargo_memo)as cargo_evaluado,
+                                upper (de.cargo_actual_memo) as cargo_evaluado,
                                 CASE
                               WHEN pe.genero::text = ANY (ARRAY[''varon''::character varying,''VARON''::character varying, ''Varon''::character varying]::text[]) THEN ''M''::text
                               WHEN pe.genero::text = ANY (ARRAY[''mujer''::character varying,''MUJER''::character varying, ''Mujer''::character varying]::text[]) THEN ''F''::text
@@ -333,8 +339,9 @@ BEGIN
 	***********************************/
 
 	elsif(p_transaccion='MEM_EVD_FUN')then
-
+		
 		begin
+
 			--Sentencia de la consulta de conteo de registros
             --raise exception '%',v_parametros.filtro;
 			v_consulta:='select 	fu.id_funcionario,
@@ -372,7 +379,7 @@ BEGIN
                                     evd.cite,
                                     evd.estado,
                                     f.desc_funcionario1 as nombre_funcionario,
-                                    upper ( evd.cargo_memo) as nombre_cargo,
+                                    upper (evd.cargo_evaluado) as nombre_cargo,
                                     f.email_empresa,	
                                     evd.gestion,
                                     ger.nombre_unidad,
@@ -381,6 +388,7 @@ BEGIN
                                     evd.nro_tramite
                                     from orga.tevaluacion_desempenio evd
                                     inner join orga.vfuncionario_cargo f on f.id_funcionario = evd.id_funcionario and (f.fecha_finalizacion is null or f.fecha_asignacion>=now()::date)
+                                    --inner join orga.tcargo ca on ca.id_temporal_cargo = evd.id_cargo_evaluado --agregado                                            
                                     inner join orga.tuo ger ON ger.id_uo = orga.f_get_uo_gerencia(f.id_uo, NULL::integer, NULL::date)
                                     where';
 			
@@ -406,6 +414,7 @@ BEGIN
 			v_consulta:='select	  count( evd.id_evaluacion_desempenio)
                                   from orga.tevaluacion_desempenio evd
                                   inner join orga.vfuncionario_cargo f on f.id_funcionario = evd.id_funcionario and (f.fecha_finalizacion is null or f.fecha_asignacion>=now()::date)
+                                  --inner join orga.tcargo ca on ca.id_temporal_cargo = evd.id_cargo_evaluado --agregado                                          
                                   inner join orga.tuo ger ON ger.id_uo = orga.f_get_uo_gerencia(f.id_uo, NULL::integer, NULL::date)
                                   where';
 			
