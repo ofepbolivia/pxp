@@ -62,7 +62,7 @@ BEGIN
      if(par_transaccion='RH_FUNCIO_INS')then
 
 
-          BEGIN
+          BEGIN RAISE EXCEPTION 'COMUNIQUESE CON EL DEPTO. INFORMATICO';
 			  v_id_persona = v_parametros.id_persona;
               if(v_parametros.id_persona is null)then
               --CI
@@ -226,7 +226,6 @@ BEGIN
 
 
           BEGIN
-
 
                 if exists (select 1 from orga.tfuncionario
                 			where id_funcionario!=v_parametros.id_funcionario

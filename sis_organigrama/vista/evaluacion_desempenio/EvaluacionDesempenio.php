@@ -54,15 +54,15 @@ Phx.vista.EvaluacionDesempenio=Ext.extend(Phx.gridInterfaz,{
             handler : this.onButtonReporteFun,
             tooltip : '<b>Reporte de Evaluacion por Funcionario</b>'
         });*/
-        this.addButton('Report',{
+        /*this.addButton('Report',{
             grupo:[0,1],
             text :'Reporte',
             iconCls : 'bprint',
             disabled: false,
             handler : this.onButtonReporte,
             tooltip : '<b>Reporte Por Gerencia</b>'
-        });
-        this.addButton('CorreoCorreos',{
+        });*/
+       this.addButton('CorreoCorreos',{
             grupo:[0,1],
             text :'Correo Gerencias',
             iconCls : 'bemail',
@@ -224,40 +224,40 @@ Phx.vista.EvaluacionDesempenio=Ext.extend(Phx.gridInterfaz,{
         },
         {
             config:{
-                name: 'cargo_memo',
-                fieldLabel: 'Cargo Memo',
+                name: 'nombre_cargo_evaluado',
+                fieldLabel: 'Cargo Evaluado',
                 allowBlank: true,
                 anchor: '80%',
                 gwidth: 200,
                 maxLength:50,
                 renderer: function(value, p, record) {
-                    return '<tpl for="."><div><p><b>'+record.data['cargo_memo']+'</b><p></div></tpl>';
+                    return '<tpl for="."><div><p><b>'+record.data['nombre_cargo_evaluado']+'</b><p></div></tpl>';
                 }
             },
             type:'TextField',
-            filters:{pfiltro:'f.cargo_memo',type:'string'},
+            filters:{pfiltro:'evd.nombre_cargo_evaluado',type:'string'},
             id_grupo:1,
             grid:true,
             form:false
         },
         {
             config:{
-                name: 'cargo_memo',
-                fieldLabel: 'Cargo Actual',
+                name: 'nombre_cargo_actual_memo',
+                fieldLabel: 'Cargo Actual (Memo)',
                 allowBlank: true,
                 anchor: '80%',
                 gwidth: 200,
                 maxLength:50,
                 renderer: function(value, p, record) {
-                    return '<tpl for="."><div><p><b>'+record.data['cargo_memo']+'</b><p></div></tpl>';
+                    return '<tpl for="."><div><p><b>'+record.data['nombre_cargo_actual_memo']+'</b><p></div></tpl>';
                 }
             },
             type:'TextField',
-            filters:{pfiltro:'f.cargo_memo',type:'string'},
+            filters:{pfiltro:'evd.nombre_cargo_actual_memo',type:'string'},
             id_grupo:1,
             grid:true,
             form:false
-        },
+        },        
 		{
 			config:{
 				name: 'nota',
@@ -463,7 +463,9 @@ Phx.vista.EvaluacionDesempenio=Ext.extend(Phx.gridInterfaz,{
 		{name:'usr_reg', type: 'string'},
 		{name:'usr_mod', type: 'string'},
         {name:'nombre_funcionario', type: 'string'},
-        {name:'cargo_memo', type: 'string'},
+        {name:'nombre_cargo_actual_memo',type:'string'},
+        {name:'nombre_cargo_evaluado',type:'string'},
+        //{name:'cargo_memo', type: 'string'},
         {name:'recomendacion', type: 'string'},
         {name:'cite', type: 'string'},
         {name:'gestion', type: 'numeric'},
@@ -476,8 +478,10 @@ Phx.vista.EvaluacionDesempenio=Ext.extend(Phx.gridInterfaz,{
 		field: 'id_evaluacion_desempenio',
 		direction: 'DESC'
 	},
-	bdel:true,
+	bdel:false,
 	bsave:true,
+	bnew:false,
+	bedit:true,
     iniciarEvento :function () {
 
         this.Cmp.id_funcionario.on('select',function(cmb,rec,i){
@@ -501,14 +505,15 @@ Phx.vista.EvaluacionDesempenio=Ext.extend(Phx.gridInterfaz,{
 	    var rec = this.getSelectedData();
         var tb =this.tbar;
 
-        //this.getBoton('ReporteFun').setDisabled(false);
+        //this.getBoton('ReporteFun').setDisabled(false);        
         this.getBoton('CorreoFuncionario').setDisabled(false);
-        this.getBoton('btnChequeoDocumentosWf').setDisabled(false);
+        this.getBoton('btnChequeoDocumentosWf').setDisabled(false);        
         Phx.vista.EvaluacionDesempenio.superclass.preparaMenu.call(this,n);
     },
 
     liberaMenu:function(){
         var tb = Phx.vista.EvaluacionDesempenio.superclass.liberaMenu.call(this);
+        console.log('data',tb);
         if(tb){
             //this.getBoton('ReporteFun').setDisabled(true);
             this.getBoton('CorreoFuncionario').setDisabled(true);

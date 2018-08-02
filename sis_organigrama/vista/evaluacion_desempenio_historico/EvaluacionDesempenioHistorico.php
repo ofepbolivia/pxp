@@ -154,18 +154,18 @@ Phx.vista.EvaluacionDesempenioHistorico=Ext.extend(Phx.gridInterfaz,{
 		},
         {
             config:{
-                name: 'cargo_memo',
+                name: 'cargo_evaluado',
                 fieldLabel: 'Cargo',
                 allowBlank: true,
                 anchor: '80%',
                 gwidth: 200,
                 maxLength:500,
                 renderer: function(value, p, record) {
-                    return '<tpl for="."><div class="x-combo-list-item"><p><b>'+record.data['cargo_memo']+'</b></p></div></tpl>';
+                    return '<tpl for="."><div class="x-combo-list-item"><p><b>'+record.data['cargo_evaluado']+'</b></p></div></tpl>';
                 }
             },
             type:'TextField',
-            filters:{pfiltro:'hed.cargo_memo',type:'string'},
+            filters:{pfiltro:'hed.cargo_evaluado',type:'string'},
             id_grupo:1,
             grid:true,
             form:true
@@ -403,7 +403,7 @@ Phx.vista.EvaluacionDesempenioHistorico=Ext.extend(Phx.gridInterfaz,{
 		{name:'codigo', type: 'string'},
 		{name:'estado', type: 'string'},
 		{name:'fecha_solicitud', type: 'date',dateFormat:'Y-m-d'},
-		{name:'cargo_memo', type: 'string'},
+		{name:'cargo_evaluado', type: 'string'},
 		{name:'descripcion', type: 'string'},
 		{name:'estado_reg', type: 'string'},
 		{name:'id_evaluacion_desempenio_padre', type: 'numeric'},

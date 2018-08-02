@@ -27,7 +27,7 @@ class MODEvaluacionDesempenioHistorico extends MODbase{
 		$this->captura('codigo','varchar');
 		$this->captura('estado','varchar');
 		$this->captura('fecha_solicitud','date');
-		$this->captura('cargo_memo','varchar');
+		$this->captura('cargo_evaluado','varchar');
 		$this->captura('descripcion','varchar');
 		$this->captura('estado_reg','varchar');
 		$this->captura('id_evaluacion_desempenio_padre','int4');

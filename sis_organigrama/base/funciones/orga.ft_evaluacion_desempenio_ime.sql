@@ -72,6 +72,7 @@ DECLARE
     v_codigo 					varchar;
     v_mensaje					varchar;
     v_mjs						varchar;
+	v_registro_eva    			varchar;	
 
 BEGIN
 
@@ -152,10 +153,10 @@ BEGIN
 			fecha_mod,
 			id_usuario_mod,
             gestion,
-            cargo_memo,
+            cargo_evaluado,
             cite,
             id_uo,
-            cargo_actual
+            cargo_actual_memo
           	) values(
 			v_nro_tramite,
 			v_id_proceso_wf,
@@ -174,7 +175,7 @@ BEGIN
 			null,
 			null,
             v_parametros.gestion,
-            v_parametros.cargo_memo,
+            v_parametros.nombre_cargo_evaluado,
             v_cite,
             v_id_uo,
             v_cargo_actual
@@ -203,8 +204,6 @@ BEGIN
 			--Sentencia de la modificacion
 			update orga.tevaluacion_desempenio set
 			id_funcionario = v_parametros.id_funcionario,
-			fecha_mod = now(),
-			id_usuario_mod = p_id_usuario,
 			id_usuario_ai = v_parametros._id_usuario_ai,
 			usuario_ai = v_parametros._nombre_usuario_ai,
             recomendacion = v_parametros.recomendacion
@@ -251,6 +250,7 @@ BEGIN
 	elsif(p_transaccion='MEM_EVD_EUG')then
 
 		begin
+
 			select f.id_uo
             into
             v_id_uo
@@ -531,7 +531,7 @@ BEGIN
                    	de.fecha_mod,
                     de.id_usuario_mod,
                     de.gestion,
-                    de.cargo_memo,
+                    de.cargo_evaluado,
                     de.cite,
                     de.id_uo,
                     de.fecha_solicitud,
@@ -565,7 +565,7 @@ BEGIN
                                                                 nro_tramite,
                                                                 estado,
                                                                 gestion,
-                                                                cargo_memo,
+                                                                cargo_evaluado,
                                                                 fecha_solicitud,
                                                                 id_evaluacion_desempenio_padre,
                                                                 cite,
@@ -580,7 +580,7 @@ BEGIN
                                                               VALUES (
                                                                 p_id_usuario,
                                                                 v_registo.id_usuario_mod,
-                                                                now(),
+                                                                v_registo.fecha_reg,
                                                                 v_registo.fecha_mod,
                                                                 v_registo.estado_reg,
                                                                 v_registo.id_funcionario,
@@ -593,7 +593,7 @@ BEGIN
                                                                 v_registo.nro_tramite,
                                                                 v_registo.estado,
                                                                 v_registo.gestion,
-                                                                v_registo.cargo_memo,
+                                                                v_registo.cargo_evaluado,
                                                                 v_registo.fecha_solicitud,
                                                               	v_registo.id_evaluacion_desempenio,
                                                                 v_registo.cite,
@@ -667,7 +667,7 @@ BEGIN
 			fecha_mod,
 			id_usuario_mod,
             gestion,
-            cargo_memo,
+            cargo_evaluado,
             cite,
             id_uo,
             estado_modificado
@@ -734,7 +734,7 @@ BEGIN
              v_evaluado = v_json.json_array_elements::json;
              v_id_funcionario = v_evaluado::json->>'id_funcionario';
              
-             select f.desc_funcionario1
+             select f.desc_funcionario1 
               	into v_datos
              	from orga.vfuncionario f 
              	where f.id_funcionario = v_id_funcionario;
@@ -770,7 +770,7 @@ BEGIN
            where pm.codigo='MED' and tp.estado_reg = 'activo' and tp.inicio = 'si' ;
 
                  -- inciar el tramite en el sistema de WF
-           SELECT
+          SELECT
                  ps_num_tramite ,
                  ps_id_proceso_wf ,
                  ps_id_estado_wf ,
@@ -804,6 +804,14 @@ BEGIN
 		if exists (select 1
             from orga.tevaluacion_desempenio de
             where de.id_funcionario = v_id_funcionario and de.gestion = v_parametros.gestion) then
+ /*
+			update orga.tevaluacion_desempenio  set
+            cargo_actual_memo=v_datos.nombre_cargo,
+            cargo_evaluado=(select c.nombre
+                              from orga.ttemporal_cargo  c
+                              where c.id_temporal_cargo =v_id_cargo),
+            id_cargo_evaluado=v_id_cargo           
+            where id_funcionario = v_id_funcionario and gestion = v_parametros.gestion;*/
 
              select 	de.nro_tramite,
                     de.id_proceso_wf,
@@ -821,13 +829,13 @@ BEGIN
                    	de.fecha_mod,
                     de.id_usuario_mod,
                     de.gestion,
-                    de.cargo_memo,
+                    de.cargo_evaluado,
                     de.cite,
                     de.id_uo,
                     de.fecha_solicitud,
                     de.id_evaluacion_desempenio,
                     de.recomendacion,
-                     de.correo,
+                    de.correo,
                     de.fecha_correo,
                     de.plantilla,
                     de.ip,
@@ -855,7 +863,7 @@ BEGIN
                                                                 nro_tramite,
                                                                 estado,
                                                                 gestion,
-                                                                cargo_memo,
+                                                                cargo_evaluado,
                                                                 fecha_solicitud,
                                                                 id_evaluacion_desempenio_padre,
                                                                 cite,
@@ -870,7 +878,7 @@ BEGIN
                                                               VALUES (
                                                                 p_id_usuario,
                                                                 v_registo.id_usuario_mod,
-                                                                now(),
+                                                                v_registo.fecha_reg,
                                                                 v_registo.fecha_mod,
                                                                 v_registo.estado_reg,
                                                                 v_registo.id_funcionario,
@@ -883,7 +891,7 @@ BEGIN
                                                                 v_registo.nro_tramite,
                                                                 v_registo.estado,
                                                                 v_registo.gestion,
-                                                                v_registo.cargo_memo,
+                                                                v_registo.cargo_evaluado,
                                                                 v_registo.fecha_solicitud,
                                                               	v_registo.id_evaluacion_desempenio,
                                                                 v_registo.cite,
@@ -954,7 +962,7 @@ BEGIN
 			fecha_mod,
 			id_usuario_mod,
             gestion,
-            cargo_memo,
+            cargo_evaluado,
             cite,
             id_uo,
             estado_modificado
@@ -1004,10 +1012,11 @@ BEGIN
 			fecha_mod,
 			id_usuario_mod,
             gestion,
-            cargo_memo,
+            cargo_evaluado,
             cite,
             id_uo,
-            cargo_actual
+            cargo_actual_memo,
+            id_cargo_evaluado
           	) select
 			v_nro_tramite,
 			v_id_proceso_wf,
@@ -1030,8 +1039,10 @@ BEGIN
             'OB.AH.MED.'||lpad(COALESCE(nextval('orga.cite'::regclass), 0)::varchar,3,'0')||'.'||anho::varchar as cite,
 	         v_datos.id_uo,
              (select c.nombre
-        from orga.tcargo c
-        where c.id_cargo = v_id_cargo and c.estado_reg = 'activo');
+        from orga.ttemporal_cargo  c --orga.tcargo c original
+        --where c.id_cargo = v_id_cargo and c.estado_reg = 'activo'),
+        where c.id_temporal_cargo =v_id_cargo and c.estado_reg='activo'),
+        v_id_cargo;
 
 
           end if;
@@ -1058,7 +1069,7 @@ BEGIN
             begin
 
     IF  pxp.f_existe_parametro(p_tabla,'id_uo') THEN
-
+--solo los q ue no fueron enviado si estado es borrador
             for v_registros_cer in (select f.id_funcionario,
             								initcap(f.desc_funcionario1) as nombre_funionaro,
                                             evd.gestion,
@@ -1068,12 +1079,12 @@ BEGIN
         WHEN pe.genero::text = ANY (ARRAY['varon'::character varying,'VARON'::character varying, 'Varon'::character varying]::text[]) THEN 'Estimado: '::text
         WHEN pe.genero::text = ANY (ARRAY['mujer'::character varying,'MUJER'::character varying, 'Mujer'::character varying]::text[]) THEN 'Estimada: '::text
         ELSE ''::text
-        END::character varying) AS genero
+        END::character varying) AS genero,evd.estado
             					from orga.tevaluacion_desempenio evd
                                 inner join orga.vfuncionario_cargo f on f.id_funcionario = evd.id_funcionario and (f.fecha_finalizacion is null or f.fecha_asignacion>=now()::date)
 								inner join orga.vfuncionario_persona p on p.id_funcionario = f.id_funcionario
         						inner join segu.vpersona2 pe on pe.id_persona = p.id_persona
-                                where evd.id_uo = v_parametros.id_uo and evd.gestion = v_parametros.gestion and (case
+                                where evd.id_uo = v_parametros.id_uo and evd.estado = 'borrador' and evd.gestion = v_parametros.gestion and (case
        	  																		 when v_parametros.rango = '0_70' then
                                                                                   evd.nota >= 0 and evd.nota <= 70
                                                                                  when v_parametros.rango = '71_80' then
@@ -1104,17 +1115,16 @@ BEGIN
                             <p><img src="../../../sis_organigrama/media/RRHH.jpeg">';
 
 
-
              v_id_alarma = (select param.f_inserta_alarma_dblink (p_id_usuario,'Evaluacion de Desempeño Gestión '||v_registros_cer.gestion::varchar,v_plantilla::text,v_registros_cer.email_empresa::varchar));
 
 
      --- (v_correo = null)then
-    if exists(select 1
+    /*if exists(select 1
       			from wf.tdocumento_wf dw
      			where dw.id_proceso_wf = v_registros_cer.id_proceso_wf and
                  dw.id_tipo_documento = 408) THEN
 
-     else
+     else*/
      
         INSERT INTO  wf.tdocumento_wf (
               id_usuario_reg,
@@ -1147,10 +1157,20 @@ BEGIN
                 id_usuario_mod = p_id_usuario,
                 plantilla = v_plantilla
                 where id_proceso_wf = v_registros_cer.id_proceso_wf;
-     	end if;
+     	--end if;
         
      end loop;
 	ELSE
+		if 	v_parametros.rango = '71_80' then 
+					select evd.recomendacion
+                     into v_registro_eva                    
+                    from orga.tevaluacion_desempenio evd
+                    where evd.id_funcionario = v_parametros.id_funcionario and evd.gestion=v_parametros.gestion;
+
+         	if  v_registro_eva is null or v_registro_eva = ''then            
+            	 raise exception 'El Funcionario no tiene recomendacion';                            
+            end if; 
+		end if;                   
 
                             select f.id_funcionario,
                                     initcap(f.desc_funcionario1) as nombre_funionaro,
@@ -1161,15 +1181,23 @@ BEGIN
                                 WHEN pe.genero::text = ANY (ARRAY['varon'::character varying,'VARON'::character varying, 'Varon'::character varying]::text[]) THEN 'Estimado: '::text
                                 WHEN pe.genero::text = ANY (ARRAY['mujer'::character varying,'MUJER'::character varying, 'Mujer'::character varying]::text[]) THEN 'Estimada: '::text
                                 ELSE ''::text
-                                END::character varying) AS genero
+                                END::character varying) AS genero,
+                                evd.estado,
+                                evd.recomendacion
                                 into
                                 v_registros_cer
             					from orga.tevaluacion_desempenio evd
-                                inner join orga.vfuncionario_cargo f on f.id_funcionario = evd.id_funcionario and (f.fecha_finalizacion is null or f.fecha_asignacion>=now()::date)
+                                inner join orga.vfuncionario_cargo f on f.id_uo_funcionario = evd.id_uo_funcionario --f.id_funcionario = evd.id_funcionario and (f.fecha_finalizacion is null or f.fecha_asignacion>=now()::date)
 								inner join orga.vfuncionario_persona p on p.id_funcionario = f.id_funcionario
         						inner join segu.vpersona2 pe on pe.id_persona = p.id_persona
                                 where evd.id_funcionario = v_parametros.id_funcionario and evd.gestion = v_parametros.gestion;
 		
+        if v_registros_cer.estado = 'enviado' then
+        	raise exception 'El correo ya fue enviado no puede ser enviado nuevamente';
+        elsif v_registros_cer.estado = 'revisado' then
+			raise exception 'El correo ya fue revisado no puede ser enviado nuevamente';        	    
+		end if;
+        
         select initcap (fun.desc_funcionario1) as nombre_funionaro,
         		initcap ( fun.descripcion_cargo) as nombre_cargo
                 into
@@ -1179,8 +1207,8 @@ BEGIN
         inner join orga.vfuncionario_cargo fun on fun.id_funcionario = p.id_funcionario
         and (fun.fecha_finalizacion is null or fun.fecha_finalizacion >= now()::date)
         where u.id_usuario = p_id_usuario;
-
-                v_plantilla='<p><span style="color: #150296;">' ||v_registros_cer.genero||''||regexp_replace (v_registros_cer.nombre_funionaro, '[^a-zA-Z0-9]', ' ', 'g')||'</span></p>
+ 
+                v_plantilla='<p><span style="color: #150296;">'||v_registros_cer.genero||''||regexp_replace (v_registros_cer.nombre_funionaro,'[^a-zA-Z0-9]', ' ', 'g')||'</span></p>
                             <p><span style="color: #150296;">Enviamos para su conocimiento el enlace para ver el Memorándum de <b>Evaluación de Desempeño</b> correspondiente a la <b>gestión '||v_registros_cer.gestion||'</b></span></p>
                             <p><span style="color: #150296;">La lectura y visualizaci&oacute;n de este mensaje tiene caracter obligatorio.</span></p>
                             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://'||v_parametros.link||'sis_organigrama/control/Memo.php?proceso='||v_registros_cer.id_proceso_wf||'"><span style="color: #150296;"><b>Enlace para ver el Memorandum</b></span></a></p>
@@ -1196,12 +1224,12 @@ BEGIN
 
 
      --if (v_correo = null)then
-    if exists( 	select 1
+    /*if exists( 	select 1
       			from wf.tdocumento_wf dw
      			where dw.id_proceso_wf = v_registros_cer.id_proceso_wf and dw.id_tipo_documento = 408) THEN
      raise notice 'Ya existe';
 
-     else
+     else*/
 
         INSERT INTO  wf.tdocumento_wf (
               id_usuario_reg,
@@ -1226,7 +1254,7 @@ BEGIN
             'exigir',
             'no'
           );
-     		end if;
+     		--end if;
 
          update orga.tevaluacion_desempenio set
                 estado = 'enviado',
@@ -1235,9 +1263,7 @@ BEGIN
                 id_usuario_mod = p_id_usuario,
                 plantilla = v_plantilla
                 where id_proceso_wf = v_registros_cer.id_proceso_wf;
-                               
-    
-    
+       --end if;                      
     END IF;
 
     --Definicion de la respuesta

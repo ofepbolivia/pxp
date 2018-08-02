@@ -116,7 +116,7 @@ EOF;
         $this->SetFont('helvetica','',11);
         $this->Cell(100, 2,$array["nombre_funcioario"], 0, 2, 'L', false, '', 0, false, 'T', 'C');
         $this->SetFont('helvetica','B',11);
-        $this->Cell(100, 2,$array["cargo_memo"] , 0, 2, 'L', false, '', 0, false, 'T', 'C');
+        $this->Cell(100, 2,$array["cargo_evaluado"] , 0, 2, 'L', false, '', 0, false, 'T', 'C');
         $this->ln();
         $this->Cell(15, 2,'Asunto', 0, 0, 'L', false, '', 0, false, 'T', 'C');
         $this->Cell(25, 2,'  :', 0, 0, 'L', false, '', 0, false, 'T', 'C');

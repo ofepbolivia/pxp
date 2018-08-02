@@ -29,6 +29,7 @@ class REvaluacionGerencia extends  ReportePDF{
     }
     function setDatos($datos) {
         $this->datos = $datos;
+		var_dump($this->datos);exit;
     }
     function  reporteGeneralPrimer($genero,$nombre_funcioario,$cargo_evaluado,$gestion,$recomendacion,$nota,$cite){
 

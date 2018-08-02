@@ -47,22 +47,23 @@ header("content-type: text/javascript; charset=UTF-8");
                 form: false
             }, {
                     config: {
-                        name: 'correo',
+                        name: 'estado',
                         fieldLabel: 'Correo',
                         allowBlank: true,
                         anchor: '50%',
                         gwidth: 80,
                         maxLength: 3,
                         renderer: function (value, p, record) {
+                        	console.log('envio correo',record.data.estado);
                             var result;
                             if(record.data['estado'] == 'borrador') {
-                                result = "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_email.png' align='center' width='35' height='35' title='impreso'/></div>";
+                                result = String.format('{0}', "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_email.png' align='center' width='35' height='35' title='borrador'/></div>");
 
                             }else if(record.data['estado'] == 'enviado'){
-                                result = "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_mail.png' align='center' width='35' height='35' title='impreso'/></div>";
+                                result =  String.format('{0}', "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_mail.png' align='center' width='35' height='35' title='enviado'/></div>");
                             }
                             else{
-                                result = "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_end.png' align='center' width='35' height='35' title='impreso'/></div>";
+                                result = String.format('{0}', "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_end.png' align='center' width='35' height='35' title='recibido'/></div>");
 
                             }
                             return result;
@@ -79,6 +80,9 @@ header("content-type: text/javascript; charset=UTF-8");
             this.store.baseParams={tipo_interfaz:this.nombreVista};
             this.store.baseParams.pes_estado = '0_70';
             this.finCons = true;
+            this.getBoton('CorreoCorreos').setVisible(false);
+            this.getBoton('CorreoFuncionario').setVisible(false);
+            this.getBoton('edit').setVisible(false);                                              
         },
         gruposBarraTareas:[
             {name:'0_70',title:'<font color="red"><H1 align="center"><i class="fa fa-list-ul"> Malo</i> 0 - 70 </h1></font>',grupo:1,height:0},
@@ -89,10 +93,23 @@ header("content-type: text/javascript; charset=UTF-8");
         actualizarSegunTab: function(name, indice){
               if(this.finCons){
                   if(!this.validarFiltros()){
-                      alert('Especifique la Gerencia y Año')
+                      alert('Especifique la Gerencia y Año');
+                      this.getBoton('CorreoCorreos').setVisible(false);
+                      this.getBoton('CorreoFuncionario').setVisible(false);
+                      this.getBoton('edit').setVisible(false);
                   }
-                  else {
-                      this.store.baseParams.pes_estado = name;
+                  else {                  	  
+                      this.store.baseParams.pes_estado = name;                      
+                      if(this.store.baseParams.pes_estado == '0_70'){                      	
+                      	this.getBoton('CorreoCorreos').setVisible(false);
+                      	this.getBoton('CorreoFuncionario').setVisible(false);                      	                      	                      	
+                      }
+                      if(this.store.baseParams.pes_estado == '71_80'){
+                      	this.getBoton('edit').setVisible(true);
+                      	this.getBoton('CorreoCorreos').setVisible(false);
+                      }else{
+                      	this.getBoton('edit').setVisible(false);
+                      }   
                       this.rango = name;
                       this.load({params: {start: 0, limit: this.tam_pag}});
                   }
@@ -104,14 +121,20 @@ header("content-type: text/javascript; charset=UTF-8");
           bexcelGroups: [2,1],
           bnewGroups: [0,1],
 
-        preparaMenu:function(n){
-            var data = this.getSelectedData();
-            var tb =this.tbar;
+        preparaMenu:function(n){        	        	
+        	var rec = this.getSelectedData();        	
+        	var tb =this.tbar;    	            
             Phx.vista.RegistroEvaluacion.superclass.preparaMenu.call(this,n);
+            if(rec.nota >= 71 && rec.nota <= 80){
+            	if(rec.estado == 'enviado' || rec.estado == 'revisado'){
+            		this.getBoton('edit').disable();            		
+            	}
+            }
+            
             return tb;
         },
 
-        liberaMenu:function(){
+        liberaMenu:function(){        	        	
             var tb = Phx.vista.RegistroEvaluacion.superclass.liberaMenu.call(this);
             return tb;
         },
@@ -148,11 +171,28 @@ header("content-type: text/javascript; charset=UTF-8");
                 scope: this
             });
         },
-        onButtonCorreoFunc : function () {
-            Phx.CP.loadingShow();
-            var rec=this.sm.getSelected();
-            var ran= this.rango;
-            console.log(ran);
+        onButtonCorreoFunc : function () {        	     
+        	var ran= this.rango;
+        	var rec=this.sm.getSelected(); 
+        	       	
+        	if(rec.data.nota <=80){
+        	 if(rec.data.recomendacion == '' || rec.data.recomendacion.length <= 4){
+        		alert(' El usuario: '+rec.data.nombre_funcionario+'\n Tiene nota de: '+rec.data.nota+'\n Es nesecario registrar una recomendacion \n antes de enviar la evaluacion por correo electronico');
+        	  }else{
+				Phx.CP.loadingShow();                        
+	            console.log(ran);            
+	            Ext.Ajax.request({
+	                url:'../../sis_organigrama/control/EvaluacionDesempenio/correoFuncoario',
+	                params:{'id_funcionario':rec.data.id_funcionario,'gestion':this.cmbGestion.getValue(),rango:ran},
+	                success: this.successSinc,
+	                failure: this.conexionFailure,
+	                timeout: this.timeout,
+	                scope: this
+	            });        	  	        	  	        	  	
+        	  }
+        	}else{               	 
+            Phx.CP.loadingShow();                        
+            console.log(ran);            
             Ext.Ajax.request({
                 url:'../../sis_organigrama/control/EvaluacionDesempenio/correoFuncoario',
                 params:{'id_funcionario':rec.data.id_funcionario,'gestion':this.cmbGestion.getValue(),rango:ran},
@@ -161,6 +201,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 timeout: this.timeout,
                 scope: this
             });
+           } 
         },
         onButtonReporteFun:function(){
           //  Phx.CP.loadingShow();
@@ -200,7 +241,7 @@ header("content-type: text/javascript; charset=UTF-8");
             Phx.CP.loadingHide();
             var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
             this.reload();
-        }
+        }       
     }
 </script>
 
