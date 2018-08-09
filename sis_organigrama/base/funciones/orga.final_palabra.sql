@@ -19,7 +19,7 @@ data					varchar;
 data1 					varchar;
 v_n 					integer;
 BEGIN
-v_n = pruebas.f_punto(texto);
+v_n = orga.f_punto(texto);
 if v_n = 0 then 
 resul = texto;
 else

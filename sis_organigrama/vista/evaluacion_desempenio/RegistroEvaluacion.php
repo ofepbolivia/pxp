@@ -88,7 +88,7 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:'71_80',title:'<font color="orange"><H1 align="center"><i class="fa fa-list-ul"> Regular</i> 71 - 80 </h1></font>',grupo:1,height:0},
             {name:'81_90',title:'<font color="black"><H1 align="center"><i class="fa fa-list-ul"> Bueno</i> 81 - 90 </h1></font>',grupo:1,height:0},
             {name:'91_100',title:'<font color="green"><H1 align="center"><i class="fa fa-list-ul"> Excelente</i> 91 -100 </h1></font>',grupo:1,height:0},
-            {name:'glu',title:'<font color="blue"><H1 align="center"><i class="fa fa-list-ul"> <b>Todos</b> </i></h1></font>',grupo:1,height:0},
+            {name:'glu',title:'<font color="blue"><H1 align="center"><i class="fa fa-list-ul"> Gerencia</i> Total </h1></font>',grupo:1,height:0},
             
         ],
         actualizarSegunTab: function(name, indice){
