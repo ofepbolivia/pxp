@@ -17,7 +17,12 @@ total					varchar;
 linea					varchar;
 data					varchar;
 data1 					varchar;
+v_n 					integer;
 BEGIN
+v_n = pruebas.f_punto(texto);
+if v_n = 0 then 
+resul = texto;
+else
 v_iniciales = regexp_replace(regexp_replace(texto, E'<.*?>', '', 'g' ), E'&nbsp;', '', 'g'); 
 espacio = regexp_replace(v_iniciales,'[[:space:]][[:space:]]',' ','g');
 resp = REGEXP_REPLACE(espacio,'[[:digit:]]. ','','g');
@@ -39,7 +44,8 @@ elsif v_i = 1 then
 elsif v_i = 0 then 
       total = replace(replace(replace(resp1,chr(11),''),chr(13),''),chr(27),'');
 	  resul = total;
-end if;           
+end if;
+end if;         
 return resul;
 END;
 $body$

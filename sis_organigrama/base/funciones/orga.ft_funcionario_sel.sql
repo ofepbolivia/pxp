@@ -54,10 +54,6 @@ $body$
           	fecha_asignacion date
        	)on commit drop;
 
-        /*v_consulta = 'insert into tt_orga_filtro
-                      select tuo.id_funcionario,  max(tuo.id_uo_funcionario)
-                      from orga.tuo_funcionario tuo
-                      group by  tuo.id_funcionario';*/
                       v_consulta = 'insert into tt_orga_filtro
                       select  tuo.id_funcionario, max(tuo.fecha_asignacion)
                       from orga.tuo_funcionario tuo
@@ -112,7 +108,7 @@ $body$
                             tof.nombre as nombre_oficina,
                             tlo.nombre as nombre_lugar_ofi
                             FROM orga.tfuncionario FUNCIO
-                            inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario AND
+                            inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario AND 
                             tuo.fecha_asignacion  in (select fecha_asignacion
                                                         from tt_orga_filtro where id_funcionario = FUNCIO.id_funcionario)
                             inner join orga.tcargo tca on tca.id_cargo = tuo.id_cargo
@@ -164,6 +160,11 @@ $body$
           	fecha_asignacion date
        	)on commit drop;
 
+        /*v_consulta = 'insert into tt_orga_filtro
+                      select tuo.id_funcionario,  max(tuo.id_uo_funcionario)
+                      from orga.tuo_funcionario tuo
+                      group by  tuo.id_funcionario';*/
+        
         v_consulta = 'insert into tt_orga_filtro
                       select  tuo.id_funcionario, max(tuo.fecha_asignacion)
                       from orga.tuo_funcionario tuo
@@ -174,8 +175,7 @@ $body$
         v_consulta:='SELECT
          					count(FUNCIO.id_funcionario)
                             FROM orga.tfuncionario FUNCIO
-                            inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario  AND
-
+                            inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario  AND 
                             tuo.fecha_asignacion  in (select fecha_asignacion
                                                         from tt_orga_filtro where id_funcionario = FUNCIO.id_funcionario)
                             inner join orga.tcargo tca on tca.id_cargo = tuo.id_cargo

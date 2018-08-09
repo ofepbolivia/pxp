@@ -168,7 +168,8 @@ Phx.vista.EvaluacionDesempenio=Ext.extend(Phx.gridInterfaz,{
 				filters:{pfiltro:'evd.cite',type:'string'},
 				id_grupo:1,
 				grid:true,
-				form:false
+				form:false,
+				bottom_filter:true
 		}, {
             config: {
                 name: 'id_funcionario',
@@ -275,7 +276,8 @@ Phx.vista.EvaluacionDesempenio=Ext.extend(Phx.gridInterfaz,{
 				filters:{pfiltro:'evd.nota',type:'numeric'},
 				id_grupo:1,
 				grid:true,
-				form:false
+				form:false,
+				bottom_filter:true
 		},
         {
             config:{

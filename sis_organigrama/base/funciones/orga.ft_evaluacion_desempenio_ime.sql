@@ -839,7 +839,8 @@ BEGIN
                     de.fecha_correo,
                     de.plantilla,
                     de.ip,
-                    de.fecha_receptor
+                    de.fecha_receptor,
+                    de.cargo_actual_memo
                     into
                     v_registo
                     from orga.tevaluacion_desempenio de
@@ -965,7 +966,9 @@ BEGIN
             cargo_evaluado,
             cite,
             id_uo,
-            estado_modificado
+            estado_modificado,
+            cargo_actual_memo,
+            id_cargo_evaluado            
           	) values(
 			v_nro_tramite,
 			v_id_proceso_wf,
@@ -984,10 +987,13 @@ BEGIN
 			null,
 			null,
             v_parametros.gestion,
-            v_datos.nombre_cargo,
+            --v_datos.nombre_cargo,
+            v_registo.cargo_evaluado,
              v_registo.cite,
             v_datos.id_uo,
-            'modificado'
+            'modificado',
+            v_registo.cargo_actual_memo,
+            v_id_cargo            
 			);
 		end if;
 
@@ -1012,10 +1018,10 @@ BEGIN
 			fecha_mod,
 			id_usuario_mod,
             gestion,
-            cargo_evaluado,
+            cargo_actual_memo,
             cite,
             id_uo,
-            cargo_actual_memo,
+            cargo_evaluado,
             id_cargo_evaluado
           	) select
 			v_nro_tramite,

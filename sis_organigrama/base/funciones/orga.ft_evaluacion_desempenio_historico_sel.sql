@@ -51,7 +51,7 @@ BEGIN
 						hed.codigo,
 						hed.estado,
 						hed.fecha_solicitud,
-						hed.cargo_memo,
+						hed.cargo_evaluado,
 						hed.descripcion,
 						hed.estado_reg,
 						hed.id_evaluacion_desempenio_padre,
