@@ -46,7 +46,8 @@ header("content-type: text/javascript; charset=UTF-8");
                 iconCls: 'bfolder',
                 disabled: false,
                 handler: this.archivo,
-                tooltip: '<b>Adjuntar Archivo</b><br><b>Nos permite adjuntar documentos de un funcionario.</b>'
+                tooltip: '<b>Adjuntar Archivo</b><br><b>Nos permite adjuntar documentos de un funcionario.</b>',
+                grupo: [0,1]
             });
 
             this.iniciarEventos();
@@ -388,7 +389,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         '<div class="x-combo-list-item">',
                         '<div class="awesomecombo-item {checked}">',
                         '<p><b>{nombre_completo1}</b></p>',
-                            '</div><p><b>CI:</b> <span style="color: green;">{ci} {expedicion}</span></p>',
+                        '</div><p><b>CI:</b> <span style="color: green;">{ci} {expedicion}</span></p>',
                         '</div></tpl>'
                     ]),
                 },
@@ -759,7 +760,8 @@ header("content-type: text/javascript; charset=UTF-8");
                     triggerAction: 'all',
                     lazyRender:true,
                     mode: 'local',
-                    store:['documento_identidad','pasaporte']
+                    store:['documento_identidad','pasaporte'],
+                    renderer:function (value, p, record){return String.format('{0}', record.data['nombre_lugar']);}
 
                 },
                 type:'ComboBox',
