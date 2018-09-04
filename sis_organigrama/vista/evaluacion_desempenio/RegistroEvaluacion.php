@@ -53,8 +53,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         anchor: '50%',
                         gwidth: 80,
                         maxLength: 3,
-                        renderer: function (value, p, record) {
-                        	console.log('envio correo',record.data.estado);
+                        renderer: function (value, p, record) {                        	
                             var result;
                             if(record.data['estado'] == 'borrador') {
                                 result = String.format('{0}', "<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_email.png' align='center' width='35' height='35' title='borrador'/></div>");
@@ -88,7 +87,9 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:'0_70',title:'<font color="red"><H1 align="center"><i class="fa fa-list-ul"> Malo</i> 0 - 70 </h1></font>',grupo:1,height:0},
             {name:'71_80',title:'<font color="orange"><H1 align="center"><i class="fa fa-list-ul"> Regular</i> 71 - 80 </h1></font>',grupo:1,height:0},
             {name:'81_90',title:'<font color="black"><H1 align="center"><i class="fa fa-list-ul"> Bueno</i> 81 - 90 </h1></font>',grupo:1,height:0},
-            {name:'91_100',title:'<font color="green"><H1 align="center"><i class="fa fa-list-ul"> Excelente</i> 91 -100 </h1></font>',grupo:1,height:0}
+            {name:'91_100',title:'<font color="green"><H1 align="center"><i class="fa fa-list-ul"> Excelente</i> 91 -100 </h1></font>',grupo:1,height:0},
+            {name:'glu',title:'<font color="blue"><H1 align="center"><i class="fa fa-list-ul"> Gerencia</i> Total </h1></font>',grupo:1,height:0},
+            
         ],
         actualizarSegunTab: function(name, indice){
               if(this.finCons){
@@ -102,12 +103,20 @@ header("content-type: text/javascript; charset=UTF-8");
                       this.store.baseParams.pes_estado = name;                      
                       if(this.store.baseParams.pes_estado == '0_70'){                      	
                       	this.getBoton('CorreoCorreos').setVisible(false);
+                      	this.getBoton('edit').setVisible(false);
                       	this.getBoton('CorreoFuncionario').setVisible(false);                      	                      	                      	
                       }
-                      if(this.store.baseParams.pes_estado == '71_80'){
+                      else if(this.store.baseParams.pes_estado == '71_80'){
                       	this.getBoton('edit').setVisible(true);
                       	this.getBoton('CorreoCorreos').setVisible(false);
-                      }else{
+                      }
+                      else if(this.store.baseParams.pes_estado == 'glu'){
+                      	this.getBoton('CorreoCorreos').setVisible(false);
+                      	this.getBoton('edit').setVisible(false);
+                      	this.getBoton('CorreoFuncionario').setVisible(false);
+                      	this.getBoton('btnEvaluacionesTodos').setVisible(false);                      	
+                      }
+                      else{
                       	this.getBoton('edit').setVisible(false);
                       }   
                       this.rango = name;

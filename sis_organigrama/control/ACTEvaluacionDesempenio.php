@@ -24,7 +24,10 @@ class ACTEvaluacionDesempenio extends ACTbase{
             $this->objParam->addFiltro("evd.nota >= 71 and evd.nota <= 80");
         }elseif ($this->objParam->getParametro('pes_estado') == '81_90'){
             $this->objParam->addFiltro("evd.nota >= 81 and evd.nota <= 90");
-        }else{
+        }elseif ($this->objParam->getParametro('pes_estado') == 'glu'){
+        	$this->objParam->addFiltro("ger.id_uo = ".$this->objParam->getParametro('id_gerencia')."and evd.gestion = ".$this->objParam->getParametro('id_gestion'));
+        }
+        else{
             $this->objParam->addFiltro("evd.nota >= 91 and evd.nota <= 100");
         }
 
