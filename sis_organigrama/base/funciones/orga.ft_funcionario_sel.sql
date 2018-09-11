@@ -33,6 +33,11 @@ $body$
     v_id_funcionario	integer;
     v_ids_funcionario	varchar;
 
+    v_id_uo					integer;
+    v_gerencia			varchar;
+    v_id_uo_hijo		integer;
+    v_nivel				integer;
+
   BEGIN
 
     v_parametros:=pxp.f_get_record(par_tabla);
@@ -75,10 +80,10 @@ $body$
                             PERSON.nombre_completo2 AS desc_person,
                             usu1.cuenta as usr_reg,
 						    usu2.cuenta as usr_mod,
-                            PERSON.ci, 
+                            PERSON.ci,
                             PERSON.num_documento,
-                            PERSON.telefono1, 
-                            PERSON.celular1, 
+                            PERSON.telefono1,
+                            PERSON.celular1,
                             PERSON.correo,
                             FUNCIO.telefono_ofi,
                             FUNCIO.antiguedad_anterior,
@@ -93,7 +98,7 @@ $body$
                             FUNCIO.id_biometrico,
                             tar.nombre_archivo,
                             tar.extension,
-                            PERSON.telefono2, 
+                            PERSON.telefono2,
                             PERSON.celular2,
                             PERSON.nombre,
                             PERSON.ap_materno,
@@ -108,7 +113,7 @@ $body$
                             tof.nombre as nombre_oficina,
                             tlo.nombre as nombre_lugar_ofi
                             FROM orga.tfuncionario FUNCIO
-                            inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario AND 
+                            inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario AND
                             tuo.fecha_asignacion  in (select fecha_asignacion
                                                         from tt_orga_filtro where id_funcionario = FUNCIO.id_funcionario)
                             inner join orga.tcargo tca on tca.id_cargo = tuo.id_cargo
@@ -164,18 +169,18 @@ $body$
                       select tuo.id_funcionario,  max(tuo.id_uo_funcionario)
                       from orga.tuo_funcionario tuo
                       group by  tuo.id_funcionario';*/
-        
+
         v_consulta = 'insert into tt_orga_filtro
                       select  tuo.id_funcionario, max(tuo.fecha_asignacion)
                       from orga.tuo_funcionario tuo
                       group by  tuo.id_funcionario';
 
         execute(v_consulta);
-        
+
         v_consulta:='SELECT
          					count(FUNCIO.id_funcionario)
                             FROM orga.tfuncionario FUNCIO
-                            inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario  AND 
+                            inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario  AND
                             tuo.fecha_asignacion  in (select fecha_asignacion
                                                         from tt_orga_filtro where id_funcionario = FUNCIO.id_funcionario)
                             inner join orga.tcargo tca on tca.id_cargo = tuo.id_cargo
@@ -459,87 +464,150 @@ $body$
         return v_consulta;
       END;
     /*******************************
-     #TRANSACCION:  ORGA_FUN_DOC_SEL
-     #DESCRIPCION:	Lista los documento que tiene un funcionario.
-     #AUTOR:		Franklin Espinoza A. (fea)
-     #FECHA:		30/10/2017
-    ***********************************/
-    elsif(par_transaccion='ORGA_FUN_DOC_SEL')then
-      BEGIN
+   #TRANSACCION:  ORGA_FUN_DOC_SEL
+   #DESCRIPCION:	Lista los documento que tiene un funcionario.
+   #AUTOR:		Franklin Espinoza A. (fea)
+   #FECHA:		30/10/2017
+  ***********************************/
+  elsif(par_transaccion='ORGA_FUN_DOC_SEL')then
+  --consulta:=';
+    BEGIN
 
-        v_consulta = 'select
-        			 distinct on (tf.desc_funcionario2) tf.desc_funcionario2::varchar AS desc_funcionario,
-        			 tf.id_funcionario,
-                     tf.id_biometrico,
-                     tf.ci,
-                     (case when position(''FOTO_FUNCIONARIO'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Foto'' else ''X'' end)::varchar as fotografia,
-                     (case when position(''DIAC'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''D. Academico'' else ''X'' end)::varchar as diploma_academico,
-                     (case when position(''TIT_BACHILLER'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''T. Bachiller'' else ''X'' end)::varchar as titulo_bachiller,
-                     (case when position(''TIT_PROF'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''T. Profesional'' else ''X'' end)::varchar as titulo_profesional,
-                     (case when position(''TIT_MAES'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''T. Maestria'' else ''X'' end)::varchar as titulo_maestria,
-                     (case when position(''TIT_DOC'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''T. Doctorado'' else ''X'' end)::varchar as titulo_doctorado,
-                     (case when position(''CERT_EGRESO'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''C. Egreso'' else ''X'' end)::varchar as certificado_egreso,
-                     (case when position(''CI_FUNCIONARIO'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''CI'' else ''X'' end)::varchar as carnet_identidad,
-                     (case when position(''CER_NAC'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''C. Nacimiento'' else ''X'' end)::varchar as certificado_nacimiento,
-                     (case when position(''CERT_MATR'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''C. Matrimonio'' else ''X'' end)::varchar as certificado_matrimonio,
-                     (case when position(''LIB_MIL'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''L. Militar'' else ''X'' end)::varchar as libreta_militar,
 
-                     (case when position(''AVISO_FILIA'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''A. Afiliación'' else ''X'' end)::varchar as aviso_afiliacion,
-                     (case when position(''EXA_PREOC'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''E. Preocupacional'' else ''X'' end)::varchar as examen_pre,
-                     (case when position(''CARN_ASEG'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''C. Asegurado'' else ''X'' end)::varchar as carnet_asegurado,
-                     (case when position(''CAR_DIS'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''C. Discapacidad'' else ''X'' end)::varchar as carnet_discapacidad,
-                     (case when position(''FELCC'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''FELCC'' else ''X'' end)::varchar as felcc,
-                     (case when position(''FELCN'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''FELCN'' else ''X'' end)::varchar as felcn,
-                     (case when position(''CONTRA'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Contraloria'' else ''X'' end)::varchar as declaracion_jurada,
-                     (case when position(''SIPASS'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Sipasse'' else ''X'' end)::varchar as sipasse,
-                     (case when position(''DJ-PARENT'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''D.J. Parentesco'' else ''X'' end)::varchar as dj_parentesco,
-                     (case when position(''DJ_PERS'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''D.J. Percepciones'' else ''X'' end)::varchar as dj_percepciones,
-                     (case when position(''DESIG'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Memo Designación'' else ''X'' end)::varchar as memorandum_designacion,
-                     (case when position(''CONTRATO'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Memo Contrato'' else ''X'' end)::varchar as memorandum_contrato,
-                     (case when position(''DECL-HER'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''D. Herederos'' else ''X'' end)::varchar as declaracion_herederos,
-                     (case when position(''FINIQ'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Finiquito'' else ''X'' end)::varchar as finiquito,
-                     (case when position(''CART_DESP'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''C. Despido'' else ''X'' end)::varchar as carta_despido,
-                     (case when position(''CONC_CONTR'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''C. Contrato'' else ''X'' end)::varchar as conclusion_contrato,
-                     (case when position(''DESV_PER_PRUE'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Desvinculación Prueba'' else ''X'' end)::varchar as desvinculacion_prueba,
-                     (case when position(''OTR_RET'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Otro Retiro'' else ''X'' end)::varchar as otro_retiro,
-                     (case when position(''BAJA'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Baja Afiliación'' else ''X'' end)::varchar as aviso_bajaf,
-                     (case when position(''SUM'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Sumario'' else ''X'' end)::varchar as sumario,
-					 (case when position(''PEN-EX-TRA'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''P. Ex. Trabajadores'' else ''X'' end)::varchar as pendientes_extrabajadores,
-                     tc.nombre as cargo,
-                     orga.f_url_foto(tf.id_funcionario, pxp.list(distinct tta.codigo)::varchar) as url_foto,
-                     tf.fecha_ingreso
+  --Creamos una tabla donde obtenemos la ultima asignacion de un funcionario
+      create temp table tt_orga_filtro (
+          id_funcionario integer,
+          fecha_asignacion date
+      )on commit drop;
 
-					 from orga.vfuncionario_biometrico tf
-					 left join param.tarchivo tar on tar.id_tabla = tf.id_funcionario
-					 left join param.ttipo_archivo tta on tta.id_tipo_archivo = tar.id_tipo_archivo
-                     left JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario and (current_date <= uof.fecha_finalizacion or  uof.fecha_finalizacion is null)
-     				 left JOIN orga.tcargo tc ON tc.id_cargo = uof.id_cargo
-                     where tf.estado_reg = ''activo'' and tc.estado_reg = ''activo'' and ';
-        v_consulta:=v_consulta||v_parametros.filtro;
-        v_consulta:=v_consulta||'group by tf.id_funcionario, tf.id_biometrico, tf.desc_funcionario2, tf.ci, tc.nombre, tf.fecha_ingreso order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
-		raise notice 'v_consulta: %',v_consulta;
-        return v_consulta;
-      END;
-    /*******************************
-     #TRANSACCION:  ORGA_FUN_DOC_CONT
-     #DESCRIPCION:	Contador lista de documento que tiene un funcionario.
-     #AUTOR:		Franklin Espinoza A. (fea)
-     #FECHA:		30/10/2017
-    ***********************************/
-    elsif(par_transaccion='ORGA_FUN_DOC_CONT')then
-      BEGIN
+                    v_consulta = 'insert into tt_orga_filtro
+                    select uo.id_funcionario, max(uo.fecha_asignacion)
+                    from orga.tuo_funcionario uo
+                    group by  uo.id_funcionario';
 
-        v_consulta = 'select count(distinct tf.id_funcionario)
-					 from orga.vfuncionario_biometrico tf
-					 left join param.tarchivo tar on tar.id_tabla = tf.id_funcionario
-					 left join param.ttipo_archivo tta on tta.id_tipo_archivo = tar.id_tipo_archivo
-                     left JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario and (current_date <= uof.fecha_finalizacion or  uof.fecha_finalizacion is null)
-     				 left JOIN orga.tcargo tc ON tc.id_cargo = uof.id_cargo
-                     where tf.estado_reg = ''activo'' and ';
-        v_consulta:=v_consulta||v_parametros.filtro;
+      execute(v_consulta);
 
-        return v_consulta;
-      END;
+      v_consulta = 'select
+             distinct on (tf.desc_funcionario2) tf.desc_funcionario2::varchar AS desc_funcionario,
+             tf.id_funcionario,
+                   tf.id_biometrico,
+                   tf.ci,
+                   (case when position(''FOTO_FUNCIONARIO'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Foto'' else ''X'' end)::varchar as fotografia,
+                   (case when position(''DIAC'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''D. Academico'' else ''X'' end)::varchar as diploma_academico,
+                   (case when position(''TIT_BACHILLER'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''T. Bachiller'' else ''X'' end)::varchar as titulo_bachiller,
+                   (case when position(''TIT_PROF'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''T. Profesional'' else ''X'' end)::varchar as titulo_profesional,
+                   (case when position(''TIT_MAES'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''T. Maestria'' else ''X'' end)::varchar as titulo_maestria,
+                   (case when position(''TIT_DOC'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''T. Doctorado'' else ''X'' end)::varchar as titulo_doctorado,
+                   (case when position(''CERT_EGRESO'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''C. Egreso'' else ''X'' end)::varchar as certificado_egreso,
+                   (case when position(''CI_FUNCIONARIO'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''CI'' else ''X'' end)::varchar as carnet_identidad,
+                   (case when position(''CER_NAC'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''C. Nacimiento'' else ''X'' end)::varchar as certificado_nacimiento,
+                   (case when position(''CERT_MATR'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''C. Matrimonio'' else ''X'' end)::varchar as certificado_matrimonio,
+                   (case when position(''LIB_MIL'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''L. Militar'' else ''X'' end)::varchar as libreta_militar,
+
+                   (case when position(''AVISO_FILIA'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''A. Afiliación'' else ''X'' end)::varchar as aviso_afiliacion,
+                   (case when position(''EXA_PREOC'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''E. Preocupacional'' else ''X'' end)::varchar as examen_pre,
+                   (case when position(''CARN_ASEG'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''C. Asegurado'' else ''X'' end)::varchar as carnet_asegurado,
+                   (case when position(''CAR_DIS'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''C. Discapacidad'' else ''X'' end)::varchar as carnet_discapacidad,
+                   (case when position(''FELCC'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''FELCC'' else ''X'' end)::varchar as felcc,
+                   (case when position(''FELCN'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''FELCN'' else ''X'' end)::varchar as felcn,
+                   (case when position(''CONTRA'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Contraloria'' else ''X'' end)::varchar as declaracion_jurada,
+                   (case when position(''SIPASS'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Sipasse'' else ''X'' end)::varchar as sipasse,
+                   (case when position(''DJ-PARENT'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''D.J. Parentesco'' else ''X'' end)::varchar as dj_parentesco,
+                   (case when position(''DJ_PERS'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''D.J. Percepciones'' else ''X'' end)::varchar as dj_percepciones,
+                   (case when position(''DESIG'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Memo Designación'' else ''X'' end)::varchar as memorandum_designacion,
+                   (case when position(''CONTRATO'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Memo Contrato'' else ''X'' end)::varchar as memorandum_contrato,
+                   (case when position(''DECL-HER'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''D. Herederos'' else ''X'' end)::varchar as declaracion_herederos,
+                   (case when position(''FINIQ'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Finiquito'' else ''X'' end)::varchar as finiquito,
+                   (case when position(''CART_DESP'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''C. Despido'' else ''X'' end)::varchar as carta_despido,
+                   (case when position(''CONC_CONTR'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''C. Contrato'' else ''X'' end)::varchar as conclusion_contrato,
+                   (case when position(''DESV_PER_PRUE'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Desvinculación Prueba'' else ''X'' end)::varchar as desvinculacion_prueba,
+                   (case when position(''OTR_RET'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Otro Retiro'' else ''X'' end)::varchar as otro_retiro,
+                   (case when position(''BAJA'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Baja Afiliación'' else ''X'' end)::varchar as aviso_bajaf,
+                   (case when position(''SUM'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''Sumario'' else ''X'' end)::varchar as sumario,
+         (case when position(''PEN-EX-TRA'' in pxp.list(distinct tta.codigo)::varchar)>0 then ''P. Ex. Trabajadores'' else ''X'' end)::varchar as pendientes_extrabajadores,
+                   tc.nombre as cargo,
+                   orga.f_url_foto(tf.id_funcionario, pxp.list(distinct tta.codigo)::varchar) as url_foto,
+                   tf.estado_reg,
+                   tf.fecha_ingreso,
+         		   uo.fecha_finalizacion,
+                   tca.nombre as nombre_cargo,
+                   tof.nombre as nombre_oficina,
+         		   tlo.nombre as nombre_lugar_ofi,
+                   tuoo.descripcion,
+                   tca.id_lugar,
+                   ger.id_uo
+				   from orga.vfuncionario_biometrico tf
+                   inner join orga.tuo_funcionario uo on uo.id_funcionario = tf.id_funcionario AND
+                   uo.fecha_asignacion  in (select fecha_asignacion
+                                                      from tt_orga_filtro where id_funcionario = tf.id_funcionario)
+         			left join param.tarchivo tar on tar.id_tabla = tf.id_funcionario
+        			left join param.ttipo_archivo tta on tta.id_tipo_archivo = tar.id_tipo_archivo
+                   	left JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario and (current_date <= uof.fecha_finalizacion or  uof.fecha_finalizacion is null)
+           			left JOIN orga.tcargo tc ON tc.id_cargo = uof.id_cargo
+                   inner join orga.tuo tuoo on tuoo.id_uo = uo.id_uo
+                   inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(tuoo.id_uo,null::integer,null::date)
+                   inner join orga.tcargo tca on tca.id_cargo = uo.id_cargo
+                   inner join orga.toficina tof on tof.id_oficina = tca.id_oficina
+                   inner join param.tlugar tlo on tlo.id_lugar = tca.id_lugar
+
+                   where';
+      v_consulta:=v_consulta||v_parametros.filtro;
+      v_consulta:=v_consulta||'group by tf.id_funcionario, tf.id_biometrico, tf.desc_funcionario2, tf.ci, tc.nombre, tf.estado_reg, tf.fecha_ingreso, uo.fecha_finalizacion, tca.nombre, tof.nombre, tlo.nombre, tuoo.descripcion, tca.id_lugar, ger.id_uo   order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
+  raise notice 'v_consulta: %',v_consulta;
+      return v_consulta;
+    END;
+  /*******************************
+   #TRANSACCION:  ORGA_FUN_DOC_CONT
+   #DESCRIPCION:	Contador lista de documento que tiene un funcionario.
+   #AUTOR:		Franklin Espinoza A. (fea)
+   #FECHA:		30/10/2017
+  ***********************************/
+  elsif(par_transaccion='ORGA_FUN_DOC_CONT')then
+    --consulta:=';
+    BEGIN
+
+
+
+
+
+
+  --Creamos una tabla donde obtenemos la ultima asignacion de un funcionario
+  create temp table tt_orga_filtro (
+          id_funcionario integer,
+          fecha_asignacion date
+      )on commit drop;
+
+      /*v_consulta = 'insert into tt_orga_filtro
+                    select tuo.id_funcionario,  max(tuo.id_uo_funcionario)
+                    from orga.tuo_funcionario tuo
+                    group by  tuo.id_funcionario';*/
+
+      v_consulta = 'insert into tt_orga_filtro
+                    select  uo.id_funcionario, max(uo.fecha_asignacion)
+                    from orga.tuo_funcionario uo
+                    group by  uo.id_funcionario';
+
+      execute(v_consulta);
+
+      v_consulta = 'select count(distinct tf.id_funcionario)
+         from orga.vfuncionario_biometrico tf
+                   inner join orga.tuo_funcionario uo on uo.id_funcionario = tf.id_funcionario AND
+                   uo.fecha_asignacion  in (select fecha_asignacion
+                                                      from tt_orga_filtro where id_funcionario = tf.id_funcionario)
+         			left join param.tarchivo tar on tar.id_tabla = tf.id_funcionario
+        			left join param.ttipo_archivo tta on tta.id_tipo_archivo = tar.id_tipo_archivo
+                   	left JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario and (current_date <= uof.fecha_finalizacion or  uof.fecha_finalizacion is null)
+           			left JOIN orga.tcargo tc ON tc.id_cargo = uof.id_cargo
+                   inner join orga.tuo tuoo on tuoo.id_uo = uo.id_uo
+                   inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(tuoo.id_uo,null::integer,null::date)
+                   inner join orga.tcargo tca on tca.id_cargo = uo.id_cargo
+                   inner join orga.toficina tof on tof.id_oficina = tca.id_oficina
+                   inner join param.tlugar tlo on tlo.id_lugar = tca.id_lugar
+                   where';
+      v_consulta:=v_consulta||v_parametros.filtro;
+
+      return v_consulta;
+    END;
     /*******************************
      #TRANSACCION:  ORGA_REP_DOC_SEL
      #DESCRIPCION:	Reporte de documento que tiene un funcionario.

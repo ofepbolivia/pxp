@@ -389,7 +389,19 @@ class MODFuncionario extends MODbase{
 
         $this->captura('cargo','varchar');
         $this->captura('url_foto','varchar');
+        $this->captura('estado_reg','varchar');
         $this->captura('fecha_ingreso','date');
+        $this->captura('fecha_finalizacion','date');
+        $this->captura('nombre_cargo','varchar');
+        $this->captura('nombre_oficina','varchar');
+        $this->captura('nombre_lugar_ofi','varchar');
+
+        $this->captura('descripcion','varchar');
+        $this->captura('id_lugar','int4');
+        $this->captura('id_uo','int4');
+
+
+
 
 
         //Ejecuta la instruccion
