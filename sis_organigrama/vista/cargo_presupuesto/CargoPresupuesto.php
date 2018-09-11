@@ -130,6 +130,22 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 {
                     config:{
+                        name: 'fecha_fin',
+                        fieldLabel: 'Fecha Finalización',
+                        allowBlank: true,
+                        anchor: '80%',
+                        gwidth: 150,
+                        format: 'd/m/Y',
+                        renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+                    },
+                    type:'DateField',
+                    filters:{pfiltro:'carpre.fecha_fin',type:'date'},
+                    id_grupo:1,
+                    grid:true,
+                    form:true
+                },
+                {
+                    config:{
                         name: 'estado_reg',
                         fieldLabel: 'Estado Reg.',
                         allowBlank: true,
@@ -222,6 +238,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name:'desc_centro_costo', type: 'string'},
                 {name:'porcentaje', type: 'numeric'},
                 {name:'fecha_ini', type: 'date',dateFormat:'Y-m-d'},
+                {name:'fecha_fin', type: 'date',dateFormat:'Y-m-d'},
                 {name:'estado_reg', type: 'string'},
                 {name:'id_usuario_reg', type: 'numeric'},
                 {name:'fecha_reg', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
@@ -247,6 +264,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 this.Cmp.id_cargo.setValue(this.maestro.id_cargo);
                 Phx.vista.CargoPresupuesto.superclass.loadValoresIniciales.call(this);
             },
+
             cmbGestion:new Ext.form.ComboBox({
                 fieldLabel: 'Gestion',
                 allowBlank: true,

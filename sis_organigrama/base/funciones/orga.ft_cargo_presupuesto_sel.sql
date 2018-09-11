@@ -12,13 +12,13 @@ $body$
  DESCRIPCION:   Funcion que devuelve conjuntos de registros de las consultas relacionadas con la tabla 'orga.tcargo_presupuesto'
  AUTOR: 		 (admin)
  FECHA:	        15-01-2014 13:05:35
- COMENTARIOS:	
+ COMENTARIOS:
 ***************************************************************************
  HISTORIAL DE MODIFICACIONES:
 
- DESCRIPCION:	
- AUTOR:			
- FECHA:		
+ DESCRIPCION:
+ AUTOR:
+ FECHA:
 ***************************************************************************/
 
 DECLARE
@@ -27,21 +27,21 @@ DECLARE
 	v_parametros  		record;
 	v_nombre_funcion   	text;
 	v_resp				varchar;
-			    
+
 BEGIN
 
 	v_nombre_funcion = 'orga.ft_cargo_presupuesto_sel';
     v_parametros = pxp.f_get_record(p_tabla);
 
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'OR_CARPRE_SEL'
  	#DESCRIPCION:	Consulta de datos
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		15-01-2014 13:05:35
 	***********************************/
 
 	if(p_transaccion='OR_CARPRE_SEL')then
-     				
+
     	begin
     		--Sentencia de la consulta
 			v_consulta:='select
@@ -51,6 +51,7 @@ BEGIN
 						carpre.id_centro_costo,
 						carpre.porcentaje,
 						carpre.fecha_ini,
+                        carpre.fecha_fin,
 						carpre.estado_reg,
 						carpre.id_usuario_reg,
 						carpre.fecha_reg,
@@ -67,20 +68,20 @@ BEGIN
 						left join conta.torden_trabajo ot on ot.id_orden_trabajo = carpre.id_ot
                         inner join param.vcentro_costo cc on cc.id_centro_costo = carpre.id_centro_costo
 				        where  ';
-			
+
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
 			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
 
 			--Devuelve la respuesta
 			return v_consulta;
-						
+
 		end;
 
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'OR_CARPRE_CONT'
  	#DESCRIPCION:	Conteo de registros
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		15-01-2014 13:05:35
 	***********************************/
 
@@ -95,23 +96,23 @@ BEGIN
 						left join conta.torden_trabajo ot on ot.id_orden_trabajo = carpre.id_ot
                         inner join param.vcentro_costo cc on cc.id_centro_costo = carpre.id_centro_costo
 					    where ';
-			
-			--Definicion de la respuesta		    
+
+			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
 
 			--Devuelve la respuesta
 			return v_consulta;
 
 		end;
-					
+
 	else
-					     
+
 		raise exception 'Transaccion inexistente';
-					         
+
 	end if;
-					
+
 EXCEPTION
-					
+
 	WHEN OTHERS THEN
 			v_resp='';
 			v_resp = pxp.f_agrega_clave(v_resp,'mensaje',SQLERRM);

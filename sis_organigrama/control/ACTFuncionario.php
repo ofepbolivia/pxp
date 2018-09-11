@@ -215,7 +215,18 @@ class ACTFuncionario extends ACTbase{
         }
 
 
-
+        if($this->objParam->getParametro('estado_func')=='activo'){
+            $this->objParam->addFiltro("(FUNCAR.estado_reg_fun = ''activo'' and current_date < coalesce (FUNCAR.fecha_finalizacion, ''31/12/9999''::date))");
+        }else if($this->objParam->getParametro('estado_func')=='inactivo'){
+            $this->objParam->addFiltro("(FUNCAR.estado_reg_fun = ''inactivo'' or FUNCAR.fecha_finalizacion < current_date)");
+        }else if($this->objParam->getParametro('estado_func')=='act_desc'){
+            $this->objParam->addFiltro("(
+            FUNCAR.estado_reg_fun in (''activo'', ''inactivo'') or (current_date < coalesce (FUNCAR.fecha_finalizacion, ''31/12/9999''::date) or 
+            FUNCAR.fecha_finalizacion < current_date)
+            )");
+        }else{
+            $this->objParam->addFiltro("(FUNCAR.estado_reg_fun = ''activo'' and current_date < coalesce (FUNCAR.fecha_finalizacion, ''31/12/9999''::date))");
+        }
 
         if($this->objParam->getParametro('fecha')!=''){
 
