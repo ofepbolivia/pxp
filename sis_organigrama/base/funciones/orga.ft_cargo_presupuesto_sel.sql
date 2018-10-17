@@ -64,7 +64,8 @@ BEGIN
                         ot.desc_orden
 						from orga.tcargo_presupuesto carpre
                         inner join orga.tcargo tca on tca.id_cargo = carpre.id_cargo
-                        inner join orga.tuo_funcionario tuo on tuo.id_cargo = carpre.id_cargo and coalesce(tuo.fecha_finalizacion,''31/12/2018''::date)  between  carpre.fecha_ini and coalesce(carpre.fecha_fin,''31/12/2018''::date)
+                        INNER JOIN param.tgestion tg on tg.id_gestion = carpre.id_gestion
+                        inner join orga.tuo_funcionario tuo on tuo.id_cargo = carpre.id_cargo and coalesce(tuo.fecha_finalizacion,(''31/12/''||tg.gestion)::date)  between  carpre.fecha_ini and coalesce(carpre.fecha_fin,(''31/12/''||tg.gestion)::date) 
 						inner join segu.tusuario usu1 on usu1.id_usuario = carpre.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = carpre.id_usuario_mod
 						left join conta.torden_trabajo ot on ot.id_orden_trabajo = carpre.id_ot
@@ -94,7 +95,8 @@ BEGIN
 			v_consulta:='select count(id_cargo_presupuesto)
 					    from orga.tcargo_presupuesto carpre
                         inner join orga.tcargo tca on tca.id_cargo = carpre.id_cargo
-					    inner join orga.tuo_funcionario tuo on tuo.id_cargo = carpre.id_cargo and coalesce(tuo.fecha_finalizacion,''31/12/2018''::date)  between  carpre.fecha_ini and coalesce(carpre.fecha_fin,''31/12/2018''::date)
+                        INNER JOIN param.tgestion tg on tg.id_gestion = carpre.id_gestion
+					    inner join orga.tuo_funcionario tuo on tuo.id_cargo = carpre.id_cargo and coalesce(tuo.fecha_finalizacion,(''31/12/''||tg.gestion)::date)  between  carpre.fecha_ini and coalesce(carpre.fecha_fin,(''31/12/''||tg.gestion)::date) 
                         inner join segu.tusuario usu1 on usu1.id_usuario = carpre.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = carpre.id_usuario_mod
 						left join conta.torden_trabajo ot on ot.id_orden_trabajo = carpre.id_ot

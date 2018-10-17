@@ -26,7 +26,7 @@ class ACTFuncionario extends ACTbase{
         }
 
         if( $this->objParam->getParametro('es_combo_solicitud') == 'si' ) {
-            $this->objParam->addFiltro("FUNCIO.id_funcionario IN (select * 
+            $this->objParam->addFiltro("FUNCIO.id_funcionario IN (select *
 										FROM orga.f_get_funcionarios_x_usuario_asistente(now()::date, " .
                 $_SESSION["ss_id_usuario"] . ") AS (id_funcionario INTEGER)) ");
         }
@@ -39,7 +39,7 @@ class ACTFuncionario extends ACTbase{
             $this->objParam->addFiltro("(FUNCIO.estado_reg = ''inactivo'' or tuo.fecha_finalizacion < current_date)");
         }else if($this->objParam->getParametro('estado_func')=='act_desc'){
             $this->objParam->addFiltro("(
-            FUNCIO.estado_reg in (''activo'', ''inactivo'') or (current_date < coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date) or 
+            FUNCIO.estado_reg in (''activo'', ''inactivo'') or (current_date < coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date) or
             tuo.fecha_finalizacion < current_date)
             )");
         }else{
@@ -113,8 +113,8 @@ class ACTFuncionario extends ACTbase{
         if($this->objParam->getParametro('nombre_empleado')!=''){
             $nombre_empleado = trim($this->objParam->getParametro('nombre_empleado'));
             $nombre_empleado = str_replace(' ', '%', $nombre_empleado);
-            $this->objParam->addFiltro("(lower(PERSON.nombre_completo1) like lower(''%" .  $nombre_empleado ."%'') or 
-            							lower(PERSON.nombre_completo2) like lower(''%" .  $nombre_empleado ."%'') or 
+            $this->objParam->addFiltro("(lower(PERSON.nombre_completo1) like lower(''%" .  $nombre_empleado ."%'') or
+            							lower(PERSON.nombre_completo2) like lower(''%" .  $nombre_empleado ."%'') or
             							lower(CAR.nombre) like lower(''%" .  $nombre_empleado ."%''))");
         }
 
@@ -239,7 +239,7 @@ class ACTFuncionario extends ACTbase{
             } else {
                 $date = $this->objParam->getParametro('fecha');
             }
-            $this->objParam->addFiltro("FUNCAR.id_funcionario IN (select * 
+            $this->objParam->addFiltro("FUNCAR.id_funcionario IN (select *
 										FROM orga.f_get_funcionarios_x_usuario_asistente(''" . $date . "'', " .
                 $_SESSION["ss_id_usuario"] . ") AS (id_funcionario INTEGER)) ");
         }
@@ -346,6 +346,24 @@ class ACTFuncionario extends ACTbase{
     function listarDocumentos(){
         $this->objParam->defecto('ordenacion','tf.desc_funcionario2');
         $this->objParam->defecto('dir_ordenacion','asc');
+        if($this->objParam->getParametro('id_uo') != '') {
+            $this->objParam->addFiltro(" ger.id_uo = " . $this->objParam->getParametro('id_uo'));
+        }
+
+        if($this->objParam->getParametro('estado_func')=='activo'){
+            $this->objParam->addFiltro("(tf.estado_reg = ''activo'' and current_date < coalesce (uo.fecha_finalizacion, ''31/12/9999''::date))");
+        }else if($this->objParam->getParametro('estado_func')=='inactivo'){
+            $this->objParam->addFiltro("(tf.estado_reg = ''inactivo'' or uo.fecha_finalizacion < current_date)");
+        }else if($this->objParam->getParametro('estado_func')=='act_desc'){
+            $this->objParam->addFiltro("(
+            tf.estado_reg in (''activo'', ''inactivo'') or (current_date < coalesce (uo.fecha_finalizacion, ''31/12/9999''::date) or
+            uo.fecha_finalizacion < current_date)
+            )");
+        }else{
+            $this->objParam->addFiltro("(tf.estado_reg = ''activo'' and current_date < coalesce (uo.fecha_finalizacion, ''31/12/9999''::date))");
+        }
+
+
 
         if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
             $this->objReporte = new Reporte($this->objParam,$this);

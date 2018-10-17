@@ -120,8 +120,10 @@ $body$
         v_consulta:='select c.nombre::varchar as cargo,lu.nombre::varchar as lugar,ger.nombre_unidad::varchar as gerencia,count(*)::integer as cantidad
                           from orga.tcargo c
                           inner join orga.tuo ger on ger.id_uo = orga.f_get_uo_gerencia(c.id_uo,NULL,'''|| v_parametros.fecha ||'''::date)
-	                      left join orga.toficina ofi on ofi.id_oficina = c.id_oficina
-                          left join param.tlugar lu on lu.id_lugar = ofi.id_lugar
+
+                          left join orga.toficina ofi on ofi.id_oficina = c.id_oficina
+                          inner join param.tlugar lu on lu.id_lugar = ofi.id_lugar
+
                           inner join orga.ttipo_contrato tc on tc.id_tipo_contrato = c.id_tipo_contrato
                           left join orga.tuo_funcionario uofun on uofun.id_cargo = c.id_cargo and
                                         (uofun.fecha_finalizacion >= '''|| v_parametros.fecha ||'''::date or uofun.fecha_finalizacion is null) and
@@ -135,6 +137,7 @@ $body$
 
         v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion;
 		raise notice 'consulta: %', v_consulta;
+
         --Devuelve la respuesta
         return v_consulta;
 
@@ -169,6 +172,7 @@ $body$
 
         v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion;
 		raise notice 'consulta: %', v_consulta;
+
         --Devuelve la respuesta
         return v_consulta;
 
@@ -291,6 +295,7 @@ $body$
                         LEFT join orga.tuo_funcionario tuo on tuo.id_cargo = cargo.id_cargo and '||v_activo||'
                         LEFT join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
 				        where (cargo.estado_reg = ''activo'' or cargo.estado_reg = ''inactivo'') '||v_condicion||' and ';
+
 
         --Definicion de la respuesta
         v_consulta:=v_consulta||v_parametros.filtro;

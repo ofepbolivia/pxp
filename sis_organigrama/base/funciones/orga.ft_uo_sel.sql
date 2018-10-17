@@ -12,13 +12,13 @@ CREATE OR REPLACE FUNCTION orga.ft_uo_sel (
  FUNCION: 		orga.ft_uo_sel
  DESCRIPCIÓN:  listado de uo
  AUTOR: 	    KPLIAN (mzm)
- FECHA:	        
- COMENTARIOS:	
+ FECHA:
+ COMENTARIOS:
 ***************************************************************************
  HISTORIA DE MODIFICACIONES:
 
- DESCRIPCION:	
- AUTOR:		
+ DESCRIPCION:
+ AUTOR:
  FECHA:		21-01-2011
 ***************************************************************************/
 
@@ -42,30 +42,30 @@ BEGIN
 /*******************************
  #TRANSACCION:  RH_UO_SEL
  #DESCRIPCION:	Listado de uos
- #AUTOR:		
- #FECHA:		23/05/11	
+ #AUTOR:
+ #FECHA:		23/05/11
 ***********************************/
      if(par_transaccion='RH_UO_SEL')then
 
-          
+
           BEGIN
-          
-          
+
+
             v_filadd = '';
             IF (pxp.f_existe_parametro(par_tabla,'correspondencia')) THEN
                v_filadd = ' (UO.correspondencia = '''||v_parametros.correspondencia||''') and ';
-            END IF;    
-            
+            END IF;
+
             --29mar12: para SAJ
             IF (pxp.f_existe_parametro(par_tabla,'gerencia')) THEN
                v_filadd = ' (UO.gerencia = '''||v_parametros.gerencia||''') and ';
             END IF;
-            
+
             IF (pxp.f_existe_parametro(par_tabla,'presupuesta')) THEN
                v_filadd = ' (UO.presupuesta = '''||v_parametros.presupuesta||''') and ';
             END IF;
-            
-            
+
+
                v_consulta:='SELECT UO.id_uo,
                                   UO.cargo_individual,
                                   UO.codigo,
@@ -73,7 +73,7 @@ BEGIN
                                   UO.estado_reg,
                                   UO.fecha_mod,
                                   UO.fecha_reg,
-                                  
+
                                   UO.id_usuario_mod,
                                   UO.id_usuario_reg,
                                   UO.nombre_cargo,
@@ -87,8 +87,8 @@ BEGIN
                             LEFT JOIN SEGU.tusuario USUMOD ON USUMOD.id_usuario=UO.id_usuario_mod
                             LEFT JOIN SEGU.vpersona PERMOD ON PERMOD.id_persona=USUMOD.id_persona
                             WHERE UO.estado_reg=''activo'' and '||v_filadd;
-               
-               
+
+
                v_consulta:=v_consulta||v_parametros.filtro;
                v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
 
@@ -97,27 +97,30 @@ BEGIN
 
          END;
 
+
+
+
 /*******************************
  #TRANSACCION:  RH_UO_CONT
  #DESCRIPCION:	Conteo de uos
- #AUTOR:		
- #FECHA:		23/05/11	
+ #AUTOR:
+ #FECHA:		23/05/11
 ***********************************/
      elsif(par_transaccion='RH_UO_CONT')then
 
           --consulta:=';
           BEGIN
-          
+
            v_filadd = '';
             IF (pxp.f_existe_parametro(par_tabla,'correspondencia')) THEN
                v_filadd = ' (UO.correspondencia = '''||v_parametros.correspondencia||''') and ';
             END IF;
-           
+
             --29mar12: para SAJ
             IF (pxp.f_existe_parametro(par_tabla,'gerencia')) THEN
                v_filadd = ' (UO.gerencia = '''||v_parametros.gerencia||''') and ';
             END IF;
-            
+
                v_consulta:='SELECT
                                   count(UO.id_uo)
                             FROM orga.tuo UO
@@ -128,6 +131,77 @@ BEGIN
                             WHERE UO.estado_reg=''activo'' and '||v_filadd;
                v_consulta:=v_consulta||v_parametros.filtro;
                return v_consulta;
+         END;
+
+/*******************************
+ #TRANSACCION:  RH_UOIRVA_SEL
+ #DESCRIPCION:	Listado de uos
+ #AUTOR:
+ #FECHA:		23/05/11
+***********************************/
+     elseif(par_transaccion='RH_UOIRVA_SEL')then
+
+
+          BEGIN
+
+            --raise exception 'El valor de par_id_usuario es: %',par_id_usuario;
+
+               v_consulta:='SELECT UO.id_uo,
+                                  UO.cargo_individual,
+                                  UO.codigo,
+                                  UO.descripcion,
+                                  UO.estado_reg,
+                                  UO.fecha_mod,
+                                  UO.fecha_reg,
+
+                                  UO.id_usuario_mod,
+                                  UO.id_usuario_reg,
+                                  UO.nombre_cargo,
+                                  UO.nombre_unidad,
+                                  UO.presupuesta
+
+                           		  from orga.tfuncionario f
+										inner join segu.tusuario usu on usu.id_persona = f.id_persona
+										inner join orga.tuo_funcionario func on func.id_funcionario = f.id_funcionario
+										inner join orga.tuo uo on uo.estado_reg=''activo'' and uo.id_uo = orga.f_get_uo_gerencia(func.id_uo,null::integer,null::date)
+										WHERE usu.id_usuario='||par_id_usuario;
+
+
+
+               --Definicion de la respuesta
+			--v_consulta:=v_consulta||v_parametros.filtro;
+			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
+
+			--Devuelve la respuesta
+			return v_consulta;
+
+		 END;
+
+
+
+/*******************************
+ #TRANSACCION:  RH_UOIRVA_CONT
+ #DESCRIPCION:	Conteo de uos
+ #AUTOR:
+ #FECHA:		23/05/11
+***********************************/
+     elsif(par_transaccion='RH_UOIRVA_CONT')then
+
+          --consulta:=';
+          BEGIN
+
+               v_consulta:='SELECT
+                                  count(UO.id_uo)
+                            from orga.tfuncionario f
+										inner join segu.tusuario usu on usu.id_persona = f.id_persona
+										inner join orga.tuo_funcionario func on func.id_funcionario = f.id_funcionario
+										inner join orga.tuo uo on uo.estado_reg=''activo'' and uo.id_uo = orga.f_get_uo_gerencia(func.id_uo,null::integer,null::date)
+										WHERE usu.id_usuario='||par_id_usuario;
+              --Definicion de la respuesta
+			--v_consulta:=v_consulta||v_parametros.filtro;
+
+			--Devuelve la respuesta
+			return v_consulta;
          END;
      else
          raise exception 'No existe la opcion';
