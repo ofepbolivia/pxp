@@ -24,6 +24,7 @@ header("content-type: text/javascript; charset=UTF-8");
         gruposBarraTareas:[
             {name:'sin_presupuesto',title:'<H1 align="center">Sin Presupuesto</h1>',grupo:1,height:0},
             {name:'con_presupuesto',title:'<H1 align="center">Con Presupuesto</h1>',grupo:0,height:0},
+            {name:'acefalo',title:'<H1 align="center">Acefalos</h1>',grupo:0,height:0}
         ],
 
         actualizarSegunTab: function(name, indice){
@@ -542,6 +543,7 @@ header("content-type: text/javascript; charset=UTF-8");
         ActList:'../../sis_organigrama/control/Cargo/listarPresupuestoCargo',
         id_store:'id_cargo',
         fields: [
+            {name:'id_funcionario', type: 'numeric'},
             {name:'id_cargo', type: 'numeric'},
             {name:'id_uo', type: 'numeric'},
             {name:'id_tipo_contrato', type: 'numeric'},

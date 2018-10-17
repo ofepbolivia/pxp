@@ -12,13 +12,13 @@ $body$
  DESCRIPCION:   Funcion que devuelve conjuntos de registros de las consultas relacionadas con la tabla 'orga.tcargo_presupuesto'
  AUTOR: 		 (admin)
  FECHA:	        15-01-2014 13:05:35
- COMENTARIOS:	
+ COMENTARIOS:
 ***************************************************************************
  HISTORIAL DE MODIFICACIONES:
 
- DESCRIPCION:	
- AUTOR:			
- FECHA:		
+ DESCRIPCION:
+ AUTOR:
+ FECHA:
 ***************************************************************************/
 
 DECLARE
@@ -27,21 +27,21 @@ DECLARE
 	v_parametros  		record;
 	v_nombre_funcion   	text;
 	v_resp				varchar;
-			    
+
 BEGIN
 
 	v_nombre_funcion = 'orga.ft_cargo_presupuesto_sel';
     v_parametros = pxp.f_get_record(p_tabla);
 
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'OR_CARPRE_SEL'
  	#DESCRIPCION:	Consulta de datos
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		15-01-2014 13:05:35
 	***********************************/
 
 	if(p_transaccion='OR_CARPRE_SEL')then
-     				
+
     	begin
     		--Sentencia de la consulta
 			v_consulta:='select
@@ -51,6 +51,7 @@ BEGIN
 						carpre.id_centro_costo,
 						carpre.porcentaje,
 						carpre.fecha_ini,
+                        carpre.fecha_fin,
 						carpre.estado_reg,
 						carpre.id_usuario_reg,
 						carpre.fecha_reg,
@@ -62,25 +63,27 @@ BEGIN
                         carpre.id_ot,
                         ot.desc_orden
 						from orga.tcargo_presupuesto carpre
+                        inner join orga.tcargo tca on tca.id_cargo = carpre.id_cargo
+                        inner join orga.tuo_funcionario tuo on tuo.id_cargo = carpre.id_cargo and coalesce(tuo.fecha_finalizacion,''31/12/2018''::date)  between  carpre.fecha_ini and coalesce(carpre.fecha_fin,''31/12/2018''::date)
 						inner join segu.tusuario usu1 on usu1.id_usuario = carpre.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = carpre.id_usuario_mod
 						left join conta.torden_trabajo ot on ot.id_orden_trabajo = carpre.id_ot
                         inner join param.vcentro_costo cc on cc.id_centro_costo = carpre.id_centro_costo
 				        where  ';
-			
+
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
 			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
-
+			raise notice 'v_consulta: %', v_consulta;
 			--Devuelve la respuesta
 			return v_consulta;
-						
+
 		end;
 
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'OR_CARPRE_CONT'
  	#DESCRIPCION:	Conteo de registros
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		15-01-2014 13:05:35
 	***********************************/
 
@@ -90,28 +93,30 @@ BEGIN
 			--Sentencia de la consulta de conteo de registros
 			v_consulta:='select count(id_cargo_presupuesto)
 					    from orga.tcargo_presupuesto carpre
-					    inner join segu.tusuario usu1 on usu1.id_usuario = carpre.id_usuario_reg
+                        inner join orga.tcargo tca on tca.id_cargo = carpre.id_cargo
+					    inner join orga.tuo_funcionario tuo on tuo.id_cargo = carpre.id_cargo and coalesce(tuo.fecha_finalizacion,''31/12/2018''::date)  between  carpre.fecha_ini and coalesce(carpre.fecha_fin,''31/12/2018''::date)
+                        inner join segu.tusuario usu1 on usu1.id_usuario = carpre.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = carpre.id_usuario_mod
 						left join conta.torden_trabajo ot on ot.id_orden_trabajo = carpre.id_ot
                         inner join param.vcentro_costo cc on cc.id_centro_costo = carpre.id_centro_costo
 					    where ';
-			
-			--Definicion de la respuesta		    
+
+			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
 
 			--Devuelve la respuesta
 			return v_consulta;
 
 		end;
-					
+
 	else
-					     
+
 		raise exception 'Transaccion inexistente';
-					         
+
 	end if;
-					
+
 EXCEPTION
-					
+
 	WHEN OTHERS THEN
 			v_resp='';
 			v_resp = pxp.f_agrega_clave(v_resp,'mensaje',SQLERRM);

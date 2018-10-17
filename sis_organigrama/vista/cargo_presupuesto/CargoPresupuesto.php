@@ -257,7 +257,7 @@ header("content-type: text/javascript; charset=UTF-8");
             bsave:false,
             onReloadPage:function(m){
                 this.maestro=m;
-                this.load({params:{start:0, limit:this.tam_pag,id_cargo:this.maestro.id_cargo,id_gestion:this.cmbGestion.getValue()}});
+                this.load({params:{start:0, limit:this.tam_pag,id_cargo:this.maestro.id_cargo,id_gestion:this.cmbGestion.getValue(),id_uo:this.maestro.id_uo, id_funcionario:this.maestro.id_funcionario}});
             },
             loadValoresIniciales:function()
             {
@@ -298,4 +298,3 @@ header("content-type: text/javascript; charset=UTF-8");
     )
 </script>
 
-		
