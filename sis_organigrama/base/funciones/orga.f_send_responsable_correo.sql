@@ -26,7 +26,7 @@ BEGIN
     select tcon.codigo, tcon.nombre
 	into v_rec_contrato
     from orga.tcargo tc 
-    inner join orga.ttipo_contrato tcon on tcon.id_tipo_contrato = tc.id_tipo_contrato
+    left join orga.ttipo_contrato tcon on tcon.id_tipo_contrato = tc.id_tipo_contrato
     where tc.id_cargo = p_id_cargo;
     
     if v_rec_contrato.codigo in ('PLA', 'EVE', 'CONS', 'PEXTE', 'PEXT') then

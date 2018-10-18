@@ -9,9 +9,26 @@
 
 header("content-type: text/javascript; charset=UTF-8");
 ?>
+<style type="text/css" rel="stylesheet">
+    .histo {
+        background-color: #F1B178 !important;
+        color: #090;
+
+    }
+</style>
 <script>
 
 Phx.vista.EvaluacionDesempenio=Ext.extend(Phx.gridInterfaz,{
+    viewConfig: {
+        stripeRows: false,
+        getRowClass: function(record) {
+        	var histori = record.data.estado_modificado;                   
+            if(histori != ''){
+                return 'histo';           
+        	}
+        }
+
+    },	
     id_uo: 0,
 	constructor:function(config){
         this.initButtons=[this.cmbGerencia, this.cmbGestion];
