@@ -50,55 +50,55 @@ Ext.state.LocalProvider = Ext.extend(Ext.state.Provider, {
 });
 
 Ext.ux.clone =  function(item, cloneDom) {
-            if (item == null) {
-                return item;
-            }
+    if (item == null) {
+        return item;
+    }
 
-            // DOM nodes
-            // TODO proxy this to Ext.Element.clone to handle automatic id attribute changing
-            // recursively
-            if (cloneDom !== false && item.nodeType && item.cloneNode) {
-                return item.cloneNode(true);
-            }
+    // DOM nodes
+    // TODO proxy this to Ext.Element.clone to handle automatic id attribute changing
+    // recursively
+    if (cloneDom !== false && item.nodeType && item.cloneNode) {
+        return item.cloneNode(true);
+    }
 
-            var type = toString.call(item),
-                i, j, k, clone, key;
+    var type = toString.call(item),
+        i, j, k, clone, key;
 
-            // Date
-            if (type === '[object Date]') {
-                return new Date(item.getTime());
-            }
+    // Date
+    if (type === '[object Date]') {
+        return new Date(item.getTime());
+    }
 
-            // Array
-            if (type === '[object Array]') {
-                i = item.length;
+    // Array
+    if (type === '[object Array]') {
+        i = item.length;
 
-                clone = [];
+        clone = [];
 
-                while (i--) {
-                    clone[i] = Ext.ux.clone(item[i], cloneDom);
+        while (i--) {
+            clone[i] = Ext.ux.clone(item[i], cloneDom);
+        }
+    }
+    // Object
+    else if (type === '[object Object]' && item.constructor === Object) {
+        clone = {};
+
+        for (key in item) {
+            clone[key] = Ext.ux.clone(item[key], cloneDom);
+        }
+
+        if (enumerables) {
+            for (j = enumerables.length; j--;) {
+                k = enumerables[j];
+                if (item.hasOwnProperty(k)) {
+                    clone[k] = item[k];
                 }
             }
-            // Object
-            else if (type === '[object Object]' && item.constructor === Object) {
-                clone = {};
+        }
+    }
 
-                for (key in item) {
-                    clone[key] = Ext.ux.clone(item[key], cloneDom);
-                }
-
-                if (enumerables) {
-                    for (j = enumerables.length; j--;) {
-                        k = enumerables[j];
-                        if (item.hasOwnProperty(k)) {
-                            clone[k] = item[k];
-                        }
-                    }
-                }
-            }
-
-            return clone || item;
-        };
+    return clone || item;
+};
 
 ///////////////////////////////
 //		CLASE MENU		  	//
@@ -115,20 +115,20 @@ Ext.FORMATO_MONETARIO = '0.000,00/i';
 
 Ext.override(Ext.form.Field,
     {	afterRender : Ext.form.Field.prototype.afterRender.createSequence(function()
-    {
-        var qt = this.qtip;
-        if (qt)
-        {	Ext.QuickTips.register({
-            target:  this,
-            title: '',
-            text: qt,
-            enabled: true,
-            showDelay: 20,
-            dismissDelay:20000,
-            draggable:true
-        });
-        }
-    })
+        {
+            var qt = this.qtip;
+            if (qt)
+            {	Ext.QuickTips.register({
+                target:  this,
+                title: '',
+                text: qt,
+                enabled: true,
+                showDelay: 20,
+                dismissDelay:20000,
+                draggable:true
+            });
+            }
+        })
     });
 
 //RCM: 18/11/2011 Vtype personalizado para validación de fechas por rango y de comparación de passwords
@@ -151,10 +151,10 @@ Ext.apply(Ext.form.VTypes, {
             end.validate();
             this.dateRangeMin = date;
         }
-		/*
-		 * Always return true since we're only using this vtype to set the
-		 * min/max allowed values (these are tested for after the vtype test)
-		 */
+        /*
+         * Always return true since we're only using this vtype to set the
+         * min/max allowed values (these are tested for after the vtype test)
+         */
         return true;
     },
 
@@ -319,12 +319,12 @@ Ext.extend(Menu,Ext.tree.TreePanel,{
         // hide empty packages that weren't filtered
         this.hiddenPkgs = [];
 
-		/*this.root.cascade(function(n){
-		 if(!n.attributes.leaf && n.ui.ctNode.offsetHeight < 3){
-		 n.ui.hide();
-		 me.hiddenPkgs.push(n);
-		 }
-		 });*/
+        /*this.root.cascade(function(n){
+         if(!n.attributes.leaf && n.ui.ctNode.offsetHeight < 3){
+         n.ui.hide();
+         me.hiddenPkgs.push(n);
+         }
+         });*/
     },
     tools:[{
         id:'refresh',
@@ -609,17 +609,17 @@ Phx.CP=function(){
 
                     //cerramos todas las ventanas abiertas con loadWindows menos alertar y aplicacion de interinato
                     //comentado por que se cerraban las ventas iniciaales de alertaas , parametros y otros
-					/*Ext.WindowMgr.each(function(w){
-					 //if(w.is_page){}
-					 console.log('CLOSE', w)
-					 if(w.auxNoClose===false){
-					 w.close();
-					 alert('close 1')
-					 }
-					 else{
-					 alert('close 2')
-					 }
-					 },this);*/
+                    /*Ext.WindowMgr.each(function(w){
+                     //if(w.is_page){}
+                     console.log('CLOSE', w)
+                     if(w.auxNoClose===false){
+                     w.close();
+                     alert('close 1')
+                     }
+                     else{
+                     alert('close 2')
+                     }
+                     },this);*/
 
                     if(action=='main-tabs'){
                         //si el tab existe toma el foco
@@ -799,7 +799,7 @@ Phx.CP=function(){
                         bbar:[
                             {xtype:'label',
                                 width: 500,
-                                html:' <a href="http://www.kplian.com" target="_blank"><img src="'+Phx.CP.config_ini.mini_logo+'"  style="margin-left:5px;margin-top:1px;margin-bottom:1px"/> </a>',
+                                html:' <a href="http://www.boa.bo" target="_blank"><img src="'+Phx.CP.config_ini.mini_logo+'"  style="margin-left:5px;margin-top:1px;margin-bottom:1px"/> </a>',
                                 border: false
                             },
                             '->',
@@ -871,25 +871,25 @@ Phx.CP=function(){
             else{
                 //si usuario tiene alertas iniciamos la ventana
                 if(Phx.CP.config_ini.cont_alertas > 0){
-                        //comentado 15/02/2018
-                      /*  this.loadWindows('../../../sis_parametros/vista/alarma/AlarmaFuncionario.php', 'Alarmas', {
-                                width: 900,
-                                height: 400,
-                                modal: false,
-                                auxNoClose: true
-                            },
-                            {id_usuario: Phx.CP.config_ini.id_usuario},
-                            'Phx.CP', 'AlarmaFuncionario');*/
+                    //comentado 15/02/2018
+                    /*  this.loadWindows('../../../sis_parametros/vista/alarma/AlarmaFuncionario.php', 'Alarmas', {
+                              width: 900,
+                              height: 400,
+                              modal: false,
+                              auxNoClose: true
+                          },
+                          {id_usuario: Phx.CP.config_ini.id_usuario},
+                          'Phx.CP', 'AlarmaFuncionario');*/
 
 
-					/*
-					 url: donde se encuentra el js de la ventana que se quiere abrir
-					 title: titulo de la ventanan que se abrira
-					 config: configuracion de la venta
-					 params: parametros que se le pasaran al js
-					 pid: identificador de la ventana padre
-					 cls: nombre de la clase que se va ejecutar
-					 */
+                    /*
+                     url: donde se encuentra el js de la ventana que se quiere abrir
+                     title: titulo de la ventanan que se abrira
+                     config: configuracion de la venta
+                     params: parametros que se le pasaran al js
+                     pid: identificador de la ventana padre
+                     cls: nombre de la clase que se va ejecutar
+                     */
                 }
             }
 
@@ -907,13 +907,13 @@ Phx.CP=function(){
                     },3000);
                 });
 
-            //RAC se incluyen imagenes /SVG 
-            //23/07/2017      
+            //RAC se incluyen imagenes /SVG
+            //23/07/2017
             window.Images = ['arrow', 'default', 'animal', 'bicycle', 'boat', 'bus', 'car', 'crane', 'helicopter',
-                          'motorcycle', 'offroad', 'person', 'pickup', 'plane', 'ship', 'tractor', 'truck', 'van'];
+                'motorcycle', 'offroad', 'person', 'pickup', 'plane', 'ship', 'tractor', 'truck', 'van'];
 
             for (i = 0; i < window.Images.length; i++) {
-               this.addSvgFile('../../../lib/images/svg/' + window.Images[i] + '.svg', window.Images[i] + 'Svg');
+                this.addSvgFile('../../../lib/images/svg/' + window.Images[i] + '.svg', window.Images[i] + 'Svg');
             }
 
         },
@@ -1470,9 +1470,9 @@ Phx.CP=function(){
             return dst;
         },
 
-		/*getWindowManager:function(){
-		 return windowManager;
-		 },*/
+        /*getWindowManager:function(){
+         return windowManager;
+         },*/
 
 
         elementos:new Array(),
@@ -1558,20 +1558,20 @@ Phx.CP=function(){
             return  -1;
         },
 
-		/*getStateGui:function(){
-		 temp = Ext.util.Cookies.get('arrayInterfaces')
-		 this.arrayInterfaces=JSON.parse(temp)
-		 if(!this.arrayInterfaces){
-		 this.arrayInterfaces = [];
-		 }
+        /*getStateGui:function(){
+         temp = Ext.util.Cookies.get('arrayInterfaces')
+         this.arrayInterfaces=JSON.parse(temp)
+         if(!this.arrayInterfaces){
+         this.arrayInterfaces = [];
+         }
 
 
-		 if(this.arrayInterfaces.length > 0){
-		 var ind =  this.arrayInterfaces.length -1
-		 var obj = this.arrayInterfaces[ind]
-		 Phx.CP.getMainPanel().loadClass(obj.href,obj.cls, obj.title,obj.icono,obj.ruta,obj.clase,true,this.arrayInterfaces,ind);
-		 }
-		 },*/
+         if(this.arrayInterfaces.length > 0){
+         var ind =  this.arrayInterfaces.length -1
+         var obj = this.arrayInterfaces[ind]
+         Phx.CP.getMainPanel().loadClass(obj.href,obj.cls, obj.title,obj.icono,obj.ruta,obj.clase,true,this.arrayInterfaces,ind);
+         }
+         },*/
 
         // para destruir paginas
         destroyPage:function(id){
@@ -1622,9 +1622,9 @@ Phx.CP=function(){
         },
 
 
-		/*RAC 20/01/2012
-		 * esta funcion ejecuta la clase cargada en los contenedores
-		 */
+        /*RAC 20/01/2012
+         * esta funcion ejecuta la clase cargada en los contenedores
+         */
 
         callbackWindows:function(r,a,o){
 
@@ -1699,27 +1699,27 @@ Phx.CP=function(){
 
         // para cargar ventanas hijo
         loadWindows:function(url,title,config,params,pid,mycls,listeners){
-			/*
-			 * url: donde se encuentra el js de la ventana que se quiere abrir
-			 * title: titulo de la ventanan que se abrira
-			 * config: configuracion de la venta
-			 * params: parametros que se le pasaran al js
-			 * pid: identificador de la ventana padre
-			 * cls: nombre de la clase que se va ejecutar
-			 */
+            /*
+             * url: donde se encuentra el js de la ventana que se quiere abrir
+             * title: titulo de la ventanan que se abrira
+             * config: configuracion de la venta
+             * params: parametros que se le pasaran al js
+             * pid: identificador de la ventana padre
+             * cls: nombre de la clase que se va ejecutar
+             */
 
             var sw=false// ,_url=url.split('?');
 
             // Busca si la ventana ya fue abierta para recarla - comentado temporalmente
-			/*
-			 * for(var i=0;i<pagHijo.length;i++){ if(pagHijo[i].url==_url[0]){
-			 * var paginaHijo=Phx.CP.getPagina(pagHijo[i].idContenedor);
-			 * if(!paginaHijo){
-			 * paginaHijo=Phx.CP.getPagina(idContenedor).pagina.getPagina(pagHijo[i].idContenedor) }
-			 * paginaHijo.pagina.reload(_url[1]); pagHijo[i].ventana.show();
-			 * sw=true; idVentana=pagHijo[i].idContenedor; break } }
-			 *
-			 */
+            /*
+             * for(var i=0;i<pagHijo.length;i++){ if(pagHijo[i].url==_url[0]){
+             * var paginaHijo=Phx.CP.getPagina(pagHijo[i].idContenedor);
+             * if(!paginaHijo){
+             * paginaHijo=Phx.CP.getPagina(idContenedor).pagina.getPagina(pagHijo[i].idContenedor) }
+             * paginaHijo.pagina.reload(_url[1]); pagHijo[i].ventana.show();
+             * sw=true; idVentana=pagHijo[i].idContenedor; break } }
+             *
+             */
             if(!sw){
                 // crea una nueva ventana
                 var	Ventana={
