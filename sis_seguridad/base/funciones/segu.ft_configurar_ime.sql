@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION segu.ft_configurar_ime (
   p_administrador integer,
   p_id_usuario integer,
@@ -90,7 +88,7 @@ BEGIN
               
 		        --1.1.1.1) modifico contraseña
 	            -- se actualiza la clave  
-                if (pxp.f_get_variable_global('sincronizar') = 'true') then
+               /* if (pxp.f_get_variable_global('sincronizar') = 'true') then
                 	/*UPDATE segu.tusuario SET
                    		 estilo = v_parametros.estilo,                         
                          autentificacion = v_parametros.autentificacion                         
@@ -106,10 +104,10 @@ BEGIN
                          'SELECT * FROM migracion.f_sincronizacion()',FALSE)AS t1(resp varchar)
                          into v_resp;
                                    
-                else
+                else*/
                 
                  
-                   
+
                     UPDATE segu.tusuario SET
                            contrasena_anterior = v_clave_anterior,
                            contrasena = v_parametros.clave_nueva,
@@ -118,7 +116,7 @@ BEGIN
                            
                       WHERE segu.tusuario.id_usuario = p_id_usuario;
                
-                end if;
+                --end if;
                     
                     v_mod_exito = 1;
                     
