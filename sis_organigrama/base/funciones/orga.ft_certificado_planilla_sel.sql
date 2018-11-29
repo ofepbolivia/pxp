@@ -97,6 +97,7 @@ BEGIN
                               inner join segu.tusuario usu1 on usu1.id_usuario = planc.id_usuario_reg
                               inner join orga.vfuncionario_cargo fun on fun.id_funcionario = planc.id_funcionario and (fun.fecha_finalizacion is null or fun.fecha_finalizacion >= now() or fun.fecha_finalizacion >= ''20/12/2017'')
                               inner join orga.tcargo car on car.id_cargo = fun.id_cargo and (car.fecha_fin is null or car.fecha_fin >= now()) and car.estado_reg = ''activo''
+							  inner join orga.tuo_funcionario ufun on ufun.id_cargo = car.id_cargo and ufun.tipo=''oficial''  and ufun.id_funcionario= planc.id_funcionario
                               inner join orga.tescala_salarial es on es.id_escala_salarial =car.id_escala_salarial
                               inner join orga.tfuncionario fon on fon.id_funcionario = planc.id_funcionario
                               inner join segu.tpersona pe on pe .id_persona = fon.id_persona
@@ -145,6 +146,7 @@ BEGIN
                             inner join segu.tusuario usu1 on usu1.id_usuario = planc.id_usuario_reg
                             inner join orga.vfuncionario_cargo fun on fun.id_funcionario = planc.id_funcionario and (fun.fecha_finalizacion is null or fun.fecha_finalizacion >= now() or fun.fecha_finalizacion >= ''20/12/2017'')
                             inner join orga.tcargo car on car.id_cargo = fun.id_cargo and (car.fecha_fin is null or car.fecha_fin >= now()) and car.estado_reg = ''activo''
+							inner join orga.tuo_funcionario ufun on ufun.id_cargo = car.id_cargo and ufun.tipo=''oficial''  and ufun.id_funcionario= planc.id_funcionario
                             inner join orga.tescala_salarial es on es.id_escala_salarial =car.id_escala_salarial
                             inner join orga.tfuncionario fon on fon.id_funcionario = planc.id_funcionario
                             inner join segu.tpersona pe on pe .id_persona = fon.id_persona
@@ -229,6 +231,8 @@ BEGIN
                               from orga.tcertificado_planilla c
                               inner join orga.vfuncionario_cargo  fu on fu.id_funcionario = c.id_funcionario and( fu.fecha_finalizacion is null or  fu.fecha_finalizacion >= now())
                               inner join orga.tcargo ca on ca.id_cargo = fu.id_cargo
+                              inner join orga.tuo_funcionario ufun on ufun.id_cargo = ca.id_cargo and ufun.tipo=''oficial''  
+                              and ufun.id_funcionario= c.id_funcionario                              
                               inner join orga.tescala_salarial es on es.id_escala_salarial = ca.id_escala_salarial
                               inner join orga.tfuncionario fun on fun.id_funcionario = fu.id_funcionario
                               inner join segu.tpersona pe on pe.id_persona = fun.id_persona
@@ -250,15 +254,12 @@ BEGIN
 
 		begin
 
-
-
         select orga.f_iniciales_funcionarios(p.desc_funcionario1)
         into
         v_iniciales
         from segu.tusuario u
         inner join orga.vfuncionario_persona p on p.id_persona = u.id_persona
         where u.id_usuario = p_id_usuario;
-
 
         select f.desc_funcionario1
         into
@@ -296,6 +297,8 @@ BEGIN
                               from orga.tcertificado_planilla c
                               inner join orga.vfuncionario_cargo  fu on fu.id_funcionario = c.id_funcionario and( fu.fecha_finalizacion is null or  fu.fecha_finalizacion >= now())
                               inner join orga.tcargo ca on ca.id_cargo = fu.id_cargo
+                              inner join orga.tuo_funcionario ufun on ufun.id_cargo = ca.id_cargo and ufun.tipo=''oficial''  
+                              and ufun.id_funcionario= c.id_funcionario
                               inner join orga.tescala_salarial es on es.id_escala_salarial = ca.id_escala_salarial
                               inner join orga.tfuncionario fun on fun.id_funcionario = fu.id_funcionario
                               inner join segu.tpersona pe on pe.id_persona = fun.id_persona
