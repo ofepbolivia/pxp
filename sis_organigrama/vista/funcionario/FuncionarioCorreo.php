@@ -252,7 +252,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     fieldLabel: "Correo Empresarial",
                     gwidth: 140,
                     name: 'email_empresa',
-                    allowBlank:false,
+                    allowBlank:true,
                     maxLength:100,
                     minLength:1,
                     anchor:'100%',

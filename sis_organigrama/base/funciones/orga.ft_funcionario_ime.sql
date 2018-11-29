@@ -47,8 +47,13 @@ v_id_biometrico       integer;
 v_persona					record;
 v_codigo_empleado 			varchar;
 v_id_persona				integer;
+--variables para replicacion SQL (F.E.A)
+v_cadena_db					varchar;
+v_consulta					varchar;
+v_id_usuario 				integer;
+
 BEGIN
-	raise exception 'COMUNIQUESE CON EL DEPTO. INFORMATICO';
+	--raise exception 'COMUNIQUESE CON EL DEPTO. INFORMATICO';
      v_nombre_funcion:='orga.ft_funcionario_ime';
      v_parametros:=pxp.f_get_record(par_tabla);
 
@@ -228,6 +233,30 @@ BEGIN
             	update orga.tfuncionario set
                 	email_empresa=v_parametros.email_empresa
                 where id_funcionario=v_parametros.id_funcionario;
+
+                v_cadena_db = pxp.f_get_variable_global('cadena_db_sql_2');
+
+                --if (v_parametros.email_empresa is not null or v_parametros.email_empresa !='')then
+
+                v_consulta =  'exec Ende_Correo '''||v_parametros.email_empresa||''', '||v_parametros.id_funcionario||';';
+
+                INSERT INTO sqlserver.tmigracion
+                (	id_usuario_reg,
+                    consulta,
+                    estado,
+                    respuesta,
+                    operacion,
+                    cadena_db
+                )
+                VALUES (
+                    par_id_usuario,
+                    v_consulta,
+                    'pendiente',
+                    null,
+                    'UPDATE',
+                    v_cadena_db
+                );
+                --end if;
             else
                 if exists (select 1 from orga.tfuncionario
                 			where id_funcionario!=v_parametros.id_funcionario

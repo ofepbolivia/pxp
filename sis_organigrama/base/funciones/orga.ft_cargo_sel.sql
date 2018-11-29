@@ -140,7 +140,7 @@ $body$
         return v_consulta;
 
       end;*/
-      
+
     /*********************************
  	#TRANSACCION:  'OR_CARGOACE_SEL'
  	#DESCRIPCION:	Consulta de cargos acefalos
@@ -224,7 +224,7 @@ $body$
       begin
 
 
-        
+
         if(pxp.f_existe_parametro(p_tabla,'activo'))then
         	if v_parametros.activo = 'activo' then
         		v_activo = '(tuo.fecha_finalizacion is null or current_date<=tuo.fecha_finalizacion)';
@@ -236,7 +236,7 @@ $body$
       	v_condicion = 'true';
       	if(pxp.f_existe_parametro(p_tabla,'presupuesto'))then
         	if (v_parametros.presupuesto = 'con_presupuesto') then
-            	v_condicion = 'and tuo.tipo = ''oficial'' and tuo.estado_reg = ''activo'' and (tcp.id_cargo_presupuesto is not null and tcp.id_ot is not null)';
+            	v_condicion = 'and (tuo.tipo = ''oficial'' or tuo.tipo is null) and (tuo.estado_reg = ''activo'' or tuo.estado_reg is null) and (tcp.id_cargo_presupuesto is not null and tcp.id_ot is not null)';
             elsif(v_parametros.presupuesto = 'sin_presupuesto')then
             	v_condicion = 'and tuo.tipo = ''oficial'' and tuo.estado_reg = ''activo'' and (tcp.id_cargo_presupuesto is null or tcp.id_ot is null)';
             elsif(v_parametros.presupuesto = 'acefalo')then
@@ -292,7 +292,7 @@ $body$
                         left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = '||v_id_gestion||'
                         LEFT join orga.tuo_funcionario tuo on tuo.id_cargo = cargo.id_cargo and '||v_activo||'
                         LEFT join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
-				        where cargo.estado_reg = ''activo'' '||v_condicion||' and ';
+				        where cargo.estado_reg = ''activo'' and tipcon.codigo != ''PCP'' '||v_condicion||' and ';
 
         --Definicion de la respuesta
         v_consulta:=v_consulta||v_parametros.filtro;
@@ -323,7 +323,7 @@ $body$
       	v_condicion = 'true';
       	if(pxp.f_existe_parametro(p_tabla,'presupuesto'))then
         	if (v_parametros.presupuesto = 'con_presupuesto') then
-            	v_condicion = 'and tuo.tipo = ''oficial'' and tuo.estado_reg = ''activo'' and (tcp.id_cargo_presupuesto is not null and tcp.id_ot is not null)';
+            	v_condicion = 'and (tuo.tipo = ''oficial'' or tuo.tipo is null) and (tuo.estado_reg = ''activo'' or tuo.estado_reg is null) and (tcp.id_cargo_presupuesto is not null and tcp.id_ot is not null)';
             elsif(v_parametros.presupuesto = 'sin_presupuesto')then
             	v_condicion = 'and tuo.tipo = ''oficial'' and tuo.estado_reg = ''activo'' and (tcp.id_cargo_presupuesto is null or tcp.id_ot is null)';
             elsif(v_parametros.presupuesto = 'acefalo')then
@@ -342,11 +342,11 @@ $body$
 						left join segu.tusuario usu2 on usu2.id_usuario = cargo.id_usuario_mod
 						inner join orga.ttipo_contrato tipcon on tipcon.id_tipo_contrato = cargo.id_tipo_contrato
 						inner join orga.tescala_salarial escsal on escsal.id_escala_salarial = cargo.id_escala_salarial
-						LEFT join orga.toficina ofi on ofi.id_oficina = cargo.id_oficina                        
+						LEFT join orga.toficina ofi on ofi.id_oficina = cargo.id_oficina
                         left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = '||v_id_gestion||'
                         LEFT join orga.tuo_funcionario tuo on tuo.id_cargo = cargo.id_cargo and '||v_activo||'
                         LEFT join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
-				        where cargo.estado_reg = ''activo'' '||v_condicion||' and ';
+				        where cargo.estado_reg = ''activo'' and tipcon.codigo != ''PCP'' '||v_condicion||' and ';
 
         --Definicion de la respuesta
         v_consulta:=v_consulta||v_parametros.filtro;
