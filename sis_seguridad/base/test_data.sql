@@ -1,6 +1,6 @@
 /*
-*	Author: RAC
-*	Date: 20-11-2012
+*	Author: BOA
+*	Date: 01-01-2019
 *	Description: Test data
 */
 
@@ -10,128 +10,20 @@
 
 -- Persona
 
-INSERT INTO segu.tpersona (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_persona, nombre, apellido_paterno, apellido_materno, ci, correo, celular1, num_documento, telefono1, telefono2, celular2, foto, extension, genero, fecha_nacimiento, direccion)
-VALUES (1, NULL, '2012-11-08 13:12:37.648965', '2012-11-08 13:12:37.648965', 'activo', 2, 'Juan', 'Perez', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
-INSERT INTO segu.tpersona (id_usuario_reg, id_usuario_mod, fecha_reg, fecha_mod, estado_reg, id_persona, nombre, apellido_paterno, apellido_materno, ci, correo, celular1, num_documento, telefono1, telefono2, celular2, foto, extension, genero, fecha_nacimiento, direccion)
-VALUES (1, NULL, '2012-11-13 10:24:20', '2012-11-13 10:24:20', 'activo', 3, 'Sancho', 'Panza', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (NULL, NULL, E'2012-12-29 09:42:35.222', E'2012-12-29 09:42:35.222', E'activo', 4, E'Gabriel', E'Garcia', E'', E'', E'', E'', NULL, E'', E'', E'', NULL, NULL, NULL, NULL, NULL);
 
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (NULL, NULL, E'2012-12-29 09:42:50.045', E'2012-12-29 09:42:50.045', E'activo', 5, E'Joel ', E'Fernandez', E'', E'', E'', E'', NULL, E'', E'', E'', NULL, NULL, NULL, NULL, NULL);
 
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (NULL, NULL, E'2012-12-29 13:01:00.370', E'2012-12-29 13:01:00.370', E'activo', 6, E'Gabriel Eduardo', E'Rodriguez', E'Linares', E'561348977', E'', E'', NULL, E'46215885', E'', E'', E'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', E'jpg', NULL, NULL, NULL);
+/* Data for the 'segu.ttipo_documento' table */
 
---------------
----- GSS -----
---------------
+INSERT INTO segu.ttipo_documento ("id_tipo_documento", "nombre", "descripcion", "fecha_reg", "estado_reg")
+VALUES (1, E'CI', E'Cédula de Identidad', E'2018-11-12 09:33:05', E'activo');
 
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-17 00:00:00', NULL, E'activo', 8412, E'RONALD SALVADOR', E'CASSO', E'CASSO', NULL, E'rocasso@gmail.com', E'72093857', NULL, E'4413955', E'4140873', E'70107000', NULL, NULL, E'', E'1967-02-14', E'A CORNEJO NO 20');
+INSERT INTO segu.ttipo_documento ("id_tipo_documento", "nombre", "descripcion", "fecha_reg", "estado_reg")
+VALUES (2, E'NIT', E'Numero de Identificación Tributaria\r\n', E'2018-11-12 09:33:33', E'activo');
 
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-17 00:00:00', E'2012-05-17 00:00:00', E'activo', 8415, E'ROCIO ESDENKA', E'CLAURE', E'CASTELLON', NULL, E'rclaure@boa.bo', NULL, NULL, NULL, NULL, NULL, NULL, NULL, E'', E'2012-05-07', NULL);
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-18 00:00:00', NULL, E'activo', 8426, E'MARIA RENE', E'ECHAVARRIA', E'IBARRA', E'1140210', E'mariarene99@hotmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, E'', E'1975-10-12', NULL);
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-18 00:00:00', NULL, E'activo', 8439, E'KARINA', E'BARRANCOS', E'RIOS', E'4280479', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, E'', NULL, NULL);
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-18 00:00:00', NULL, E'activo', 8440, E'ANA LUISA', E'DIAZ', E'PACO', E'4903126', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, E'', NULL, NULL);
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-18 00:00:00', NULL, E'activo', 8443, E'ANGELA', E'CORREA', E'MACIAS', E'3720069', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, E'', NULL, NULL);
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-18 00:00:00', NULL, E'activo', 8445, E'CLAUDIA VERONCIA', E'GUZMAN', E'PANOZO', E'5150185', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, E'', NULL, NULL);
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-18 00:00:00', NULL, E'activo', 8446, E'RENE HUGO', E'TAPIA', E'VERDUGUEZ', E'2874060', E'htapiav@hotmail.com', E'', NULL, E'4407425', E'4140873', E'72242707', NULL, NULL, E'', E'1961-09-01', E'WASHIGTON N1171');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-18 00:00:00', NULL, E'activo', 8447, E'KARIN VIOLETA GOLDA', E'SOTO', E'RODRIGUEZ', E'3805559', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, E'', NULL, NULL);
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-18 00:00:00', NULL, E'activo', 8448, E'ELIANA', E'CRUZ', E'TERRAZAS', E'5901740', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, E'', NULL, NULL);
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-20 00:00:00', NULL, E'activo', 8465, E'VICTOR', E'MAMANI', E'VARGAS', E'2228187', E'vmamani@boa.bo', E'72201285', NULL, E'4122438', NULL, NULL, NULL, NULL, E'', E'1954-11-08', E'GabrielReneMoreno106');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-20 00:00:00', NULL, E'activo', 8466, E'MARCO ANTONIO', E'MENDOZA', E'SALAZAR', E'4417656', E'marco_mendoza77@hotmail.com', E'72242710', NULL, E'4490612', E'4140873', E'72242710', NULL, NULL, E'', E'1977-08-10', E'ZENOBIO GALLARDO 3403');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-20 00:00:00', NULL, E'activo', 8467, E'PASCUAL', E'QUISPE', E'HUANCA', E'4777145', E'pquispe@boa.bo', E'71900450', NULL, E'4140873', NULL, NULL, NULL, NULL, E'', E'1976-05-17', E'Av. 6 de agosto No.913');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-21 00:00:00', NULL, E'activo', 8560, E'CAROLINA VANESSA', E'JORDAN', E'CARDONA', E'5308868', E'cjordan@boa.bo', E'70303805', NULL, E'4242157', NULL, NULL, NULL, NULL, E'', E'1983-01-09', E'pasaje luis calvo');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-21 00:00:00', NULL, E'activo', 8569, E'JULIO BERNARDO', E'ANDRADE', E'REQUENA', E'965396', E'jandrade@boa.bo', E'70613666', NULL, E'4456999', NULL, NULL, NULL, NULL, E'', E'1972-05-13', E'Urbanización Lomas de Aranjuez');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-21 00:00:00', NULL, E'activo', 8570, E'DANIELA SOCORRO', E'PINTO', E'MANCILLA', E'5188353', E'dpinto@boa.bo', E'70396832', NULL, E'4420105', NULL, NULL, NULL, NULL, E'', E'1981-04-27', E'CALLE ARAWI');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-21 00:00:00', NULL, E'activo', 8590, E'MARIA RENE', E'HERBAS', E'ANTELO', E'4421368', E'mariareneha@gmail.com', E'76414817', NULL, E'4531068', E'4140873', E'68581120', NULL, NULL, E'', E'1981-05-01', E'CALLE MOLLES 225 URB. IRLANDES');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-22 00:00:00', NULL, E'activo', 8716, E'ROGER WILMER', E'BALDERRAMA', E'ANGULO', E'3006828', E'wilmer.balderrama@gmail.com', E'71727872', NULL, E'4450210', E'4141968', E'72242020', NULL, NULL, E'', E'1963-05-26', E'CALLE SCHILLER NO. 0394');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-22 00:00:00', NULL, E'activo', 8727, E'GUIDO', E'BLANCO', E'PACHECO', E'1542068', E'guidoblancop@gmail.com', E'71711852', NULL, E'4290349', E'4122701', E'72201481', NULL, NULL, E'', E'1949-04-26', E'CALLE CARIPE 1155 (ZONA NORTE)');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-22 00:00:00', NULL, E'activo', 8790, E'RONNIE MARIO', E'BAZUALDO', E'TAPIA', E'2914240', E'rbazualdo@boa.bo', E'72743761', NULL, E'4379711', NULL, NULL, NULL, NULL, E'', E'1963-10-30', E'Av. Blanco Galindo Km 6 ,calle Adela Zamudio 161 ,Barrio Oasys');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-22 00:00:00', NULL, E'activo', 8791, E'FRANCISCO FREDY', E'PEREZ', E'GUTIERREZ', E'1804961', E'fperez@boa.bo', E'79760849', NULL, E'4303719', NULL, NULL, NULL, NULL, E'', E'1958-10-04', E'Av. Colquiri Nro 416');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-22 00:00:00', NULL, E'activo', 8792, E'WILFREDO TEODORO', E'AGUILA', E'ROCHA', E'3124490', NULL, E'74826607', NULL, E'4216307', NULL, NULL, NULL, NULL, E'', E'1965-03-26', E'Calle Arauco Nro. 3325');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-22 00:00:00', NULL, E'activo', 8793, E'IVAN CESAR', E'MENDOZA', E'ALVARADO', E'5204480', NULL, E'72760101', NULL, E'4219824', NULL, NULL, NULL, NULL, E'', E'1981-01-19', E'Av. Del Cabildo Nro. 1100');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-22 00:00:00', NULL, E'activo', 8892, E'MARIA ISABEL', E'ESCALERA', E'MERIDA', E'3448910', NULL, E'72200960', NULL, E'4488194', NULL, NULL, NULL, NULL, E'', E'1983-07-18', E'av. santa cruz');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-06-24 00:00:00', NULL, E'activo', 9004, E'JOSE PAULINO', E'LOBATON', E'BUSTAMANTE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, E'', E'1963-08-10', NULL);
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-20 00:00:00', NULL, E'activo', 8475, E'MANOLO OLIVER', E'MONTENEGRO', E'LAZO', E'3722813', E'mmontenegro@boa.bo', E'79775552', NULL, E'4472312', NULL, NULL, NULL, NULL, E'', E'1978-03-09', E'Av.Simón López casi Melchor Perezde Olguin');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-20 00:00:00', NULL, E'activo', 8476, E'JUAN CARLOS', E'COLODRO', E'REVILLA', E'1249560', E'jcolodro@boa.bo', E'71954522', NULL, E'4440107', NULL, NULL, NULL, NULL, E'', E'1967-01-27', E'Av.Galindo Km11 Barrio Jardin');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-20 00:00:00', NULL, E'activo', 8477, E'MIGUEL RENE', E'MARIN', E'ACHA', E'3724505', E'NULL', E'60362822', NULL, E'4475521', NULL, NULL, NULL, NULL, E'', E'2012-01-06', E'ZARCOBAMBA');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-20 00:00:00', NULL, E'activo', 8480, E'ANGELA ANDREA', E'MENDEZ', E'ROJAS', E'5236863', E'amendez@boa.bo', E'77970888', NULL, E'4258749', NULL, NULL, NULL, NULL, E'', E'1984-08-23', E'Calle Avaroa No434');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-21 00:00:00', NULL, E'activo', 8573, E'GONZALO ARIEL', E'MAYORGA', E'LAZCANO', E'3027798', E'gonmayorga@hotmail.com', E'72202337', NULL, E'4425618', E'4128155', E'72202121', NULL, NULL, E'', E'1965-10-24', E'CALLE LOS ALAMOS 392');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-21 00:00:00', NULL, E'activo', 8574, E'HUGO FERNANDO', E'ESTRADA', E'RAMOS', E'4495286', E'hugoestradar@gmail.com', E'70710755', NULL, E'4020613', E'4140873', E'72242705', NULL, NULL, E'', E'1978-01-31', E'CALLE FRANCISCO VIEDMA 791');
-
-INSERT INTO segu.tpersona ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_persona", "nombre", "apellido_paterno", "apellido_materno", "ci", "correo", "celular1", "num_documento", "telefono1", "telefono2", "celular2", "foto", "extension", "genero", "fecha_nacimiento", "direccion")
-VALUES (1, NULL, E'2012-05-20 00:00:00', NULL, E'activo', 8478, E'JOSE RUDDY', E'BALDERRAMA', E'JALDIN', E'3733544', E'jbalderrama@boa.bo', E'70755957', NULL, E'4222309', NULL, NULL, NULL, NULL, E'', E'1982-11-20', E'ESTEBAN ARZE 1090');
-
--- Data for table segu.ttipo_documento  (LIMIT 0,2)
-
-INSERT INTO segu.ttipo_documento (id_tipo_documento, nombre, fecha_reg, estado_reg)
-VALUES (1, 'CI', '2009-11-30', 'activo');
-
-INSERT INTO segu.ttipo_documento (id_tipo_documento, nombre, fecha_reg, estado_reg)
-VALUES (2, 'NIT', '2010-09-11', 'activo');
+INSERT INTO segu.ttipo_documento ("id_tipo_documento", "nombre", "descripcion", "fecha_reg", "estado_reg")
+VALUES (5, E'Pasaporte', E'Pasaporte', E'2018-11-12 09:34:59', E'activo');
 
 
 -----------
@@ -140,7 +32,7 @@ VALUES (2, 'NIT', '2010-09-11', 'activo');
 
 --usuarios
 
-INSERT INTO segu.tusuario ("id_usuario", "id_clasificador", "cuenta", "contrasena", "fecha_caducidad", "fecha_reg", "estilo", "contrasena_anterior", "id_persona", "estado_reg", "autentificacion")
+/*INSERT INTO segu.tusuario ("id_usuario", "id_clasificador", "cuenta", "contrasena", "fecha_caducidad", "fecha_reg", "estilo", "contrasena_anterior", "id_persona", "estado_reg", "autentificacion")
 VALUES (21, NULL, E'maria.echavarria', E'154de1763043a7b0e2ed667b0aab469e', E'2013-12-31', E'2012-07-25', E'xtheme-aero.css', NULL, 8426, E'activo', E'local');
 
 INSERT INTO segu.tusuario ("id_usuario", "id_clasificador", "cuenta", "contrasena", "fecha_caducidad", "fecha_reg", "estilo", "contrasena_anterior", "id_persona", "estado_reg", "autentificacion")
@@ -180,11 +72,729 @@ INSERT INTO segu.tusuario ("id_usuario", "id_clasificador", "cuenta", "contrasen
 VALUES (55, NULL, E'marco', E'f5888d0bb58d611107e11f7cbc41c97a', E'2013-07-31', E'2013-04-30', E'xtheme-gray.css', NULL, 8466, E'activo', E'local');
 
 INSERT INTO segu.tusuario ("id_usuario", "id_clasificador", "cuenta", "contrasena", "fecha_caducidad", "fecha_reg", "estilo", "contrasena_anterior", "id_persona", "estado_reg", "autentificacion")
-VALUES (56, NULL, E'rocio', E'325daa03a34823cef2fc367c779561ba', E'2013-08-31', E'2013-04-30', E'xtheme-gray.css', NULL, 8415, E'activo', E'local');
+VALUES (56, NULL, E'rocio', E'325daa03a34823cef2fc367c779561ba', E'2013-08-31', E'2013-04-30', E'xtheme-gray.css', NULL, 8415, E'activo', E'local');*/
 
 ---------------------
 --- USUARIO-GRUPO-EP
 --------------------
 
-INSERT INTO segu.tusuario_grupo_ep ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_usuario_grupo_ep", "id_usuario", "id_grupo")
-VALUES (1, NULL, E'2013-05-08 15:19:05.586', NULL, E'activo', 1, 51, 1);
+/*INSERT INTO segu.tusuario_grupo_ep ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_usuario_grupo_ep", "id_usuario", "id_grupo")
+VALUES (1, NULL, E'2013-05-08 15:19:05.586', NULL, E'activo', 1, 51, 1);*/
+
+/*=============================================================== DATOS BASE (f.e.a) =================================================================*/
+
+/* Data for the 'segu.trol' table */
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (1, E'Administrador', E'2011-05-17', E'activo', E'Administrador', NULL, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (2, E'Administrador Almacenes', E'2014-02-01', E'activo', E'Administrador Almacenes', 6, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (3, NULL, E'2014-02-01', E'activo', E'Asistente de Almacenes', 6, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (4, E'solicita items de almacenes', E'2014-02-01', E'activo', E'Solicitante de Almacenes', 6, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (5, E'visto bueno solicitud de almacen', E'2014-02-01', E'activo', E'Visto Bueno Solicitud Almacen', 6, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (6, E'almacenero se ocupa de registrar los items que ingresan', E'2014-02-01', E'activo', E'Almacenero', 6, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (7, E'Interface de Solicitud de Compra,  directos y secretarias', E'2014-02-03', E'activo', E'ADQ - Solicitud de Compra', 7, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (8, E'Visto Bueno Solicitud de Compras', E'2014-02-03', E'activo', E'ADQ - Visto Bueno Sol', 7, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (9, E'Visto bueno orden de compra cotizacion', E'2014-02-03', E'activo', E'ADQ - Visto Bueno OC/COT', 7, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (10, E'Visto Bueno devengaos o pagos', E'2014-02-03', E'inactivo', E'ADQ - Visto Bueno DEV/PAG', 7, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (11, E'Resposnable de Adquisiciones', E'2014-02-03', E'activo', E'ADQ. RESP ADQ', 7, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (12, E'ADQ - Aux Adquisiciones', E'2014-02-03', E'activo', E'ADQ - Aux Adquisiciones', 7, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (13, E'Presolicitudes de Compra', E'2014-02-03', E'activo', E'ADQ - Presolicitud de Compra', 7, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (14, E'Registro de Proveedores', E'2014-02-03', E'activo', E'ADQ - Registro Proveedores', 7, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (15, E'Visto bueno presolicitudes de compra', E'2014-02-03', E'activo', E'ADQ - VioBo Presolicitud', 7, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (16, E'Consolidador de presolicitudes de Compra', E'2014-02-03', E'activo', E'ADQ - Consolidaro Presolicitudes', 7, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (17, E'Visto Bueno de plan de PAgos', E'2014-02-03', E'inactivo', E'OP - VoBo Plan de PAgos', 7, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (18, E'Visto Bueno plan de pagos', E'2014-02-03', E'activo', E'OP - VoBo Plan de Pagos', 11, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (19, E'Interface de Obligaciones de Pago, directamente sobre la interface de tesoreria', E'2014-02-03', E'activo', E'OP - Obligaciones de PAgo', 11, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (20, E'Relación Contable Concepto Gasto', E'2014-02-04', E'inactivo', E'Relación Contable Concepto Gasto', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (21, E'CONTA-Rleacion contable concepto gatos', E'2014-02-04', E'inactivo', E'CONTA-Rleacion contable concepto gatos', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (22, E'CONTA- Relación Contable Concepto Gasto', E'2014-02-04', E'activo', E'CONTA- Relación Contable Concepto Gasto', 10, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (23, E'Rol para ingreso de relaciones de proveedores con Auxiliar Contable', E'2014-02-17', E'activo', E'CONTA - Relacion Proveedor - Cuenta Contable', 10, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (24, E'Registra salidas de almacenes', E'2014-02-21', E'activo', E'ALM - Asistente de Almacenes', 6, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (25, E'ingreso a Reportes', E'2014-02-21', E'activo', E'ALM - Consulta', 6, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (26, E'Pagos de servicios que no requieren proceso', E'2014-03-25', E'activo', E'OP - Pagos Directos de Servicios', 11, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (27, E'Para el Encargado de habilitar los preingreso y enviarlos al modulo de activos fijos', E'2014-03-25', E'activo', E'ADQ - Preingreso AF', 7, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (28, E'Cierre de proceso con finalizacion de documentos', E'2014-03-25', E'activo', E'OP - Cierre de Proceso', 11, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (29, E'PXP-Rol inicial', E'2014-03-28', E'activo', E'PXP-Rol inicial', 0, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (30, E'Registro de Cuenta Bancaria', E'2014-03-31', E'activo', E'OP - Cuenta Bancaria', 11, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (31, E'Para registrar relaciones contables con cuenta bancaria', E'2014-04-01', E'activo', E'CONTA - Relacion cuenta Bancaria', 10, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (32, E'Rol para relaciones contables', E'2014-04-01', E'activo', E'CONTA - Relaciones contables ELACIONES CONTABLES', 10, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (33, E'Rol pra edicion modiificacion o configuracion de plantilla de docuemntos contables ', E'2014-04-01', E'activo', E'CONTA - Plantilla de Documentos', 10, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (34, E'OP - Solicitudes de Pago Recurrente (Con Contrato)', E'2014-06-12', E'activo', E'OP - Solicitudes de Pago Directas', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (35, E'Registro de Servicios Telefónicos', E'2014-07-29', E'activo', E'Registro de Servicios', 15, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (36, E'Registro de Números Corporativos', E'2014-07-29', E'activo', E'Registro de Números Corporativos', 15, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (37, E'Asignación de Números Corporativos', E'2014-07-29', E'activo', E'Asignación de Números Corporativos', 15, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (38, E'Registro de Consumo Corporativo', E'2014-07-29', E'activo', E'Registro de Consumo Corporativo', 15, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (39, E'Lectura de la interfaz de planillas', E'2014-08-08', E'activo', E'PLANI - Planillas Lectura', 13, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (40, E'ORGA - Registro de Cuentas de Servicios ', E'2014-08-12', E'activo', E'ORGA - Registro de Cuentas de Servicios ', 4, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (41, E'VoBo procesos de WF', E'2014-08-18', E'activo', E'WF - VoBo', 5, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (42, E'OP - VoBo Pago Contabilidad', E'2014-09-01', E'activo', E'OP - VoBo Pago Contabilidad', 11, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (43, E'OP -Visto Bueno Contabilidad', E'2014-09-03', E'activo', E'OP -Visto Bueno Contabilidad', 11, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (44, E'Solo para consulta de documentos ', E'2014-09-03', E'activo', E'OP - Revision Documentos', 11, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (45, E'Visto buenos fondos en avances', E'2014-09-12', E'activo', E'OP -VoBo Fondos en Avance', 11, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (46, E'Las asistentes pueden revisar los vistobuenos pendientes de sus asistidos', E'2014-09-18', E'activo', E'ADQ - VoBo Solicitud (Asistentes)', 7, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (47, E'OP - VoBo Ppagos (Asistentes)', E'2014-09-18', E'activo', E'OP - VoBo Ppagos (Asistentes)', 11, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (48, E'ADQ - VoBo Presupuestos', E'2014-09-22', E'activo', E'ADQ - VoBo Presupuestos', 7, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (49, E'Rol para consulta de obligacionens de pago, necesita estar en el departamento de contabilidad', E'2014-09-23', E'activo', E'OP - Plan de Pagos Consulta', 11, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (50, E'PAra consulta de solicitudes de compra', E'2014-09-30', E'activo', E'ADQ - Consulta Solicitudes ', 7, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (51, E'OP - Reporte Pagos X Concepto', E'2014-10-24', E'activo', E'OP - Reporte Pagos X Concepto', 11, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (52, NULL, E'2014-11-04', E'activo', E'ORGA - Asignar interinos', 4, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (53, E'PLANI- Registro de Planillas', E'2014-11-24', E'activo', E'PLANI- Registro de Planillas', 13, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (54, E'Accesso a la interface de solicitudes de pago para contabilidad', E'2014-12-02', E'activo', E'OP - Solicitud OP (Conta)', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (55, E'OP -Consulta de solicitudes de pago', E'2014-12-02', E'activo', E'OP -Consulta de solicitudes de pago', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (56, E'OP - Depositos y Cheques', E'2014-12-26', E'activo', E'OP - Depositos y Cheques', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (57, E'OP - Libro de Bancos', E'2014-12-26', E'activo', E'OP - Libro de Bancos', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (58, E'OP - Consulta Libro Bancos', E'2014-12-26', E'activo', E'OP - Consulta Libro Bancos', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (59, E'OP - VoBo Obligación de Pago (Presupuestos)', E'2015-01-06', E'activo', E'OP - VoBo Obligación de Pago (Presupuestos)', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (60, E'ADQ- VoBo Solicitudes de  Compras (Presupuestos)', E'2015-01-15', E'activo', E'ADQ- VoBo Sol Compras (Presupuestos)', 7, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (61, E'AF - Preingreso Activos ERP 1', E'2015-01-26', E'activo', E'AF - Preingreso Activos', 14, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (62, E'ADQ - Reporte Ejecución Presupuestaria', E'2015-02-19', E'activo', E'ADQ - Reporte Ejecución Presupuestaria', 7, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (63, E'Listado de Contratos Finalizados', E'2015-03-17', E'inactivo', E'CONTFIN', 16, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (64, NULL, E'2015-03-17', E'activo', E'LEG- Contrato Finalizado', 16, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (65, E'Reportes de Planillas', E'2015-03-26', E'activo', E'PLANI - Reportes Planillas', 13, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (66, E'ORGA- Consulta Estructura Organizacional', E'2015-03-30', E'activo', E'ORGA- Consulta Estructura Organizacional', 4, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (67, E'Cierre y Apertura del periodo de obligaciones de pago', E'2015-04-06', E'activo', E'OP - Periodo Obligaciones de Pago', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (68, E'Solo coonsulta', E'2015-05-06', E'activo', E'ADQ - VoBo Presupuestos Consulta', 7, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (69, NULL, E'2015-05-08', E'activo', E'LEG-Abogado', 16, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (70, NULL, E'2015-05-08', E'activo', E'LEG-Gerencia', 16, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (71, NULL, E'2015-05-08', E'activo', E'LEG - Jefe Legal', 16, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (72, NULL, E'2015-05-08', E'activo', E'LEG-Digitalizacion', 16, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (73, NULL, E'2015-05-08', E'activo', E'LEG-Firma Contraparte', 16, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (74, NULL, E'2015-05-08', E'activo', E'LEG-Firma RPC', 16, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (75, NULL, E'2015-05-08', E'activo', E'LEG-Firma GAF', 16, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (76, E'ADQ - Visto Bueno Poa', E'2015-05-08', E'activo', E'ADQ - VoBo Poa', 7, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (77, NULL, E'2015-05-08', E'activo', E'LEG-Solicitante', 16, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (78, E'OP - Pago unico (Sin contrato)', E'2015-05-09', E'activo', E'OP - Pago unico (Sin contrato)', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (79, NULL, E'2015-05-18', E'activo', E'LEG-Revision', 16, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (80, NULL, E'2015-06-05', E'activo', E'LEG-Firma comercial', 16, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (81, E'OP - Pago sin Presupuesto', E'2015-08-20', E'activo', E'OP - Pago sin Presupuesto', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (82, E'CONTA- OT Oficina', E'2015-10-09', E'activo', E'CONTA- OT Oficina', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (83, E'Obligaciones de Pago', E'2015-12-09', E'activo', E'ADQ- Obligaciones de Pago', 7, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (84, E'Devoluciones', E'2015-12-30', E'activo', E'DECR-Devoluciones', 17, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (85, E'CONTA - Bancarización Compras', E'2016-01-26', E'activo', E'CONTA - Bancarización Compras', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (86, E'CONTA - Bancarización Ventas', E'2016-01-26', E'activo', E'CONTA - Bancarización Ventas', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (87, E'Reporte libro de compras estandar y NCD', E'2016-04-22', E'activo', E'CONTA - Libro de Compras', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (88, E'Pagos Sin Facturas Asociadas', E'2016-05-09', E'activo', E'OP - Pagos Sin Facturas Asociadas', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (89, E'CD - Solicitud de Fondos en Avance', E'2016-06-20', E'activo', E'CD - Solicitud de Fondos en Avance', 20, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (90, E'CD - VoBo Tesoreria', E'2016-06-20', E'activo', E'CD - VoBo Tesoreria', 20, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (91, E'CD - VoBo Cuenta Documentada', E'2016-06-20', E'activo', E'CD - VoBo Cuenta Documentada', 20, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (92, NULL, E'2016-07-04', E'activo', E'CAJA - Cajero', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (93, NULL, E'2016-07-04', E'activo', E'CAJA - Solicitud Creacion Caja', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (94, NULL, E'2016-07-04', E'activo', E'CAJA - VoBo Creacion Caja', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (95, E'ORGA - Consulta Funcionarios', E'2016-07-06', E'activo', E'ORGA - Consulta Funcionarios', 4, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (96, E'PRE - Administrador de presupuestos', E'2016-07-08', E'activo', E'PRE - Administrador de presupuestos', 8, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (97, E'CONTA - Revisor Documentos Fiscales', E'2016-07-08', E'activo', E'CONTA - Revisor Documentos Fiscales', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (98, E'CONTA - Administrador Documentos Fiscales', E'2016-07-08', E'activo', E'CONTA - Administrador Documentos Fiscales', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (99, E'CONTA - Consulta documentos Fiscales', E'2016-07-08', E'activo', E'CONTA - Consulta documentos Fiscales', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (100, E'CONTA - Bancarización Compras (CONSULTA)', E'2016-07-11', E'activo', E'CONTA - Bancarización Compras (CONSULTA)', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (101, E'Generación del comprobante contable en funcion a la solicitud', E'2016-07-20', E'activo', E'CAJA - Contabilidad', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (102, E'Solicitud de efectivo a caja chica', E'2016-07-20', E'activo', E'CAJA - Solicitud de efectivo', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (103, NULL, E'2016-07-20', E'inactivo', E'CAJA - VoBo Creación de Caja', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (104, E'Visto Bueno Facturas Rendicion', E'2016-07-20', E'activo', E'CAJA - VoBo Facturas Rendicion', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (105, E'Visto Bueno Fondos', E'2016-07-20', E'activo', E'CAJA - VoBo Fondos', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (106, E'VoBo Rendiciones Caja Presupuestos', E'2016-07-20', E'activo', E'CAJA - VoBo Rend Presup', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (107, E'CAJA - VoBo Rend/Repo Cajas', E'2016-07-20', E'activo', E'CAJA - VoBo Rend/Repo Cajas', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (108, E'VoBo Solicitud de Efectivo', E'2016-07-20', E'activo', E'CAJA - VoBo Solicitud de Efectivo', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (109, E'PRE - Formulacion', E'2016-08-02', E'activo', E'PRE - Formulacion', 8, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (110, E'CD - Consulta Fondos en Avance', E'2016-08-04', E'activo', E'CD - Consulta Fondos en Avance', 20, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (111, E'CD - VoBo Cuenta Documentada Central', E'2016-08-17', E'activo', E'CD - VoBo Cuenta Documentada Central', 20, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (112, E'PLANI-Reporte Planilla Actualizada', E'2016-10-04', E'activo', E'PLANI-Reporte Planilla Actualizada', 13, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (113, NULL, E'2016-10-06', E'activo', E'CONTA - Libro Diario', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (114, NULL, E'2016-11-07', E'activo', E'Reporte Fondos Avance', 20, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (115, E'Dotacion Ropa de Trabajo', E'2016-11-10', E'activo', E'ALM - Dotaciones', 6, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (116, E'CONTA - Administrador', E'2016-11-17', E'activo', E'CONTA - Administrador', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (117, E'sd\nd\nf', E'2016-11-17', E'inactivo', E'asdf', 14, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (118, E'OBINGRESOS - Reporte Nit Razon', E'2016-11-18', E'activo', E'OBINGRESOS - Reporte Nit Razon', 19, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (119, E'PARAM - Grupo de EP', E'2016-11-24', E'activo', E'PARAM - Grupo de EP', 2, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (120, NULL, E'2016-11-24', E'activo', E'SEGU - Usuarios y Grupo EPs', 1, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (121, NULL, E'2016-11-25', E'activo', E'Reporte Procesos', 7, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (122, E'OBINGRESOS-Reportes Depositos', E'2016-11-29', E'activo', E'OBINGRESOS-Reportes Depositos', 19, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (123, E'PRE - Conceptos de Gasto / Autorizaciones', E'2016-11-29', E'activo', E'PRE - Conceptos de Gasto / Autorizaciones', 8, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (124, E'Conceptos de gastos po gestion', E'2016-12-01', E'activo', E'PARAM - ConceptosGastosGestion', 2, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (125, E'GM - Solicitante de Materiales ', E'2017-01-08', E'activo', E'GM - Solicitante de Materiales ', 22, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (126, E'GM - Visto Bueno ', E'2017-01-08', E'activo', E'GM - Visto Bueno ', 22, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (127, E'GM -  Auxiliar Abastecimientos ', E'2017-01-08', E'activo', E'GM -  Auxiliar Abastecimientos  ', 22, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (128, E'GM - Consulta de Solicitudes ', E'2017-01-08', E'activo', E'GM - Consulta de Solicitudes ', 22, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (129, E'GM - Solicitante', E'2017-01-08', E'inactivo', E'GM - Solicitante', 22, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (130, E'GM - Visto Bueno Solicitud', E'2017-01-08', E'inactivo', E'GM - Visto Bueno Solicitud', 22, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (131, E'GM - Abastecimientos', E'2017-01-08', E'inactivo', E'GM - Abastecimientos', 22, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (132, E'GM - Auxiliar Abastecimientos', E'2017-01-08', E'inactivo', E'GM - Auxiliar Abastecimientos', 22, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (133, E'CONTA - Cajero', E'2017-01-09', E'inactivo', E'CONTA - Cajero', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (134, E'CONTA - Contador', E'2017-01-09', E'activo', E'CONTA - Contador', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (135, E'Procesos iniciados adjudicados ejecutados', E'2017-01-09', E'activo', E'ADQ - Reporte Iniciados Adjudicados Ejecutados', 7, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (136, E'OP - VoBo Costos', E'2017-01-11', E'activo', E'OP - VoBo Costos', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (137, E'CONTA - Registro Facturas Comisiones', E'2017-01-12', E'activo', E'CONTA - Registro Facturas Comisiones', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (138, E'GM - Cotización y Compra ', E'2017-01-12', E'activo', E'GM - Cotización y Compra ', 22, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (139, E'OBINGRESOS - Modificaciones Venta Web', E'2017-01-13', E'activo', E'OBINGRESOS - Modificaciones Venta Web', 19, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (140, NULL, E'2017-01-16', E'activo', E'CONTA - Plan de cuentas', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (141, E'BANCOS - Extracto Bancario', E'2017-01-16', E'activo', E'BANCOS - Extracto Bancario', 21, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (142, E'AF-Reportes ERP 1', E'2017-01-20', E'activo', E'AF-Reportes', 14, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (143, E'REC - Administrador Reclamos', E'2017-01-27', E'activo', E'REC - Administrador Reclamos', 23, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (144, E'REC - Especialista SAC', E'2017-01-27', E'activo', E'REC - Especialista SAC', 23, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (145, E'REC - Parametros Generales', E'2017-01-27', E'activo', E'REC - Parametros Generales', 23, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (146, E'REC - Tecnico SAC', E'2017-01-27', E'activo', E'REC - Tecnico SAC', 23, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (147, E'REC - Responsable SAC', E'2017-01-27', E'activo', E'REC - Responsable SAC', 23, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (148, E'REC - Legal SAC', E'2017-01-27', E'activo', E'REC - Legal SAC', 23, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (149, E'REC - OperadorOdeco SAC', E'2017-01-27', E'activo', E'REC - OperadorOdeco SAC', 23, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (150, E'Consultas Auditoria Interna', E'2017-02-01', E'activo', E'Consultas Auditoria Interna', 1, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (151, E'Consultas Auditoria Externa', E'2017-02-01', E'activo', E'Consultas Auditoria Externa', 1, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (152, E'PLANI-Reporte de Movimientos', E'2017-02-06', E'activo', E'PLANI-Reporte de Movimientos', 13, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (153, E'CD - Ampliacion Fondos en Avance', E'2017-02-08', E'activo', E'CD - Ampliacion Fondos en Avance', 20, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (154, E'GM - Almacenes', E'2017-02-10', E'activo', E'GM - Almacenes', 22, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (155, E'PRE - Relacionar partida con presupuestos', E'2017-02-17', E'activo', E'PRE - Relacionar partida con presupuestos', 8, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (156, E'Reporte presupuestos', E'2017-02-20', E'activo', E'PRE - Reportes Presupuestos', 8, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (157, E'OBINGRESOS-Registro Depositos', E'2017-03-01', E'activo', E'OBINGRESOS-Registro Depositos', 19, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (158, E'OP - VoBo Plan de Pagos (Presupuestos)', E'2017-03-01', E'activo', E'OP - VoBo Plan de Pagos (Presupuestos)', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (159, NULL, E'2017-03-03', E'inactivo', E'PLA - Generar Reporte Planilla', 13, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (160, E'PARAM - Consulta Grupo EP y Usuarios', E'2017-03-06', E'activo', E'PARAM - Consulta Grupo EP y Usuarios', 2, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (161, E'COS - Clasificador de Costos', E'2017-03-07', E'activo', E'COS - Clasificador de Costos', 28, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (162, E'VEF - Vendedor', E'2017-03-17', E'activo', E'VEF - Vendedor', 25, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (163, E'VEF - Cajero', E'2017-03-17', E'activo', E'VEF - Cajero', 25, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (164, E'REC - Consulta de reclamos', E'2017-04-04', E'activo', E'REC - Consulta de reclamos', 23, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (165, E'CONTA - Reportes', E'2017-04-04', E'activo', E'CONTA - Reportes', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (166, E'GM - Gestor Aduanero', E'2017-04-10', E'activo', E'GM - Gestor Aduanero', 22, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (167, NULL, E'2017-04-21', E'activo', E'webfirma', 4, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (168, E'CONTA-Bancarizacion-bloquear-desbloquear', E'2017-05-26', E'activo', E'CONTA-Bancarizacion-bloquear-desbloquear', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (169, E'Ampliación días de rendición caja chica', E'2017-06-07', E'activo', E'CAJA - Ampliación Caja Chica', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (170, NULL, E'2017-06-16', E'activo', E'CONTA - Libro Diario (Consulta)', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (171, E'CONTA - Validador Documentos', E'2017-06-22', E'activo', E'CONTA - Validador Documentos', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (172, E'CVPN - Solicitante Conexión', E'2017-06-26', E'activo', E'CVPN - Solicitante Conexión', 29, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (173, E'CVPN - VoBo Sol. Conexión', E'2017-06-26', E'activo', E'CVPN - VoBo Sol. Conexión', 29, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (174, E'CONTA - Resolución 101700000014', E'2017-07-03', E'activo', E'CONTA - Resolución 101700000014', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (175, E'PRE - Consulta Presupuestos', E'2017-07-06', E'activo', E'PRE - Consulta Presupuestos', 8, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (176, E'RestColas para conectarse  con el touch y panel', E'2017-08-03', E'activo', E'RestColas', 30, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (177, E'COUNTER COLAS', E'2017-08-03', E'activo', E'COUNTER COLAS', 30, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (178, E'GM - Visto Bueno Comité ', E'2017-08-14', E'activo', E'GM - Visto Bueno Comité ', 22, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (179, E'ORGA - Certificados de Trabajo', E'2017-08-18', E'activo', E'ORGA - Certificados de Trabajo', 4, 1);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (180, E'VENT - Administrador Sistema de Ventas', E'2017-08-18', E'activo', E'VENT - Administrador Sistema de Ventas', 25, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (181, E'OBINGRESOS-Portal Corporativo', E'2017-09-11', E'activo', E'OBINGRESOS-Portal Corporativo', 19, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (182, E'SIGEP - Clasificadores', E'2017-09-15', E'activo', E'SIGEP - Clasificadores', 32, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (183, E'CONTA - Consulta de Entregas', E'2017-09-19', E'activo', E'CONTA - Consulta de Entregas', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (184, E'AF - Administrador', E'2017-09-21', E'activo', E'AF - Administrador', 33, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (185, E'AF - Auxiliar Activos Fijos', E'2017-09-21', E'activo', E'AF - Auxiliar Activos Fijos', 33, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (186, E'AF - Auxiliar Activos TI', E'2017-09-21', E'activo', E'AF - Auxiliar Activos TI', 33, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (187, E'AF - Responsable Activos TI', E'2017-09-21', E'activo', E'AF - Responsable Activos TI', 33, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (188, E'AF - Consulta Parametros', E'2017-09-21', E'activo', E'AF - Consulta Parametros', 33, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (189, E'VEF - Counter', E'2017-09-22', E'activo', E'VEF - Counter', 25, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (190, E'VEF - Tesoreria', E'2017-09-22', E'activo', E'VEF - Tesoreria', 25, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (191, E'VEF - Cajero CTO', E'2017-10-04', E'inactivo', E'VEF - Cajero CTO', 19, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (192, E'Eliminar Rol', E'2017-10-04', E'inactivo', E'VEF - Cajero CTO', 25, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (193, E'ORGA - Certificados Emitidos', E'2017-10-13', E'activo', E'ORGA - Certificados Emitidos', 4, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (194, E'AF - Búsqueda de Activos', E'2017-10-18', E'activo', E'AF - Búsqueda de Activos', 33, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (195, E'VEF - Dosificaciónes', E'2017-10-20', E'activo', E'VEF - Dosificaciónes', 25, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (197, E'ORGA - Documentos Funcionarios', E'2017-10-23', E'activo', E'ORGA - Archivos Adjuntos', 4, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (198, E'OBING-upload depositos', E'2017-11-21', E'activo', E'OBING-upload depositos', 19, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (199, E'POA - Objetivos', E'2017-12-26', E'activo', E'POA - Objetivos', 24, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (200, NULL, E'2017-12-27', E'activo', E'COLAS-Admin', 30, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (201, E'OBINGRESOS-Portal lectura', E'2018-01-03', E'activo', E'OBINGRESOS-Portal lectura', 19, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (202, E'OP - Pagos Gestiones Anteriores', E'2018-01-08', E'activo', E'OP - Pagos Gestiones Anteriores', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (203, E'OBINGRESOS-Admin Portal Corporativo', E'2018-01-23', E'activo', E'OBINGRESOS-Admin Portal Corporativo', 19, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (204, E'ORGA - Presuesto Cargo', E'2018-02-16', E'activo', E'ORGA - Presuesto Cargo', 4, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (205, E'ADQ - Consulta 400, 500', E'2018-03-05', E'activo', E'ADQ - Consulta 400, 500', 7, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (206, E'PLANI - VoBo RRHH Planilla', E'2018-03-15', E'activo', E'PLANI - VoBo RRHH Planilla', 13, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (207, E'PLANI - VoBo POA Planilla', E'2018-03-15', E'activo', E'PLANI - VoBo POA Planilla', 13, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (208, E'PLANI - VoBo SUP Planilla', E'2018-03-15', E'activo', E'PLANI - VoBo SUP Planilla', 13, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (209, E'PLANI - VoBo PRESU Planilla', E'2018-03-15', E'activo', E'PLANI - VoBo PRESU Planilla', 13, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (210, E'REC - Clientes', E'2018-04-03', E'activo', E'REC - Clientes', 23, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (211, E'ORGA - Responsable de Correos', E'2018-04-26', E'activo', E'ORGA - Responsable de Correos', 4, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (212, E'Consulta de provedores', E'2018-05-02', E'activo', E'ADQ - Consulta de Proveedores', 7, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (213, E'OBINGRESOS - Consulta Boletas de Garantia', E'2018-05-02', E'activo', E'OBINGRESOS - Consulta Boletas de Garantia', 19, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (214, E'ORGA - Ficha Personal', E'2018-05-03', E'activo', E'ORGA - Ficha Personal', 4, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (215, E'ORGA - Evaluación de Desempeño', E'2018-05-22', E'activo', E'ORGA - Evaluación de Desempeño', 4, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (216, E'CONTA - Comprobantes ERP vs SIGEP', E'2018-05-28', E'activo', E'CONTA - Comprobantes ERP vs SIGEP', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (217, E'PARAM-REGISTRO-DE-PERSONA', E'2018-06-01', E'inactivo', E'PARAM-REGISTRO-DE-PERSONA', 2, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (218, E'SEGU - Registro de persona', E'2018-06-01', E'activo', E'SEGU-REGISTRO-DE-PERSONA', 1, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (219, E'OP - Pago de Compras en el Exterior', E'2018-06-04', E'activo', E'OP - Pago de Compras en el Exterior', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (220, E'ORGA - Gestión Personal', E'2018-06-13', E'activo', E'ORGA - Gestión Personal', 4, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (221, E'ORGA - Consulta Presupuesto por Cargo', E'2018-06-20', E'activo', E'ORGA - Consulta Presupuesto por Cargo', 4, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (222, E'AF - Consulta Clasificador de Activos', E'2018-06-25', E'activo', E'AF - Consulta Clasificador de Activos', 33, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (223, E'ORGA - Cumpleaños BoA', E'2018-06-28', E'activo', E'ORGA - Cumpleaños BoA', 4, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (224, E'ORGA - Edición Memo Desempeño', E'2018-07-02', E'activo', E'ORGA - Edición Memo Desempeño', 4, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (225, E'PLANI - Configuración Parametros', E'2018-07-09', E'activo', E'PLANI - Configuración Parametros', 13, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (226, E'VEF - Consulta Ventas', E'2018-07-10', E'activo', E'VEF - Consulta Ventas', 25, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (227, E'OP - VoBo Obligacion Pago', E'2018-07-12', E'activo', E'OP - VoBo Obligacion Pago', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (228, E'ALM - Responsable Almacen TI', E'2018-08-20', E'activo', E'ALM - Responsable Almacen TI', 6, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (229, E'KAF - Modificar AF Pasantes', E'2018-09-25', E'activo', E'KAF - Modificar AF Pasantes', 33, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (230, E'OBINGRESOS-Administrador Acm', E'2018-10-11', E'activo', E'OBINGRESOS-Administrador Acm', 19, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (231, E'OBINGRESOS-Operador Acm', E'2018-10-11', E'activo', E'OBINGRESOS-Operador Acm', 19, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (232, E'ORGA - Registro Funcionarios', E'2018-10-17', E'activo', E'ORGA - Registro Funcionarios', 4, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (233, E'OBINGRESOS-Consulta Acm', E'2018-10-25', E'activo', E'OBINGRESOS-Consulta Acm', 19, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (234, E'PARAM - Registrar Tipos de Cambio', E'2018-12-01', E'activo', E'PARAM - Registrar Tipos de Cambio', 2, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (235, E'CONTA - Auxiliares', E'2018-12-05', E'activo', E'CONTA - Auxiliares', 10, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (236, E'TES - Pago BOA REP', E'2018-12-26', E'activo', E'TES - Pago BOA REP', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (237, E'TES - Pago de Procesos Manuales', E'2019-01-07', E'activo', E'TES - Pago de Procesos Manuales', 11, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (238, E'AF - Interfaz Principal', E'2019-01-11', E'activo', E'AF - Interfaz Principal', 14, NULL);
+
+INSERT INTO segu.trol ("id_rol", "descripcion", "fecha_reg", "estado_reg", "rol", "id_subsistema", "modificado")
+VALUES (239, E'VEF - Viajero Interno', E'2019-01-14', E'activo', E'VEF - Viajero Interno', 25, NULL);
