@@ -154,6 +154,26 @@ class ACTInterinato extends ACTbase{
         
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
+    function listarConsultaInterinato(){
+        $this->objParam->defecto('ordenacion','id_interinato');
+
+//        $this->objParam->defecto('dir_ordenacion','asc');
+        $this->objParam->defecto('dir_ordenacion','desc');
+
+        if($this->objParam->getParametro('id_cargo_suplente')!=''){
+            $this->objParam->addFiltro("int.id_cargo_suplente = ".$this->objParam->getParametro('id_cargo_suplente'));
+        }
+
+        if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+            $this->objReporte = new Reporte($this->objParam,$this);
+            $this->res = $this->objReporte->generarReporteListado('MODInterinato','listarInterinato');
+        } else{
+            $this->objFunc=$this->create('MODInterinato');
+
+            $this->res=$this->objFunc->listarInterinato($this->objParam);
+        }
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 			
 }
 

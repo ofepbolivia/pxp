@@ -17,6 +17,15 @@ Phx.vista.Interinato=Ext.extend(Phx.gridInterfaz,{
     	//llama al constructor de la clase padre
 		Phx.vista.Interinato.superclass.constructor.call(this,config);
 		this.init();
+
+        this.addButton('archivo', {
+            text: 'Adjuntar Archivo',
+            iconCls: 'bfolder',
+            disabled: false,
+            handler: this.archivo,
+            tooltip: '<b>Adjuntar Archivo</b><br><b>Nos permite adjuntar documentos de un funcionario.</b>',
+            grupo: [0,1]
+        });
 		 
       	this.iniciarEventos();
 		this.load({params:{start:0, limit:this.tam_pag}})
@@ -346,6 +355,28 @@ Phx.vista.Interinato=Ext.extend(Phx.gridInterfaz,{
 		field: 'id_interinato',
 		direction: 'ASC'
 	},
+    archivo: function () {
+
+        var rec = this.getSelectedData();
+        //enviamos el id seleccionado para cual el archivo se deba subir
+        rec.datos_extras_id = rec.id_interinato;
+        //enviamos el nombre de la tabla
+        rec.datos_extras_tabla = 'orga.tinterinato';
+        //enviamos el codigo ya que una tabla puede tener varios archivos diferentes como ci,pasaporte,contrato,slider,fotos,etc
+        rec.datos_extras_codigo = '';
+
+        //esto es cuando queremos darle una ruta personalizada
+        //rec.datos_extras_ruta_personalizada = './../../../uploaded_files/favioVideos/videos/';
+
+        Phx.CP.loadWindows('../../../sis_parametros/vista/archivo/Archivo.php',
+            'Archivo',
+            {
+                width: '80%',
+                height: '100%'
+            }, rec, this.idContenedor, 'Archivo');
+
+    },
+
 	bdel:true,
 	bsave:true
 	}
