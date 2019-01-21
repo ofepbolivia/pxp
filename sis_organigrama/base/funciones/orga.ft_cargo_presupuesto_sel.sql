@@ -63,6 +63,9 @@ BEGIN
                         carpre.id_ot,
                         ot.desc_orden
 						from orga.tcargo_presupuesto carpre
+                        inner join orga.tcargo tca on tca.id_cargo = carpre.id_cargo
+                        INNER JOIN param.tgestion tg on tg.id_gestion = carpre.id_gestion
+                        left join orga.tuo_funcionario tuo on tuo.id_cargo = carpre.id_cargo and coalesce(tuo.fecha_finalizacion,(''31/12/''||tg.gestion)::date)  between  carpre.fecha_ini and coalesce(carpre.fecha_fin,(''31/12/''||tg.gestion)::date)
 						inner join segu.tusuario usu1 on usu1.id_usuario = carpre.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = carpre.id_usuario_mod
 						left join conta.torden_trabajo ot on ot.id_orden_trabajo = carpre.id_ot
@@ -72,7 +75,7 @@ BEGIN
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
 			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
-
+			raise notice 'v_consulta: %', v_consulta;
 			--Devuelve la respuesta
 			return v_consulta;
 
@@ -91,7 +94,10 @@ BEGIN
 			--Sentencia de la consulta de conteo de registros
 			v_consulta:='select count(id_cargo_presupuesto)
 					    from orga.tcargo_presupuesto carpre
-					    inner join segu.tusuario usu1 on usu1.id_usuario = carpre.id_usuario_reg
+                        inner join orga.tcargo tca on tca.id_cargo = carpre.id_cargo
+                        INNER JOIN param.tgestion tg on tg.id_gestion = carpre.id_gestion
+					    left join orga.tuo_funcionario tuo on tuo.id_cargo = carpre.id_cargo and coalesce(tuo.fecha_finalizacion,(''31/12/''||tg.gestion)::date)  between  carpre.fecha_ini and coalesce(carpre.fecha_fin,(''31/12/''||tg.gestion)::date)
+                        inner join segu.tusuario usu1 on usu1.id_usuario = carpre.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = carpre.id_usuario_mod
 						left join conta.torden_trabajo ot on ot.id_orden_trabajo = carpre.id_ot
                         inner join param.vcentro_costo cc on cc.id_centro_costo = carpre.id_centro_costo

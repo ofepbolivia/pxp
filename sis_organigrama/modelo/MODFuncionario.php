@@ -305,6 +305,8 @@ class MODFuncionario extends MODbase{
         $this->setParametro('expedicion','expedicion','varchar');
         $this->setParametro('direccion','direccion','varchar');
 
+        $this->setParametro('estado_correo','estado_correo','varchar');
+
         //Ejecuta la instruccion
         $this->armarConsulta();
 
@@ -477,3 +479,4 @@ class MODFuncionario extends MODbase{
 
 }
 ?>
+

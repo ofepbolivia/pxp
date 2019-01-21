@@ -54,8 +54,8 @@ header("content-type: text/javascript; charset=UTF-8");
 
             Phx.vista.FuncionarioCorreo.superclass.onButtonEdit.call(this);
 
-            this.getComponente('nombre').setVisible(false);
-            this.getComponente('nombre').setValue('insertar_correo');
+            this.getComponente('estado_correo').setVisible(false);
+            this.getComponente('estado_correo').setValue('modificar_correo');
 
         },
 
@@ -108,6 +108,18 @@ header("content-type: text/javascript; charset=UTF-8");
                     labelSeparator:'',
                     inputType:'hidden',
                     name: 'id_funcionario'
+                },
+                type:'Field',
+                form:true
+
+            },
+
+            {
+                // configuracion del componente
+                config:{
+                    labelSeparator:'',
+                    inputType:'hidden',
+                    name: 'estado_correo'
                 },
                 type:'Field',
                 form:true
@@ -240,7 +252,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     fieldLabel: "Correo Empresarial",
                     gwidth: 140,
                     name: 'email_empresa',
-                    allowBlank:false,
+                    allowBlank:true,
                     maxLength:100,
                     minLength:1,
                     anchor:'100%',
@@ -273,7 +285,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 //bottom_filter : true,
                 id_grupo:1,
                 grid:false,
-                form:true
+                form:false
             },
             {
                 config:{
@@ -915,5 +927,5 @@ header("content-type: text/javascript; charset=UTF-8");
                 }, {}, this.idContenedor, 'CorreosEmpBoa');
 
         }
-});
+    });
 </script>

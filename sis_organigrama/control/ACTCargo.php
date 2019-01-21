@@ -1,33 +1,33 @@
 <?php
 /**
-*@package pXP
-*@file gen-ACTCargo.php
-*@author  (admin)
-*@date 14-01-2014 19:16:06
-*@description Clase que recibe los parametros enviados por la vista para mandar a la capa de Modelo
-*/
+ *@package pXP
+ *@file gen-ACTCargo.php
+ *@author  (admin)
+ *@date 14-01-2014 19:16:06
+ *@description Clase que recibe los parametros enviados por la vista para mandar a la capa de Modelo
+ */
 
-class ACTCargo extends ACTbase{    
-			
-	function listarCargo(){
-		$this->objParam->defecto('ordenacion','id_cargo');
+class ACTCargo extends ACTbase{
 
-		$this->objParam->defecto('dir_ordenacion','asc');
-		
-		if ($this->objParam->getParametro('id_uo') != '') {
-			$this->objParam->addFiltro("cargo.id_uo = ". $this->objParam->getParametro('id_uo'));
-		}
-				
-		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
-			$this->objReporte = new Reporte($this->objParam,$this);
-			$this->res = $this->objReporte->generarReporteListado('MODCargo','listarCargo');
-		} else{
-			$this->objFunc=$this->create('MODCargo');
-			
-			$this->res=$this->objFunc->listarCargo($this->objParam);
-		}
-		$this->res->imprimirRespuesta($this->res->generarJson());
-	}
+    function listarCargo(){
+        $this->objParam->defecto('ordenacion','id_cargo');
+
+        $this->objParam->defecto('dir_ordenacion','asc');
+
+        if ($this->objParam->getParametro('id_uo') != '') {
+            $this->objParam->addFiltro("cargo.id_uo = ". $this->objParam->getParametro('id_uo'));
+        }
+
+        if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+            $this->objReporte = new Reporte($this->objParam,$this);
+            $this->res = $this->objReporte->generarReporteListado('MODCargo','listarCargo');
+        } else{
+            $this->objFunc=$this->create('MODCargo');
+
+            $this->res=$this->objFunc->listarCargo($this->objParam);
+        }
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 
     function listarCargoAcefalo(){
 
@@ -49,8 +49,14 @@ class ACTCargo extends ACTbase{
         }
 
         //si aplicar filtro de id_uo gerencia aplicamos el filtro
-        if($this->objParam->getParametro('id_gerencia') !=''){
+        /*if($this->objParam->getParametro('id_gerencia') !=''){
             $this->objParam->addFiltro("ger.id_uo = ''" . $this->objParam->getParametro('id_gerencia') . "''");
+        }*/
+
+        //si aplicar filtro de id_uo gerencia aplicamos el filtro
+        $id_uo = $this->objParam->getParametro('id_gerencia');
+        if($this->objParam->getParametro('id_gerencia') !=''){
+            $this->objParam->addFiltro("ger.id_uo = any (string_to_array(btrim(''".$id_uo.",''||orga.f_get_arbol_uo(".$id_uo."),'',''),'','')::integer[])");
         }
 
 
@@ -79,38 +85,38 @@ class ACTCargo extends ACTbase{
 
 
     }
-				
-	function insertarCargo(){
-		$this->objFunc=$this->create('MODCargo');	
-		if($this->objParam->insertar('id_cargo')){
-			$this->res=$this->objFunc->insertarCargo($this->objParam);			
-		} else{			
-			$this->res=$this->objFunc->modificarCargo($this->objParam);
-		}
-		$this->res->imprimirRespuesta($this->res->generarJson());
-	}
-						
-	function eliminarCargo(){
-			$this->objFunc=$this->create('MODCargo');	
-		$this->res=$this->objFunc->eliminarCargo($this->objParam);
-		$this->res->imprimirRespuesta($this->res->generarJson());
-	}
 
-	function listarPresupuestoCargo(){
-		/*$this->objParam->defecto('ordenacion','id_cargo');
-		$this->objParam->defecto('dir_ordenacion','asc');*/
+    function insertarCargo(){
+        $this->objFunc=$this->create('MODCargo');
+        if($this->objParam->insertar('id_cargo')){
+            $this->res=$this->objFunc->insertarCargo($this->objParam);
+        } else{
+            $this->res=$this->objFunc->modificarCargo($this->objParam);
+        }
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 
-		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
-			$this->objReporte = new Reporte($this->objParam,$this);
-			$this->res = $this->objReporte->generarReporteListado('MODCargo','listarPresupuestoCargo');
-		} else{
-			$this->objFunc=$this->create('MODCargo');
+    function eliminarCargo(){
+        $this->objFunc=$this->create('MODCargo');
+        $this->res=$this->objFunc->eliminarCargo($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 
-			$this->res=$this->objFunc->listarPresupuestoCargo($this->objParam);
-		}
-		$this->res->imprimirRespuesta($this->res->generarJson());
-	}
-			
+    function listarPresupuestoCargo(){
+        /*$this->objParam->defecto('ordenacion','id_cargo');
+        $this->objParam->defecto('dir_ordenacion','asc');*/
+
+        if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+            $this->objReporte = new Reporte($this->objParam,$this);
+            $this->res = $this->objReporte->generarReporteListado('MODCargo','listarPresupuestoCargo');
+        } else{
+            $this->objFunc=$this->create('MODCargo');
+
+            $this->res=$this->objFunc->listarPresupuestoCargo($this->objParam);
+        }
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
 }
 
 ?>

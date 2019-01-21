@@ -39,7 +39,7 @@ class MODCargoPresupuesto extends MODbase{
         $this->captura('desc_orden','varchar');
 
         //Ejecuta la instruccion
-        $this->armarConsulta();
+        $this->armarConsulta();//echo $this->consulta; exit;
         $this->ejecutarConsulta();
 
         //Devuelve la respuesta

@@ -38,6 +38,18 @@ class ACTDepto extends ACTbase{
 			$this->res=$this->objFunSeguridad->listarDepto($this->objParam);
 			
 		}
+        if($this->objParam->getParametro('deptos')=='todos'){
+
+            $respuesta = $this->res->getDatos();
+
+
+            array_unshift ( $respuesta, array(  'id_depto'=>'0',
+                'nombre'=>'Todos',
+                'codigo'=>'Todos')
+            );
+            $this->res->setDatos($respuesta);
+        }
+
 		
 		$this->res->imprimirRespuesta($this->res->generarJson());
 		

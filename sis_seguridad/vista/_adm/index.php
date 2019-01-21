@@ -1,6 +1,6 @@
 <?php
 //include_once '../../../lib/lib_control/session_secure.inc.php';
-//session_secure();  
+//session_secure();
 include('../../../lib/lib_control/CTSesion.php');
 session_start();
 include(dirname(__FILE__).'/../../../lib/DatosGenerales.php');
@@ -31,9 +31,9 @@ if(!isset($_SESSION["_SESION"])){
     <title><?php echo $_SESSION['_NOMBRE_SIS']; ?></title>
     <meta http-equiv="Content-Type" content="charset=UTF-8;text/html; " />
     <meta name="language" content="es"/>
-    <meta name="author" content="Rensi Arteaga Copari" />
-    <meta name="subject" content="rensi@kplian.com" />
-    <meta name="application-name" content="KERP - KPLIAN"/>
+    <meta name="author" content="BOA" />
+    <meta name="subject" content="boa-institucional@boa.bo" />
+    <meta name="application-name" content="ERP - BOA"/>
     <link rel="icon" type="image/x-icon" href="<?php echo $_SESSION['_DIR_FAV_ICON'] ?>" />
 
     <!-- overrides to base library  -->
@@ -164,6 +164,8 @@ if (isset($_SESSION["_INCLUDE_GMAPS"]) && $_SESSION["_INCLUDE_GMAPS"] == 'si') {
 <script type='text/javascript' charset="UTF-8" src="../../../lib/ux/ItemSelector.js"></script>
 <script type="text/javascript" charset="UTF-8" src="../../../lib/ux/grid/LockingGridView.js"></script>
 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ckeditor/4.4.1/ckeditor.js"></script>
+<script type="text/javascript" charset="UTF-8" src="../../../lib/ux/ckeditor/src/Ext.form.CKEditor.js"></script>
 <?php
 echo "<script type=\"text/javascript\" charset=\"UTF-8\" src=\"resources/Phx.CP.main.php?nueva_sesion=false&estado_sesion=".$estado_sesion."\"></script>";
 ?>

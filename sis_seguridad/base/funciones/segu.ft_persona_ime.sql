@@ -9,14 +9,14 @@ $body$
 /**************************************************************************
  FUNCION: 		segu.ft_persona_ime
  DESCRIPCION:   modificaciones de persona
- AUTOR: 		KPLIAN(jrr)	
- FECHA:	
- COMENTARIOS:	
+ AUTOR: 		KPLIAN(jrr)
+ FECHA:
+ COMENTARIOS:
 ***************************************************************************
  HISTORIA DE MODIFICACIONES:
 
  DESCRIPCION:	actualizacion a nueva version xph
- AUTOR:		Jaime Rivera Rojas	
+ AUTOR:		Jaime Rivera Rojas
  FECHA:		08/01/11
 ***************************************************************************/
 
@@ -45,7 +45,7 @@ v_respuesta_sinc       varchar;
 
 BEGIN
 
-           
+
 
      v_nombre_funcion:='segu.ft_persona_ime';
      v_parametros:=pxp.f_get_record(par_tabla);
@@ -53,20 +53,20 @@ BEGIN
  /*******************************
  #TRANSACCION:  SEG_PERSON_INS
  #DESCRIPCION:	Inserta Persona
- #AUTOR:		KPLIAN(jrr)		
- #FECHA:		08/01/11	
+ #AUTOR:		KPLIAN(jrr)
+ #FECHA:		08/01/11
 ***********************************/
      if(par_transaccion='SEG_PERSON_INS')then
 
           --consulta:=';
           BEGIN
-          
+
           		--Verificación de persona ya registrada
           		--CI
           		if exists(select 1 from segu.tpersona
           					where ci = v_parametros.ci) then
           			raise exception 'Este número de Carnet de Identidad ya fue registrado';
-          		end if;                
+          		end if;
           		--Nombre completo
           		if exists(select 1 from segu.tpersona
           					where upper(nombre) = upper(v_parametros.nombre)
@@ -74,7 +74,7 @@ BEGIN
           					and upper(apellido_materno) = upper(v_parametros.ap_materno)) then
           			raise exception 'Persona ya registrada';
           		end if;
-                       
+
                insert into segu.tpersona (
                                nombre,
                                apellido_paterno,
@@ -94,7 +94,8 @@ BEGIN
                                estado_civil,
                                nacionalidad,
                                discapacitado,
-                               carnet_discapacitado
+                               carnet_discapacitado,
+                               id_tipo_doc_identificacion
                                )
                values(
                       upper(v_parametros.nombre),
@@ -106,7 +107,7 @@ BEGIN
                       v_parametros.telefono1,
                       v_parametros.telefono2,
                       v_parametros.celular2,
-                      v_parametros.tipo_documento,
+                      '',
                       v_parametros.expedicion,
                       v_parametros.fecha_nacimiento,
                       v_parametros.genero,
@@ -115,20 +116,21 @@ BEGIN
                       v_parametros.estado_civil,
                       v_parametros.nacionalidad,
                       v_parametros.discapacitado,
-                      v_parametros.carnet_discapacitado
-                      )  
-                        
+                      v_parametros.carnet_discapacitado,
+                      v_parametros.id_tipo_doc_identificacion
+                      )
+
                RETURNING id_persona INTO v_id_persona;
-              
+
                --v_respuesta_sinc:= segu.f_sincroniza_persona_entre_bd(v_id_persona,'10.172.0.13','5432','db_link','db_link','dbendesis','INSERT');
                --if(v_respuesta_sinc!='si')  then
                --   raise exception 'Sincronizacion de persona en BD externa no realizada%',v_respuesta_sinc;
                --end if;
                --raise exception 'lega al final del insert';
-               v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Persona insertada con exito '||v_id_persona); 
+               v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Persona insertada con exito '||v_id_persona);
                v_resp = pxp.f_agrega_clave(v_resp,'id_persona',v_id_persona::varchar);
                v_resp = pxp.f_agrega_clave(v_resp,'v_momento', 'new');
-			
+
           return v_resp;
 
          END;
@@ -136,14 +138,14 @@ BEGIN
  /*******************************
  #TRANSACCION:  SEG_PERSON_MOD
  #DESCRIPCION:	Modifica Persona
- #AUTOR:		KPLIAN(jrr)		
- #FECHA:		08/01/11	
+ #AUTOR:		KPLIAN(jrr)
+ #FECHA:		08/01/11
 ***********************************/
      elsif(par_transaccion='SEG_PERSON_MOD')then
 
           --consulta:=';
           BEGIN
-          
+
    				--Verificación de persona ya registrada
           		--CI
           		if exists(select 1 from segu.tpersona
@@ -160,17 +162,17 @@ BEGIN
           			raise exception 'Persona ya registrada';
           		end if;
 
-               update segu.tpersona 
-               set nombre=v_parametros.nombre,
-               apellido_paterno=v_parametros.ap_paterno,
-               apellido_materno=v_parametros.ap_materno,
+               update segu.tpersona
+               set nombre=upper(v_parametros.nombre),
+               apellido_paterno=upper(v_parametros.ap_paterno),
+               apellido_materno=upper(v_parametros.ap_materno),
                ci=v_parametros.ci,
                correo=v_parametros.correo,
                celular1=v_parametros.celular1,
                telefono1=v_parametros.telefono1,
                telefono2=v_parametros.telefono2,
                celular2=v_parametros.celular2,
-               tipo_documento	= v_parametros.tipo_documento,
+               --tipo_documento	= coalesce(v_parametros.tipo_documento,''),
                expedicion = v_parametros.expedicion,
                fecha_nacimiento = v_parametros.fecha_nacimiento,
                genero = v_parametros.genero,
@@ -181,26 +183,26 @@ BEGIN
                discapacitado = v_parametros.discapacitado,
                carnet_discapacitado = v_parametros.carnet_discapacitado
                where id_persona=v_parametros.id_persona;
-              
+
                --v_respuesta_sinc:= segu.f_sincroniza_persona_entre_bd(v_parametros.id_persona,'10.172.0.13','5432','db_link','db_link','dbendesis','UPDATE');
                --if(v_respuesta_sinc!='si')  then
                --   raise exception 'Sincronizacion a actualizacion de persona en BD externa no realizada%',v_respuesta_sinc;
                --end if;
-   
-             v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Persona modificada con exito '||v_parametros.id_persona); 
+
+             v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Persona modificada con exito '||v_parametros.id_persona);
              v_resp = pxp.f_agrega_clave(v_resp,'id_persona',v_parametros.id_persona::varchar);
-               
-             --v_resp = 'exito'; 
-             
-            -- raise exception 'XXXXXXXXXXXXXxxx' ;  
-               
+
+             --v_resp = 'exito';
+
+            -- raise exception 'XXXXXXXXXXXXXxxx' ;
+
           END;
 
  /*******************************
  #TRANSACCION:  SEG_UPFOTOPER_MOD
  #DESCRIPCION:	Modifica la foto de la persona
- #AUTOR:		KPLIAN(jrr)		
- #FECHA:		08/01/11	
+ #AUTOR:		KPLIAN(jrr)
+ #FECHA:		08/01/11
 ***********************************/
      elsif(par_transaccion='SEG_UPFOTOPER_MOD')then
 
@@ -209,46 +211,46 @@ BEGIN
 
    -- raise exception 'ERROR al subir archivo';
 
-               update segu.tpersona 
-               set 
+               update segu.tpersona
+               set
                foto=v_parametros.foto,
                extension=v_parametros.extension
                where id_persona=v_parametros.id_persona;
-             
-             v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Foto de la persona modificada con exito '||v_parametros.id_persona); 
+
+             v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Foto de la persona modificada con exito '||v_parametros.id_persona);
              v_resp = pxp.f_agrega_clave(v_resp,'id_persona',v_parametros.id_persona::varchar);
 
-               
+
           END;
 /*******************************
  #TRANSACCION:  SEG_PERSON_ELI
  #DESCRIPCION:	Elimina Persona
- #AUTOR:		KPLIAN(jrr)		
- #FECHA:		08/01/11	
+ #AUTOR:		KPLIAN(jrr)
+ #FECHA:		08/01/11
 ***********************************/
     elsif(par_transaccion='SEG_PERSON_ELI')then
-                     
+
           --consulta:=';
           BEGIN
-             
+
             delete from segu.tpersona where id_persona=v_parametros.id_persona;
-          
+
             --v_respuesta_sinc:= segu.f_sincroniza_persona_entre_bd(v_parametros.id_persona,'10.172.0.13','5432','db_link','db_link','dbendesis','DELETE');
             --if(v_respuesta_sinc!='si')  then
             --      raise exception 'Sincronizacion a eliminacion de persona en BD externa no realizada%',v_respuesta_sinc;
             --end if;
-            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Persona eliminada '||v_parametros.id_persona); 
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Persona eliminada '||v_parametros.id_persona);
             v_resp = pxp.f_agrega_clave(v_resp,'id_persona',v_parametros.id_persona::varchar);
-            
+
          END;
-         
+
      else
-     
+
          raise exception 'Transacción inexistente: %',par_transaccion;
 
      end if;
-     
-       
+
+
     return v_resp;
 
 EXCEPTION

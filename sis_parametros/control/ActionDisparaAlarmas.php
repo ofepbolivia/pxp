@@ -81,7 +81,7 @@ if($res2->getTipo()=='ERROR'){
 $errores_id = '';
 $errores_msg = '';
 $pendiente = '0';
-var_dump($res2->datos);
+//var_dump($res2->datos);
 error_reporting(-1);//captura todos los tipos de errores ...
 foreach ($res2->datos as $d){
 
@@ -90,7 +90,7 @@ foreach ($res2->datos as $d){
 	$correo = new CorreoExterno();
 	try {
 
-		if(isset($d['email_empresa'])){
+		if(isset($d['email_empresa']) && $d['email_empresa'] != ''){
 			$correo->addDestinatario($d['email_empresa'],$d['email_empresa']);
 			//$correo->addCC($_SESSION["_MAIL_PRUEBAS"],'Correo de Pruebas');
 
@@ -110,7 +110,7 @@ foreach ($res2->datos as $d){
 
 		} else if (isset($d['correos'])) {
 			$correos = explode(',', $d['correos']);
-			var_dump($correos);
+			//var_dump($correos);
 			foreach($correos as $value) {
 
 				$value = trim($value);

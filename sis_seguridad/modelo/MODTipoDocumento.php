@@ -28,10 +28,10 @@ class MODTipoDocumento extends MODbase{
 		$this->captura('id_tipo_documento','integer');
 		$this->captura('nombre','varchar');
 		$this->captura('fecha_reg','date');
-		$this->captura('estado_reg','pxp.estado_reg');
+		$this->captura('estado_reg','varchar');
 				
 					
-		$this->armarConsulta();
+		$this->armarConsulta(); //echo $this->consulta; exit;
 
 		$consulta=$this->getConsulta();	
 		$this->ejecutarConsulta();

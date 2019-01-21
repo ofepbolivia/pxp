@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION orga.f_get_haber_basico_a_fecha (
+CREATE OR REPLACE FUNCTION orga.f_get_haber_basico_a_fecha_v2 (
   p_id_escala_salarial integer,
   p_fecha date = now()
 )
@@ -11,13 +11,13 @@ DECLARE
   v_mensaje_error         	text;
   v_haber_basico			numeric;
 BEGIN
-  v_nombre_funcion = 'orga.f_get_haber_basico_a_fecha';
+  v_nombre_funcion = 'orga.f_get_haber_basico_a_fecha_v2';
   select es.haber_basico into v_haber_basico
-  from orga.tescala_salarial es
+  from orga.tescala_salarial_aux es
   where (id_escala_padre = p_id_escala_salarial or id_escala_salarial = p_id_escala_salarial) and
   ((es.fecha_ini is null and es.estado_reg = 'activo') or
-  (es.fecha_ini is not null  and p_fecha between es.fecha_ini and coalesce(es.fecha_fin,'31/12/9999'::DATE)));
-
+  (es.fecha_ini is not null  and p_fecha between es.fecha_ini and coalesce(es.fecha_fin,now()::date)));
+    --raise exception 'p_id_escala_salarial %, p_fecha %, v_haber_basico %',p_id_escala_salarial, p_fecha, v_haber_basico;
   return v_haber_basico;
 
 EXCEPTION
