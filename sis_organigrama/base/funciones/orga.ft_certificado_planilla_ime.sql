@@ -76,7 +76,7 @@ BEGIN
 	if(p_transaccion='OR_PLANC_INS')then
 
         begin
- 
+
         select v.valor
         into
         v_valor
@@ -87,27 +87,28 @@ BEGIN
         into
         v_count
 		from orga.tcertificado_planilla c
-		where c.id_funcionario = v_parametros.id_funcionario 
+		where c.id_funcionario = v_parametros.id_funcionario
         and EXTRACT( YEAR FROM c.fecha_solicitud) = EXTRACT(YEAR FROM current_date) and
-        (c.tipo_certificado='General' or c.tipo_certificado='Con viáticos de los últimos tres meses');
-        
+        (c.tipo_certificado='General' or c.tipo_certificado='Con viáticos de los últimos tres meses')
+        and  c.estado='emitido';
+
         select desc_funcionario1
         into
         v_funcionario
         from orga.vfuncionario
         where id_funcionario = v_parametros.id_funcionario;
-        
+
   if(pxp.f_existe_parametro(p_tabla,'factura'))then
-             
+
         if (v_parametros.factura ='') then
             if v_valor = v_count then
             raise exception 'El Funcionario %, sobrepaso el limite maximo de certificados emitidos por gestion = %.',v_funcionario,v_valor;
             end if ;
-        end if; 
-    else 
+        end if;
+    else
           if v_valor = v_count then
               raise exception 'El Funcionario %, sobrepaso el limite maximo de certificados emitidos por gestion = %.',v_funcionario,v_valor;
-          end if;            
+          end if;
   end if;
 
         --Gestion para WF
@@ -148,7 +149,7 @@ BEGIN
 
 
 	if(pxp.f_existe_parametro(p_tabla,'factura'))then
-    
+
         	--Sentencia de la insercion
         	insert into orga.tcertificado_planilla(
 			tipo_certificado,
@@ -220,7 +221,7 @@ BEGIN
             v_id_proceso_wf,
 			v_id_estado_wf
 			)RETURNING id_certificado_planilla into v_id_certificado_planilla;
-	end if;                        
+	end if;
 
 			--Definicion de la respuesta
 			v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Certificado Planilla almacenado(a) con exito (id_certificado_planilla'||v_id_certificado_planilla||')');
@@ -335,22 +336,22 @@ BEGIN
 	***********************************/
     elseif(p_transaccion='OR_SIGUE_EMI') then
     	begin
-               
+
 		IF NOT EXISTS (
-        		select h.estado_reg 
+        		select h.estado_reg
                   from wf.tdocumento_historico_wf h
                   inner join wf.tdocumento_wf d on d.id_documento_wf=h.id_documento
                   where d.id_proceso_wf= v_parametros.id_proceso_wf_act)then
-		v_bo =1; 
+		v_bo =1;
         ELSE
         v_bo =0;
         end if;
- 		
+
 		if(v_parametros.factura<>'' and v_bo=1 and (v_parametros.tipo_certificado='General(Factura)' or v_parametros.tipo_certificado='Con viáticos de los últimos tres meses(Factura)'))then
     	    	raise exception 'Adjunte Su Factura Por Favor';
-                 
+
 		ELSE
-        
+
           --recupera el registro de la CVPN
           select *
           into v_registo

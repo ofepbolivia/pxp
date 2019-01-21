@@ -62,7 +62,7 @@ $body$
                       v_consulta = 'insert into tt_orga_filtro
                       select  tuo.id_funcionario, max(tuo.fecha_asignacion)
                       from orga.tuo_funcionario tuo
-                      where tuo.tipo = ''oficial''
+                      where tuo.tipo = ''oficial'' and tuo.estado_reg = ''activo''
                       group by  tuo.id_funcionario';
 
         execute(v_consulta);

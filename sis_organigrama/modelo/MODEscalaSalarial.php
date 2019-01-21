@@ -59,6 +59,8 @@ class MODEscalaSalarial extends MODbase{
 		$this->setParametro('nombre','nombre','varchar');
 		$this->setParametro('nro_casos','nro_casos','int4');
 		$this->setParametro('codigo','codigo','varchar');
+		$this->setParametro('fecha_ini','fecha_ini','date');
+
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();

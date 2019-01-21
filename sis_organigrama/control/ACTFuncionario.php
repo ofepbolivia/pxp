@@ -34,16 +34,16 @@ class ACTFuncionario extends ACTbase{
 
 
         if($this->objParam->getParametro('estado_func')=='activo'){
-            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''activo'' and current_date < coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date))");
+            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''activo'' and current_date <= coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date))");
         }else if($this->objParam->getParametro('estado_func')=='inactivo'){
-            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''inactivo'' or tuo.fecha_finalizacion < current_date)");
+            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''inactivo'' or tuo.fecha_finalizacion <= current_date)");
         }else if($this->objParam->getParametro('estado_func')=='act_desc'){
             $this->objParam->addFiltro("(
-            FUNCIO.estado_reg in (''activo'', ''inactivo'') or (current_date < coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date) or
+            FUNCIO.estado_reg in (''activo'', ''inactivo'') or (current_date <= coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date) or
             tuo.fecha_finalizacion < current_date)
             )");
         }else{
-            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''activo'' and current_date < coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date))");
+            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''activo'' and current_date <= coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date))");
         }
 
 
@@ -216,16 +216,16 @@ class ACTFuncionario extends ACTbase{
 
 
         if($this->objParam->getParametro('estado_func')=='activo'){
-            $this->objParam->addFiltro("(FUNCAR.estado_reg_fun = ''activo'' and current_date < coalesce (FUNCAR.fecha_finalizacion, ''31/12/9999''::date))");
+            $this->objParam->addFiltro("(FUNCAR.estado_reg_fun = ''activo'' and current_date <= coalesce (FUNCAR.fecha_finalizacion, ''31/12/9999''::date))");
         }else if($this->objParam->getParametro('estado_func')=='inactivo'){
-            $this->objParam->addFiltro("(FUNCAR.estado_reg_fun = ''inactivo'' or FUNCAR.fecha_finalizacion < current_date)");
+            $this->objParam->addFiltro("(FUNCAR.estado_reg_fun = ''inactivo'' or FUNCAR.fecha_finalizacion <= current_date)");
         }else if($this->objParam->getParametro('estado_func')=='act_desc'){
             $this->objParam->addFiltro("(
-            FUNCAR.estado_reg_fun in (''activo'', ''inactivo'') or (current_date < coalesce (FUNCAR.fecha_finalizacion, ''31/12/9999''::date) or 
+            FUNCAR.estado_reg_fun in (''activo'', ''inactivo'') or (current_date <= coalesce (FUNCAR.fecha_finalizacion, ''31/12/9999''::date) or 
             FUNCAR.fecha_finalizacion < current_date)
             )");
         }else{
-            $this->objParam->addFiltro("(FUNCAR.estado_reg_fun = ''activo'' and current_date < coalesce (FUNCAR.fecha_finalizacion, ''31/12/9999''::date))");
+            $this->objParam->addFiltro("(FUNCAR.estado_reg_fun = ''activo'' and current_date <= coalesce (FUNCAR.fecha_finalizacion, ''31/12/9999''::date))");
         }
 
         if($this->objParam->getParametro('fecha')!=''){
@@ -351,16 +351,16 @@ class ACTFuncionario extends ACTbase{
         }
 
         if($this->objParam->getParametro('estado_func')=='activo'){
-            $this->objParam->addFiltro("(tf.estado_reg = ''activo'' and current_date < coalesce (uo.fecha_finalizacion, ''31/12/9999''::date))");
+            $this->objParam->addFiltro("(tf.estado_reg = ''activo'' and current_date <= coalesce (uo.fecha_finalizacion, ''31/12/9999''::date))");
         }else if($this->objParam->getParametro('estado_func')=='inactivo'){
-            $this->objParam->addFiltro("(tf.estado_reg = ''inactivo'' or uo.fecha_finalizacion < current_date)");
+            $this->objParam->addFiltro("(tf.estado_reg = ''inactivo'' or uo.fecha_finalizacion <= current_date)");
         }else if($this->objParam->getParametro('estado_func')=='act_desc'){
             $this->objParam->addFiltro("(
-            tf.estado_reg in (''activo'', ''inactivo'') or (current_date < coalesce (uo.fecha_finalizacion, ''31/12/9999''::date) or
+            tf.estado_reg in (''activo'', ''inactivo'') or (current_date <= coalesce (uo.fecha_finalizacion, ''31/12/9999''::date) or
             uo.fecha_finalizacion < current_date)
             )");
         }else{
-            $this->objParam->addFiltro("(tf.estado_reg = ''activo'' and current_date < coalesce (uo.fecha_finalizacion, ''31/12/9999''::date))");
+            $this->objParam->addFiltro("(tf.estado_reg = ''activo'' and current_date <= coalesce (uo.fecha_finalizacion, ''31/12/9999''::date))");
         }
 
 
