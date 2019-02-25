@@ -95,7 +95,7 @@ class RDocumentoRRHHXls
                 )
             ));
 
-        $this->docexcel->getActiveSheet()->getStyle('A1:X2')->applyFromArray($styleTitulos);
+        $this->docexcel->getActiveSheet()->getStyle('A1:AH2')->applyFromArray($styleTitulos);
 
         $this->docexcel->getActiveSheet()->mergeCells('A1:A2');
         $this->docexcel->getActiveSheet()->mergeCells('B1:B2');
@@ -106,6 +106,9 @@ class RDocumentoRRHHXls
         $this->docexcel->getActiveSheet()->mergeCells('M1:Q1');
         $this->docexcel->getActiveSheet()->mergeCells('R1:U1');
         $this->docexcel->getActiveSheet()->mergeCells('V1:X1');
+        $this->docexcel->getActiveSheet()->mergeCells('Y1:AB1');
+        $this->docexcel->getActiveSheet()->mergeCells('AC1:AE1');
+        $this->docexcel->getActiveSheet()->mergeCells('AF1:AH1');
 
         //*************************************Cabecera*****************************************
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[0])->setWidth(7);
@@ -172,6 +175,38 @@ class RDocumentoRRHHXls
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[21])->setWidth(20);
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[22])->setWidth(20);
         $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[23])->setWidth(20);
+
+
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[24])->setWidth(20);
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(24,1,'DIPLOMA ACADEMICO');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(24,2,'CARRERA');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(25,2,'NIVEL ACAD.');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(26,2,'ENTIDAD EMISORA');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(27,2,'FECHA DE EMISION');
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[24])->setWidth(20);
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[25])->setWidth(20);
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[26])->setWidth(20);
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[27])->setWidth(20);
+
+        //SUM
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[28])->setWidth(20);
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(28,1,'SUMARIO');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(28,2,'FECHA SUMARIO');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(29,2,'NUM. DE SUMARIO');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(30,2,'OBSERVACIONES');
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[28])->setWidth(20);
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[29])->setWidth(20);
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[30])->setWidth(20);
+
+        //RESOLUCION
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[31])->setWidth(20);
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(31,1,'RESOLUCIÓN ADMINISTRATIVA');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(31,2,'FECHA');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(32,2,'NUMERO');
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(33,2,'SANCIÓN');
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[31])->setWidth(20);
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[32])->setWidth(20);
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->equivalencias[33])->setWidth(20);
         //*************************************Fin Cabecera*****************************************
         $fila = 3;
         $contador = 1;
@@ -183,7 +218,11 @@ class RDocumentoRRHHXls
         $this->docexcel->getActiveSheet()->getStyle('M1:Q2')->getFill()->getStartColor()->setRGB('98B9D5');
         $this->docexcel->getActiveSheet()->getStyle('R1:U2')->getFill()->getStartColor()->setRGB('C1D5E6');
         $this->docexcel->getActiveSheet()->getStyle('V1:X2')->getFill()->getStartColor()->setRGB('EAF1F6');
-        $this->docexcel->getActiveSheet()->getStyle('E3:X'.$tamano)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $this->docexcel->getActiveSheet()->getStyle('Y1:AB2')->getFill()->getStartColor()->setRGB('EAF1A9');
+
+            $this->docexcel->getActiveSheet()->getStyle('AC1:AE2')->getFill()->getStartColor()->setRGB('4682b4');
+        $this->docexcel->getActiveSheet()->getStyle('AF1:AH2')->getFill()->getStartColor()->setRGB('6f9dc4');
+        $this->docexcel->getActiveSheet()->getStyle('E3:AB'.$tamano)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 
         /////////////////////***********************************Detalle***********************************************
         foreach($datos as $value) {
@@ -216,9 +255,19 @@ class RDocumentoRRHHXls
                 $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(21, $fila, "sin registrar");
                 $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(22, $fila, "sin registrar");
                 $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(23, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(24, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(25, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(26, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(27, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(28, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(29, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(30, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(31, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(32, $fila, "sin registrar");
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(33, $fila, "sin registrar");
             }else {
 
-                $this->docexcel->getActiveSheet()->getStyle('E'.$fila.':X'.$fila)->getAlignment()->setWrapText(true);
+                $this->docexcel->getActiveSheet()->getStyle('E'.$fila.':AB'.$fila)->getAlignment()->setWrapText(true);
 
 
                 $valores = json_decode(preg_replace('[\n|\r|\n\r]', '', $value['documento']));
@@ -293,6 +342,44 @@ class RDocumentoRRHHXls
                             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(21, $fila, "sin registrar");
                             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(22, $fila, "sin registrar");
                             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(23, $fila, "sin registrar");
+                        }
+                    }
+
+                    if(key($obj) == 'DIAC'){
+                        if($obj->DIAC->fecha != '' || $obj->DIAC->entidad_emisora != '' || $obj->DIAC->carrera != '' || $obj->DIAC->nivel_academico != '') {
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(24, $fila, $obj->DIAC->carrera);
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(25, $fila, $obj->DIAC->nivel_academico);
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(26, $fila, $obj->DIAC->entidad_emisora);
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(27, $fila, $obj->DIAC->fecha);
+                        }else{
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(24, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(25, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(26, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(27, $fila, "sin registrar");
+                        }
+                    }
+
+                    if(key($obj) == 'SUM'){
+                        if($obj->SUM->fecha != '' || $obj->SUM->numero_sumario != '' || $obj->SUM->observaciones != '') {
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(28, $fila, date_format(date_create($obj->SUM->fecha), 'd/m/Y'));
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(29, $fila, $obj->SUM->numero_sumario);
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(30, $fila, $obj->SUM->observaciones);
+                        }else{
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(28, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(29, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(30, $fila, "sin registrar");
+                        }
+                    }
+
+                    if(key($obj) == 'resolucion_administrativa'){
+                        if($obj->resolucion_administrativa->fecha != '' || $obj->resolucion_administrativa->numero != '' || $obj->resolucion_administrativa->sancion != '') {
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(31, $fila, date_format(date_create($obj->resolucion_administrativa->fecha), 'd/m/Y'));
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(32, $fila, $obj->resolucion_administrativa->numero);
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(33, $fila, $obj->resolucion_administrativa->sancion);
+                        }else{
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(31, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(32, $fila, "sin registrar");
+                            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(33, $fila, "sin registrar");
                         }
                     }
 
