@@ -96,7 +96,7 @@ Phx.vista.Interinato=Ext.extend(Phx.gridInterfaz,{
                     remoteSort: true,
                     baseParams: {par_filtro: 'descripcion_cargo#desc_funcionario1#desc_funcionario2'}
                 }),
-                tpl:'<tpl for="."><div class="x-combo-list-item"><p>{descripcion_cargo}</p><p>{desc_funcionario1}</p> </div></tpl>',
+                tpl:'<tpl for="."><div class="x-combo-list-item"><p><b>{descripcion_cargo}</b></p><p>{desc_funcionario1}</p> </div></tpl>',
                 valueField: 'id_cargo',
 				displayField: 'descripcion_cargo',
 				gdisplayField: 'nombre_titular',
@@ -155,7 +155,7 @@ Phx.vista.Interinato=Ext.extend(Phx.gridInterfaz,{
 					remoteSort: true,
 					baseParams: {par_filtro: 'descripcion_cargo#desc_funcionario1#desc_funcionario2'}
 				}),
-				tpl:'<tpl for="."><div class="x-combo-list-item"><p>{descripcion_cargo}</p><p>{desc_funcionario1}</p> </div></tpl>',
+				tpl:'<tpl for="."><div class="x-combo-list-item"><p><b>{descripcion_cargo}</b></p><p>{desc_funcionario1}</p> </div></tpl>',
                 valueField: 'id_cargo',
 				displayField: 'descripcion_cargo',
 				gdisplayField: 'nombre_suplente',
