@@ -62,7 +62,7 @@ class RCertificadoHtml{
 <tr>
 <td>&nbsp;</td>
 <td><p style="text-align: justify"><FONT FACE="Century Gothic" style="font-size: 12pt;" >Que, de la revisión de la carpeta que cursa en el Área de Recursos Humanos, se evidencia que '.$gen.' <b>'.$datos['genero'].'. '.$datos['nombre_funcionario'].'</b> con C.I. '.$datos['ci'].' '.$datos['expedicion'].', ingresó a la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA"
-         el '.$this->obtenerFechaEnLetra($datos['fecha_contrato']).', y actualmente ejerce el cargo de <b>'.$datos['nombre_cargo'].'</b>, dependiente de la '.$datos['nombre_unidad'].', con una remuneración mensual de Bs. '.number_format($datos['haber_basico'],2,",",".") .'.- ('.$datos['haber_literal'].' Bolivianos).</FONT></p>
+         el '.$this->obtenerFechaEnLetra($datos['fecha_contrato']).', y actualmente ejerce el cargo de <b>'.$datos['nombre_cargo'].', con Nº de item '.$datos['nro_item'].'</b>, dependiente de la '.$datos['nombre_unidad'].', con una remuneración mensual de Bs. '.number_format($datos['haber_basico'],2,",",".") .'.- ('.$datos['haber_literal'].' Bolivianos).</FONT></p>
 </td>
 <td>&nbsp;</td>
 </tr>';

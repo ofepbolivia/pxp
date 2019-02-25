@@ -36,7 +36,7 @@ BEGIN
                      tta.codigo
                      from param.tarchivo ta 
                      inner join param.ttipo_archivo tta on tta.id_tipo_archivo = ta.id_tipo_archivo
-                     where ta.id_tabla = p_id_funcionario and tta.codigo in ('TIT_BACHILLER', 'DIAC','TIT_PROF','CERT_EGRESO', 'TIT_MAES', 'TIT_DOC','LIB_MIL') AND ta.id_archivo_fk is null loop
+                     where ta.id_tabla = p_id_funcionario and tta.codigo in ('TIT_BACHILLER', 'DIAC','TIT_PROF','CERT_EGRESO', 'TIT_MAES', 'TIT_DOC','LIB_MIL', 'DIAC', 'SUM', 'resolucion_administrativa') AND ta.id_archivo_fk is null loop
     	v_documentos = v_documentos||'{"'||v_archivo.codigo||'":{';
     	for v_valores in  select 
                           tfta.nombre as clave,

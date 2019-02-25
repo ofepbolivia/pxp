@@ -194,6 +194,7 @@ class MODCertificadoPlanilla extends MODbase{
         $this->captura('iniciales','varchar');
         $this->captura('fun_imitido','varchar');
         $this->captura('estado','varchar');
+		$this->captura('nro_item','varchar');
         //Ejecuta la instruccion
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -233,6 +234,7 @@ class MODCertificadoPlanilla extends MODbase{
         $this->captura('iniciales','varchar');
         $this->captura('fun_imitido','varchar');
         $this->captura('estado','varchar');
+		$this->captura('nro_item','varchar');
         //Ejecuta la instruccion
         $this->armarConsulta();
         $this->ejecutarConsulta();
