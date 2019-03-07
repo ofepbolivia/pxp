@@ -249,7 +249,25 @@ BEGIN
                               END::character varying AS genero,
                               c.fecha_solicitud,
                               ger.nombre_unidad,
-                              initcap  (mat.f_primer_letra_mayuscula( pxp.f_convertir_num_a_letra( round(es.haber_basico + round(plani.f_evaluar_antiguedad(plani.f_get_fecha_primer_contrato_empleado(fu.id_uo_funcionario, fu.id_funcionario, fu.fecha_asignacion), c.fecha_solicitud::date, fun.antiguedad_anterior), 2)))))::varchar as haber_literal,
+                              initcap  (mat.f_primer_letra_mayuscula( pxp.f_convertir_num_a_letra(
+                             (select
+                                        round(colval.valor,2)
+                                        from plani.tcolumna_valor colval
+                                        inner join plani.tfuncionario_planilla funpla on funpla.id_funcionario_planilla = colval.id_funcionario_planilla
+                                        inner join plani.tplanilla pla on pla.id_planilla = funpla.id_planilla and pla.id_tipo_planilla = 1
+                                        where  funpla.id_funcionario = c.id_funcionario
+                                        and colval.codigo_columna = ''COTIZABLE''
+                                        and pla.fecha_planilla = 
+                                                          (select p.fecha_planilla
+                                                          from plani.tplanilla p
+                                                          where 
+                                                          p.id_tipo_planilla = 1
+                                                          and p.id_periodo = (select p.id_periodo
+                                                                                from param.tperiodo p
+                                                                                where  c.fecha_solicitud between p.fecha_ini and p.fecha_fin
+                                                                                ) - 1))              
+                                            
+                              )))::varchar as haber_literal,
                               (select initcap( cart.desc_funcionario1)
                               from orga.vfuncionario_cargo cart
                               where cart.nombre_cargo = ''Jefe Recursos Humanos'') as jefa_recursos,
@@ -332,7 +350,24 @@ BEGIN
                               END::character varying AS genero,
                               c.fecha_solicitud,
                               ger.nombre_unidad,
-                              initcap  (mat.f_primer_letra_mayuscula( pxp.f_convertir_num_a_letra( round(es.haber_basico + round(plani.f_evaluar_antiguedad(plani.f_get_fecha_primer_contrato_empleado(fu.id_uo_funcionario, fu.id_funcionario, fu.fecha_asignacion), c.fecha_solicitud::date, fun.antiguedad_anterior), 2)))))::varchar as haber_literal,
+                              initcap  (mat.f_primer_letra_mayuscula( pxp.f_convertir_num_a_letra(
+                               (select
+                                          round(colval.valor,2)
+                                          from plani.tcolumna_valor colval
+                                          inner join plani.tfuncionario_planilla funpla on funpla.id_funcionario_planilla = colval.id_funcionario_planilla
+                                          inner join plani.tplanilla pla on pla.id_planilla = funpla.id_planilla and pla.id_tipo_planilla = 1
+                                          where  funpla.id_funcionario = c.id_funcionario
+                                          and colval.codigo_columna = ''COTIZABLE''
+                                          and pla.fecha_planilla = 
+                                                            (select p.fecha_planilla
+                                                            from plani.tplanilla p
+                                                            where 
+                                                            p.id_tipo_planilla = 1
+                                                            and p.id_periodo = (select p.id_periodo
+                                                                                  from param.tperiodo p
+                                                                                  where  c.fecha_solicitud between p.fecha_ini and p.fecha_fin
+                                                                                  ) - 1))                              
+                               )))::varchar as haber_literal,
                               (select initcap( cart.desc_funcionario1)
                               from orga.vfuncionario_cargo cart
                               where cart.nombre_cargo = ''Jefe Recursos Humanos'') as jefa_recursos,
@@ -342,7 +377,8 @@ BEGIN
                               c.nro_tramite,
                               '''||COALESCE (v_iniciales,'NA')||'''::varchar as iniciales,
                                '''||COALESCE (v_fun_emetido,'NA')||'''::varchar as fun_imitido,
-                               c.estado
+                               c.estado,
+                               ca.codigo as nro_item
                               from orga.tcertificado_planilla c
                               inner join orga.vfuncionario_cargo  fu on fu.id_funcionario = c.id_funcionario and( fu.fecha_finalizacion is null or  fu.fecha_finalizacion >= now())
                               inner join orga.tcargo ca on ca.id_cargo = fu.id_cargo
