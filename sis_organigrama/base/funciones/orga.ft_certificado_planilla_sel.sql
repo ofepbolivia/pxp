@@ -88,7 +88,23 @@ BEGIN
                               planc.id_estado_wf,
                               fun.nombre_cargo,
                               pe.ci,
-                              round(es.haber_basico + round(plani.f_evaluar_antiguedad(plani.f_get_fecha_primer_contrato_empleado(fun.id_uo_funcionario, fun.id_funcionario, fun.fecha_asignacion), planc.fecha_solicitud::date, fon.antiguedad_anterior), 2)) as haber_basico,
+                              --round(es.haber_basico + round(plani.f_evaluar_antiguedad(plani.f_get_fecha_primer_contrato_empleado(fun.id_uo_funcionario, fun.id_funcionario, fun.fecha_asignacion), planc.fecha_solicitud::date, fon.antiguedad_anterior), 2)) as haber_basico,
+                              (select
+                                  round(colval.valor,2)
+                                  from plani.tcolumna_valor colval
+                                  inner join plani.tfuncionario_planilla funpla on funpla.id_funcionario_planilla = colval.id_funcionario_planilla
+                                  inner join plani.tplanilla pla on pla.id_planilla = funpla.id_planilla and pla.id_tipo_planilla = 1
+                                  where  funpla.id_funcionario = planc.id_funcionario
+                                  and colval.codigo_columna = ''COTIZABLE''
+                                  and pla.fecha_planilla =
+                                                        (select p.fecha_planilla
+                                                          from plani.tplanilla p
+                                                          where 
+                                                          p.id_tipo_planilla = 1
+                                                          and p.id_periodo = (select p.id_periodo
+                                                                                from param.tperiodo p
+                                                                                where  planc.fecha_solicitud between p.fecha_ini and p.fecha_fin
+                                                                                ) - 1)) as  haber_basico,                              
                               pe.expedicion,
                               planc.impreso,
                               planc.impreso as control,
@@ -207,7 +223,23 @@ BEGIN
         v_consulta:='select  initcap (fu.desc_funcionario1) as  nombre_funcionario,
                               fu.nombre_cargo,
                               plani.f_get_fecha_primer_contrato_empleado(fu.id_uo_funcionario, fu.id_funcionario, fu.fecha_asignacion) as fecha_contrato,
-                              round(es.haber_basico + round(plani.f_evaluar_antiguedad(plani.f_get_fecha_primer_contrato_empleado(fu.id_uo_funcionario, fu.id_funcionario, fu.fecha_asignacion), c.fecha_solicitud::date, fun.antiguedad_anterior), 2)) as haber_basico,
+                              --round(es.haber_basico + round(plani.f_evaluar_antiguedad(plani.f_get_fecha_primer_contrato_empleado(fu.id_uo_funcionario, fu.id_funcionario, fu.fecha_asignacion), c.fecha_solicitud::date, fun.antiguedad_anterior), 2)) as haber_basico,
+                             (select
+                                        round(colval.valor,2)
+                                        from plani.tcolumna_valor colval
+                                        inner join plani.tfuncionario_planilla funpla on funpla.id_funcionario_planilla = colval.id_funcionario_planilla
+                                        inner join plani.tplanilla pla on pla.id_planilla = funpla.id_planilla and pla.id_tipo_planilla = 1
+                                        where  funpla.id_funcionario = c.id_funcionario
+                                        and colval.codigo_columna = ''COTIZABLE''
+                                        and pla.fecha_planilla = 
+                                                          (select p.fecha_planilla
+                                                          from plani.tplanilla p
+                                                          where 
+                                                          p.id_tipo_planilla = 1
+                                                          and p.id_periodo = (select p.id_periodo
+                                                                                from param.tperiodo p
+                                                                                where  c.fecha_solicitud between p.fecha_ini and p.fecha_fin
+                                                                                ) - 1)) as  haber_basico,                              
                               pe.ci,
                               pe.expedicion,
                               CASE
@@ -274,7 +306,23 @@ BEGIN
         v_consulta:='select  initcap (fu.desc_funcionario1) as  nombre_funcionario,
                               fu.nombre_cargo,
                               plani.f_get_fecha_primer_contrato_empleado(fu.id_uo_funcionario, fu.id_funcionario, fu.fecha_asignacion) as fecha_contrato,
-                              round(es.haber_basico + round(plani.f_evaluar_antiguedad(plani.f_get_fecha_primer_contrato_empleado(fu.id_uo_funcionario, fu.id_funcionario, fu.fecha_asignacion), c.fecha_solicitud::date, fun.antiguedad_anterior), 2)) as haber_basico,
+                              --round(es.haber_basico + round(plani.f_evaluar_antiguedad(plani.f_get_fecha_primer_contrato_empleado(fu.id_uo_funcionario, fu.id_funcionario, fu.fecha_asignacion), c.fecha_solicitud::date, fun.antiguedad_anterior), 2)) as haber_basico,
+                             (select
+                                        round(colval.valor,2)
+                                        from plani.tcolumna_valor colval
+                                        inner join plani.tfuncionario_planilla funpla on funpla.id_funcionario_planilla = colval.id_funcionario_planilla
+                                        inner join plani.tplanilla pla on pla.id_planilla = funpla.id_planilla and pla.id_tipo_planilla = 1
+                                        where  funpla.id_funcionario = c.id_funcionario
+                                        and colval.codigo_columna = ''COTIZABLE''
+                                        and pla.fecha_planilla =                                                           
+                                                          (select p.fecha_planilla
+                                                          from plani.tplanilla p
+                                                          where 
+                                                          p.id_tipo_planilla = 1
+                                                          and p.id_periodo = (select p.id_periodo
+                                                                                from param.tperiodo p
+                                                                                where  c.fecha_solicitud between p.fecha_ini and p.fecha_fin
+                                                                                ) - 1)) as  haber_basico,                             
                               pe.ci,
                               pe.expedicion,
                               CASE
@@ -326,7 +374,25 @@ BEGIN
                             planc.tipo_certificado,
                             planc.estado,
                             f.nombre_cargo,
-                            round(es.haber_basico + round(plani.f_evaluar_antiguedad(plani.f_get_fecha_primer_contrato_empleado(f.id_uo_funcionario, f.id_funcionario, f.fecha_asignacion), planc.fecha_solicitud::date, fon.antiguedad_anterior), 2)) as remuneracion
+                            --round(es.haber_basico + round(plani.f_evaluar_antiguedad(plani.f_get_fecha_primer_contrato_empleado(f.id_uo_funcionario, f.id_funcionario, f.fecha_asignacion), planc.fecha_solicitud::date, fon.antiguedad_anterior), 2)) as remuneracion
+                           (select
+                                      round(colval.valor,2)
+                                      from plani.tcolumna_valor colval
+                                      inner join plani.tfuncionario_planilla funpla on funpla.id_funcionario_planilla = colval.id_funcionario_planilla
+                                      inner join plani.tplanilla pla on pla.id_planilla = funpla.id_planilla and pla.id_tipo_planilla = 1
+                                      where  funpla.id_funcionario = planc.id_funcionario
+                                      and colval.codigo_columna = ''COTIZABLE''
+                                      and pla.fecha_planilla = 
+                                                        (select p.fecha_planilla
+                                                        from plani.tplanilla p
+                                                        where 
+                                                        p.id_tipo_planilla = 1
+                                                        and p.id_periodo = (select p.id_periodo
+                                                                              from param.tperiodo p
+                                                                              where  planc.fecha_solicitud between p.fecha_ini and p.fecha_fin
+                                                                              ) - 1)
+                                                                               
+                                          ) as  remuneracion                           
                             from orga.tcertificado_planilla planc
                             inner join orga.vfuncionario_cargo f on f.id_funcionario = planc.id_funcionario and (f.fecha_finalizacion is null or f.fecha_finalizacion >= now())
                             inner join orga.tcargo car on car.id_cargo = f.id_cargo and (car.fecha_fin is null or car.fecha_fin >= now()) and car.estado_reg = ''activo''
