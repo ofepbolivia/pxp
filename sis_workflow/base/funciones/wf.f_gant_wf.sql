@@ -77,9 +77,9 @@ BEGIN
     where pro.id_proceso_wf = p_id_proceso_wf;
 
 
-  if (v_cod_tramite = 'GA' or v_cod_tramite = 'GM' or v_cod_tramite = 'GO' or v_cod_tramite = 'GC') THEN
-    raise exception 'El diagrama de Gantt no esta disponible para este tipo de tramite.';
-    else
+  --if (v_cod_tramite = 'GA' or v_cod_tramite = 'GM' or v_cod_tramite = 'GO' or v_cod_tramite = 'GC') THEN
+   -- raise exception 'El diagrama de Gantt no esta disponible para este tipo de tramite.';
+   -- else
    --0) recperar id_proceso_wf inicial
 	 WITH RECURSIVE path_rec(id_estado_wf_prev, id_proceso_wf_prev ) AS (
 	    SELECT
@@ -88,7 +88,7 @@ BEGIN
 	    FROM wf.tproceso_wf pwf
 	    inner join wf.testado_wf ewf on ewf.id_estado_wf = pwf.id_estado_wf_prev
 	    WHERE pwf.id_proceso_wf = p_id_proceso_wf
-
+	
 	    UNION
 	    SELECT
 	    pwf2.id_estado_wf_prev,
@@ -216,7 +216,7 @@ BEGIN
                 --end if;
 
              END LOOP;
-  end if;
+  --end if;
 
 END IF;
 
