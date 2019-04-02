@@ -260,7 +260,7 @@ class CorreoExterno
                     <p>-------------------------------------------</p>
                     <br/>
                     <br/>
-                    <H6>Powered by KPLIAN</H6>
+                    <H6>Powered by BoA</H6>
                     </body>
                     </html>";
         

@@ -30,18 +30,18 @@
 
 }
 .blist {
-	background-image:url(awe_list.png) !important;  
-	
+	background-image:url(awe_list.png) !important;
+
 }
 .bsave {
 	background-image:url(awe_save.png) !important;
-  
+
 }
 .bnew {
-	background-image:url(awe_new.png) !important;  
+	background-image:url(awe_new.png) !important;
 }
 .bdel {
-	background-image:url(awe_eli.png) !important;  
+	background-image:url(awe_eli.png) !important;
 }
 .bact {
 	background-image:url(awe_act.png) !important;
@@ -50,7 +50,7 @@
 	background-image:url(awe_actfil.png) !important;
 }
 .bprint {
-	background-image:url(awe_printer.png) !important; 
+	background-image:url(awe_printer.png) !important;
 }
 .bedit {
 	background-image:url(awe_edit.png) !important;
@@ -172,7 +172,7 @@
 }
 .bgear {
 	background-image:url(awe_gear.png) !important;
-} 
+}
 .bcalendar {
 	background-image:url(awe_calendar.png) !important;
 }
@@ -181,6 +181,10 @@
 }
 .bchecklist {
 	background-image:url(awe_checklist.png) !important;
+}
+.bchecklist2{
+background-image:url(awe_checklist2.png) !important;
+width: 2px;
 }
 .baddphoto {
 	background-image:url(awe_add_photo.png) !important;
