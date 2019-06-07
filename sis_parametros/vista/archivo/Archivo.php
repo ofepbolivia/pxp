@@ -158,7 +158,7 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 				scope: this,
 				renderer:function (value, p, record, rowIndex, colIndex){
 
-					if(record.data.id_archivo != null){
+                            if(record.data.id_archivo != null && record.data.estado_reg == 'activo' ){
 						return "<div style='text-align:center'><img border='0' style='-webkit-user-select:auto;cursor:pointer;' title='Abrir Documento' src = '../../../lib/imagenes/icono_awesome/awe_print_good.png' align='center' width='30' height='30'></div>";
 
 					}else{
@@ -206,6 +206,34 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 			grid:true,
 			form:false
 		},
+
+        {
+            config:{
+                name: 'remove',
+                fieldLabel: 'Remove',
+                allowBlank: true,
+                anchor: '80%',
+                gwidth: 65,
+                scope: this,
+                renderer:function (value, p, record, rowIndex, colIndex){
+
+                    if(record.data.id_archivo != null){
+                        return "<div style='text-align:center'><i style='cursor:pointer;' class='fa fa-trash fa-2x'></i></div>";
+
+                    }else{
+                        return  String.format('{0}',"<div style='text-align:center'><i style='cursor:pointer;'  class='fa fa-trash fa-2x'></i></div>");
+
+                    }
+
+                },
+            },
+            type:'Checkbox',
+            filters:{pfiltro:'arch.ver',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:false
+        },
+
 
 		{
 			config:{
@@ -399,7 +427,7 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 			type:'TextField',
 			filters:{pfiltro:'arch.estado_reg',type:'string'},
 			id_grupo:1,
-			grid:true,
+                    grid:false,
 			form:false
 		},
 
@@ -579,6 +607,12 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 			} else {
 				alert('No se ha subido ningun archivo para este documento');
 			}
+        }else if (fieldName == 'remove') {
+            if (record.data['extension'].length != 0) {
+               this.removeArchivoGrilla(record);
+            } else {
+                alert('No se ha subido ningun archivo para este documento');
+            }
 		}
 
 
@@ -615,7 +649,27 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
                 width: 350,
                 height: 300
             }, rec, this.idContenedor, 'frmValor');
-    }
+    },
+    removeArchivoGrilla: function (record) {
+
+        /*la logica es enviarlo al historial quedando como nuevo el principal pero manteniendo el historico*/
+        Ext.Ajax.request({
+            url: '../../sis_parametros/control/Archivo/removeArchivoGrilla',
+            params: {
+                id_archivo: record.data.id_archivo,
+                id_tipo_archivo: record.data.id_tipo_archivo,
+                id_tabla: record.data.id_tabla
+
+            },
+            success: this.successDel,
+            failure: this.conexionFailure,
+            timeout: this.timeout,
+            scope: this
+        });
+
+
+
+    },
 
 
 

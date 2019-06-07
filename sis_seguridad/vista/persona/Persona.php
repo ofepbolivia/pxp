@@ -60,7 +60,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     fieldLabel: "Apellido Paterno",
                     gwidth: 130,
                     name: 'ap_paterno',
-                    allowBlank:false,
+                    allowBlank:true,
                     maxLength:150,
                     style:'text-transform:uppercase;',
                     anchor:'100%'
@@ -333,7 +333,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     triggerAction: 'all',
                     lazyRender:true,
                     mode: 'local',
-                    store:['CB','LP','BN','CJ','PT','CH','TJ','SC','OR','OTRO']
+                    store:['CB','LP','BN','PA','PT','CH','TJ','SC','OR','OTRO']
 
                 },
                 type:'ComboBox',

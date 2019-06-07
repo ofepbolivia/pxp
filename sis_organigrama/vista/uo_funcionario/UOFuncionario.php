@@ -103,6 +103,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
    				tinit:true,  				
    				valueField: 'id_funcionario',
    			    gdisplayField: 'desc_funcionario1',
+                url: '../../sis_organigrama/control/Funcionario/listarSinAsignacionFuncionario',
       			renderer:function(value, p, record){return String.format('{0}', record.data['desc_funcionario1']);}
        	     },
    			type:'ComboRec',//ComboRec
@@ -406,6 +407,12 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 			this.Cmp.id_funcionario.tdata.tipo = this.Cmp.tipo.getValue();
 			
 		},this);
+
+        this.getComponente('fecha_finalizacion').on('beforerender',function (combo) {
+            var fecha_actual = new Date();
+            fecha_actual.setMonth(fecha_actual.getMonth());
+            this.getComponente('fecha_finalizacion').setMinValue(fecha_actual);
+        }, this);
 		
 		this.Cmp.fecha_finalizacion.on('blur', function () {
 			//Habilitar y obligar a llenar observaciones de finalizacion si la fecha no es null
@@ -419,7 +426,13 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 			}
 			
 		},this);
-		
+
+        this.getComponente('fecha_asignacion').on('beforerender',function (combo) {
+            var fecha_actual = new Date();
+            fecha_actual.setMonth(fecha_actual.getMonth());
+            this.getComponente('fecha_asignacion').setMinValue(fecha_actual);
+        }, this);
+
 		this.Cmp.fecha_asignacion.on('blur', function () {
 			this.Cmp.id_cargo.store.setBaseParam('fecha',this.Cmp.fecha_asignacion.getValue().dateFormat('d/m/Y'));
 			this.Cmp.id_funcionario.store.setBaseParam('fecha',this.Cmp.fecha_asignacion.getValue().dateFormat('d/m/Y'));

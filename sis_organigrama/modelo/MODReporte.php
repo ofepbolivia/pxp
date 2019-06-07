@@ -67,5 +67,33 @@ class MODReporte extends MODbase{
         //Devuelve la respuesta
         return $this->respuesta;
     }
+
+    function reporteListaDocumentos(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='orga.ft_reporte_sel';
+        $this->transaccion='ORGA_REP_DOC_RH_SEL';
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+
+        $this->setParametro('configuracion_reporte','configuracion_reporte','varchar');
+        $this->setParametro('tipo_archivo','tipo_archivo','varchar');
+
+        $this->setCount(false);
+        //Definicion de la lista del resultado del query
+        $this->captura('gerencia','varchar');
+        $this->captura('desc_funcionario','varchar');
+        $this->captura('id_funcionario','int4');
+        $this->captura('ci','varchar');
+        $this->captura('cargo','varchar');
+        $this->captura('fecha_ingreso','date');
+        $this->captura('documento','varchar');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        //echo($this->consulta);exit;
+        $this->ejecutarConsulta();
+
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
 }
 ?>

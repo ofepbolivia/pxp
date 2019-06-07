@@ -12,15 +12,29 @@ class ACTDeptoUsuario extends ACTbase{
 	function listarDeptoUsuario(){
 		$this->objParam->defecto('ordenacion','id_depto_usuario');
 
+
 		$this->objParam->defecto('dir_ordenacion','asc');
-		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
-			$this->objReporte = new Reporte($this->objParam, $this);
-			$this->res = $this->objReporte->generarReporteListado('MODDeptoUsuario','listarDeptoUsuario');
-		} else{
-			$this->objFunc=$this->create('MODDeptoUsuario');	
-			$this->res=$this->objFunc->listarDeptoUsuario();
-			$this->res->imprimirRespuesta($this->res->generarJson());
-		}
+        if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+            $this->objReporte = new Reporte($this->objParam, $this);
+            $this->res = $this->objReporte->generarReporteListado('MODDeptoUsuario','listarDeptoUsuario');
+        } else{
+            $this->objFunc=$this->create('MODDeptoUsuario');
+            $this->res=$this->objFunc->listarDeptoUsuario($this->objParam);
+        }
+
+        if($this->objParam->getParametro('_adicionar')!=''){
+
+            $respuesta = $this->res->getDatos();
+
+            array_unshift ( $respuesta, array(  'id_usuario'=>'0',
+                'id_depto_usuario'=>'Todos',
+                'desc_usuario'=>'Todos',
+                'cargo'=>'Todos'));
+            //var_dump($respuesta);
+            $this->res->setDatos($respuesta);
+        }
+
+        $this->res->imprimirRespuesta($this->res->generarJson());
 	}
 				
 	function insertarDeptoUsuario(){

@@ -39,6 +39,10 @@ class MODPersona extends MODbase{
         $this->captura('tipo_documento','varchar');
         $this->captura('expedicion','varchar');
         $this->captura('id_tipo_doc_identificacion','integer');
+        $this->captura('nacionalidad','varchar');
+        $this->captura('id_lugar','integer');
+        $this->captura('discapacitado','varchar');
+        $this->captura('nombre_lugar','varchar');
 
 
 

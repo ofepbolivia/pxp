@@ -85,6 +85,59 @@ class MODFuncionario extends MODbase{
 
     }
 
+    function listarSinAsignacionFuncionario(){
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento='orga.ft_funcionario_sel';// nombre procedimiento almacenado
+        $this->transaccion='RH_FUN_ASIG_SEL';//nombre de la transaccion
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+
+        $this->setParametro('tipo','tipo','varchar');
+        $this->setParametro('fecha','fecha','date');
+        $this->setParametro('id_uo','id_uo','integer');
+
+        //defino variables que se capturan como retorno de la funcion
+
+        $this->captura('id_funcionario','integer');
+        $this->captura('codigo','varchar');
+        $this->captura('estado_reg','varchar');
+        $this->captura('fecha_reg','timestamp');
+        $this->captura('id_persona','integer');
+        $this->captura('id_usuario_reg','integer');
+        $this->captura('fecha_mod','timestamp');
+        $this->captura('id_usuario_mod','integer');
+        $this->captura('email_empresa','varchar');
+        $this->captura('interno','varchar');
+        $this->captura('fecha_ingreso','date');
+        $this->captura('desc_person','text');
+        $this->captura('usr_reg','varchar');
+        $this->captura('usr_mod','varchar');
+        $this->captura('ci','varchar');
+        $this->captura('num_documento','integer');
+        $this->captura('telefono1','varchar');
+        $this->captura('celular1','varchar');
+        $this->captura('correo','varchar');
+        $this->captura('telefono_ofi','varchar');
+        $this->captura('antiguedad_anterior','integer');
+
+        $this->captura('estado_civil','varchar');
+        $this->captura('genero','varchar');
+        $this->captura('fecha_nacimiento','date');
+        $this->captura('id_lugar','integer');
+        $this->captura('nombre_lugar','varchar');
+        $this->captura('nacionalidad','varchar');
+        $this->captura('discapacitado','varchar');
+        $this->captura('carnet_discapacitado','varchar');
+        $this->captura('id_biometrico','int4');
+        $this->captura('nombre_archivo','varchar');
+        $this->captura('extension','varchar');
+
+        //Ejecuta la funcion
+        $this->armarConsulta();
+        //echo $this->getConsulta(); exit;
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
+
     function getDatosFuncionario(){
         //Definicion de variables para ejecucion del procedimiento
         $this->procedimiento='orga.ft_funcionario_sel';// nombre procedimiento almacenado

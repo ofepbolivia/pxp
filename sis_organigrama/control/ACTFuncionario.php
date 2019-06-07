@@ -36,7 +36,7 @@ class ACTFuncionario extends ACTbase{
         if($this->objParam->getParametro('estado_func')=='activo'){
             $this->objParam->addFiltro("(FUNCIO.estado_reg = ''activo'' and current_date <= coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date))");
         }else if($this->objParam->getParametro('estado_func')=='inactivo'){
-            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''inactivo'' or tuo.fecha_finalizacion <= current_date)");
+            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''inactivo'' or tuo.fecha_finalizacion < current_date)");
         }else if($this->objParam->getParametro('estado_func')=='act_desc'){
             $this->objParam->addFiltro("(
             FUNCIO.estado_reg in (''activo'', ''inactivo'') or (current_date <= coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date) or
@@ -86,6 +86,30 @@ class ACTFuncionario extends ACTbase{
 
 
 
+    }
+
+    function listarSinAsignacionFuncionario(){
+
+        //el objeto objParam contiene todas la variables recibidad desde la interfaz
+
+        // parametros de ordenacion por defecto
+        $this->objParam->defecto('ordenacion','PERSON.nombre_completo2');
+        $this->objParam->defecto('dir_ordenacion','asc');
+        //$this->objParam->addFiltro("FUNCIO.estado_reg = ''activo''");
+
+
+        //crea el objetoFunSeguridad que contiene todos los metodos del sistema de seguridad
+        if ($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+            $this->objReporte=new Reporte($this->objParam, $this);
+            $this->res=$this->objReporte->generarReporteListado('MODFuncionario','listarSinAsignacionFuncionario');
+        }
+        else {
+            $this->objFunSeguridad=$this->create('MODFuncionario');
+            //ejecuta el metodo de lista funcionarios a travez de la intefaz objetoFunSeguridad
+            $this->res=$this->objFunSeguridad->listarSinAsignacionFuncionario($this->objParam);
+        }
+        //imprime respuesta en formato JSON para enviar lo a la interface (vista)
+        $this->res->imprimirRespuesta($this->res->generarJson());
     }
 
     function getDatosFuncionario(){
