@@ -60,6 +60,41 @@ class ACTPlantilla extends ACTbase{
 		$this->res=$this->objFunc->eliminarPlantilla($this->objParam);
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
+
+    function listarPlantillaFil(){
+        $this->objParam->defecto('ordenacion','id_plantilla');
+        $this->objParam->defecto('dir_ordenacion','asc');
+
+        if($this->objParam->getParametro('sw_compro')!=''){
+            $this->objParam->addFiltro("sw_compro = ''".$this->objParam->getParametro('sw_compro')."''");
+        }
+
+        if($this->objParam->getParametro('sw_tesoro')!=''){
+            $this->objParam->addFiltro("sw_tesoro = ''".$this->objParam->getParametro('sw_tesoro')."''");
+        }
+
+        if($this->objParam->getParametro('sw_monto_excento')!=''){
+            $this->objParam->addFiltro("sw_monto_excento = ''".$this->objParam->getParametro('sw_monto_excento')."''");
+        }
+
+        if($this->objParam->getParametro('id_plantilla')!=''){
+            $this->objParam->addFiltro("id_plantilla=".$this->objParam->getParametro('id_plantilla'));
+        }
+
+        if($this->objParam->getParametro('tipo_plantilla')!=''){
+            $this->objParam->addFiltro("plt.tipo_plantilla=''".$this->objParam->getParametro('tipo_plantilla')."''");
+        }
+
+        if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+            $this->objReporte = new Reporte($this->objParam,$this);
+            $this->res = $this->objReporte->generarReporteListado('MODPlantilla','listarPlantillaFil');
+        } else{
+            $this->objFunc=$this->create('MODPlantilla');
+
+            $this->res=$this->objFunc->listarPlantillaFil($this->objParam);
+        }
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 			
 }
 

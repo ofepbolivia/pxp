@@ -599,7 +599,31 @@ Phx.vista.Plantilla=Ext.extend(Phx.gridInterfaz,{
 			id_grupo:1,
 			grid:true,
 			form:false
-		}
+		},
+        {
+            config:{
+                name: 'cod_inter',
+                qtip:'Cod. del tipo de documento para internacionales',
+                fieldLabel: 'Cod. Internacionales',
+                anchor: '80%',
+                gwidth: 170,
+                allowBlank: false,
+                typeAhead: true,
+                triggerAction: 'all',
+                lazyRender:true,
+                mode: 'local',
+                valueField: 'inicio',
+                forcSselect:true,
+                enableMultiSelect: true,
+                store:['BOL','BUE','MIA','SAO','MAD']
+            },
+            type:'AwesomeCombo',
+            filters:{pfiltro:'plt.cod_inter',type:'string'},
+
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
 	],
 	
 	title:'Plantilla Documento',
@@ -623,7 +647,7 @@ Phx.vista.Plantilla=Ext.extend(Phx.gridInterfaz,{
 		{name:'usr_mod', type: 'string'},'sw_monto_excento',
 		'sw_descuento' ,'sw_autorizacion','sw_codigo_control','tipo_plantilla',
 		'sw_nro_dui','sw_ic','tipo_excento','valor_excento','tipo_informe',
-		'sw_qr','sw_nit','plantilla_qr', 'sw_estacion', 'sw_punto_venta', 'sw_codigo_no_iata'
+		'sw_qr','sw_nit','plantilla_qr', 'sw_estacion', 'sw_punto_venta', 'sw_codigo_no_iata','cod_inter'
 		
 	],
 	sortInfo:{

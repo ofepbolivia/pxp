@@ -51,7 +51,7 @@ class MODPlantilla extends MODbase{
 		$this->captura('sw_punto_venta','varchar');
 		$this->captura('sw_codigo_no_iata','varchar');
 
-		
+        $this->captura('cod_inter','varchar');
 		
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -90,6 +90,8 @@ class MODPlantilla extends MODbase{
 		$this->setParametro('sw_estacion','sw_estacion','varchar');
 		$this->setParametro('sw_punto_venta','sw_punto_venta','varchar');
 		$this->setParametro('sw_codigo_no_iata','sw_codigo_no_iata','varchar');
+
+        $this->setParametro('cod_inter','cod_inter','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -130,6 +132,8 @@ class MODPlantilla extends MODbase{
 		$this->setParametro('sw_punto_venta','sw_punto_venta','varchar');
 		$this->setParametro('sw_codigo_no_iata','sw_codigo_no_iata','varchar');
 
+        $this->setParametro('cod_inter','cod_inter','varchar');
+
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
@@ -154,6 +158,54 @@ class MODPlantilla extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
+
+    function listarPlantillaFil(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='param.f_plantilla_sel';
+        $this->transaccion='PM_FILPLT_SEL';
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+
+//        $this->setParametro('id_plantilla','id_plantilla','int4');
+
+        //Definicion de la lista del resultado del query
+        $this->captura('id_plantilla','int4');
+        $this->captura('estado_reg','varchar');
+        $this->captura('desc_plantilla','varchar');
+        $this->captura('sw_tesoro','varchar');
+        $this->captura('sw_compro','varchar');
+        $this->captura('nro_linea','numeric');
+        $this->captura('tipo','numeric');
+        $this->captura('fecha_reg','timestamp');
+        $this->captura('id_usuario_reg','int4');
+        $this->captura('fecha_mod','timestamp');
+        $this->captura('id_usuario_mod','int4');
+        $this->captura('usr_reg','varchar');
+        $this->captura('usr_mod','varchar');
+        $this->captura('sw_monto_excento','varchar');
+        $this->captura('sw_descuento','varchar');
+        $this->captura('sw_autorizacion','varchar');
+        $this->captura('sw_codigo_control','varchar');
+        $this->captura('tipo_plantilla','varchar');
+        $this->captura('sw_ic','varchar');
+        $this->captura('sw_nro_dui','varchar');
+        $this->captura('tipo_excento','varchar');
+        $this->captura('valor_excento','numeric');
+        $this->captura('tipo_informe','varchar');
+
+        $this->captura('sw_qr','varchar');
+        $this->captura('sw_nit','varchar');
+        $this->captura('plantilla_qr','varchar');
+        $this->captura('sw_estacion','varchar');
+        $this->captura('sw_punto_venta','varchar');
+        $this->captura('sw_codigo_no_iata','varchar');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+//        var_dump('llega fil mod', $this->respuesta);exit;
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
 			
 }
 ?>

@@ -2068,5 +2068,19 @@ ALTER TABLE param.ttipo_archivo ADD obligatorio VARCHAR(255) NULL;
 
 /***********************************F-SCP-FFP-PARAM-0-24/10/2017*****************************************/
 
+/***********************************I-SCP-MAY-PARAM-0-25/02/2019*****************************************/
+ALTER TABLE param.tproveedor_cta_bancaria
+  ADD COLUMN estado_cta VARCHAR(50);
+/***********************************F-SCP-MAY-PARAM-0-25/02/2019*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-11/06/2019*****************************************/
+ALTER TABLE param.tplantilla
+  ADD COLUMN cod_inter VARCHAR [];
+
+COMMENT ON COLUMN param.tplantilla.cod_inter
+IS 'para diferenciar los tipos de documentos de las internacionales';
+/***********************************F-SCP-MAY-PARAM-0-11/06/2019*****************************************/
+
+
 
 
