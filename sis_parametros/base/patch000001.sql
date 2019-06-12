@@ -2081,6 +2081,24 @@ COMMENT ON COLUMN param.tplantilla.cod_inter
 IS 'para diferenciar los tipos de documentos de las internacionales';
 /***********************************F-SCP-MAY-PARAM-0-11/06/2019*****************************************/
 
+/***********************************I-SCP-MAY-PARAM-1-11/06/2019*****************************************/
+CREATE TABLE param.tforma_pago (
+  id_forma_pago SERIAL NOT NULL,
+  desc_forma_pago VARCHAR(100),
+  observaciones VARCHAR(300),
+  cod_inter VARCHAR [],
+  PRIMARY KEY(id_forma_pago)
+) INHERITS (pxp.tbase)
+WITH (oids = false);
 
+ALTER TABLE param.tforma_pago
+  OWNER TO postgres;
+
+ALTER TABLE param.tforma_pago
+  ALTER COLUMN cod_inter SET STATISTICS 0;
+
+COMMENT ON COLUMN param.tforma_pago.cod_inter
+IS 'para diferenciar las formas de pago de las internacionales';
+/***********************************F-SCP-MAY-PARAM-1-11/06/2019*****************************************/
 
 
