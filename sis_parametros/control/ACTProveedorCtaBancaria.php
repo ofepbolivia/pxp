@@ -43,6 +43,28 @@ class ACTProveedorCtaBancaria extends ACTbase{
 		$this->res=$this->objFunc->eliminarProveedorCtaBancaria($this->objParam);
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
+
+    function listarProveedorCtaBancariaActivo(){
+        $this->objParam->defecto('ordenacion','id_proveedor_cta_bancaria');
+        
+        if($this->objParam->getParametro('id_proveedor')!=''){
+            $this->objParam->addFiltro("pctaban.id_proveedor = ".$this->objParam->getParametro('id_proveedor'));
+        }
+        if($this->objParam->getParametro('id_proveedor_cta_bancaria')!=''){
+            $this->objParam->addFiltro("pctaban.id_proveedor_cta_bancaria = ".$this->objParam->getParametro('id_proveedor_cta_bancaria'));
+        }
+
+        $this->objParam->defecto('dir_ordenacion','asc');
+        if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+            $this->objReporte = new Reporte($this->objParam,$this);
+            $this->res = $this->objReporte->generarReporteListado('MODProveedorCtaBancaria','listarProveedorCtaBancariaActivo');
+        } else{
+            $this->objFunc=$this->create('MODProveedorCtaBancaria');
+
+            $this->res=$this->objFunc->listarProveedorCtaBancariaActivo($this->objParam);
+        }
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 			
 }
 
