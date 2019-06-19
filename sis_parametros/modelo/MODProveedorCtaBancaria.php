@@ -37,6 +37,8 @@ class MODProveedorCtaBancaria extends MODbase{
 		$this->captura('fecha_mod','timestamp');
 		$this->captura('usr_reg','varchar');
 		$this->captura('usr_mod','varchar');
+
+        $this->captura('estado_cta','varchar');
 		
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -60,6 +62,8 @@ class MODProveedorCtaBancaria extends MODbase{
 		$this->setParametro('banco_intermediario','banco_intermediario','varchar');
 		$this->setParametro('nro_cuenta','nro_cuenta','varchar');
 		$this->setParametro('id_proveedor','id_proveedor','int4');
+
+        $this->setParametro('estado_cta','estado_cta','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -85,6 +89,8 @@ class MODProveedorCtaBancaria extends MODbase{
 		$this->setParametro('nro_cuenta','nro_cuenta','varchar');
 		$this->setParametro('id_proveedor','id_proveedor','int4');
 
+        $this->setParametro('estado_cta','estado_cta','varchar');
+
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
@@ -109,6 +115,41 @@ class MODProveedorCtaBancaria extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
+
+    function listarProveedorCtaBancariaActivo(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='param.ft_proveedor_cta_bancaria_sel';
+        $this->transaccion='PM_PCTABANACT_SEL';
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+
+        //Definicion de la lista del resultado del query
+        $this->captura('id_proveedor_cta_bancaria','int4');
+        $this->captura('id_banco_beneficiario','int4');
+        $this->captura('banco_beneficiario','varchar');
+        $this->captura('fw_aba_cta','varchar');
+        $this->captura('swift_big','varchar');
+        $this->captura('estado_reg','varchar');
+        $this->captura('banco_intermediario','varchar');
+        $this->captura('nro_cuenta','varchar');
+        $this->captura('id_proveedor','int4');
+        $this->captura('id_usuario_ai','int4');
+        $this->captura('usuario_ai','varchar');
+        $this->captura('fecha_reg','timestamp');
+        $this->captura('id_usuario_reg','int4');
+        $this->captura('id_usuario_mod','int4');
+        $this->captura('fecha_mod','timestamp');
+        $this->captura('usr_reg','varchar');
+        $this->captura('usr_mod','varchar');
+
+        $this->captura('estado_cta','varchar');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
 			
 }
 ?>
