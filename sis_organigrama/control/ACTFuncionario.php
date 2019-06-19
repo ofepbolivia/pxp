@@ -433,6 +433,34 @@ class ACTFuncionario extends ACTbase{
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
 
+    function listarAltasBajas(){
+
+        $this->objParam->defecto('ordenacion','PERSON.nombre_completo2');
+        $this->objParam->defecto('dir_ordenacion','asc');
+
+        /*$this->objFunc=$this->create('MODFuncionario');
+        $this->res=$this->objFunc->listarAltasBajas($this->objParam);*/
+
+
+        if ($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+            $this->objReporte=new Reporte($this->objParam, $this);
+            $this->res=$this->objReporte->generarReporteListado('MODFuncionario','listarAltasBajas');
+        }
+        else {
+            $this->objFunSeguridad=$this->create('MODFuncionario');
+            //ejecuta el metodo de lista funcionarios a travez de la intefaz objetoFunSeguridad
+            $this->res=$this->objFunSeguridad->listarAltasBajas($this->objParam);
+        }
+
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
+    function dispararControlAsignacionCargo(){
+        $this->objFunc=$this->create('MODFuncionario');
+        $this->res=$this->objFunc->dispararControlAsignacionCargo($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
 }
 
 ?>

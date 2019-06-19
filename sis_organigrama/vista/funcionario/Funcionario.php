@@ -50,6 +50,15 @@ header("content-type: text/javascript; charset=UTF-8");
                 grupo: [0,1]
             });
 
+            this.addButton('alta_baja', {
+                text: 'Altas y Bajas',
+                iconCls: 'bcargo',
+                disabled: false,
+                handler: this.altasBajas,
+                tooltip: '<b>Altas y Bajas</b><br><b>Permite visualizar las altas y bajas de los Funcionarios.</b>',
+                grupo: [0,1]
+            });
+
             this.iniciarEventos();
 
         },
@@ -1317,6 +1326,17 @@ header("content-type: text/javascript; charset=UTF-8");
                 }, rec, this.idContenedor, 'Archivo');
 
         },
+
+        altasBajas: function () {
+            var rec = this.getSelectedData();
+            Phx.CP.loadWindows('../../../sis_organigrama/vista/funcionario/AltasBajasFuncionario.php',
+                'Altas y Bajas',
+                {
+                    width: '80%',
+                    height: '100%'
+                }, rec, this.idContenedor, 'AltasBajasFuncionario');
+
+        }
 
 
 

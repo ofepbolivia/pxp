@@ -51,6 +51,7 @@ v_id_persona				integer;
 v_cadena_db					varchar;
 v_consulta					varchar;
 v_id_usuario 				integer;
+v_resultado					varchar;
 
 BEGIN
 	--raise exception 'COMUNIQUESE CON EL DEPTO. INFORMATICO';
@@ -127,16 +128,12 @@ BEGIN
                       v_parametros.direccion
                       ) RETURNING id_persona INTO v_id_persona;
                end if;
-               --insercion de nuevo FUNCIONARIO
-               if exists (select 1 from orga.tfuncionario where codigo=v_parametros.codigo and estado_reg='activo') then
-                  raise exception 'Insercion no realizada. CODIGO EN USO';
-               end if;
+
 
                if exists(select 1 from orga.tfuncionario where id_persona=v_id_persona and estado_reg='activo') then
                   raise exception 'Insercion no realizada. Esta persona ya está registrada como funcionario';
                end if;
-               --Obtener el correlativo biometrico.
-               SELECT nextval('orga.tfuncionario_id_biometrico_seq') INTO v_id_biometrico;
+
 			   -- Update datos civiles Persona si es Natural.
                if(v_parametros.id_persona is not null)then
                  update segu.tpersona set
@@ -189,6 +186,14 @@ BEGIN
                                         end) ||
                                         substr(v_persona.nombre, 1 , 1);
                   end if;
+               --insercion de nuevo FUNCIONARIO
+               if exists (select 1 from orga.tfuncionario where codigo = v_codigo_empleado and estado_reg='activo') then
+                  raise exception 'Insercion no realizada. CODIGO EN USO';
+               end if;
+
+               --Obtener el correlativo biometrico.
+               SELECT nextval('orga.tfuncionario_id_biometrico_seq') INTO v_id_biometrico;
+
                INSERT INTO orga.tfuncionario(
 		               codigo,
                        id_persona,
@@ -218,7 +223,7 @@ BEGIN
                RETURNING id_funcionario into v_id_funcionario;
 
 
-               v_resp = pxp.f_agrega_clave(v_resp,'mensaje','funcionario '||v_parametros.codigo ||' insertado con exito ');
+               v_resp = pxp.f_agrega_clave(v_resp,'mensaje','funcionario '||v_codigo_empleado ||' insertado con exito ');
                v_resp = pxp.f_agrega_clave(v_resp,'id_funcionario',v_id_funcion::varchar);
          END;
  /*******************************
@@ -465,7 +470,20 @@ BEGIN
        END LOOP;
        end;
 
+	/*******************************
+     #TRANSACCION:  RH_TRI_CAR_ASIG_IME
+     #DESCRIPCION:	Envia emails responsable registro de correos de funcionario
+     #AUTOR:	    franklin.espinoza
+     #FECHA:		10-06-2019
+    ***********************************/
 
+    elsif(par_transaccion='RH_TRI_CAR_ASIG_IME')then
+        BEGIN
+        	v_resultado = orga.f_tr_registra_movimiento_asignacion();
+        	v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Envio de correos de las asignaciones de funcionario');
+            v_resp = pxp.f_agrega_clave(v_resp,'envio',v_resultado::varchar);
+
+        END;
     else
 
          raise exception 'No existe la transaccion: %',par_transaccion;

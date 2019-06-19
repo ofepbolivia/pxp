@@ -28,10 +28,19 @@ header("content-type: text/javascript; charset=UTF-8");
                 disabled: false,
                 grupo: [0,1],
                 handler: this.reporte,
+                style: 'background-color: white !important; background-image: none;',
                 tooltip: '<b>Reporte Correos</b><br><b>Nos muestra un formulario para generar reporte de los correos de la empresa<br> por estación o todas las oficinas.</br>'
             });
 
+            this.addButton('alta_baja', {
+                text: '<b style="color: blue; font-size: 10pt;">Altas y Bajas</b>',
+                iconCls: 'bcargo',
 
+                disabled: false,
+                handler: this.altasBajas,
+                tooltip: '<b>Altas y Bajas</b><br><b>Permite visualizar las altas y bajas de los Funcionarios.</b>',
+                grupo: [0,1]
+            });
         },
         bnewGroups:[],
         beditGroups:[0,1],
@@ -200,6 +209,65 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid:true,
                 form:false
             },
+            {
+                config:{
+                    fieldLabel: "Correo Empresarial",
+                    gwidth: 140,
+                    name: 'email_empresa',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    vtype: 'email',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'FUNCIO.email_empresa',type:'string'},
+                id_grupo:1,
+                bottom_filter : true,
+                grid:true,
+                form:true
+            },
+
+            {
+                config:{
+                    name: 'fecha_asignacion',
+                    fieldLabel: 'Fecha Asignación',
+                    allowBlank: true,
+                    anchor: '80%',
+                    gwidth: 100,
+                    renderer:function (value,p,record){
+                        valor = value?value.dateFormat('d/m/Y'):''
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', valor);
+                    }
+                },
+                type:'DateField',
+                filters:{pfiltro:'tuo.fecha_asignacion',type:'date'},
+                id_grupo:0,
+                grid:true,
+                form:false
+            },
+            {
+                config:{
+                    name: 'fecha_finalizacion',
+                    fieldLabel: 'Fecha Finalización',
+                    allowBlank: true,
+                    anchor: '80%',
+                    gwidth: 110,
+                    style: 'background-image: none; color:green;',
+                    renderer:function (value,p,record){
+                        valor = value?value.dateFormat('d/m/Y'):''
+                        return String.format('<div style="color: red; font-weight: bold;">{0}</div>', valor);
+                    }
+                },
+                type:'DateField',
+                filters:{pfiltro:'tuo.fecha_finalizacion',type:'date'},
+                id_grupo:0,
+                grid:true,
+                form:false
+            },
 
             {
                 config:{
@@ -244,29 +312,6 @@ header("content-type: text/javascript; charset=UTF-8");
                 id_grupo:1,
                 grid:true,
                 form:false
-            },
-
-
-            {
-                config:{
-                    fieldLabel: "Correo Empresarial",
-                    gwidth: 140,
-                    name: 'email_empresa',
-                    allowBlank:true,
-                    maxLength:100,
-                    minLength:1,
-                    anchor:'100%',
-                    vtype: 'email',
-                    renderer: function (value, p, record){
-                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
-                    }
-                },
-                type:'TextField',
-                filters:{pfiltro:'FUNCIO.email_empresa',type:'string'},
-                id_grupo:1,
-                bottom_filter : true,
-                grid:true,
-                form:true
             },
 
             //PERSONA
@@ -895,6 +940,11 @@ header("content-type: text/javascript; charset=UTF-8");
             'expedicion',
             'direccion',
             'es_tutor',
+            {name:'fecha_asignacion', type: 'date', dateFormat:'Y-m-d'},
+            {name:'fecha_finalizacion', type: 'date', dateFormat:'Y-m-d'},
+            'nombre_cargo',
+            'nombre_oficina',
+            'nombre_lugar_ofi'
         ],
         sortInfo:{
             field: 'PERSON.nombre_completo2',
@@ -925,6 +975,16 @@ header("content-type: text/javascript; charset=UTF-8");
                     width: '50%',
                     height: '50%'
                 }, {}, this.idContenedor, 'CorreosEmpBoa');
+
+        },
+        altasBajas: function () {
+            var rec = this.getSelectedData();
+            Phx.CP.loadWindows('../../../sis_organigrama/vista/funcionario/AltasBajasFuncionario.php',
+                'Altas y Bajas',
+                {
+                    width: '80%',
+                    height: '100%'
+                }, rec, this.idContenedor, 'AltasBajasFuncionario');
 
         }
     });
