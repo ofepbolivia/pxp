@@ -37,6 +37,7 @@ Phx.vista.Institucion=Ext.extend(Phx.gridInterfaz,{
 			type:'TextField',
 			filters:{pfiltro:'instit.codigo',type:'string'},
 			id_grupo:0,
+            bottom_filter : true,
 			grid:true,
 			form:true
 		},
@@ -45,6 +46,7 @@ Phx.vista.Institucion=Ext.extend(Phx.gridInterfaz,{
 				name: 'nombre',
 				fieldLabel: 'Nombre',
 				allowBlank: false,
+                style:'text-transform:uppercase;',
 				width: '100%',
 				gwidth: 250,
 				maxLength:100
@@ -52,6 +54,7 @@ Phx.vista.Institucion=Ext.extend(Phx.gridInterfaz,{
 			type:'TextField',
 			filters:{pfiltro:'instit.nombre',type:'string'},
 			id_grupo:0,
+            bottom_filter : true,
 			grid:true,
 			form:true
 		},
@@ -59,7 +62,7 @@ Phx.vista.Institucion=Ext.extend(Phx.gridInterfaz,{
 			config:{
 				name: 'doc_id',
 				fieldLabel: 'NIT',
-				allowBlank: false,
+				allowBlank: true,
 				width: '100%',
 				gwidth: 100,
 				maxLength:10
@@ -67,6 +70,7 @@ Phx.vista.Institucion=Ext.extend(Phx.gridInterfaz,{
 			type:'NumberField',
 			filters:{pfiltro:'instit.doc_id',type:'string'},
 			id_grupo:0,
+            bottom_filter : true,
 			grid:true,
 			form:true
 		},
@@ -498,11 +502,14 @@ Phx.vista.Institucion=Ext.extend(Phx.gridInterfaz,{
 		direction: 'ASC'
 	},
 	bsave:false,
-	bdel:(Phx.CP.config_ini.sis_integracion=='ENDESIS')?false:true,
-    bnew:(Phx.CP.config_ini.sis_integracion=='ENDESIS')?false:true,
-    bedit:(Phx.CP.config_ini.sis_integracion=='ENDESIS')?false:true,
-	fheight: 350,
-	fwidth: 400
+    // bdel:(Phx.CP.config_ini.sis_integracion=='ENDESIS')?false:true,
+    // bnew:(Phx.CP.config_ini.sis_integracion=='ENDESIS')?false:true,
+    // bedit:(Phx.CP.config_ini.sis_integracion=='ENDESIS')?false:true,
+    bdel:true,
+	bnew: true,
+	bedit:true,
+	fheight: 450,
+	fwidth: 1050
 	}
 )
 </script>

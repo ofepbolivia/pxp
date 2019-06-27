@@ -62,7 +62,8 @@ BEGIN
 						pctaban.fecha_mod,
 						usu1.cuenta as usr_reg,
 						usu2.cuenta as usr_mod,
-                        pctaban.estado_cta
+                        pctaban.estado_cta,
+                        pctaban.prioridad
 						from param.tproveedor_cta_bancaria pctaban
                         left join param.tinstitucion instben on instben.id_institucion=pctaban.id_banco_beneficiario
 						inner join segu.tusuario usu1 on usu1.id_usuario = pctaban.id_usuario_reg
@@ -132,7 +133,8 @@ BEGIN
 						pctaban.fecha_mod,
 						usu1.cuenta as usr_reg,
 						usu2.cuenta as usr_mod,
-                        pctaban.estado_cta
+                        pctaban.estado_cta,
+                        pctaban.prioridad
 						from param.tproveedor_cta_bancaria pctaban
                         left join param.tinstitucion instben on instben.id_institucion=pctaban.id_banco_beneficiario
 						inner join segu.tusuario usu1 on usu1.id_usuario = pctaban.id_usuario_reg
@@ -192,4 +194,8 @@ LANGUAGE 'plpgsql'
 VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
+PARALLEL UNSAFE
 COST 100;
+
+ALTER FUNCTION param.ft_proveedor_cta_bancaria_sel (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;

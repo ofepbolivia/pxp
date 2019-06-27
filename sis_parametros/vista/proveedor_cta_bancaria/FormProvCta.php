@@ -106,7 +106,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     allowBlank: true,
                     anchor: '80%',
                     gwidth: 100,
-                    maxLength: 15
+                    maxLength: 25
                 },
                 type: 'TextField',
                 filters: {pfiltro: 'pctaban.fw_aba_cta', type: 'string'},
@@ -128,6 +128,23 @@ header("content-type: text/javascript; charset=UTF-8");
                 id_grupo: 1,
                 grid: true,
                 form: true
+            },
+            {
+                config:{
+                    name: 'prioridad',
+                    fieldLabel: 'Prioridad',
+                    allowBlank: true,
+                    qtip: 'Solo se permite números enteros',
+                    allowNegative: false,
+                    anchor: '80%',
+                    gwidth: 100,
+                    maxLength: 2
+                },
+                type:'NumberField',
+                filters:{pfiltro:'pctaban.prioridad',type:'numeric'},
+                id_grupo:1,
+                grid:true,
+                form:true
             },
             {
                 config: {
@@ -152,6 +169,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     displayField: 'valor'
                 },
                 type: 'ComboBox',
+                valorInicial: 'Activo',
                 id_grupo: 1,
                 grid: true,
                 form: true
@@ -277,19 +295,25 @@ header("content-type: text/javascript; charset=UTF-8");
                 form: false
             }
         ],
-        title: 'Clientes',
+        title: 'Cuenta Bancaria',
+        id_store:'id_proveedor_cta_bancaria',
+
 
         onSubmit:function(o){
             var record = Phx.CP.getPagina(this.maestro.id_padre).getSelectedData();
-            console.log('enviar info', this.Cmp.nro_cuenta.getValue(),record);
+            console.log('enviar info2', this.Cmp.nro_cuenta.getValue(),record);
             this.Cmp.id_proveedor.setValue(record.id_proveedor);
+
+
             Phx.vista.FormProvCta.superclass.onSubmit.call(this,o);
         },
 
         successSave:function(resp)
         {
+
             var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
-            Phx.CP.getPagina(this.maestro.id_padre).cargarCuenta(reg.ROOT.datos.nro_cuenta, this.Cmp.nro_cuenta.getValue());
+            // Phx.CP.getPagina(this.maestro.id_padre).cargarCuenta(reg.ROOT.datos.nro_cuenta, this.Cmp.nro_cuenta.getValue());
+            Phx.CP.getPagina(this.maestro.id_padre).cargarCuenta(reg.ROOT.datos.id_proveedor_cta_bancaria, this.Cmp.id_proveedor_cta_bancaria.getValue());
             Phx.CP.loadingHide();
             this.close();
             this.onDestroy();
@@ -310,8 +334,8 @@ header("content-type: text/javascript; charset=UTF-8");
                 swift_big: this.Cmp.swift_big.getValue(),
                 fw_aba_cta: this.Cmp.fw_aba_cta.getValue(),
                 banco_intermediario: this.Cmp.banco_intermediario.getValue(),
-                estado_cta: this.Cmp.estado_cta.getValue(),
-
+                estado_cta: this.Cmp.estado_cta.getValue('Activo'),
+                id_proveedor_cta_bancaria: this.Cmp.id_proveedor_cta_bancaria.getValue(),
             };
 
             return resp;
