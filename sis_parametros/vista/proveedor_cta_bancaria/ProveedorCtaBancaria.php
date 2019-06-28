@@ -125,6 +125,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     type:'NumberField',
                     filters:{pfiltro:'pctaban.prioridad',type:'numeric'},
                     id_grupo:1,
+                    valorInicial: 1,
                     grid:true,
                     form:true
                 },

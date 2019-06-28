@@ -68,7 +68,7 @@ BEGIN
                         left join param.tinstitucion instben on instben.id_institucion=pctaban.id_banco_beneficiario
 						inner join segu.tusuario usu1 on usu1.id_usuario = pctaban.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = pctaban.id_usuario_mod
-				        where  ';
+				        where pctaban.estado_reg = ''activo'' and pctaban.estado_cta = ''Activo'' and ';
 
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
@@ -94,7 +94,7 @@ BEGIN
 					    from param.tproveedor_cta_bancaria pctaban
 					    inner join segu.tusuario usu1 on usu1.id_usuario = pctaban.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = pctaban.id_usuario_mod
-					    where ';
+					    where pctaban.estado_reg = ''activo'' and pctaban.estado_cta = ''Activo'' and ';
 
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
@@ -194,8 +194,4 @@ LANGUAGE 'plpgsql'
 VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
-PARALLEL UNSAFE
 COST 100;
-
-ALTER FUNCTION param.ft_proveedor_cta_bancaria_sel (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
-  OWNER TO postgres;

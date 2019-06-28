@@ -61,28 +61,86 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid: true,
                 form: true
             },
+            // {
+            //     config: {
+            //         name: 'id_banco_beneficiario',
+            //         fieldLabel: 'Banco Beneficiario',
+            //         allowBlank: false,
+            //         tinit: true,
+            //         origen: 'INSTITUCION',
+            //         gdisplayField: 'banco_beneficiario',
+            //         anchor: '80%',
+            //         gwidth: 100,
+            //         // maxLength:100,
+            //         baseParams: {es_banco: 'si'},
+            //         renderer: function (value, p, record) {
+            //             return String.format('{0}', record.data['banco_beneficiario']);
+            //         }
+            //
+            //     },
+            //     type: 'ComboRec',
+            //     filters: {pfiltro: 'instben.banco_beneficiario', type: 'string'},
+            //     id_grupo: 1,
+            //     grid: true,
+            //     form: true
+            // },
             {
-                config: {
-                    name: 'id_banco_beneficiario',
-                    fieldLabel: 'Banco Beneficiario',
-                    allowBlank: false,
-                    tinit: true,
-                    origen: 'INSTITUCION',
-                    gdisplayField: 'banco_beneficiario',
+                config:{
+
+                    name:'id_banco_beneficiario',
+                    fieldLabel:'Banco Beneficiario',
+                    allowBlank:true,
+                    emptyText:'Institucion...',
+                    resizable:true,
                     anchor: '80%',
                     gwidth: 100,
-                    // maxLength:100,
-                    baseParams: {es_banco: 'si'},
+                    // dato: 'reclamo',
+                    qtip:'Ingrese la Cuenta Bancaria Dest.,si no se encuentra la opción deseada registre Nuevo con el botón de Lupa.',
+                    store: new Ext.data.JsonStore({
+                        url: '../../sis_parametros/control/Institucion/listarInstitucion',
+                        id: 'id_institucion',
+                        root: 'datos',
+                        sortInfo:{
+                            field: 'nombre',
+                            direction: 'ASC'
+                        },
+                        totalProperty: 'total',
+                        fields: ['id_institucion','nombre','doc_id','codigo','doc_id','casilla','telefono1','telefono2',
+                            'celular1','celular2','fax','email1','email2','pag_web','observaciones','id_persona','desc_persona',
+                            'direccion','codigo_banco'],
+                        // turn on remote sorting
+                        remoteSort: true,
+                        baseParams:{par_filtro:'instit.codigo#instit.nombre#instit.doc_id', es_banco: 'si'}
+                    }),
+                    valueField: 'id_institucion',
+                    displayField: 'nombre',
+                    gdisplayField:'banco_beneficiario',//mapea al store del grid
+                    tpl:'<tpl for="."><div class="x-combo-list-item"><p>{nombre}</p></div></tpl>',
+                    hiddenName: 'id_institucion',
+                    forceSelection:true,
+                    typeAhead: false,
+                    triggerAction: 'all',
+                    lazyRender:true,
+                    mode:'remote',
+                    pageSize:15,
+                    queryDelay:1000,
+                    // width:250,
+                    gwidth: 250,
+                    // minChars:2,
+
                     renderer: function (value, p, record) {
                         return String.format('{0}', record.data['banco_beneficiario']);
                     }
-
                 },
-                type: 'ComboRec',
-                filters: {pfiltro: 'instben.banco_beneficiario', type: 'string'},
-                id_grupo: 1,
-                grid: true,
-                form: true
+                type:'ComboBox',
+                bottom_filter:true,
+                id_grupo:1,
+                filters:{
+                    pfiltro:'instben.banco_beneficiario',
+                    type:'string'
+                },
+                grid:true,
+                form:true
             },
             {
                 config: {
@@ -143,6 +201,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 type:'NumberField',
                 filters:{pfiltro:'pctaban.prioridad',type:'numeric'},
                 id_grupo:1,
+                valorInicial: 1,
                 grid:true,
                 form:true
             },

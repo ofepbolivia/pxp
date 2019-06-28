@@ -61,20 +61,21 @@ BEGIN
              IF   exists(select 1
                           from param.tproveedor_cta_bancaria p
                           where p.estado_reg = 'activo'
+                          and  p.nro_cuenta =  v_parametros.nro_cuenta
+                          and p.id_proveedor= v_parametros.id_proveedor ) THEN
+
+                 raise exception 'Número de Cuenta ya registrado con el Proveedor %',UPPER(v_proveedor);
+             END IF;
+
+             IF   exists(select 1
+                          from param.tproveedor_cta_bancaria p
+                          where p.estado_reg = 'activo'
                           and  p.nro_cuenta =  v_parametros.nro_cuenta ) THEN
 
                  raise exception 'Número de Cuenta ya registrado con el Proveedor %',UPPER(v_proveedor);
              END IF;
             --
-            --controles para que no se repita la prioridad
-              IF   exists(select 1
-                          from param.tproveedor_cta_bancaria p
-                          where p.estado_reg = 'activo'
-                          and  p.prioridad =  v_parametros.prioridad ) THEN
 
-                 raise exception 'Prioridad ya registrado con el Número de Cuenta % y Proveedor %',v_nro_cuenta,UPPER(v_proveedor);
-             END IF;
-            --
 
         	--Sentencia de la insercion
         	insert into param.tproveedor_cta_bancaria(
@@ -144,7 +145,8 @@ BEGIN
                 IF   exists(select 1
                             from param.tproveedor_cta_bancaria p
                             where p.estado_reg = 'activo'
-                            and  p.prioridad =  v_parametros.prioridad ) THEN
+                            and  p.prioridad =  v_parametros.prioridad
+                            and p.id_proveedor = v_parametros.id_proveedor) THEN
 
                    raise exception 'Prioridad ya registrado con el Número de Cuenta % y Proveedor %',v_nro_cuenta,UPPER(v_proveedor);
                END IF;
@@ -226,8 +228,4 @@ LANGUAGE 'plpgsql'
 VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
-PARALLEL UNSAFE
 COST 100;
-
-ALTER FUNCTION param.ft_proveedor_cta_bancaria_ime (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
-  OWNER TO postgres;

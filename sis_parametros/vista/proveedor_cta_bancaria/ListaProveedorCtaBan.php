@@ -1019,7 +1019,7 @@ header("content-type: text/javascript; charset=UTF-8");
         }),
 
         sortInfo: {
-            field: 'id_proveedor',
+            field: 'nombre_proveedor',
             direction: 'ASC'
         },
         bdel: false,

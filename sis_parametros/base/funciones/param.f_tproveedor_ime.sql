@@ -453,13 +453,12 @@ BEGIN
         begin
 
 
-
-           if exists(select 1 from param.tproveedor
+          /* if exists(select 1 from param.tproveedor
                     where codigo = v_parametros.codigo
                     and id_proveedor != v_parametros.id_proveedor) then
                 raise exception 'Código de Proveedor duplicado';
             end if;
-
+            */
             --recupera datos previos del proveedor
             select
                   *
@@ -475,37 +474,7 @@ BEGIN
             from param.vproveedor p
             where p.id_proveedor = v_id_proveedor;
 
-   --(may)control para no duplicar el registro de persona e institucion
 
-   			select  p.id_persona,p.id_institucion, p.rotulo_comercial, p.desc_proveedor
-            INTO v_id_persona_prov, v_id_institucion_prov, v_rotulo_comercial, v_desc_proveedor
-            from param.vproveedor p
-            where p.id_proveedor = v_parametros.id_proveedor;
-
-         IF (v_parametros.id_persona is null) THEN
-             IF ( v_id_institucion_prov  =  v_parametros.id_institucion ) THEN
-
-                 --raise exception 'Proveedor ya registrado, ya existe la institución %',UPPER(v_parametros.rotulo_comercial);
-             END IF;
-             IF  (UPPER(v_rotulo_comercial) = UPPER (v_parametros.rotulo_comercial) ) THEN
-
-                 --raise exception 'Proveedor ya registrado, ya existe la institución con Rótulo comercial %',UPPER(v_parametros.rotulo_comercial);
-             END IF;
-         ELSE
-
-
-         	/*
-            IF  (v_id_persona_prov =  v_parametros.id_persona) THEN
-
-                 raise exception 'Proveedor ya registrado, ya existe la persona %',UPPER(v_desc_proveedor);
-             END IF;*/
-
-             IF (UPPER(v_rotulo_comercial) != UPPER (v_parametros.rotulo_comercial) ) THEN
-
-                -- raise exception 'Proveedor ya registrado, ya existe la persona con Rótulo comercial %',UPPER(v_parametros.rotulo_comercial);
-             END IF;
-   		 END IF;
-          --
 
 
 
@@ -1087,8 +1056,4 @@ LANGUAGE 'plpgsql'
 VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
-PARALLEL UNSAFE
 COST 100;
-
-ALTER FUNCTION param.f_tproveedor_ime (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
-  OWNER TO postgres;
