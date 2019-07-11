@@ -79,7 +79,7 @@ class RCertificadoHtml{
 
         $this->html.='<tr>
 <td>&nbsp;</td>
-<td align="justify"><FONT FACE="Century Gothic" style="font-size: 12pt;">Es cuando se certifica, para fines de derecho que convengan '.$tipol.'.<br><br>Cochabamba '.$this->obtenerFechaEnLetra($datos['fecha_solicitud']).'.</FONT>
+<td align="justify"><FONT FACE="Century Gothic" style="font-size: 12pt;">Es cuanto se certifica, para fines de derecho que convengan '.$tipol.'.<br><br>Cochabamba '.$this->obtenerFechaEnLetra($datos['fecha_solicitud']).'.</FONT>
 </td>
 <td>&nbsp;</td>
 </tr>
