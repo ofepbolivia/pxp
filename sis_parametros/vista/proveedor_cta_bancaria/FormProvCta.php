@@ -89,7 +89,7 @@ header("content-type: text/javascript; charset=UTF-8");
 
                     name:'id_banco_beneficiario',
                     fieldLabel:'Banco Beneficiario',
-                    allowBlank:true,
+                    allowBlank:false,
                     emptyText:'Institucion...',
                     resizable:true,
                     anchor: '80%',
