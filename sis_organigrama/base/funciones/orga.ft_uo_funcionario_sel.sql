@@ -70,8 +70,9 @@ BEGIN
                                   UOFUNC.observaciones_finalizacion,
                                   UOFUNC.nro_documento_asignacion,
                                   UOFUNC.fecha_documento_asignacion,
-                                  UOFUNC.tipo
-
+                                  UOFUNC.tipo,
+								  UOFUNC.codigo_ruta,
+                                  UOFUNC.estado_funcional
                             FROM orga.tuo_funcionario UOFUNC
                             INNER JOIN orga.tuo UO ON UO.id_uo=UOFUNC.id_uo
                             INNER JOIN orga.vfuncionario FUNCIO ON FUNCIO.id_funcionario=UOFUNC.id_funcionario
@@ -245,4 +246,5 @@ LANGUAGE 'plpgsql'
 VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
+PARALLEL UNSAFE
 COST 100;

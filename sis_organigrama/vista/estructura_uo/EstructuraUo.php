@@ -137,10 +137,52 @@ Phx.vista.EstructuraUo=function(config){
 			id_grupo:0,
 			form:true
 		},
-	
+
+        {
+           config: {
+               name: 'nombre_cargo',
+               fieldLabel: 'Cargo',
+               allowBlank: false,
+               emptyText: 'Elija una opción...',
+               store: new Ext.data.JsonStore({
+                   url: '../../sis_organigrama/control/TemporalCargo/listarTemporalCargo',
+                   id: 'id_temporal_cargo',
+                   root: 'datos',
+                   sortInfo: {
+                       field: 'nombre',
+                       direction: 'ASC'
+                   },
+                   totalProperty: 'total',
+                   fields: ['id_temporal_cargo', 'nombre'],
+                   remoteSort: true,
+                   baseParams: {par_filtro: 'cargo.nombre'}
+               }),
+               valueField: 'nombre',
+               displayField: 'nombre',
+               gdisplayField: 'nombre',
+               hiddenName: 'nombre',
+               forceSelection: false,
+               typeAhead: false,
+               triggerAction: 'all',
+               lazyRender: true,
+               mode: 'remote',
+               pageSize: 15,
+               queryDelay: 1000,
+               anchor: '100%',
+               gwidth: 200,
+               minChars: 2,
+               renderer : function(value, p, record) {
+                   return String.format('{0}', record.data['nombre']);
+               }
+           },
+           type: 'ComboBox',
+           id_grupo: 0,
+           filters: {pfiltro: 'tcargo.nombre',type: 'string'},
+           grid: true,
+           form: true
+        },
 		
-		
-		{
+		/*{
 			config:{
 				fieldLabel: "Cargo",
 				gwidth: 120,
@@ -152,7 +194,7 @@ Phx.vista.EstructuraUo=function(config){
 			type:'TextField',
 			id_grupo:0,
 			form:true
-		},
+		},*/
 		{
 			config:{
 				fieldLabel: "Cargo Individual",
@@ -299,7 +341,7 @@ Phx.vista.EstructuraUo=function(config){
 		);*/
 		
 		this.addButton('btnCargo',	{
-				text: 'Cargos',
+				text: 'Items',
 				iconCls: 'bcargo',
 				disabled: false,
 				handler: this.onBtnCargos,
@@ -406,7 +448,7 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 			var node = this.sm.getSelectedNode();
 			var data = node.attributes;
 			Phx.CP.loadWindows('../../../sis_organigrama/vista/cargo/Cargo.php',
-					'Cargos por Unidad',
+					'Items por Unidad',
 					{
 						width:1000,
 						height:600

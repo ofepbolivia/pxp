@@ -553,6 +553,7 @@ class MODFuncionario extends MODbase{
         $this->captura('id_persona','integer');
         $this->captura('desc_person','text');
         $this->captura('ci','varchar');
+        $this->captura('expedicion','varchar');
         $this->captura('num_documento','integer');
         $this->captura('telefono1','varchar');
         $this->captura('celular1','varchar');
@@ -578,6 +579,13 @@ class MODFuncionario extends MODbase{
         $this->captura('estado_reg','varchar');
         $this->captura('fecha_reg','timestamp');
         $this->captura('fecha_mod','timestamp');
+
+        $this->captura('desc_nivel_salarial','varchar');
+        $this->captura('haber_basico','numeric');
+        $this->captura('bono_antiguedad','numeric');
+        $this->captura('bono_frontera','numeric');
+        $this->captura('total_ganado','numeric');
+
 
         //Ejecuta la funcion
         $this->armarConsulta();

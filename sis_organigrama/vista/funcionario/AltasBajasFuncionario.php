@@ -9,18 +9,51 @@
 
 header("content-type: text/javascript; charset=UTF-8");
 ?>
+
+<style type="text/css" rel="stylesheet">
+    .x-selectable,
+    .x-selectable * {
+        -moz-user-select: text !important;
+        -khtml-user-select: text !important;
+        -webkit-user-select: text !important;
+    }
+
+    .x-grid-row td,
+    .x-grid-summary-row td,
+    .x-grid-cell-text,
+    .x-grid-hd-text,
+    .x-grid-hd,
+    .x-grid-row,
+
+    .x-grid-row,
+    .x-grid-cell,
+    .x-unselectable
+    {
+        -moz-user-select: text !important;
+        -khtml-user-select: text !important;
+        -webkit-user-select: text !important;
+    }
+</style>
+
 <script>
     Phx.vista.AltasBajasFuncionario=Ext.extend(Phx.gridInterfaz,{
-
+        viewConfig: {
+            stripeRows: false,
+            getRowClass: function(record) {
+                return "x-selectable";
+            }
+        },
         constructor: function(config) {
             this.maestro = config;
 
             Phx.vista.AltasBajasFuncionario.superclass.constructor.call(this,config);
 
             this.current_date = new Date();
+            this.diasMes = [31, new Date(this.current_date.getFullYear(), 2, 0).getDate(), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
             //var fecha_i = new Date((current_date.getMonth()+1)+'/'+'01'+'/'+current_date.getFullYear());
             //var fecha_i = new Date(current_date.getFullYear(),current_date.getMonth(),1);
             //var fecha_f = new Date(current_date.getFullYear(),current_date.getMonth()+1,0);
+            console.log('this.diasMes',this.diasMes);
 
             this.etiqueta_ini = new Ext.form.Label({
                 name: 'etiqueta_ini',
@@ -44,7 +77,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 gwidth: 100,
                 format: 'd/m/Y',
                 hidden : false,
-                disabled:true
+                disabled:false
             });
 
             this.etiqueta_fin = new Ext.form.Label({
@@ -69,10 +102,14 @@ header("content-type: text/javascript; charset=UTF-8");
                 gwidth: 100,
                 format: 'd/m/Y',
                 hidden : false,
-                disabled:true
+                disabled:false
             });
-            //this.fecha_ini.setValue(fecha_i);
-            //this.fecha_fin.setValue(fecha_f);
+
+            /*this.fecha_i = new Date(this.current_date.getFullYear(),this.current_date.getMonth(),1);
+            this.fecha_f = new Date(this.current_date.getFullYear(),this.current_date.getMonth()+1,0);
+            this.fecha_ini.setValue(this.fecha_i);
+            this.fecha_fin.setValue(this.fecha_f);*/
+
             this.tbar.addField(this.etiqueta_ini);
             this.tbar.addField(this.fecha_ini);
             this.tbar.addField(this.etiqueta_fin);
@@ -93,26 +130,52 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:  'altas', title: '<h1 style="text-align: center; color: green;"><i class="fa fa-user fa-2x" aria-hidden="true"></i>ALTAS</h1>',grupo: 0, height: 0} ,
             {name: 'bajas', title: '<h1 style="text-align: center; color: red;"><i class="fa fa-user-times fa-2x" aria-hidden="true"></i>BAJAS</h1>', grupo: 1, height: 1}
         ],
+        iniciarEventos: function(){
+            /*this.fecha_ini.on('select', function () {
+                this.val_funcionario = this.Cmp.id_funcionario_recepcion.getRawValue();
+            },this);*/
+
+            this.fecha_fin.on('select', function (combo,rec,index) {
+
+
+                this.store.baseParams.fecha_ini = this.fecha_ini.getValue();
+                this.store.baseParams.fecha_fin = this.fecha_fin.getValue();
+                console.log('select',this.tabtbar.getActiveTab().name, this.tabtbar.getActiveTab().grupo, this.tabtbar.get(0), this.tabtbar.get(1),this.tabtbar.getActiveTab());
+                /*if (this.tabtbar.getActiveTab().name = 'bajas'){
+                    this.actualizarSegunTab('alta',0);console.log('entra',this.tabtbar.getActiveTab().name);
+                    //this.tabtbar.setActiveTab('altas',0);
+                    //this.store.baseParams.estado_func = 'altas';
+                }*/
+
+                if(this.tabtbar.getActiveTab().name == 'bajas'){
+                    console.log('bajasbajasbajasbajasbajas')
+
+                    //this.tabtbar.get(0).enable();
+                    //this.tabtbar.setActiveTab(0);
+                    this.store.baseParams.estado_func = 'bajas';
+                    var fecha = this.fecha_fin.getValue();
+                    this.current_date = new Date(fecha.getFullYear(),fecha.getMonth()+1,1);
+                }else{
+                    this.store.baseParams.estado_func = 'altas';
+                    this.current_date = this.store.baseParams.fecha_fin;
+                }
+
+                this.load({params: {start: 0, limit: 50}});
+            },this);
+        },
         actualizarSegunTab: function(name, indice){
 
-            //var current_date = new Date();
-            if(name == 'altas'/* && this.bandera_alta == 0*/){
-                //var current_date = new Date();
+            if(name == 'altas' ){
+                console.log('current_date', this.current_date.getFullYear(),this.current_date.getMonth());
                 this.fecha_ini.setValue(new Date(this.current_date.getFullYear(),this.current_date.getMonth(),1));
                 this.fecha_fin.setValue(new Date(this.current_date.getFullYear(),this.current_date.getMonth()+1,0));
                 this.bandera_alta = 1;
-            }/*else if(name == 'altas' && this.bandera_alta == 1){
-                this.fecha_ini.setValue(this.fecha_ini.getValue());
-                this.fecha_fin.setValue(this.fecha_fin.getValue());
-            }*/else if(name == 'bajas' /*&& this.bandera_baja == 0*/){
-                //current_date = new Date();
+            }else if(name == 'bajas' ){
                 this.fecha_ini.setValue(new Date(this.current_date.getFullYear(),this.current_date.getMonth()-1,1));
                 this.fecha_fin.setValue(new Date(this.current_date.getFullYear(),this.current_date.getMonth(),0));
                 this.bandera_baja = 1;
-            }/*else if(name == 'bajas' && this.bandera_baja == 1){
-                this.fecha_ini.setValue(this.fecha_ini.getValue());
-                this.fecha_fin.setValue(this.fecha_fin.getValue());
-            }*/
+            }
+
             this.store.baseParams.estado_func = name;
             this.store.baseParams.fecha_ini = this.fecha_ini.getValue();
             this.store.baseParams.fecha_fin = this.fecha_fin.getValue();
@@ -133,6 +196,51 @@ header("content-type: text/javascript; charset=UTF-8");
                 form:true
 
             },
+            {
+                config:{
+                    fieldLabel: "Desc. Niv. Salarial",
+                    gwidth: 200,
+                    name: 'desc_nivel_salarial',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'tca.nombre',type:'string'},
+                bottom_filter : true,
+                id_grupo:1,
+                grid:true,
+                form:false
+            },
+
+            {
+                config:{
+                    fieldLabel: "Desc. Cargo/Puesto",
+                    gwidth: 200,
+                    name: 'nombre_cargo',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'tca.nombre',type:'string'},
+                bottom_filter : true,
+                id_grupo:1,
+                grid:true,
+                form:true
+            },
 
             {
                 config:{
@@ -140,7 +248,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     origen:'PERSONA',
                     tinit:true,
                     allowBlank: true,
-                    fieldLabel:'Nombre Persona',
+                    fieldLabel:'Apellidos y Nombres',
                     gdisplayField:'desc_person',//mapea al store del grid
                     anchor: '100%',
                     gwidth:200,
@@ -210,9 +318,164 @@ header("content-type: text/javascript; charset=UTF-8");
             },
             {
                 config:{
-                    fieldLabel: "Cargo",
+                    fieldLabel: "Haber Basico",
                     gwidth: 200,
-                    name: 'nombre_cargo',
+                    name: 'haber_basico',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'NumberField',
+                filters:{pfiltro:'tca.nombre',type:'string'},
+                bottom_filter : true,
+                id_grupo:1,
+                grid:true,
+                form:false
+            },
+
+            {
+                config:{
+                    fieldLabel: "Bono Antiguedad",
+                    gwidth: 200,
+                    name: 'bono_antiguedad',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'NumberField',
+                filters:{pfiltro:'tca.nombre',type:'string'},
+                bottom_filter : true,
+                id_grupo:1,
+                grid:true,
+                form:false
+            },
+
+            {
+                config:{
+                    fieldLabel: "Bono Frontera",
+                    gwidth: 200,
+                    name: 'bono_frontera',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'NumberField',
+                filters:{pfiltro:'tca.nombre',type:'string'},
+                bottom_filter : true,
+                id_grupo:1,
+                grid:true,
+                form:false
+            },
+            {
+                config:{
+                    fieldLabel: "Total Ganado",
+                    gwidth: 200,
+                    name: 'total_ganado',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'NumberField',
+                filters:{pfiltro:'tca.nombre',type:'string'},
+                bottom_filter : true,
+                id_grupo:1,
+                grid:true,
+                form:false
+            },
+
+            {
+                config:{
+                    fieldLabel: "Fecha Ingreso",
+                    gwidth: 120,
+                    name: 'fecha_ingreso',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    format:'d/m/Y',
+                    anchor:'100%',
+                    renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+                },
+                type:'DateField',
+                filters:{type:'date'},
+                id_grupo:1,
+                grid:true,
+                form:true
+            },
+
+            {
+                config:{
+                    fieldLabel: "C.I.",
+                    gwidth: 120,
+                    name: 'ci',
+                    allowBlank:false,
+                    maxLength:20,
+                    minLength:1,
+                    anchor:'100%'
+                },
+                type:'TextField',
+                filters:{pfiltro:'PERSON.ci',
+                    type:'string'},
+                id_grupo:3,
+                bottom_filter : true,
+                grid:true,
+                form:true
+            },
+
+            {
+                config:{
+                    name:'expedicion',
+                    fieldLabel:'Expedido en',
+                    allowBlank:true,
+                    emptyText:'Expedido en...',
+
+                    typeAhead: true,
+                    triggerAction: 'all',
+                    lazyRender:true,
+                    mode: 'local',
+                    store:['CB','LP','BN','CJ','PT','CH','TJ','SC','OR','OTRO']
+
+                },
+                type:'ComboBox',
+                id_grupo:3,
+                filters:{
+                    type: 'list',
+                    options: ['CB','LP','BN','CJ','PT','CH','TJ','SC','OR','OTRO'],
+                },
+                grid:true,
+                //valorInicial:'expedicion',
+                form:true
+            },
+
+
+            {
+                config:{
+                    fieldLabel: "Oficina",
+                    gwidth: 200,
+                    name: 'nombre_oficina',
                     allowBlank:true,
                     maxLength:100,
                     minLength:1,
@@ -224,32 +487,11 @@ header("content-type: text/javascript; charset=UTF-8");
                     }
                 },
                 type:'TextField',
-                filters:{pfiltro:'tca.nombre',type:'string'},
+                filters:{pfiltro:'tof.nombre',type:'string'},
                 bottom_filter : true,
                 id_grupo:1,
                 grid:true,
-                form:true
-            },
-
-            {
-                config:{
-                    fieldLabel: "Correo Empresarial",
-                    gwidth: 140,
-                    name: 'email_empresa',
-                    allowBlank:true,
-                    maxLength:100,
-                    minLength:1,
-                    anchor:'100%',
-                    renderer: function (value, p, record){
-                        return String.format('<div style="color: steelblue; font-weight: bold;">{0}</div>', value);
-                    }
-                },
-                type:'TextField',
-                filters:{type:'string'},
-                id_grupo:1,
-                bottom_filter : true,
-                grid:true,
-                form:true
+                form:false
             },
 
             {
@@ -285,25 +527,23 @@ header("content-type: text/javascript; charset=UTF-8");
 
             {
                 config:{
-                    fieldLabel: "Oficina",
-                    gwidth: 200,
-                    name: 'nombre_oficina',
+                    fieldLabel: "Correo Empresarial",
+                    gwidth: 140,
+                    name: 'email_empresa',
                     allowBlank:true,
                     maxLength:100,
                     minLength:1,
                     anchor:'100%',
-                    disabled: true,
-                    style: 'color: blue; background-color: orange;',
                     renderer: function (value, p, record){
-                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                        return String.format('<div style="color: steelblue; font-weight: bold;">{0}</div>', value);
                     }
                 },
                 type:'TextField',
-                filters:{pfiltro:'tof.nombre',type:'string'},
-                bottom_filter : true,
+                filters:{type:'string'},
                 id_grupo:1,
+                bottom_filter : true,
                 grid:true,
-                form:false
+                form:true
             }
         ],
         title:'Altas y Bajas',
@@ -326,6 +566,7 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:'estado_reg', type: 'string'},
 
             {name:'ci', type:'string'},
+
             {name:'documento', type:'string'},
             {name:'correo', type:'string'},
             {name:'celular1'},
@@ -361,7 +602,12 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:'fecha_finalizacion', type: 'date', dateFormat:'Y-m-d'},
             'nombre_cargo',
             'nombre_oficina',
-            'nombre_lugar_ofi'
+            'nombre_lugar_ofi',
+            'desc_nivel_salarial',
+            'haber_basico',
+            'bono_antiguedad',
+            'bono_frontera',
+            'total_ganado',
         ],
         sortInfo:{
             field: 'PERSON.nombre_completo2',

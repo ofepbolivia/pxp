@@ -799,6 +799,7 @@ $body$
                             FUNCIO.id_persona,
                             PERSON.nombre_completo2 AS desc_person,
                             PERSON.ci,
+                            PERSON2.expedicion,
                             PERSON.num_documento,
                             PERSON.telefono1,
                             PERSON.celular1,
@@ -821,11 +822,19 @@ $body$
 						    usu2.cuenta as usr_mod,
                             FUNCIO.estado_reg,
                             FUNCIO.fecha_reg,
-                            FUNCIO.fecha_mod
+                            FUNCIO.fecha_mod,
+
+                            tes.nombre as desc_nivel_salarial,
+                            tes.haber_basico::numeric,
+                            0::numeric as bono_antiguedad,
+                            0::numeric as bono_frontera,
+                            tes.haber_basico::numeric as total_ganado
+
 
                             FROM orga.tfuncionario FUNCIO
                             inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario
                             inner join orga.tcargo tca on tca.id_cargo = tuo.id_cargo
+                            inner join orga.tescala_salarial tes on tes.id_escala_salarial = tca.id_escala_salarial
                             inner join orga.toficina tof on tof.id_oficina = tca.id_oficina
                             inner join param.tlugar tlo on tlo.id_lugar = tca.id_lugar
                             INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona
@@ -902,4 +911,5 @@ LANGUAGE 'plpgsql'
 VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
+PARALLEL UNSAFE
 COST 100;
