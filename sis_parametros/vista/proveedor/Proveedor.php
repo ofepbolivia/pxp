@@ -13,8 +13,8 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 
 	register:'',
 	tipo: '',
-	fheight: '95%',
-    fwidth: '95%',
+    fheight: 480,
+    fwidth: 840,
 	Grupos: [
             {
                 layout: 'column',
@@ -35,7 +35,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 					        bodyStyle: 'padding-left:5px;',
 					        items: [{
 					            xtype: 'fieldset',
-					            title: 'Datos persona',
+                                    title: 'Datos persona',
 					            autoHeight: true,
 					            items: [],
 						        id_grupo:1
@@ -300,6 +300,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: false,
 				anchor: '100%',
 				gwidth: 100,
+                style:'text-transform:uppercase;',
 				maxLength:150
 			},
 			type:'TextField',
@@ -309,82 +310,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 			form:true,
             bottom_filter : true
 		},
-		
-		{
-			config:{
-				name: 'estado_reg',
-				fieldLabel: 'Estado Reg.',
-				allowBlank: false,
-				anchor: '100%',
-				gwidth: 100,
-				maxLength:10
-			},
-			type:'TextField',
-			filters:{pfiltro:'provee.estado_reg',type:'string'},
-			id_grupo:0,
-			grid:true,
-			form:false
-		},
-		{
-			config:{
-				name: 'usr_reg',
-				fieldLabel: 'Creado por',
-				allowBlank: true,
-				anchor: '90%',
-				gwidth: 100,
-				maxLength:4
-			},
-			type:'NumberField',
-			filters:{pfiltro:'usu1.cuenta',type:'string'},
-			id_grupo:0,
-			grid:true,
-			form:false
-		},
-		{
-			config:{
-				name: 'fecha_reg',
-				fieldLabel: 'Fecha Registro',
-				allowBlank: false,
-				anchor: '90%',
-				gwidth: 100,
-				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
-			},
-			type:'DateField',
-			filters:{pfiltro:'provee.fecha_reg',type:'date'},
-			id_grupo:0,
-			grid:true,
-			form:false
-		},
-		{
-			config:{
-				name: 'usr_mod',
-				fieldLabel: 'Modificado por',
-				allowBlank: true,
-				anchor: '90%',
-				gwidth: 100,
-				maxLength:4
-			},
-			type:'NumberField',
-			filters:{pfiltro:'usu2.cuenta',type:'string'},
-			id_grupo:0,
-			grid:true,
-			form:false
-		},
-		{
-			config:{
-				name: 'fecha_mod',
-				fieldLabel: 'Fecha Modif.',
-				allowBlank: true,
-				anchor: '90%',
-				gwidth: 100,
-				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
-			},
-			type:'DateField',
-			filters:{pfiltro:'provee.fecha_mod',type:'date'},
-			id_grupo:0,
-			grid:true,
-			form:false
-		},
+
 		{
 			config:{
 				name: 'pais',
@@ -935,7 +861,82 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 			id_grupo:2,
 			grid:false,
 			form:true
-		}
+		},
+        {
+            config:{
+                name: 'estado_reg',
+                fieldLabel: 'Estado Reg.',
+                allowBlank: false,
+                anchor: '100%',
+                gwidth: 100,
+                maxLength:10
+            },
+            type:'TextField',
+            filters:{pfiltro:'provee.estado_reg',type:'string'},
+            id_grupo:0,
+            grid:true,
+            form:false
+        },
+        {
+            config:{
+                name: 'usr_reg',
+                fieldLabel: 'Creado por',
+                allowBlank: true,
+                anchor: '90%',
+                gwidth: 100,
+                maxLength:4
+            },
+            type:'NumberField',
+            filters:{pfiltro:'usu1.cuenta',type:'string'},
+            id_grupo:0,
+            grid:true,
+            form:false
+        },
+        {
+            config:{
+                name: 'fecha_reg',
+                fieldLabel: 'Fecha Registro',
+                allowBlank: false,
+                anchor: '90%',
+                gwidth: 100,
+                renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+            },
+            type:'DateField',
+            filters:{pfiltro:'provee.fecha_reg',type:'date'},
+            id_grupo:0,
+            grid:true,
+            form:false
+        },
+        {
+            config:{
+                name: 'usr_mod',
+                fieldLabel: 'Modificado por',
+                allowBlank: true,
+                anchor: '90%',
+                gwidth: 100,
+                maxLength:4
+            },
+            type:'NumberField',
+            filters:{pfiltro:'usu2.cuenta',type:'string'},
+            id_grupo:0,
+            grid:true,
+            form:false
+        },
+        {
+            config:{
+                name: 'fecha_mod',
+                fieldLabel: 'Fecha Modif.',
+                allowBlank: true,
+                anchor: '90%',
+                gwidth: 100,
+                renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+            },
+            type:'DateField',
+            filters:{pfiltro:'provee.fecha_mod',type:'date'},
+            id_grupo:0,
+            grid:true,
+            form:false
+        }
 		
 	],
 	title:'Proveedores',
@@ -967,6 +968,9 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		{name:'nombre_proveedor', type: 'string'},'ci', 'desc_dir_proveedor','contacto',
 		'id_proceso_wf','id_estado_wf','nro_tramite','estado'
 	],
+
+    arrayDefaultColumHidden: ['estado'],
+
 	
 	iniTramite: function(){
    	        var rec = this.sm.getSelected();
@@ -1006,7 +1010,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 	},
 	bdel:true,
 	bsave:false,
-	fwidth:400,
+
 	
 	onButtonNew:function(){
 		Phx.vista.proveedor.superclass.onButtonNew.call(this);
@@ -1152,8 +1156,8 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 	  params:{nombre_tabla:'param.tproveedor',tabla_id : 'id_proveedor'}
 	}],
 	
-	fheight: '95%',
-    fwidth: '95%',
+    // fheight: '95%',
+    // fwidth: '95%',
 
     
     antEstado:function(res){

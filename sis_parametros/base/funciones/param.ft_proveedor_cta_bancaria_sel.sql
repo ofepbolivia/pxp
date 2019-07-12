@@ -62,12 +62,13 @@ BEGIN
 						pctaban.fecha_mod,
 						usu1.cuenta as usr_reg,
 						usu2.cuenta as usr_mod,
-                        pctaban.estado_cta
+                        pctaban.estado_cta,
+                        pctaban.prioridad
 						from param.tproveedor_cta_bancaria pctaban
                         left join param.tinstitucion instben on instben.id_institucion=pctaban.id_banco_beneficiario
 						inner join segu.tusuario usu1 on usu1.id_usuario = pctaban.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = pctaban.id_usuario_mod
-				        where  ';
+				        where pctaban.estado_reg = ''activo'' and pctaban.estado_cta = ''Activo'' and ';
 
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
@@ -93,7 +94,7 @@ BEGIN
 					    from param.tproveedor_cta_bancaria pctaban
 					    inner join segu.tusuario usu1 on usu1.id_usuario = pctaban.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = pctaban.id_usuario_mod
-					    where ';
+					    where pctaban.estado_reg = ''activo'' and pctaban.estado_cta = ''Activo'' and ';
 
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
@@ -132,7 +133,8 @@ BEGIN
 						pctaban.fecha_mod,
 						usu1.cuenta as usr_reg,
 						usu2.cuenta as usr_mod,
-                        pctaban.estado_cta
+                        pctaban.estado_cta,
+                        pctaban.prioridad
 						from param.tproveedor_cta_bancaria pctaban
                         left join param.tinstitucion instben on instben.id_institucion=pctaban.id_banco_beneficiario
 						inner join segu.tusuario usu1 on usu1.id_usuario = pctaban.id_usuario_reg
