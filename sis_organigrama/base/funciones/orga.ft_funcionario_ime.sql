@@ -68,7 +68,7 @@ BEGIN
      if(par_transaccion='RH_FUNCIO_INS')then
 
 
-          BEGIN RAISE EXCEPTION 'COMUNIQUESE CON EL DEPTO. INFORMATICO';
+          BEGIN --RAISE EXCEPTION 'COMUNIQUESE CON EL DEPTO. INFORMATICO';
 			  v_id_persona = v_parametros.id_persona;
               if(v_parametros.id_persona is null)then
               --CI
@@ -143,7 +143,7 @@ BEGIN
                           fecha_nacimiento = v_parametros.fecha_nacimiento,
                           genero = v_parametros.genero,
                           nacionalidad = v_parametros.nacionalidad,
-                          id_lugar = v_parametros.id_lugar,
+                          --id_lugar = v_parametros.id_lugar,
                           tipo_documento = v_parametros.tipo_documento,
                           ci = v_parametros.ci,
                           expedicion = v_parametros.expedicion,
@@ -193,7 +193,7 @@ BEGIN
 
                --Obtener el correlativo biometrico.
                SELECT nextval('orga.tfuncionario_id_biometrico_seq') INTO v_id_biometrico;
-
+               --raise exception 'v_id_biometrico: %, %, %', v_id_biometrico,v_codigo_empleado, v_parametros.id_persona;
                INSERT INTO orga.tfuncionario(
 		               codigo,
                        id_persona,
@@ -201,7 +201,7 @@ BEGIN
 		               fecha_reg,
 		               id_usuario_reg,
                        fecha_ingreso,
-		               email_empresa,
+		               --email_empresa,
 		               interno,
 		               telefono_ofi,
 		               antiguedad_anterior,
@@ -209,12 +209,12 @@ BEGIN
                        es_tutor)
                values(
                       v_codigo_empleado,
-                        v_id_persona,
+                        v_parametros.id_persona,
                         'activo',
                         now(),
                         par_id_usuario,
                          v_parametros.fecha_ingreso,
-                        v_parametros.email_empresa,
+                        --v_parametros.email_empresa,
                         v_parametros.interno,
                         v_parametros.telefono_ofi,
                         v_parametros.antiguedad_anterior,
@@ -507,4 +507,5 @@ LANGUAGE 'plpgsql'
 VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
+PARALLEL UNSAFE
 COST 100;

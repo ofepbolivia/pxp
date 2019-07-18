@@ -115,15 +115,16 @@ BEGIN
       into v_codigo_9, v_nombre_9
       from orga.f_get_arbol_datos_uo(v_niveles[9]::integer);
 
-      for v_record in select DISTINCT ON (tf.desc_funcionario2) tf.desc_funcionario2,tuo.id_uo, ttcc.codigo as codigo_ccc, ttcc.descripcion as nombre_ccc,
+      for v_record in select /*DISTINCT ON (tf.desc_funcionario2) tf.desc_funcionario2,*/tuo.id_uo, ttcc.codigo as codigo_ccc, ttcc.descripcion as nombre_ccc,
         					 tf.codigo as codigo_empc, tf.desc_funcionario2 as nombre_empc, vf.email_empresa as correo_empc,
-                             (CASE WHEN tnc.tipo = 'interno' THEN coalesce(tnc.numero,'') ELSE '' END) as internoc
+                             --(CASE WHEN tnc.tipo = 'interno' THEN coalesce(tnc.numero,'') ELSE '' END) as internoc
+                             gecom.f_get_numero_asignado('interno', vf.id_funcionario) as internoc
                       from orga.tuo tu
                       inner join orga.tuo_funcionario tuo on tuo.id_uo = tu.id_uo
                       inner join orga.vfuncionario tf on tf.id_funcionario = tuo.id_funcionario
                       inner join orga.tfuncionario vf on vf.id_funcionario = tf.id_funcionario
-                      LEFT join gecom.tfuncionario_celular tfc on tfc.id_funcionario =  tf.id_funcionario
-                      LEFT join gecom.tnumero_celular tnc on tnc.id_numero_celular = tfc.id_numero_celular and tnc.tipo = 'interno'
+                      --LEFT join gecom.tfuncionario_celular tfc on tfc.id_funcionario =  tf.id_funcionario
+                      --LEFT join gecom.tnumero_celular tnc on tnc.id_numero_celular = tfc.id_numero_celular and tnc.tipo = 'interno'
                       inner join orga.tcargo tc on tc.id_cargo = tuo.id_cargo
                       inner join orga.ttipo_contrato ttc on ttc.id_tipo_contrato = tc.id_tipo_contrato
                       inner join orga.tcargo_presupuesto tcp on tcp.id_cargo = tc.id_cargo and tcp.id_gestion = (SELECT tg.id_gestion
@@ -131,7 +132,8 @@ BEGIN
                                                                                                                  WHERE tg.gestion = date_part('year', current_date))
                       inner join param.tcentro_costo tcc on tcc.id_centro_costo = tcp.id_centro_costo
                       inner join param.ttipo_cc ttcc on ttcc.id_tipo_cc = tcc.id_tipo_cc
-                      where tuo.estado_reg = 'activo' and ttc.codigo in ('PLA','EVE','PEXT','PEXTE') and tuo.id_uo = v_id_uo  and (tuo.fecha_finalizacion is null or tuo.fecha_finalizacion >= current_date) loop
+                      where tuo.estado_reg = 'activo' and tuo.tipo = 'oficial' and ttc.codigo in ('PLA','EVE','PEXT','PEXTE') and tuo.id_uo = v_id_uo  and
+                      (tuo.fecha_finalizacion is null or tuo.fecha_finalizacion >= current_date) loop
 
 
         nit = '154422029';
@@ -186,4 +188,5 @@ LANGUAGE 'plpgsql'
 VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
+PARALLEL UNSAFE
 COST 100 ROWS 1000;

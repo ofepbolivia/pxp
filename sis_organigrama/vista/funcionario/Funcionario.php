@@ -25,6 +25,7 @@ header("content-type: text/javascript; charset=UTF-8");
             this.addButton('btnCuenta',
                 {
                     text: 'Cuenta Bancaria',
+                    grupo: [0,2],
                     iconCls: 'blist',
                     disabled: true,
                     handler: this.onBtnCuenta,
@@ -47,7 +48,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 disabled: false,
                 handler: this.archivo,
                 tooltip: '<b>Adjuntar Archivo</b><br><b>Nos permite adjuntar documentos de un funcionario.</b>',
-                grupo: [0,1]
+                grupo: [0,1,2]
             });
 
             this.addButton('alta_baja', {
@@ -56,7 +57,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 disabled: false,
                 handler: this.altasBajas,
                 tooltip: '<b>Altas y Bajas</b><br><b>Permite visualizar las altas y bajas de los Funcionarios.</b>',
-                grupo: [0,1]
+                grupo: [0,1,2]
             });
 
             this.iniciarEventos();
@@ -69,7 +70,8 @@ header("content-type: text/javascript; charset=UTF-8");
         bexcelGroups:[0,1],
         gruposBarraTareas: [
             {name:  'activo', title: '<h1 style="text-align: center; color: green;">ACTIVOS</h1>',grupo: 0, height: 0} ,
-            {name: 'inactivo', title: '<h1 style="text-align: center; color: red;">INACTIVOS</h1>', grupo: 1, height: 1}
+            {name: 'inactivo', title: '<h1 style="text-align: center; color: red;">INACTIVOS</h1>', grupo: 1, height: 1},
+            {name: 'sin_asignacion', title: '<h1 style="text-align: center; color: blue;">SIN ASIGNACIÓN</h1>', grupo: 2, height: 1}
         ],
         actualizarSegunTab: function(name, indice){
             /*if(name == 'activo')

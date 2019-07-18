@@ -17,6 +17,7 @@ Phx.vista.Cargo=Ext.extend(Phx.gridInterfaz,{
 		this.maestro=config;
 		//llama al constructor de la clase padre
 		Phx.vista.Cargo.superclass.constructor.call(this,config);
+		this.loadValoresIniciales();
 		this.init();
 		this.iniciarEventos();
 		this.addButton('btnCostos',
@@ -460,8 +461,9 @@ Phx.vista.Cargo=Ext.extend(Phx.gridInterfaz,{
         },this);	
 	},
 	loadValoresIniciales:function()
-    {	
+    {	//console.log('this.maestro', this.maestro.nombre_cargo);
         this.Cmp.id_uo.setValue(this.maestro.id_uo);       
+        //this.Cmp.nombre.setValue(this.maestro.nombre_cargo);
         Phx.vista.Cargo.superclass.loadValoresIniciales.call(this);
     },
     preparaMenu:function()

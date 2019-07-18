@@ -42,6 +42,8 @@ class ACTFuncionario extends ACTbase{
             FUNCIO.estado_reg in (''activo'', ''inactivo'') or (current_date <= coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date) or
             tuo.fecha_finalizacion < current_date)
             )");
+        }else if($this->objParam->getParametro('estado_func')=='sin_asignacion'){
+            $this->objParam->addFiltro("tuo.id_funcionario is null");
         }else{
             $this->objParam->addFiltro("(FUNCIO.estado_reg = ''activo'' and current_date <= coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date))");
         }
