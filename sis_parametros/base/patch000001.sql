@@ -2114,3 +2114,11 @@ ALTER TABLE tes.tplan_pago
 ALTER TABLE param.tproveedor_cta_bancaria
   ADD COLUMN prioridad INTEGER;
 /***********************************F-SCP-MAY-PARAM-0-26/06/2019*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-12/07/2019*****************************************/
+ALTER TABLE param.tforma_pago
+  ADD COLUMN tipo VARCHAR(50);
+
+COMMENT ON COLUMN param.tforma_pago.tipo
+IS 'tipo de la forma de pago si es de Ingreso o Gasto';
+/***********************************F-SCP-MAY-PARAM-0-12/07/2019*****************************************/

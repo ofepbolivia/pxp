@@ -31,6 +31,7 @@ class MODFormaPago extends MODbase{
         $this->captura('usr_reg','varchar');
         $this->captura('usr_mod','varchar');
         $this->captura('id_usuario_mod','int4');
+        $this->captura('tipo','varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -78,6 +79,7 @@ class MODFormaPago extends MODbase{
         $this->setParametro('desc_forma_pago','desc_forma_pago','varchar');
         $this->setParametro('observaciones','observaciones','varchar');
         $this->setParametro('cod_inter','cod_inter','varchar');
+        $this->setParametro('tipo','tipo','varchar');
 
         //Ejecuta la instruccion
 		$this->armarConsulta();
@@ -100,6 +102,7 @@ class MODFormaPago extends MODbase{
         $this->setParametro('cod_inter','cod_inter','varchar');
         $this->setParametro('fecha_mod','fecha_mod','timestamp');
         $this->setParametro('id_usuario_mod','id_usuario_mod','int4');
+        $this->setParametro('tipo','tipo','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
