@@ -109,7 +109,7 @@ BEGIN
 	elsif(p_transaccion='PM_FORDEPAFI_SEL')then
 
     	begin
-
+		--listado para obligaciones de pago , tipo=Gasto
         	v_estacion = pxp.f_get_variable_global('ESTACION_inicio');
 
             IF v_estacion = 'BOL' THEN
@@ -138,7 +138,7 @@ BEGIN
                           from param.tforma_pago fp
                           inner join segu.tusuario usu1 on usu1.id_usuario = fp.id_usuario_reg
                           left join segu.tusuario usu2 on usu2.id_usuario = fp.id_usuario_mod
-                          where  (''' ||v_filtro|| '''=ANY(fp.cod_inter)) and fp.estado_reg = ''activo'' and ';
+                          where  (''' ||v_filtro|| '''=ANY(fp.cod_inter)) and fp.tipo = ''Gasto'' and fp.estado_reg = ''activo'' and ';
 
 
 			--Definicion de la respuesta
