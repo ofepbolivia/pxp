@@ -95,6 +95,23 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
         },
         {
             config:{
+                name: 'orden',
+                fieldLabel: 'Orden',
+                qtip: 'Posición en la Ordenación',
+                allowBlank: false,
+                allowDecimals: true,
+                anchor: '80%',
+                gwidth: 100
+            },
+            type:'NumberField',
+            filters: { pfiltro:'fp.orden', type:'numeric' },
+            valorInicial: 1.00,
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
+        {
+            config:{
                 name: 'observaciones',
                 fieldLabel: 'Observaciones',
                 allowBlank: true,
@@ -297,7 +314,8 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
         {name:'usr_reg', type: 'string'},
         {name:'usr_mod', type: 'string'},
         {name:'id_usuario_mod', type: 'numeric'},
-        {name:'tipo', type: 'string'}
+        {name:'tipo', type: 'string'},
+        {name:'orden', type: 'numeric'}
 
 	],
 	sortInfo:{

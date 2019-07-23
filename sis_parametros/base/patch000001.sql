@@ -2122,3 +2122,8 @@ ALTER TABLE param.tforma_pago
 COMMENT ON COLUMN param.tforma_pago.tipo
 IS 'tipo de la forma de pago si es de Ingreso o Gasto';
 /***********************************F-SCP-MAY-PARAM-0-12/07/2019*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-23/07/2019*****************************************/
+ALTER TABLE param.tforma_pago
+  ADD COLUMN orden NUMERIC;
+/***********************************F-SCP-MAY-PARAM-0-23/07/2019*****************************************/

@@ -25,7 +25,7 @@ class ACTFormaPago extends ACTbase{
     }
 			
 	function listarFormaPagofil(){
-		$this->objParam->defecto('ordenacion','id_forma_pago');
+		$this->objParam->defecto('ordenacion','orden');
 
 		$this->objParam->defecto('dir_ordenacion','asc');
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){

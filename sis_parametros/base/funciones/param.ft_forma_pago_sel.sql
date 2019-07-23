@@ -57,7 +57,8 @@ BEGIN
                                   usu1.cuenta::varchar as usr_reg,
                                   usu2.cuenta::varchar as usr_mod,
                                   fp.id_usuario_mod::integer,
-                                  fp.tipo
+                                  fp.tipo,
+                                  fp.orden
                           from param.tforma_pago fp
                           inner join segu.tusuario usu1 on usu1.id_usuario = fp.id_usuario_reg
                           left join segu.tusuario usu2 on usu2.id_usuario = fp.id_usuario_mod
@@ -206,5 +207,4 @@ $body$
 LANGUAGE 'plpgsql'
 VOLATILE
 CALLED ON NULL INPUT
-SECURITY INVOKER
 COST 100;
