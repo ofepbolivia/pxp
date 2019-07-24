@@ -57,7 +57,9 @@ BEGIN
                 estado_reg,
                 desc_forma_pago,
                 observaciones,
-                cod_inter
+                cod_inter,
+                tipo,
+                orden
 
           	) values(
 			    p_id_usuario,
@@ -67,7 +69,9 @@ BEGIN
                 'activo',
                 v_parametros.desc_forma_pago,
                 v_parametros.observaciones,
-                string_to_array(v_parametros.cod_inter,',')::varchar[]
+                string_to_array(v_parametros.cod_inter,',')::varchar[],
+                v_parametros.tipo,
+                v_parametros.orden
 
 		)RETURNING id_forma_pago into v_id_forma_pago;
 
@@ -98,7 +102,9 @@ BEGIN
                 observaciones = v_parametros.observaciones,
                 cod_inter = string_to_array(v_parametros.cod_inter,',')::varchar[],
                 fecha_mod = now(),
-                id_usuario_mod = p_id_usuario
+                id_usuario_mod = p_id_usuario,
+                tipo = v_parametros.tipo,
+                orden = v_parametros.orden
 			where id_forma_pago=v_parametros.id_forma_pago;
 
 			--Definicion de la respuesta
@@ -153,5 +159,4 @@ $body$
 LANGUAGE 'plpgsql'
 VOLATILE
 CALLED ON NULL INPUT
-SECURITY INVOKER
 COST 100;

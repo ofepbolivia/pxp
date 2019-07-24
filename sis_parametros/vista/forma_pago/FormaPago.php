@@ -36,7 +36,7 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
             config:{
                 name: 'desc_forma_pago',
                 fieldLabel: 'Forma de Pago',
-                allowBlank: true,
+                allowBlank: false,
                 anchor: '80%',
                 gwidth: 100,
                 maxLength:100
@@ -48,6 +48,28 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
             form:true
         },
 
+        {
+            config:{
+                name: 'tipo',
+                fieldLabel: 'Tipo',
+                anchor: '80%',
+                gwidth: 170,
+                allowBlank: false,
+                typeAhead: true,
+                triggerAction: 'all',
+                lazyRender:true,
+                mode: 'local',
+                valueField: 'inicio',
+                forcSselect:true,
+                enableMultiSelect: true,
+                store:['Gasto','Ingreso']
+            },
+            type:'ComboBox',
+            filters:{pfiltro:'fp.tipo',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
         {
             config:{
                 name: 'cod_inter',
@@ -67,6 +89,23 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
             },
             type:'AwesomeCombo',
             filters:{pfiltro:'fp.cod_inter',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
+        {
+            config:{
+                name: 'orden',
+                fieldLabel: 'Orden',
+                qtip: 'Posición en la Ordenación',
+                allowBlank: false,
+                allowDecimals: true,
+                anchor: '80%',
+                gwidth: 100
+            },
+            type:'NumberField',
+            filters: { pfiltro:'fp.orden', type:'numeric' },
+            valorInicial: 1.00,
             id_grupo:1,
             grid:true,
             form:true
@@ -274,7 +313,9 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
         {name:'id_usuario_reg', type: 'numeric'},
         {name:'usr_reg', type: 'string'},
         {name:'usr_mod', type: 'string'},
-        {name:'id_usuario_mod', type: 'numeric'}
+        {name:'id_usuario_mod', type: 'numeric'},
+        {name:'tipo', type: 'string'},
+        {name:'orden', type: 'numeric'}
 
 	],
 	sortInfo:{
