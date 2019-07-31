@@ -797,6 +797,14 @@ ALTER TABLE orga.tuo_funcionario
   ADD COLUMN codigo_ruta VARCHAR(50);
 /*****************************F-SCP-FEA-ORGA-0-11/07/2019*************/
 
+/*****************************I-SCP-FEA-ORGA-0-24/07/2019*************/
+ALTER TABLE orga.tfuncionario
+  ADD COLUMN codigo_rc_iva VARCHAR(50);
+
+COMMENT ON COLUMN orga.tfuncionario.codigo_rc_iva
+IS 'codigo relacionado con impuestos nacionales';
+/*****************************F-SCP-FEA-ORGA-0-24/07/2019*************/
+
 
 
 

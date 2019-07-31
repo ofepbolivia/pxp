@@ -66,8 +66,8 @@ header("content-type: text/javascript; charset=UTF-8");
         bnewGroups:[0],
         beditGroups:[0,1],
         bdelGroups:[0],
-        bactGroups:[0,1],
-        bexcelGroups:[0,1],
+        bactGroups:[0,1,2],
+        bexcelGroups:[0,1,2],
         gruposBarraTareas: [
             {name:  'activo', title: '<h1 style="text-align: center; color: green;">ACTIVOS</h1>',grupo: 0, height: 0} ,
             {name: 'inactivo', title: '<h1 style="text-align: center; color: red;">INACTIVOS</h1>', grupo: 1, height: 1},
@@ -608,6 +608,27 @@ header("content-type: text/javascript; charset=UTF-8");
                 form:true
             },
 
+            {
+                config:{
+                    fieldLabel: "Codigo RC-IVA",
+                    gwidth: 140,
+                    name: 'codigo_rc_iva',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'TextField',
+                filters:{type:'string'},
+                id_grupo:1,
+                bottom_filter : true,
+                grid:true,
+                form:true
+            },
+
 
             //PERSONA
             {
@@ -760,7 +781,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 form:true
             },
 
-            {
+            /*{
                 config:{
                     name:'tipo_documento',
                     fieldLabel:'Tipo Documento',
@@ -784,7 +805,68 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid:true,
                 valorInicial:'documento_identidad',
                 form:true
+            },*/
+
+            {
+                config:{
+                    name:'id_tipo_doc_identificacion',
+                    fieldLabel:'Tipo Documento',
+                    allowBlank:false,
+                    emptyText:'Seleccione una opción',
+
+                    store:new Ext.data.JsonStore(
+                        {
+                            url: '../../sis_seguridad/control/Persona/listarDocumentoIdentificacion',
+                            id: 'id_tipo_doc_identificacion',
+                            root: 'datos',
+                            sortInfo:{
+                                field: 'nombre',
+                                direction: 'ASC'
+                            },
+                            totalProperty: 'total',
+                            fields: ['id_tipo_doc_identificacion','nombre', 'descripcion'],
+                            // turn on remote sorting
+                            remoteSort: true,
+                            baseParams:{par_filtro:'nombre#descripcion'}
+                        }),
+                    valueField: 'id_tipo_doc_identificacion',
+                    displayField: 'nombre',
+                    gdisplayField:'nombre',
+                    hiddenName: 'id_tipo_doc_identificacion',
+                    forceSelection : true,
+                    typeAhead : false,
+                    triggerAction : 'all',
+                    lazyRender : true,
+                    mode : 'remote',
+                    pageSize : 10,
+                    queryDelay : 1000,
+                    anchor : '100%',
+                    gwidth : 250,
+                    minChars : 2,
+                    renderer : function(value, p, record) {
+                        return String.format('{0}', record.data['tipo_documento']);
+                    },
+                    enableMultiSelect : false,
+                    resizable: true,
+                    tpl: new Ext.XTemplate([
+                        '<tpl for=".">',
+                        '<div class="x-combo-list-item">',
+                        '<div class="awesomecombo-item {checked}">',
+                        '<p><b>Nombre: {nombre}</b></p>',
+                        '</div><p><b>Descripción: </b> <span style="color: green;">{descripcion}</span></p>',
+                        '</div></tpl>'
+                    ])
+                },
+                type:'AwesomeCombo',
+                id_grupo:3,
+                filters:{
+                    type: 'string',
+                    pfiltro:'td.nombre'
+                },
+                grid:true,
+                form:true
             },
+
             {
                 config:{
                     fieldLabel: "Nro. Documento",
@@ -904,7 +986,10 @@ header("content-type: text/javascript; charset=UTF-8");
                     allowBlank:true,
                     maxLength:3,
                     minLength:1,
-                    anchor:'100%'
+                    anchor:'100%',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
                 },
                 type:'NumberField',
                 id_grupo:1,
@@ -920,13 +1005,16 @@ header("content-type: text/javascript; charset=UTF-8");
                     allowBlank:true,
                     maxLength:50,
                     minLength:1,
-                    anchor:'100%'
+                    anchor:'100%',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
                 },
                 type:'TextField',
                 filters:{type:'string'},
                 id_grupo:1,
                 grid:true,
-                form:true
+                form:false
             },
             {
                 config:{
@@ -936,13 +1024,16 @@ header("content-type: text/javascript; charset=UTF-8");
                     allowBlank:true,
                     maxLength:100,
                     minLength:1,
-                    anchor:'100%'
+                    anchor:'100%',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
                 },
                 type:'TextField',
                 filters:{type:'string'},
                 id_grupo:1,
                 grid:true,
-                form:true
+                form:false
             },
 
             {
@@ -950,7 +1041,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     fieldLabel: "Fecha de Ingreso",
                     gwidth: 120,
                     name: 'fecha_ingreso',
-                    allowBlank:true,
+                    allowBlank:false,
                     maxLength:100,
                     minLength:1,
                     format:'d/m/Y',
@@ -1246,7 +1337,10 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:'fecha_finalizacion', type: 'date', dateFormat:'Y-m-d'},
             'nombre_cargo',
             'nombre_oficina',
-            'nombre_lugar_ofi'
+            'nombre_lugar_ofi',
+            'codigo_rc_iva',
+            {name:'id_tipo_doc_identificacion', type: 'numeric'},
+
         ],
         sortInfo:{
             field: 'PERSON.nombre_completo2',
