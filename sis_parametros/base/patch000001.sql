@@ -2127,3 +2127,8 @@ IS 'tipo de la forma de pago si es de Ingreso o Gasto';
 ALTER TABLE param.tforma_pago
   ADD COLUMN orden NUMERIC;
 /***********************************F-SCP-MAY-PARAM-0-23/07/2019*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-26/07/2019*****************************************/
+ALTER TABLE param.tforma_pago
+  ADD COLUMN codigo VARCHAR(30) DEFAULT 'a' NOT NULL;
+/***********************************F-SCP-MAY-PARAM-0-26/07/2019*****************************************/

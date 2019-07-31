@@ -72,6 +72,29 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
         },
         {
             config:{
+                name: 'codigo',
+                fieldLabel: 'Código',
+                qtip:'Código Libro de Bancos',
+                anchor: '80%',
+                gwidth: 170,
+                allowBlank: false,
+                typeAhead: true,
+                triggerAction: 'all',
+                lazyRender:true,
+                mode: 'local',
+                valueField: 'inicio',
+                forcSselect:true,
+                enableMultiSelect: true,
+                store:['cheque','deposito','debito_automatico','transferencia_carta','transferencia_exterior','transferencia_intern','transf_interna_debe','transf_interna_haber']
+            },
+            type:'ComboBox',
+            filters:{pfiltro:'fp.codigo',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
+        {
+            config:{
                 name: 'cod_inter',
                 fieldLabel: 'Cód. Internacionales',
                 qtip:'Cod. de Forma de Pago para internacionales',
@@ -316,6 +339,7 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
         {name:'id_usuario_mod', type: 'numeric'},
         {name:'tipo', type: 'string'},
         {name:'orden', type: 'numeric'}
+        {name:'codigo', type: 'string'}
 
 	],
 	sortInfo:{
