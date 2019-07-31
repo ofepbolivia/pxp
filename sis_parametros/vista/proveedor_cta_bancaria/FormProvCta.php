@@ -359,9 +359,19 @@ header("content-type: text/javascript; charset=UTF-8");
 
 
         onSubmit:function(o){
-            var record = Phx.CP.getPagina(this.maestro.id_padre).getSelectedData();
-            console.log('enviar info2', this.Cmp.nro_cuenta.getValue(),record);
-            this.Cmp.id_proveedor.setValue(record.id_proveedor);
+            if (typeof (Phx.CP.getPagina(this.maestro.id_padre).getSelectedData()) == 'undefined'){
+            // if (typeof (this.maestro.id_padre) == 'undefined'){
+            //if (isEmpty(this.maestro.id_padre)){
+            //     console.log('imorimiendo mi variable: ',this.maestro.id_proveedor)
+
+                this.Cmp.id_proveedor.setValue(this.maestro.id_proveedor);
+
+            } else{
+               // console.log('enviar info333', this.maestro.id_padre);
+                var record = Phx.CP.getPagina(this.maestro.id_padre).getSelectedData();
+                this.Cmp.id_proveedor.setValue(record.id_proveedor);
+            }
+
 
 
             Phx.vista.FormProvCta.superclass.onSubmit.call(this,o);
