@@ -547,3 +547,28 @@ AS
      JOIN segu.vpersona person ON funcio.id_persona = person.id_persona;
 
 /*********************************F-DEP-FEA-ORGA-0-31/10/2017***********************************/
+
+/*********************************I-DEP-FEA-ORGA-0-30/07/2019***********************************/
+CREATE OR REPLACE VIEW orga.vfuncionario (
+    id_funcionario,
+    desc_funcionario1,
+    desc_funcionario2,
+    num_doc,
+    ci,
+    codigo,
+    estado_reg,
+    codigo_rc_iva,
+    id_persona)
+AS
+SELECT funcio.id_funcionario,
+    person.nombre_completo1 AS desc_funcionario1,
+    person.nombre_completo2 AS desc_funcionario2,
+    person.num_documento AS num_doc,
+    person.ci,
+    funcio.codigo,
+    funcio.estado_reg,
+    funcio.codigo_rc_iva,
+    person.id_persona
+FROM orga.tfuncionario funcio
+JOIN segu.vpersona person ON funcio.id_persona = person.id_persona;
+/*********************************F-DEP-FEA-ORGA-0-30/07/2019***********************************/
