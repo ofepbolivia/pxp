@@ -6,11 +6,28 @@
 *@date 14-02-2011
 *@description  Vista para asociar los funcionarios a su correspondiente Unidad Organizacional
 */
-
+include_once('../../media/styles.php');
 header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
 Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
+
+
+    viewConfig: {
+        autoFill: true,
+        getRowClass: function (record) {
+            current_date = new Date();
+
+            if (record.data.tipo == 'funcional') {
+                return 'funcional';
+            } else if (record.data.tipo == 'oficial' && record.data.fecha_finalizacion < current_date && record.data.fecha_finalizacion != null) {
+                return 'baja';
+            } else {
+                return 'alta';
+            }
+        }
+    },
+
     Atributos:[
 		{
 			// configuracion del componente
@@ -63,7 +80,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
                 lazyRender:true,
                 mode: 'local',
                 anchor: '100%',
-                gwidth: 100,
+                gwidth: 200,
                 store:['oficial','funcional']
             },
             type:'ComboBox',
@@ -83,7 +100,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
                 allowBlank: false,
                 //anchor: '100%',
                 width: 177,
-                gwidth: 100,
+                gwidth: 150,
                 format: 'd/m/Y',
                 renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
             },
@@ -101,7 +118,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
                 name: 'fecha_finalizacion',
                 allowBlank: true,
                 width: 177,
-                gwidth: 100,
+                gwidth: 150,
                 format: 'd/m/Y',
                 renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
             },
@@ -119,13 +136,22 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
    			config:{
        		    name:'id_funcionario',
    				origen:'FUNCIONARIO',
-   				gwidth: 300,
+   				gwidth: 350,
    				fieldLabel:'Funcionario',
    				allowBlank:false,
    				tinit:true,  				
    				valueField: 'id_funcionario',
    			    gdisplayField: 'desc_funcionario1',
                 url: '../../sis_organigrama/control/Funcionario/listarSinAsignacionFuncionario',
+                tpl: new Ext.XTemplate([
+                    '<tpl for=".">',
+                    '<div class="x-combo-list-item">',
+                    '<div class="awesomecombo-item {checked}">',
+                    '<p><b style="color: #51adff;">{desc_person}</b></p>',
+                    '</div><p><b>Codigo: </b> <span style="color: green;">{codigo}</span> </p>',
+                    '<p><b>CI: </b> <span style="color: green;">{ci}</span></p>',
+                    '</div></tpl>'
+                ]),
       			renderer:function(value, p, record){return String.format('{0}', record.data['desc_funcionario1']);}
        	     },
    			type:'ComboRec',//ComboRec
@@ -142,7 +168,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
    	      {
 			config: {
 				name: 'id_cargo',
-				fieldLabel: 'Cargo a Asignar',
+				fieldLabel: 'Item a Asignar',
 				allowBlank: false,
 				tinit:true,
    			    resizable:true,
@@ -165,7 +191,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 						direction: 'ASC'
 					},
 					totalProperty: 'total',
-					fields: ['id_cargo', 'nombre', 'codigo','tipo_contrato','identificador','codigo_tipo_contrato'],
+					fields: ['id_cargo', 'nombre', 'codigo','tipo_contrato','identificador','codigo_tipo_contrato','haber_basico','nombre_escala'],
 					remoteSort: true,
 					baseParams: {par_filtro: 'cargo.nombre#cargo.codigo'}
 				}),
@@ -181,9 +207,20 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 				pageSize: 15,
 				queryDelay: 1000,
 				anchor: '100%',
-				gwidth: 120,
+				gwidth: 150,
 				minChars: 2,
-				tpl:'<tpl for="."><div class="x-combo-list-item"><p>Id: {identificador}--{codigo_tipo_contrato}</p><p>{codigo}</p><p>{nombre}</p> </div></tpl>',
+				//tpl:'<tpl for="."><div class="x-combo-list-item"><p>Id: {identificador}--{codigo_tipo_contrato}</p><p>{codigo}</p><p>{nombre}</p> </div></tpl>',
+                tpl: new Ext.XTemplate([
+                    '<tpl for=".">',
+                    '<div class="x-combo-list-item">',
+                    '<div class="awesomecombo-item {checked}">',
+                    '<p><b style="color: #51adff;">{nombre}</b></p>',
+                    '</div><p><b>Item: </b> <span style="color: green;">{codigo}</span>   <b>Contrato: </b><span style="color: green;">{codigo_tipo_contrato}</span></p>',
+                    '<p><b>Identificador: </b> <span style="color: green;">{identificador}</span></p>',
+                    '<p><b>Escala: </b> <span style="color: green;">{nombre_escala}</span></p>',
+                    '<p><b>Haber B.: </b><span style="color: green;">{haber_basico}</span></p>',
+                    '</div></tpl>'
+                ]),
 				renderer : function(value, p, record) {
 					return String.format('{0}', record.data['desc_cargo']);
 				}
@@ -201,7 +238,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 				fieldLabel: 'N° Memo de Asignación',
 				allowBlank: true,
 				anchor: '100%',
-				gwidth: 100,
+				gwidth: 200,
 				maxLength:50
 			},
 				type:'TextField',
@@ -217,7 +254,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 			name: 'fecha_documento_asignacion',
    		    allowBlank: true,
 			anchor: '100%',
-			gwidth: 100,
+			gwidth: 150,
 			format: 'd/m/Y', 
 			renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
 		},
@@ -237,7 +274,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
                 fieldLabel: 'N° Certificación Presupuestaria',
                 allowBlank: true,
                 anchor: '100%',
-                gwidth: 100,
+                gwidth: 200,
                 maxLength:50
             },
             type:'TextField',
@@ -253,7 +290,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
                 fieldLabel: 'Codigo Referencia/Ruta',
                 allowBlank: true,
                 anchor: '100%',
-                gwidth: 100,
+                gwidth: 200,
                 maxLength:50
             },
             type:'TextField',
@@ -291,7 +328,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 	       		triggerAction: 'all',
 	       		lazyRender:true,
 	       		mode: 'local',
-				gwidth: 100,
+				gwidth: 150,
                 anchor:'100%',
 				store:['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia', 'renuncia_tacita' ,'transferencia']
 			},
@@ -386,7 +423,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
     ],
 
 	title:'Asignar Cargo',
-	fheight:'65%',
+	fheight:'70%',
 	fwidth:'40%',
 	ActSave:'../../sis_organigrama/control/UoFuncionario/GuardarUoFuncionario',
 	ActDel:'../../sis_organigrama/control/UoFuncionario/EliminarUoFuncionario',
@@ -412,7 +449,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
              'fecha_reg',
              'fecha_mod',
              'USUREG',
-             'USUMOD','correspondencia','codigo_ruta','estado_funcional'],
+             'USUMOD','correspondencia','codigo_ruta','estado_funcional','certificacion_presupuestaria','nombre_escala','haber_basico'],
 	sortInfo:{
 		field: 'desc_funcionario1',
 		direction: 'ASC',
@@ -516,7 +553,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
         this.getComponente('fecha_finalizacion').on('beforerender',function (combo) {
             var fecha_actual = new Date();
             fecha_actual.setMonth(fecha_actual.getMonth());
-            this.getComponente('fecha_finalizacion').setMinValue(new Date(fecha_actual.getFullYear(),fecha_actual.getMonth(),1));
+            this.getComponente('fecha_finalizacion').setMinValue(new Date(fecha_actual.getFullYear(),fecha_actual.getMonth()-1,1));
         }, this);
 		
 		this.Cmp.fecha_finalizacion.on('blur', function () {

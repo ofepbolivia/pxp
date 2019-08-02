@@ -50,6 +50,7 @@ class MODCargo extends MODbase{
         $this->captura('id_oficina','int4');
         $this->captura('identificador','int4');
         $this->captura('codigo_tipo_contrato','varchar');
+        $this->captura('haber_basico','numeric');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
