@@ -52,7 +52,10 @@ BEGIN
         	from orga.toficina
         	where id_oficina = v_parametros.id_oficina;
         	
-        	
+          --(franklin.espinoza) se obtiene el nombre para el item
+        	select tc.nombre into v_nombre_cargo
+            from orga.ttemporal_cargo tc
+            where tc.id_temporal_cargo = v_parametros.id_temporal_cargo;
         	
         	
         	--Sentencia de la insercion
@@ -70,14 +73,15 @@ BEGIN
 			id_usuario_reg,
 			fecha_mod,
 			id_usuario_mod,
-			id_oficina
+			id_oficina,
+			id_temporal_cargo
           	) values(
 			v_parametros.id_tipo_contrato,
 			v_id_lugar,
 			v_parametros.id_uo,			
 			v_parametros.id_escala_salarial,
 			v_parametros.codigo,
-			v_parametros.nombre,
+			v_nombre_cargo,
 			v_parametros.fecha_ini,
 			'activo',
 			v_parametros.fecha_fin,
@@ -85,8 +89,8 @@ BEGIN
 			p_id_usuario,
 			null,
 			null,
-			v_parametros.id_oficina
-							
+			v_parametros.id_oficina,
+			v_parametros.id_temporal_cargo
 			)RETURNING id_cargo into v_id_cargo;
 			
 			--Definicion de la respuesta
@@ -122,7 +126,8 @@ BEGIN
 			fecha_fin = v_parametros.fecha_fin,
 			fecha_mod = now(),
 			id_usuario_mod = p_id_usuario,			
-			id_oficina = v_parametros.id_oficina
+			id_oficina = v_parametros.id_oficina,
+      id_escala_salarial = v_parametros.id_escala_salarial
 			where id_cargo=v_parametros.id_cargo;
                
 			--Definicion de la respuesta
