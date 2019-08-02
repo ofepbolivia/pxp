@@ -71,14 +71,18 @@ BEGIN
                                   UOFUNC.nro_documento_asignacion,
                                   UOFUNC.fecha_documento_asignacion,
                                   UOFUNC.tipo,
-								  UOFUNC.codigo_ruta,
-                                  UOFUNC.estado_funcional
-                            FROM orga.tuo_funcionario UOFUNC
+								                  UOFUNC.codigo_ruta,
+                                  UOFUNC.estado_funcional,
+                                  UOFUNC.certificacion_presupuestaria,
+                                  tes.nombre as nombre_escala,
+                                  tes.haber_basico
+                             FROM orga.tuo_funcionario UOFUNC
                             INNER JOIN orga.tuo UO ON UO.id_uo=UOFUNC.id_uo
                             INNER JOIN orga.vfuncionario FUNCIO ON FUNCIO.id_funcionario=UOFUNC.id_funcionario
                             INNER JOIN segu.tusuario USUREG ON  UO.id_usuario_reg=USUREG.id_usuario
                             INNER JOIN SEGU.vpersona PERREG ON PERREG.id_persona=USUREG.id_persona
                             LEFT JOIN orga.tcargo cargo ON cargo.id_cargo = UOFUNC.id_cargo
+                            left join orga.tescala_salarial tes on tes.id_escala_salarial = cargo.id_escala_salarial
                             LEFT JOIN SEGU.tusuario USUMOD ON USUMOD.id_usuario=UO.id_usuario_mod
                             LEFT JOIN SEGU.vpersona PERMOD ON PERMOD.id_persona=USUMOD.id_persona
                             WHERE  UOFUNC.estado_reg !=''inactivo'' and ';

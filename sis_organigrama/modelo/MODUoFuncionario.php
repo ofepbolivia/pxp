@@ -44,6 +44,9 @@ class MODUoFuncionario extends MODbase{
         $this->captura('tipo','varchar');
         $this->captura('codigo_ruta','varchar');
         $this->captura('estado_funcional','varchar');
+        $this->captura('certificacion_presupuestaria','varchar');
+        $this->captura('nombre_escala','varchar');
+        $this->captura('haber_basico','numeric');
 
         //Ejecuta la funcion
         $this->armarConsulta();
