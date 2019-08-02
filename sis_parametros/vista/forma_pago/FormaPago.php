@@ -17,9 +17,10 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
     	//llama al constructor de la clase padre
 		Phx.vista.FormaPago.superclass.constructor.call(this,config);
 		this.init();
+        // this.iniciarEventos();
 		this.load({params:{start:0, limit:this.tam_pag}})
 	},
-			
+
 	Atributos:[
 		{
 			//configuracion del componente
@@ -189,22 +190,7 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
 				grid:true,
 				form:false
 		},
-		{
-			config:{
-				name: 'fecha_reg',
-				fieldLabel: 'Fecha creación',
-				allowBlank: true,
-				anchor: '80%',
-				gwidth: 100,
-							format: 'd/m/Y', 
-							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
-			},
-				type:'DateField',
-				filters:{pfiltro:'fp.fecha_reg',type:'date'},
-				id_grupo:1,
-				grid:true,
-				form:false
-		},
+
 		{
 			config:{
 				name: 'usuario_ai',
@@ -217,39 +203,25 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
 				type:'TextField',
 				filters:{pfiltro:'fp.usuario_ai',type:'string'},
 				id_grupo:1,
-				grid:true,
-				form:false
-		},
-		{
-			config:{
-				name: 'usr_reg',
-				fieldLabel: 'Creado por',
-				allowBlank: true,
-				anchor: '80%',
-				gwidth: 100,
-				maxLength:4
-			},
-				type:'Field',
-				filters:{pfiltro:'usu1.cuenta',type:'string'},
-				id_grupo:1,
-				grid:true,
-				form:false
-		},
-		{
-			config:{
-				name: 'id_usuario_ai',
-				fieldLabel: 'Creado por',
-				allowBlank: true,
-				anchor: '80%',
-				gwidth: 100,
-				maxLength:4
-			},
-				type:'Field',
-				filters:{pfiltro:'fp.id_usuario_ai',type:'numeric'},
-				id_grupo:1,
 				grid:false,
 				form:false
 		},
+        {
+            config:{
+                name: 'fecha_mod',
+                fieldLabel: 'Fecha Modif.',
+                allowBlank: true,
+                anchor: '80%',
+                gwidth: 100,
+                format: 'd/m/Y',
+                renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
+            },
+            type:'DateField',
+            filters:{pfiltro:'fp.fecha_mod',type:'date'},
+            id_grupo:1,
+            grid:true,
+            form:false
+        },
 		{
 			config:{
 				name: 'usr_mod',
@@ -261,57 +233,11 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
 			},
 				type:'Field',
 				filters:{pfiltro:'usu2.cuenta',type:'string'},
-				id_grupo:1,
-				grid:true,
-				form:false
-		},
-		{
-			config:{
-				name: 'fecha_mod',
-				fieldLabel: 'Fecha Modif.',
-				allowBlank: true,
-				anchor: '80%',
-				gwidth: 100,
-							format: 'd/m/Y', 
-							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
-			},
-				type:'DateField',
-				filters:{pfiltro:'fp.fecha_mod',type:'date'},
-				id_grupo:1,
-				grid:true,
-				form:false
-		},
-		{
-			config:{
-				name: 'usr_mod',
-				fieldLabel: 'Modificado por',
-				allowBlank: true,
-				anchor: '80%',
-				gwidth: 100,
-				maxLength:4
-			},
-				type:'Field',
-				filters:{pfiltro:'usu2.cuenta',type:'string'},
-				id_grupo:1,
-				grid:true,
-				form:false
-		},
-		{
-			config:{
-				name: 'fecha_mod',
-				fieldLabel: 'Fecha Modif.',
-				allowBlank: true,
-				anchor: '80%',
-				gwidth: 100,
-							format: 'd/m/Y', 
-							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
-			},
-				type:'DateField',
-				filters:{pfiltro:'fp.fecha_mod',type:'date'},
 				id_grupo:1,
 				grid:true,
 				form:false
 		}
+
 	],
 	tam_pag:50,	
 	title:'Forma de Pago',
