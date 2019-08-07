@@ -135,7 +135,7 @@ EOF;
 
                             <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso el agradecimiento y felicitación por su desempeño tesonero y compromiso con nuestros valores corporativos.</p>
                             <p align="justica">'.$htmlR.'</p>
-                            <p align="justica">Seguro de que estos resultados obtenidos serán replicados y mejorados en adelante, reciba usted mis consideraciones distinguidas.</p>
+                            <p align="justica">Seguro de que estos resultados obtenidos serán replicados en adelante, reciba usted mis consideraciones distinguidas.</p>
                             ',true);
             $this->firmas();
 
