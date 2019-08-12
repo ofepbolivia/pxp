@@ -251,6 +251,13 @@ class ACTSubsistema extends ACTbase{
 		return $fileName;
 	}
 
+    function sincronizarPermisosDB(){
+        //Sincroniza permisos para usuario para base de datos
+        $this->objFunSeguridad=$this->create('MODSubsistema');
+        $this->res=$this->objFunSeguridad->sincronizarPermisosDB($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
 }
 
 ?>

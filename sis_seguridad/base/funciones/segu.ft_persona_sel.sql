@@ -76,10 +76,15 @@ BEGIN
                               per.direccion,
                               td.nombre as tipo_documento,
                               per.expedicion,
-                              per.id_tipo_doc_identificacion
+                              per.id_tipo_doc_identificacion,
+                              per.nacionalidad,
+                              per.id_lugar,
+                              per.discapacitado,
+                              tl.nombre as nombre_lugar
                           FROM segu.vpersona p
                           inner join segu.tpersona per on per.id_persona = p.id_persona
                           inner join segu.ttipo_documento td on td.id_tipo_documento = per.id_tipo_doc_identificacion
+                          left join param.tlugar tl on tl.id_lugar = per.id_lugar
                           WHERE ';
                v_consulta:=v_consulta||v_parametros.filtro;
                v_consulta:=v_consulta || ' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
@@ -108,7 +113,8 @@ BEGIN
                				FROM segu.vpersona p
                           	inner join segu.tpersona per on per.id_persona = p.id_persona
                             inner join segu.ttipo_documento td on td.id_tipo_documento = per.id_tipo_doc_identificacion
-                          	WHERE ';
+                          	left join param.tlugar tl on tl.id_lugar = per.id_lugar
+                            WHERE ';
                v_consulta:=v_consulta||v_parametros.filtro;
                return v_consulta;
          END;
