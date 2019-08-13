@@ -268,7 +268,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         remoteSort: true,
                         baseParams: {par_filtro:'p.nombre_completo1#p.ci', es_funcionario:'si'}
                     }),
-                    renderer:function (value, p, record){return String.format('{0}', record.data['desc_person']);},
+                    renderer:function (value, p, record){return String.format('<b style="color: orangered">{0}</b>', record.data['desc_person']);},
                     tpl: new Ext.XTemplate([
                         '<tpl for=".">',
                         '<div class="x-combo-list-item">',
@@ -319,7 +319,7 @@ header("content-type: text/javascript; charset=UTF-8");
             {
                 config:{
                     fieldLabel: "Haber Basico",
-                    gwidth: 200,
+                    gwidth: 100,
                     name: 'haber_basico',
                     allowBlank:true,
                     maxLength:100,
@@ -342,7 +342,7 @@ header("content-type: text/javascript; charset=UTF-8");
             {
                 config:{
                     fieldLabel: "Bono Antiguedad",
-                    gwidth: 200,
+                    gwidth: 100,
                     name: 'bono_antiguedad',
                     allowBlank:true,
                     maxLength:100,
@@ -365,7 +365,7 @@ header("content-type: text/javascript; charset=UTF-8");
             {
                 config:{
                     fieldLabel: "Bono Frontera",
-                    gwidth: 200,
+                    gwidth: 100,
                     name: 'bono_frontera',
                     allowBlank:true,
                     maxLength:100,
@@ -387,7 +387,7 @@ header("content-type: text/javascript; charset=UTF-8");
             {
                 config:{
                     fieldLabel: "Total Ganado",
-                    gwidth: 200,
+                    gwidth: 100,
                     name: 'total_ganado',
                     allowBlank:true,
                     maxLength:100,
@@ -410,7 +410,7 @@ header("content-type: text/javascript; charset=UTF-8");
             {
                 config:{
                     fieldLabel: "Fecha Ingreso",
-                    gwidth: 120,
+                    gwidth: 100,
                     name: 'fecha_ingreso',
                     allowBlank:true,
                     maxLength:100,
@@ -424,6 +424,28 @@ header("content-type: text/javascript; charset=UTF-8");
                 id_grupo:1,
                 grid:true,
                 form:true
+            },
+            {
+                config:{
+                    fieldLabel: "Contrato",
+                    gwidth: 100,
+                    name: 'nombre_contrato',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'tcon.nombre',type:'string'},
+                bottom_filter : true,
+                id_grupo:1,
+                grid:true,
+                form:false
             },
 
             {
@@ -524,7 +546,28 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid:true,
                 form:false
             },
-
+            {
+                config:{
+                    fieldLabel: "Motivo Finalización",
+                    gwidth: 110,
+                    name: 'motivo_fin',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'tuo.observaciones_finalizacion',type:'string'},
+                bottom_filter : true,
+                id_grupo:1,
+                grid:true,
+                form:false
+            },
             {
                 config:{
                     fieldLabel: "Correo Empresarial",
@@ -608,6 +651,8 @@ header("content-type: text/javascript; charset=UTF-8");
             'bono_antiguedad',
             'bono_frontera',
             'total_ganado',
+            'motivo_fin',
+            'nombre_contrato',
         ],
         sortInfo:{
             field: 'PERSON.nombre_completo2',
