@@ -40,7 +40,8 @@ class ACTUoFuncionario extends ACTbase{
 
         //preguntamos si se debe insertar o modificar
         if($this->objParam->insertar('id_uo_funcionario')){
-
+            //$json = "http://172.17.45.127/GeneradorUsuario/Home/Generar?idEmpleadoENDE=".$this->objParam->getParametro('id_funcionario');
+            //$jsonfile = file_get_contents($json);
             //ejecuta el metodo de insertar de la clase MODFuncionario a travez
             //de la intefaz objetoFunSeguridad
             $this->res=$this->objFunSeguridad->insertarUoFuncionario($this->objParam);

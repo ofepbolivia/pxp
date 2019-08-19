@@ -312,6 +312,21 @@ class MODSubsistema extends MODbase{
        return $this->respuesta;		
 	
 	}
+
+    function sincronizarPermisosDB(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='segu.ft_subsistema_ime';
+        $this->transaccion='SEG_SINC_GRANTS_DB';
+        $this->tipo_procedimiento='IME';
+
+        //Define los parametros para la funcion
+        $this->setParametro('esquema','esquema','varchar');
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
 	
 }
 ?>

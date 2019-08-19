@@ -61,28 +61,86 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid: true,
                 form: true
             },
+            // {
+            //     config: {
+            //         name: 'id_banco_beneficiario',
+            //         fieldLabel: 'Banco Beneficiario',
+            //         allowBlank: false,
+            //         tinit: true,
+            //         origen: 'INSTITUCION',
+            //         gdisplayField: 'banco_beneficiario',
+            //         anchor: '80%',
+            //         gwidth: 100,
+            //         // maxLength:100,
+            //         baseParams: {es_banco: 'si'},
+            //         renderer: function (value, p, record) {
+            //             return String.format('{0}', record.data['banco_beneficiario']);
+            //         }
+            //
+            //     },
+            //     type: 'ComboRec',
+            //     filters: {pfiltro: 'instben.banco_beneficiario', type: 'string'},
+            //     id_grupo: 1,
+            //     grid: true,
+            //     form: true
+            // },
             {
-                config: {
-                    name: 'id_banco_beneficiario',
-                    fieldLabel: 'Banco Beneficiario',
-                    allowBlank: false,
-                    tinit: true,
-                    origen: 'INSTITUCION',
-                    gdisplayField: 'banco_beneficiario',
+                config:{
+
+                    name:'id_banco_beneficiario',
+                    fieldLabel:'Banco Beneficiario',
+                    allowBlank:false,
+                    emptyText:'Institucion...',
+                    resizable:true,
                     anchor: '80%',
                     gwidth: 100,
-                    // maxLength:100,
-                    baseParams: {es_banco: 'si'},
+                    // dato: 'reclamo',
+                    qtip:'Ingrese la Cuenta Bancaria Dest.,si no se encuentra la opción deseada registre Nuevo con el botón de Lupa.',
+                    store: new Ext.data.JsonStore({
+                        url: '../../sis_parametros/control/Institucion/listarInstitucion',
+                        id: 'id_institucion',
+                        root: 'datos',
+                        sortInfo:{
+                            field: 'nombre',
+                            direction: 'ASC'
+                        },
+                        totalProperty: 'total',
+                        fields: ['id_institucion','nombre','doc_id','codigo','doc_id','casilla','telefono1','telefono2',
+                            'celular1','celular2','fax','email1','email2','pag_web','observaciones','id_persona','desc_persona',
+                            'direccion','codigo_banco'],
+                        // turn on remote sorting
+                        remoteSort: true,
+                        baseParams:{par_filtro:'instit.codigo#instit.nombre#instit.doc_id', es_banco: 'si'}
+                    }),
+                    valueField: 'id_institucion',
+                    displayField: 'nombre',
+                    gdisplayField:'banco_beneficiario',//mapea al store del grid
+                    tpl:'<tpl for="."><div class="x-combo-list-item"><p>{nombre}</p></div></tpl>',
+                    hiddenName: 'id_institucion',
+                    forceSelection:true,
+                    typeAhead: false,
+                    triggerAction: 'all',
+                    lazyRender:true,
+                    mode:'remote',
+                    pageSize:15,
+                    queryDelay:1000,
+                    // width:250,
+                    gwidth: 250,
+                    // minChars:2,
+
                     renderer: function (value, p, record) {
                         return String.format('{0}', record.data['banco_beneficiario']);
                     }
-
                 },
-                type: 'ComboRec',
-                filters: {pfiltro: 'instben.banco_beneficiario', type: 'string'},
-                id_grupo: 1,
-                grid: true,
-                form: true
+                type:'ComboBox',
+                bottom_filter:true,
+                id_grupo:1,
+                filters:{
+                    pfiltro:'instben.banco_beneficiario',
+                    type:'string'
+                },
+                grid:true,
+                form:true
             },
             {
                 config: {
@@ -106,7 +164,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     allowBlank: true,
                     anchor: '80%',
                     gwidth: 100,
-                    maxLength: 15
+                    maxLength: 25
                 },
                 type: 'TextField',
                 filters: {pfiltro: 'pctaban.fw_aba_cta', type: 'string'},
@@ -128,6 +186,24 @@ header("content-type: text/javascript; charset=UTF-8");
                 id_grupo: 1,
                 grid: true,
                 form: true
+            },
+            {
+                config:{
+                    name: 'prioridad',
+                    fieldLabel: 'Prioridad',
+                    allowBlank: true,
+                    qtip: 'Solo se permite números enteros',
+                    allowNegative: false,
+                    anchor: '80%',
+                    gwidth: 100,
+                    maxLength: 2
+                },
+                type:'NumberField',
+                filters:{pfiltro:'pctaban.prioridad',type:'numeric'},
+                id_grupo:1,
+                valorInicial: 1,
+                grid:true,
+                form:true
             },
             {
                 config: {
@@ -152,6 +228,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     displayField: 'valor'
                 },
                 type: 'ComboBox',
+                valorInicial: 'Activo',
                 id_grupo: 1,
                 grid: true,
                 form: true
@@ -277,19 +354,35 @@ header("content-type: text/javascript; charset=UTF-8");
                 form: false
             }
         ],
-        title: 'Clientes',
+        title: 'Cuenta Bancaria',
+        id_store:'id_proveedor_cta_bancaria',
+
 
         onSubmit:function(o){
-            var record = Phx.CP.getPagina(this.maestro.id_padre).getSelectedData();
-            console.log('enviar info', this.Cmp.nro_cuenta.getValue(),record);
-            this.Cmp.id_proveedor.setValue(record.id_proveedor);
+            if (typeof (Phx.CP.getPagina(this.maestro.id_padre).getSelectedData()) == 'undefined'){
+            // if (typeof (this.maestro.id_padre) == 'undefined'){
+            //if (isEmpty(this.maestro.id_padre)){
+            //     console.log('imorimiendo mi variable: ',this.maestro.id_proveedor)
+
+                this.Cmp.id_proveedor.setValue(this.maestro.id_proveedor);
+
+            } else{
+               // console.log('enviar info333', this.maestro.id_padre);
+                var record = Phx.CP.getPagina(this.maestro.id_padre).getSelectedData();
+                this.Cmp.id_proveedor.setValue(record.id_proveedor);
+            }
+
+
+
             Phx.vista.FormProvCta.superclass.onSubmit.call(this,o);
         },
 
         successSave:function(resp)
         {
+
             var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
-            Phx.CP.getPagina(this.maestro.id_padre).cargarCuenta(reg.ROOT.datos.nro_cuenta, this.Cmp.nro_cuenta.getValue());
+            // Phx.CP.getPagina(this.maestro.id_padre).cargarCuenta(reg.ROOT.datos.nro_cuenta, this.Cmp.nro_cuenta.getValue());
+            Phx.CP.getPagina(this.maestro.id_padre).cargarCuenta(reg.ROOT.datos.id_proveedor_cta_bancaria, this.Cmp.id_proveedor_cta_bancaria.getValue());
             Phx.CP.loadingHide();
             this.close();
             this.onDestroy();
@@ -310,8 +403,8 @@ header("content-type: text/javascript; charset=UTF-8");
                 swift_big: this.Cmp.swift_big.getValue(),
                 fw_aba_cta: this.Cmp.fw_aba_cta.getValue(),
                 banco_intermediario: this.Cmp.banco_intermediario.getValue(),
-                estado_cta: this.Cmp.estado_cta.getValue(),
-
+                estado_cta: this.Cmp.estado_cta.getValue('Activo'),
+                id_proveedor_cta_bancaria: this.Cmp.id_proveedor_cta_bancaria.getValue(),
             };
 
             return resp;

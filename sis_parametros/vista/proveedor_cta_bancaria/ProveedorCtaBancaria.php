@@ -88,7 +88,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         allowBlank: true,
                         anchor: '80%',
                         gwidth: 100,
-                        maxLength:15
+                        maxLength:25
                     },
                     type:'TextField',
                     filters:{pfiltro:'pctaban.fw_aba_cta',type:'string'},
@@ -108,6 +108,24 @@ header("content-type: text/javascript; charset=UTF-8");
                     type:'TextField',
                     filters:{pfiltro:'pctaban.banco_intermediario',type:'string'},
                     id_grupo:1,
+                    grid:true,
+                    form:true
+                },
+                {
+                    config:{
+                        name: 'prioridad',
+                        fieldLabel: 'Prioridad',
+                        allowBlank: true,
+                        qtip: 'Solo se permite números enteros',
+                        allowNegative: false,
+                        anchor: '80%',
+                        gwidth: 100,
+                        maxLength: 2
+                    },
+                    type:'NumberField',
+                    filters:{pfiltro:'pctaban.prioridad',type:'numeric'},
+                    id_grupo:1,
+                    valorInicial: 1,
                     grid:true,
                     form:true
                 },
@@ -134,6 +152,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         displayField:'valor'
                     },
                     type:'ComboBox',
+                    valorInicial: 'Activo',
                     id_grupo:1,
                     grid:true,
                     form:true
@@ -280,6 +299,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name:'usr_reg', type: 'string'},
                 {name:'usr_mod', type: 'string'},
                 {name:'estado_cta', type: 'string'},
+                {name:'prioridad', type: 'numeric'}
 
             ],
             sortInfo:{
@@ -289,7 +309,7 @@ header("content-type: text/javascript; charset=UTF-8");
 
             onReloadPage:function(m){
                 this.maestro=m;
-                this.Atributos[8].valorInicial=this.maestro.id_proveedor;
+                this.Atributos[9].valorInicial=this.maestro.id_proveedor;
                 this.store.baseParams={id_proveedor:this.maestro.id_proveedor};
                 this.load({params:{start:0, limit:this.tam_pag}})
             },
@@ -298,7 +318,11 @@ header("content-type: text/javascript; charset=UTF-8");
                 this.Cmp.id_banco_beneficiario.disable();
                 Phx.vista.ProveedorCtaBancaria.superclass.onButtonEdit.call(this);
             },
-
+            onButtonNew: function () {
+                this.Cmp.nro_cuenta.enable();
+                this.Cmp.id_banco_beneficiario.enable();
+                Phx.vista.ProveedorCtaBancaria.superclass.onButtonNew.call(this);
+            },
 
             bdel:true,
             bsave:true

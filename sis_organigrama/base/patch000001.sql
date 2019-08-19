@@ -783,6 +783,27 @@ ALTER TABLE orga.tfuncionario
   DROP COLUMN id_oficina;
 /*****************************F-SCP-FEA-ORGA-0-18/10/2017*************/
 
+/*****************************I-SCP-FEA-ORGA-0-11/07/2019*************/
+ALTER TABLE orga.tuo_funcionario
+  ADD COLUMN estado_funcional VARCHAR(15);
+
+ALTER TABLE orga.tuo_funcionario
+  ALTER COLUMN estado_funcional SET DEFAULT 'activo'::character varying;
+
+COMMENT ON COLUMN orga.tuo_funcionario.estado_funcional
+IS '(F.E.A)Campo que indica si una asignacion de cargo esta vigente.';
+
+ALTER TABLE orga.tuo_funcionario
+  ADD COLUMN codigo_ruta VARCHAR(50);
+/*****************************F-SCP-FEA-ORGA-0-11/07/2019*************/
+
+/*****************************I-SCP-FEA-ORGA-0-24/07/2019*************/
+ALTER TABLE orga.tfuncionario
+  ADD COLUMN codigo_rc_iva VARCHAR(50);
+
+COMMENT ON COLUMN orga.tfuncionario.codigo_rc_iva
+IS 'codigo relacionado con impuestos nacionales';
+/*****************************F-SCP-FEA-ORGA-0-24/07/2019*************/
 
 
 

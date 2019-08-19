@@ -16,11 +16,11 @@ header("content-type: text/javascript; charset=UTF-8");
             this.maestro = config;
 
             Phx.vista.FuncionarioCorreo.superclass.constructor.call(this,config);
-
+            this.store.baseParams.estado_func = 'todos';
             this.init();
 
-            /*this.store.baseParams.estado_func = 'activo';
-            this.load({params:{start:0, limit:50}});*/
+
+            /*this.load({params:{start:0, limit:50}});*/
 
             this.addButton('reporte', {
                 text: 'Reporte Correos',

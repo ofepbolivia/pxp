@@ -68,7 +68,7 @@ BEGIN
      if(par_transaccion='RH_FUNCIO_INS')then
 
 
-          BEGIN RAISE EXCEPTION 'COMUNIQUESE CON EL DEPTO. INFORMATICO';
+          BEGIN --RAISE EXCEPTION 'COMUNIQUESE CON EL DEPTO. INFORMATICO';
 			  v_id_persona = v_parametros.id_persona;
               if(v_parametros.id_persona is null)then
               --CI
@@ -104,7 +104,8 @@ BEGIN
                				   telefono1,
                                telefono2,
                                celular2,
-                               direccion
+                               direccion,
+                               id_tipo_doc_identificacion
                               )
                	values(
                       upper(v_parametros.nombre),
@@ -125,7 +126,8 @@ BEGIN
                       v_parametros.telefono1,
                       v_parametros.telefono2,
                       v_parametros.celular2,
-                      v_parametros.direccion
+                      v_parametros.direccion,
+                      v_parametros.id_tipo_doc_identificacion
                       ) RETURNING id_persona INTO v_id_persona;
                end if;
 
@@ -143,8 +145,8 @@ BEGIN
                           fecha_nacimiento = v_parametros.fecha_nacimiento,
                           genero = v_parametros.genero,
                           nacionalidad = v_parametros.nacionalidad,
-                          id_lugar = v_parametros.id_lugar,
-                          tipo_documento = v_parametros.tipo_documento,
+                          --id_lugar = v_parametros.id_lugar,
+                          --tipo_documento = v_parametros.tipo_documento,
                           ci = v_parametros.ci,
                           expedicion = v_parametros.expedicion,
                           estado_civil = v_parametros.estado_civil,
@@ -155,7 +157,8 @@ BEGIN
                           telefono1 = v_parametros.telefono1,
                           telefono2 = v_parametros.telefono2,
                           celular2 = v_parametros.celular2,
-                          direccion = v_parametros.direccion
+                          direccion = v_parametros.direccion,
+                          id_tipo_doc_identificacion = v_parametros.id_tipo_doc_identificacion
                  where id_persona = v_parametros.id_persona;
               end if;
 
@@ -193,7 +196,7 @@ BEGIN
 
                --Obtener el correlativo biometrico.
                SELECT nextval('orga.tfuncionario_id_biometrico_seq') INTO v_id_biometrico;
-
+               --raise exception 'v_id_biometrico: %, %, %', v_id_biometrico,v_codigo_empleado, v_parametros.id_persona;
                INSERT INTO orga.tfuncionario(
 		               codigo,
                        id_persona,
@@ -201,25 +204,27 @@ BEGIN
 		               fecha_reg,
 		               id_usuario_reg,
                        fecha_ingreso,
-		               email_empresa,
-		               interno,
-		               telefono_ofi,
+		               --email_empresa,
+		               --interno,
+		               --telefono_ofi,
 		               antiguedad_anterior,
 					   id_biometrico,
-                       es_tutor)
+                       es_tutor,
+                       codigo_rc_iva)
                values(
                       v_codigo_empleado,
-                        v_id_persona,
+                        v_parametros.id_persona,
                         'activo',
                         now(),
                         par_id_usuario,
                          v_parametros.fecha_ingreso,
-                        v_parametros.email_empresa,
-                        v_parametros.interno,
-                        v_parametros.telefono_ofi,
+                        --v_parametros.email_empresa,
+                        --v_parametros.interno,
+                        --v_parametros.telefono_ofi,
                         v_parametros.antiguedad_anterior,
                         v_id_biometrico,
-                        v_parametros.es_tutor)
+                        v_parametros.es_tutor,
+                        v_parametros.codigo_rc_iva)
                RETURNING id_funcionario into v_id_funcionario;
 
 
@@ -284,7 +289,7 @@ BEGIN
                     genero = v_parametros.genero,
                     nacionalidad = v_parametros.nacionalidad,
                     id_lugar = v_parametros.id_lugar,
-                    tipo_documento = v_parametros.tipo_documento,
+                    --tipo_documento = v_parametros.tipo_documento,
                     ci = v_parametros.ci,
                     expedicion = v_parametros.expedicion,
                     estado_civil = v_parametros.estado_civil,
@@ -295,7 +300,8 @@ BEGIN
                     telefono1 = v_parametros.telefono1,
                     telefono2 = v_parametros.telefono2,
                     celular2 = v_parametros.celular2,
-                    direccion = v_parametros.direccion
+                    direccion = v_parametros.direccion,
+                    id_tipo_doc_identificacion = v_parametros.id_tipo_doc_identificacion
                where id_persona = v_parametros.id_persona;
 
                 update orga.tfuncionario set
@@ -304,11 +310,12 @@ BEGIN
                     id_persona=v_parametros.id_persona,
                     estado_reg=v_parametros.estado_reg,
                     email_empresa=v_parametros.email_empresa,
-                    interno=v_parametros.interno,
+                    --interno=v_parametros.interno,
                     fecha_mod=now()::date,
-                    telefono_ofi= v_parametros.telefono_ofi,
+                    --telefono_ofi= v_parametros.telefono_ofi,
                     antiguedad_anterior =  v_parametros.antiguedad_anterior,
-                    es_tutor = v_parametros.es_tutor
+                    es_tutor = v_parametros.es_tutor,
+                    codigo_rc_iva = v_parametros.codigo_rc_iva
                 where id_funcionario=v_parametros.id_funcionario;
 			end if;
                v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Funcionario modificado con exito '||v_parametros.id_funcionario);

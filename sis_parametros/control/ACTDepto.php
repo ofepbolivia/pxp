@@ -105,7 +105,10 @@ class ACTDepto extends ACTbase{
         $this->objParam->defecto('dir_ordenacion','asc');
         
         if( $this->objParam->getParametro('id_lugar') != '' ) {
-			$this->objParam->addFiltro( '('.$this->objParam->getParametro('id_lugar')."::integer =ANY(DEPPTO.id_lugares) or  prioridad = 1)");
+			//17-07-2019 modificacion temporalmente para FONDOS EN AVANCE respecto para la prioridad
+            //$this->objParam->addFiltro( '('.$this->objParam->getParametro('id_lugar')."::integer =ANY(DEPPTO.id_lugares) or  prioridad = 1)");
+            //18-07-2019 se realiza distinto listado de depto para los de FONDO EN AVANCE
+            $this->objParam->addFiltro( '('.$this->objParam->getParametro('id_lugar')."::integer =ANY(DEPPTO.id_lugares))");
 		}
 		
 		if( $this->objParam->getParametro('modulo') != '' ) {
@@ -167,8 +170,39 @@ class ACTDepto extends ACTbase{
 		$this->res->imprimirRespuesta($this->res->generarJson());
 
 	}
-	
-	
+//18-07-2019 modificacion de lista solo mostrar obligaciones de pago Cochabamba con prioridad 1
+//funcion para en listar depto si es para un FONDO EN AVACE
+    function listarDeptoFiltradoXUsuarioFA(){
+
+        // parametros de ordenacion por defecto
+        $this->objParam->defecto('ordenacion','depto');
+        $this->objParam->defecto('dir_ordenacion','asc');
+
+        if( $this->objParam->getParametro('prioridad') != '' ) {
+            $this->objParam->addFiltro("DEPPTO.prioridad = ".$this->objParam->getParametro('prioridad')."");
+
+        }
+
+        if( $this->objParam->getParametro('modulo') != '' ) {
+            $this->objParam->addFiltro("DEPPTO.modulo = ''".$this->objParam->getParametro('modulo')."''");
+        }
+
+
+        if ($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+            $this->objReporte=new Reporte($this->objParam, $this);
+            $this->res=$this->objReporte->generarReporteListado('MODDepto','listarDeptoFiltradoXUsuario');
+        }
+        else {
+            $this->objFunSeguridad=$this->create('MODDepto');
+            //ejecuta el metodo de lista personas a travez de la intefaz objetoFunSeguridad
+            $this->res=$this->objFunSeguridad->listarDeptoFiltradoXUsuario($this->objParam);
+
+        }
+
+        $this->res->imprimirRespuesta($this->res->generarJson());
+
+
+    }
 	
 	
 

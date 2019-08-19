@@ -107,6 +107,7 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
                 gdisplayField:'desc_funcionario',//mapea al store del grid
                 anchor: '100%',
                 gwidth: 200,
+                baseParams: {estado_func:'todos'},
                 renderer: function (value, p, record){return String.format('{0}', record.data['desc_funcionario']);}
              },
             type:'ComboRec',

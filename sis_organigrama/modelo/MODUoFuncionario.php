@@ -42,6 +42,11 @@ class MODUoFuncionario extends MODbase{
         $this->captura('nro_documento_asignacion','varchar');
         $this->captura('fecha_documento_asignacion','date');
         $this->captura('tipo','varchar');
+        $this->captura('codigo_ruta','varchar');
+        $this->captura('estado_funcional','varchar');
+        $this->captura('certificacion_presupuestaria','varchar');
+        $this->captura('nombre_escala','varchar');
+        $this->captura('haber_basico','numeric');
 
         //Ejecuta la funcion
         $this->armarConsulta();
@@ -69,6 +74,9 @@ class MODUoFuncionario extends MODbase{
         $this->setParametro('nro_documento_asignacion','nro_documento_asignacion','varchar');
         $this->setParametro('fecha_documento_asignacion','fecha_documento_asignacion','date');
         $this->setParametro('tipo','tipo','varchar');
+        $this->setParametro('certificacion_presupuestaria','certificacion_presupuestaria','varchar');
+        $this->setParametro('codigo_ruta','codigo_ruta','varchar');
+        $this->setParametro('estado_funcional','estado_funcional','varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -93,6 +101,9 @@ class MODUoFuncionario extends MODbase{
         $this->setParametro('observaciones_finalizacion','observaciones_finalizacion','varchar');
         $this->setParametro('nro_documento_asignacion','nro_documento_asignacion','varchar');
         $this->setParametro('fecha_documento_asignacion','fecha_documento_asignacion','date');
+        $this->setParametro('certificacion_presupuestaria','certificacion_presupuestaria','varchar');
+        $this->setParametro('codigo_ruta','codigo_ruta','varchar');
+        $this->setParametro('estado_funcional','estado_funcional','varchar');
 
 
 

@@ -39,6 +39,7 @@ $body$
     v_nivel				integer;
 	v_filtro			varchar='';
     v_inner				varchar='';
+    v_estado_func		varchar = 'general';
   BEGIN
 
     v_parametros:=pxp.f_get_record(par_tabla);
@@ -55,20 +56,94 @@ $body$
       --consulta:=';
       BEGIN
 	  --Creamos una tabla donde obtenemos la ultima asignacion de un funcionario
-       	create temp table tt_orga_filtro (
-          	id_funcionario integer,
-          	fecha_asignacion date
-       	)on commit drop;
+      	if pxp.f_existe_parametro(par_tabla,'estado_func') then
+          v_estado_func =v_parametros.estado_func;
+        end if;
+      	if v_estado_func != 'sin_asignacion' then
+          create temp table tt_orga_filtro (
+              id_funcionario integer,
+              fecha_asignacion date
+          )on commit drop;
 
-                      v_consulta = 'insert into tt_orga_filtro
-                      select  tuo.id_funcionario, max(tuo.fecha_asignacion)
-                      from orga.tuo_funcionario tuo
-                      where tuo.tipo = ''oficial'' and tuo.estado_reg = ''activo''
-                      group by  tuo.id_funcionario';
+                        v_consulta = 'insert into tt_orga_filtro
+                        select  tuo.id_funcionario, max(tuo.fecha_asignacion)
+                        from orga.tuo_funcionario tuo
+                        where tuo.tipo = ''oficial'' and tuo.estado_reg = ''activo''
+                        group by  tuo.id_funcionario';
 
-        execute(v_consulta);
-        v_consulta:='SELECT
-                            FUNCIO.id_funcionario,
+          execute(v_consulta);
+          v_consulta:='SELECT
+                          FUNCIO.id_funcionario,
+                          FUNCIO.codigo,
+                          FUNCIO.estado_reg,
+                          FUNCIO.fecha_reg,
+                          FUNCIO.id_persona,
+                          FUNCIO.id_usuario_reg,
+                          FUNCIO.fecha_mod,
+                          FUNCIO.id_usuario_mod,
+                          FUNCIO.email_empresa,
+                          gecom.f_get_numeros_asignados(''interno'',FUNCIO.id_funcionario) as interno,
+                          --FUNCIO.interno,
+                          --FUNCIO.fecha_ingreso,
+                          plani.f_get_fecha_primer_contrato_empleado (tuo.id_uo_funcionario, tuo.id_funcionario, tuo.fecha_asignacion) as fecha_ingreso,
+                          PERSON.nombre_completo2 AS desc_person,
+                          usu1.cuenta as usr_reg,
+                          usu2.cuenta as usr_mod,
+                          PERSON.ci,
+                          PERSON.num_documento,
+                          PERSON.telefono1,
+                          PERSON.celular1,
+                          PERSON.correo,
+                          --FUNCIO.telefono_ofi,
+                          gecom.f_get_numeros_asignados(''celular'',FUNCIO.id_funcionario) as telefono_ofi,
+                          FUNCIO.antiguedad_anterior,
+                          PERSON2.estado_civil,
+                          PERSON2.genero,
+                          PERSON2.fecha_nacimiento,
+                          PERSON2.id_lugar,
+                          LUG.nombre as nombre_lugar,
+                          PERSON2.nacionalidad,
+                          PERSON2.discapacitado,
+                          PERSON2.carnet_discapacitado,
+                          FUNCIO.id_biometrico,
+                          tar.nombre_archivo,
+                          tar.extension,
+                          PERSON.telefono2,
+                          PERSON.celular2,
+                          PERSON.nombre,
+                          PERSON.ap_materno,
+                          PERSON.ap_paterno,
+                          --PERSON2.tipo_documento,
+                          tdoc.nombre as tipo_documento,
+                          PERSON2.expedicion,
+                          PERSON2.direccion,
+                          FUNCIO.es_tutor,
+                          tuo.fecha_asignacion,
+                          tuo.fecha_finalizacion,
+                          tca.nombre as nombre_cargo,
+                          tof.nombre as nombre_oficina,
+                          tlo.nombre as nombre_lugar_ofi,
+                          FUNCIO.codigo_rc_iva,
+                          PERSON2.id_tipo_doc_identificacion
+                          FROM orga.tfuncionario FUNCIO
+                          inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario AND
+                          tuo.fecha_asignacion  in (select fecha_asignacion
+                                                      from tt_orga_filtro where id_funcionario = FUNCIO.id_funcionario)
+                          inner join orga.tcargo tca on tca.id_cargo = tuo.id_cargo
+                          inner join orga.toficina tof on tof.id_oficina = tca.id_oficina
+                          inner join param.tlugar tlo on tlo.id_lugar = tca.id_lugar
+                          INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona
+                          INNER JOIN SEGU.tpersona PERSON2 ON PERSON2.id_persona=FUNCIO.id_persona
+                          left join segu.ttipo_documento tdoc on tdoc.id_tipo_documento = PERSON2.id_tipo_doc_identificacion
+                          LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
+                          inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
+                          left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
+                          left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10 and tar.id_archivo_fk is null
+                          WHERE ';
+
+		else
+        	v_consulta:='SELECT
+            				FUNCIO.id_funcionario,
                             FUNCIO.codigo,
                             FUNCIO.estado_reg,
                             FUNCIO.fecha_reg,
@@ -77,18 +152,20 @@ $body$
                             FUNCIO.fecha_mod,
                             FUNCIO.id_usuario_mod,
                             FUNCIO.email_empresa,
-                            FUNCIO.interno,
+                            gecom.f_get_numeros_asignados(''interno'',FUNCIO.id_funcionario) as interno,
+                            --FUNCIO.interno,
                             --FUNCIO.fecha_ingreso,
                             plani.f_get_fecha_primer_contrato_empleado (tuo.id_uo_funcionario, tuo.id_funcionario, tuo.fecha_asignacion) as fecha_ingreso,
                             PERSON.nombre_completo2 AS desc_person,
                             usu1.cuenta as usr_reg,
-						    usu2.cuenta as usr_mod,
+                            usu2.cuenta as usr_mod,
                             PERSON.ci,
                             PERSON.num_documento,
                             PERSON.telefono1,
                             PERSON.celular1,
                             PERSON.correo,
-                            FUNCIO.telefono_ofi,
+                            --FUNCIO.telefono_ofi,
+                            gecom.f_get_numeros_asignados(''celular'',FUNCIO.id_funcionario) as telefono_ofi,
                             FUNCIO.antiguedad_anterior,
                             PERSON2.estado_civil,
                             PERSON2.genero,
@@ -106,7 +183,8 @@ $body$
                             PERSON.nombre,
                             PERSON.ap_materno,
                             PERSON.ap_paterno,
-                            PERSON2.tipo_documento,
+                            --PERSON2.tipo_documento,
+                            tdoc.nombre as tipo_documento,
                             PERSON2.expedicion,
                             PERSON2.direccion,
                             FUNCIO.es_tutor,
@@ -114,24 +192,24 @@ $body$
                             tuo.fecha_finalizacion,
                             tca.nombre as nombre_cargo,
                             tof.nombre as nombre_oficina,
-                            tlo.nombre as nombre_lugar_ofi
-                            FROM orga.tfuncionario FUNCIO
-                            inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario AND
-                            tuo.fecha_asignacion  in (select fecha_asignacion
-                                                        from tt_orga_filtro where id_funcionario = FUNCIO.id_funcionario)
-                            inner join orga.tcargo tca on tca.id_cargo = tuo.id_cargo
-                            inner join orga.toficina tof on tof.id_oficina = tca.id_oficina
-                            inner join param.tlugar tlo on tlo.id_lugar = tca.id_lugar
-                            INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona
-                            INNER JOIN SEGU.tpersona PERSON2 ON PERSON2.id_persona=FUNCIO.id_persona
-                            LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
-                            inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
-						    left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
-						    left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10
-                            WHERE ';
+                            tlo.nombre as nombre_lugar_ofi,
+                            FUNCIO.codigo_rc_iva,
+                            PERSON2.id_tipo_doc_identificacion
 
-
-
+                          FROM orga.tfuncionario FUNCIO
+                          left join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario
+                          left join orga.tcargo tca on tca.id_cargo = tuo.id_cargo
+                          left join orga.toficina tof on tof.id_oficina = tca.id_oficina
+                          left join param.tlugar tlo on tlo.id_lugar = tca.id_lugar
+                          INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona
+                          INNER JOIN SEGU.tpersona PERSON2 ON PERSON2.id_persona=FUNCIO.id_persona
+                          left join segu.ttipo_documento tdoc on tdoc.id_tipo_documento = PERSON2.id_tipo_doc_identificacion
+                          LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
+                          inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
+                          left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
+                          left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10 and tar.id_archivo_fk is null
+                          WHERE FUNCIO.estado_reg = ''activo'' and (FUNCIO.fecha_ingreso between ''1/1/2019''::date and ''31/12/2019''::date) and ';
+        end if;
         v_consulta := v_consulta || v_parametros.filtro;
 
         if (pxp.f_existe_parametro(par_tabla, 'tipo') and
@@ -194,7 +272,7 @@ $body$
                             LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
                             inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
 						    left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
-						    left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10
+						    left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10 and tar.id_archivo_fk is null
                             WHERE ';
         v_consulta:=v_consulta||v_parametros.filtro;
         if (pxp.f_existe_parametro(par_tabla, 'tipo') and
@@ -784,7 +862,7 @@ $body$
         end if;*/
 		if v_parametros.estado_func = 'altas' then
         	v_filtro = 'tuo.fecha_asignacion between '''||v_parametros.fecha_ini||'''::date and '''||v_parametros.fecha_fin||'''::date';
-            v_inner = '';
+          v_inner  =  'tuo.id_funcionario not in (select tu.id_funcionario from orga.tuo_funcionario tu where tu.fecha_finalizacion between '''||(v_parametros.fecha_ini - interval '1 month')::date||'''::date and '''||(v_parametros.fecha_fin - interval '1 month')::date||'''::date) and  '::varchar;
         else
         	v_filtro = 'tuo.fecha_finalizacion between '''||v_parametros.fecha_ini||'''::date and '''||v_parametros.fecha_fin||'''::date';
             v_inner  = 'tuo.id_funcionario not in (select tu.id_funcionario from orga.tuo_funcionario tu where tu.fecha_asignacion between '''||(v_parametros.fecha_ini + interval '1 month')::date||'''::date and '''||(v_parametros.fecha_fin + interval '1 month')::date||'''::date) and  '::varchar;
@@ -799,6 +877,7 @@ $body$
                             FUNCIO.id_persona,
                             PERSON.nombre_completo2 AS desc_person,
                             PERSON.ci,
+                            PERSON2.expedicion,
                             PERSON.num_documento,
                             PERSON.telefono1,
                             PERSON.celular1,
@@ -821,11 +900,23 @@ $body$
 						    usu2.cuenta as usr_mod,
                             FUNCIO.estado_reg,
                             FUNCIO.fecha_reg,
-                            FUNCIO.fecha_mod
+                            FUNCIO.fecha_mod,
+
+                            tes.nombre as desc_nivel_salarial,
+                            tes.haber_basico::numeric,
+                            0::numeric as bono_antiguedad,
+                            0::numeric as bono_frontera,
+                            tes.haber_basico::numeric as total_ganado,
+                            tar.nombre_archivo,
+                            tar.extension,
+                            tuo.observaciones_finalizacion as motivo_fin,
+                            tcon.nombre as nombre_contrato
 
                             FROM orga.tfuncionario FUNCIO
                             inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario
                             inner join orga.tcargo tca on tca.id_cargo = tuo.id_cargo
+                            inner join orga.ttipo_contrato tcon on tcon.id_tipo_contrato = tca.id_tipo_contrato
+                            inner join orga.tescala_salarial tes on tes.id_escala_salarial = tca.id_escala_salarial
                             inner join orga.toficina tof on tof.id_oficina = tca.id_oficina
                             inner join param.tlugar tlo on tlo.id_lugar = tca.id_lugar
                             INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona
@@ -833,7 +924,8 @@ $body$
                             LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
                             inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
 						    left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
-                            WHERE '||v_filtro||' and '||v_inner;
+                            left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10
+                            WHERE tuo.estado_reg = ''activo'' and '||v_filtro||' and '||v_inner;
 
         v_consulta := v_consulta || v_parametros.filtro;
         v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
@@ -857,7 +949,7 @@ $body$
             end if;*/
             if v_parametros.estado_func = 'altas' then
         		v_filtro = 'tuo.fecha_asignacion between '''||v_parametros.fecha_ini||'''::date and '''||v_parametros.fecha_fin||'''::date';
-            	v_inner = '';
+            v_inner  =  'tuo.id_funcionario not in (select tu.id_funcionario from orga.tuo_funcionario tu where tu.fecha_finalizacion between '''||(v_parametros.fecha_ini - interval '1 month')::date||'''::date and '''||(v_parametros.fecha_fin - interval '1 month')::date||'''::date) and  '::varchar;
         	else
         		v_filtro = 'tuo.fecha_finalizacion between '''||v_parametros.fecha_ini||'''::date and '''||v_parametros.fecha_fin||'''::date';
             	v_inner  = 'tuo.id_funcionario not in (select tu.id_funcionario from orga.tuo_funcionario tu where tu.fecha_asignacion between '''||(v_parametros.fecha_ini + interval '1 month')::date||'''::date and '''||(v_parametros.fecha_fin + interval '1 month')::date||'''::date) and  '::varchar;
@@ -867,6 +959,7 @@ $body$
                             FROM orga.tfuncionario FUNCIO
                             inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario
                             inner join orga.tcargo tca on tca.id_cargo = tuo.id_cargo
+                            inner join orga.ttipo_contrato tcon on tcon.id_tipo_contrato = tca.id_tipo_contrato
                             inner join orga.toficina tof on tof.id_oficina = tca.id_oficina
                             inner join param.tlugar tlo on tlo.id_lugar = tca.id_lugar
                             INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona
@@ -874,7 +967,8 @@ $body$
                             LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
                             inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
 						    left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
-                            WHERE '||v_filtro||' and '||v_inner;
+                            left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10
+                            WHERE tuo.estado_reg = ''activo'' and '||v_filtro||' and '||v_inner;
         v_consulta := v_consulta || v_parametros.filtro;
         return v_consulta;
         end;

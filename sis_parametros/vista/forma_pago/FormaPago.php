@@ -17,9 +17,10 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
     	//llama al constructor de la clase padre
 		Phx.vista.FormaPago.superclass.constructor.call(this,config);
 		this.init();
+        // this.iniciarEventos();
 		this.load({params:{start:0, limit:this.tam_pag}})
 	},
-			
+
 	Atributos:[
 		{
 			//configuracion del componente
@@ -36,7 +37,7 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
             config:{
                 name: 'desc_forma_pago',
                 fieldLabel: 'Forma de Pago',
-                allowBlank: true,
+                allowBlank: false,
                 anchor: '80%',
                 gwidth: 100,
                 maxLength:100
@@ -48,6 +49,45 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
             form:true
         },
 
+        {
+            config:{
+                name: 'tipo',
+                fieldLabel: 'Tipo',
+                anchor: '80%',
+                gwidth: 170,
+                allowBlank: false,
+                typeAhead: true,
+                triggerAction: 'all',
+                lazyRender:true,
+                mode: 'local',
+                valueField: 'inicio',
+                forcSselect:true,
+                enableMultiSelect: true,
+                store:['Gasto','Ingreso']
+            },
+            type:'ComboBox',
+            filters:{pfiltro:'fp.tipo',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
+
+        {
+            config:{
+                name: 'codigo',
+                fieldLabel: 'Código',
+                qtip:'Código Libro de Bancos',
+                allowBlank: false,
+                anchor: '80%',
+                gwidth: 100,
+                maxLength:30
+            },
+            type:'TextField',
+            filters:{pfiltro:'fp.codigo',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
         {
             config:{
                 name: 'cod_inter',
@@ -67,6 +107,23 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
             },
             type:'AwesomeCombo',
             filters:{pfiltro:'fp.cod_inter',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
+        {
+            config:{
+                name: 'orden',
+                fieldLabel: 'Orden',
+                qtip: 'Posición en la Ordenación',
+                allowBlank: false,
+                allowDecimals: true,
+                anchor: '80%',
+                gwidth: 100
+            },
+            type:'NumberField',
+            filters: { pfiltro:'fp.orden', type:'numeric' },
+            valorInicial: 1.00,
             id_grupo:1,
             grid:true,
             form:true
@@ -133,22 +190,7 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
 				grid:true,
 				form:false
 		},
-		{
-			config:{
-				name: 'fecha_reg',
-				fieldLabel: 'Fecha creación',
-				allowBlank: true,
-				anchor: '80%',
-				gwidth: 100,
-							format: 'd/m/Y', 
-							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
-			},
-				type:'DateField',
-				filters:{pfiltro:'fp.fecha_reg',type:'date'},
-				id_grupo:1,
-				grid:true,
-				form:false
-		},
+
 		{
 			config:{
 				name: 'usuario_ai',
@@ -161,39 +203,25 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
 				type:'TextField',
 				filters:{pfiltro:'fp.usuario_ai',type:'string'},
 				id_grupo:1,
-				grid:true,
-				form:false
-		},
-		{
-			config:{
-				name: 'usr_reg',
-				fieldLabel: 'Creado por',
-				allowBlank: true,
-				anchor: '80%',
-				gwidth: 100,
-				maxLength:4
-			},
-				type:'Field',
-				filters:{pfiltro:'usu1.cuenta',type:'string'},
-				id_grupo:1,
-				grid:true,
-				form:false
-		},
-		{
-			config:{
-				name: 'id_usuario_ai',
-				fieldLabel: 'Creado por',
-				allowBlank: true,
-				anchor: '80%',
-				gwidth: 100,
-				maxLength:4
-			},
-				type:'Field',
-				filters:{pfiltro:'fp.id_usuario_ai',type:'numeric'},
-				id_grupo:1,
 				grid:false,
 				form:false
 		},
+        {
+            config:{
+                name: 'fecha_mod',
+                fieldLabel: 'Fecha Modif.',
+                allowBlank: true,
+                anchor: '80%',
+                gwidth: 100,
+                format: 'd/m/Y',
+                renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
+            },
+            type:'DateField',
+            filters:{pfiltro:'fp.fecha_mod',type:'date'},
+            id_grupo:1,
+            grid:true,
+            form:false
+        },
 		{
 			config:{
 				name: 'usr_mod',
@@ -205,57 +233,11 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
 			},
 				type:'Field',
 				filters:{pfiltro:'usu2.cuenta',type:'string'},
-				id_grupo:1,
-				grid:true,
-				form:false
-		},
-		{
-			config:{
-				name: 'fecha_mod',
-				fieldLabel: 'Fecha Modif.',
-				allowBlank: true,
-				anchor: '80%',
-				gwidth: 100,
-							format: 'd/m/Y', 
-							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
-			},
-				type:'DateField',
-				filters:{pfiltro:'fp.fecha_mod',type:'date'},
-				id_grupo:1,
-				grid:true,
-				form:false
-		},
-		{
-			config:{
-				name: 'usr_mod',
-				fieldLabel: 'Modificado por',
-				allowBlank: true,
-				anchor: '80%',
-				gwidth: 100,
-				maxLength:4
-			},
-				type:'Field',
-				filters:{pfiltro:'usu2.cuenta',type:'string'},
-				id_grupo:1,
-				grid:true,
-				form:false
-		},
-		{
-			config:{
-				name: 'fecha_mod',
-				fieldLabel: 'Fecha Modif.',
-				allowBlank: true,
-				anchor: '80%',
-				gwidth: 100,
-							format: 'd/m/Y', 
-							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
-			},
-				type:'DateField',
-				filters:{pfiltro:'fp.fecha_mod',type:'date'},
 				id_grupo:1,
 				grid:true,
 				form:false
 		}
+
 	],
 	tam_pag:50,	
 	title:'Forma de Pago',
@@ -274,7 +256,10 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
         {name:'id_usuario_reg', type: 'numeric'},
         {name:'usr_reg', type: 'string'},
         {name:'usr_mod', type: 'string'},
-        {name:'id_usuario_mod', type: 'numeric'}
+        {name:'id_usuario_mod', type: 'numeric'},
+        {name:'tipo', type: 'string'},
+        {name:'orden', type: 'numeric'},
+        {name:'codigo', type: 'string'}
 
 	],
 	sortInfo:{

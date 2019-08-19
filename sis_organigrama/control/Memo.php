@@ -120,7 +120,7 @@ EOF;
         $this->ln();
         $this->Cell(15, 2,'Asunto', 0, 0, 'L', false, '', 0, false, 'T', 'C');
         $this->Cell(25, 2,'  :', 0, 0, 'L', false, '', 0, false, 'T', 'C');
-        $this->SetFont('helvetica','B',11);
+        $this->SetFont('helvetica','BU',11);
         $this->Cell(0, 2,'Evaluación del desempeño gestión '.$array["gestion"], 0, 0, 'L', false, '', 0, false, 'T', 'C');
         $this->ln();
         $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => 'black');
@@ -160,17 +160,17 @@ EOF;
 
         if ($array["nota"] >= 91 and $array["nota"]<= 100) {
             $this->writeHTML('<p>'.$gen.':</p>
-       <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la Evaluación de <b>Desempeño de la Gestión '.$array["gestion"].'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
-                            <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso el agradecimiento y felicitación;  por su trabajo tesonero y compromiso con nuestros valores empresariales.</p>
+       <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la <b>Evaluación de Desempeño de la Gestión '.$array["gestion"].'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
+                            <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso el agradecimiento y felicitación por su desempeño tesonero y compromiso con nuestros valores corporativos.</p>
                             <p align = "justica">'.$htmlR.'</p>
-                            <p align="justica">Seguro de que estos resultados obtenidos serán replicados y mejorados en adelante, reciba usted mis consideraciones distinguidas.</p>
+                            <p align="justica">Seguro de que estos resultados obtenidos serán replicados en adelante, reciba usted mis consideraciones distinguidas.</p>
                             ',true);
             $this->firmas();
 
         } elseif ($array["nota"] >= 81 and $array["nota"]<=90) {
             $this->writeHTML('<p>'.$gen.':</p>
        <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la <b>Evaluación de Desempeño de la Gestión '.$array["gestion"].'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
-                            <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso mis felicitaciones  por su trabajo en Boliviana de Aviación.  </p>
+                            <p align="justica">En este sentido, expreso mis felicitaciones  por su desempeño en Boliviana de Aviación.</p>
                             <p align = "justica">'.$htmlR.'</p>
                             <p align="justica">Seguro de que estos resultados obtenidos serán replicados y mejorados en adelante, reciba usted mis consideraciones distinguidas.</p>
                             ',true);
@@ -179,9 +179,9 @@ EOF;
         } elseif ($array["nota"] >= 0 and $array["nota"] <= 80) {
             $this->writeHTML('<p>'.$gen.':</p>
        <p align="justica">De acuerdo a procedimientos establecidos tengo a bien comunicar, que habiéndose realizado la Evaluación de Desempeño de la Gestión '.$array["gestion"].', se evidencia que usted ha obtenido una calificación de <b>suficiente</b> en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
-                            <p align="justica">En este sentido, se sugiere tomar en cuenta las siguientes observaciones que reflejan la evaluación del desempeño gestión '.$array["gestion"].', a fin de mejorar su desempeño:  </p>
+                            <p align="justica">En este sentido, a fin de mejorar su desempeño se sugiere tomar en cuenta las siguientes observaciones que reflejan la Evaluación de Desempeño Gestión '.$array["gestion"].':</p>
                             <p align = "justica">'.$htmlR.'</p>
-                            <p align="justica">Seguro de que estas observaciones serán corregidas oportunamente, reciba usted mis consideraciones distinguidas.</p>
+                            <p align="justica">Con este motivo, saludo a usted atentamente.</p>
                             ',true);
 
             $this->firmas();

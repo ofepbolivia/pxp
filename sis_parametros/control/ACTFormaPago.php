@@ -25,10 +25,12 @@ class ACTFormaPago extends ACTbase{
     }
 			
 	function listarFormaPagofil(){
-		$this->objParam->defecto('ordenacion','id_forma_pago');
-
+		$this->objParam->defecto('ordenacion','orden');
 		$this->objParam->defecto('dir_ordenacion','asc');
-		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+        //se filtra para mostrar las formas de pago para obligaciones de pago
+        $this->objParam->addFiltro("fp.codigo not in  (''transferencia_interna'' , ''transf_interna_debe'',''transf_interna_haber'',''debito_automatico'',''transferencia_carta'',''transferencia_exterior'') ");
+
+        if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
 			$this->objReporte = new Reporte($this->objParam,$this);
 			$this->res = $this->objReporte->generarReporteListado('MODFormaPago','listarFormaPagofil');
 		} else{

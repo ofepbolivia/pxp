@@ -35,7 +35,7 @@ BEGIN
     if p_id_uo is null then
     	return;
     end if;
-    select coalesce(tuo.codigo,'N/E'), tuo.nombre_cargo
+    select /*coalesce(tuo.codigo,'N/E')*/ tuo.id_uo::varchar, tuo.nombre_unidad
     into ps_codigo, ps_nombre
     from orga.tuo tuo
     where tuo.id_uo = p_id_uo and tuo.estado_reg = 'activo';

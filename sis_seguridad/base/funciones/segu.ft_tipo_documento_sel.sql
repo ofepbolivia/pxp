@@ -61,7 +61,7 @@ BEGIN
                v_consulta:='select 
                             tipdoc.id_tipo_documento,
                             tipdoc.nombre,
-                            tipdoc.fecha_reg,
+                            tipdoc.fecha_reg::date,
                             tipdoc.estado_reg
                         from segu.ttipo_documento tipdoc
                         where tipdoc.estado_reg=''activo'' and ';

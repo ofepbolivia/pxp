@@ -32,6 +32,8 @@ DECLARE
 	v_id_proveedor_cta_bancaria	integer;
 
     v_banco_beneficiario	varchar;
+    v_proveedor				varchar;
+    v_nro_cuenta			varchar;
 
 BEGIN
 
@@ -48,6 +50,33 @@ BEGIN
 	if(p_transaccion='PM_PCTABAN_INS')then
 
         begin
+
+        	--controles para que no se repita el numero de cuenta bancaria
+        	 select vp.desc_proveedor, p.nro_cuenta
+             into v_proveedor, v_nro_cuenta
+             from param.tproveedor_cta_bancaria p
+             inner join param.vproveedor vp on vp.id_proveedor = p.id_proveedor
+             where p.id_proveedor= v_parametros.id_proveedor;
+
+             IF   exists(select 1
+                          from param.tproveedor_cta_bancaria p
+                          where p.estado_reg = 'activo'
+                          and  p.nro_cuenta =  v_parametros.nro_cuenta
+                          and p.id_proveedor= v_parametros.id_proveedor ) THEN
+
+                 raise exception 'Número de Cuenta ya registrado con el Proveedor %',UPPER(v_proveedor);
+             END IF;
+
+             IF   exists(select 1
+                          from param.tproveedor_cta_bancaria p
+                          where p.estado_reg = 'activo'
+                          and  p.nro_cuenta =  v_parametros.nro_cuenta ) THEN
+
+                 raise exception 'Número de Cuenta ya registrado con el Proveedor %',UPPER(v_proveedor);
+             END IF;
+            --
+
+
         	--Sentencia de la insercion
         	insert into param.tproveedor_cta_bancaria(
 			id_banco_beneficiario,
@@ -63,7 +92,8 @@ BEGIN
 			fecha_reg,
 			id_usuario_reg,
 			id_usuario_mod,
-			fecha_mod
+			fecha_mod,
+            prioridad
           	) values(
 			v_parametros.id_banco_beneficiario,
             v_parametros.fw_aba_cta,
@@ -78,8 +108,8 @@ BEGIN
 			now(),
 			p_id_usuario,
 			null,
-			null
-
+			null,
+			v_parametros.prioridad
 
 
 			)RETURNING id_proveedor_cta_bancaria into v_id_proveedor_cta_bancaria;
@@ -103,6 +133,25 @@ BEGIN
 	elsif(p_transaccion='PM_PCTABAN_MOD')then
 
 		begin
+
+              --controles para que no se repita la prioridad
+
+              	 select vp.desc_proveedor, p.nro_cuenta
+                 into v_proveedor, v_nro_cuenta
+                 from param.tproveedor_cta_bancaria p
+                 inner join param.vproveedor vp on vp.id_proveedor = p.id_proveedor
+                 where p.id_proveedor= v_parametros.id_proveedor;
+
+                IF   exists(select 1
+                            from param.tproveedor_cta_bancaria p
+                            where p.estado_reg = 'activo'
+                            and  p.prioridad =  v_parametros.prioridad
+                            and p.id_proveedor = v_parametros.id_proveedor) THEN
+
+                   raise exception 'Prioridad ya registrado con el Número de Cuenta % y Proveedor %',v_nro_cuenta,UPPER(v_proveedor);
+               END IF;
+              --
+
 			--Sentencia de la modificacion
 			update param.tproveedor_cta_bancaria set
 			id_banco_beneficiario = v_parametros.id_banco_beneficiario,
@@ -115,7 +164,8 @@ BEGIN
 			fecha_mod = now(),
 			id_usuario_ai = v_parametros._id_usuario_ai,
 			usuario_ai = v_parametros._nombre_usuario_ai,
-            estado_cta = v_parametros.estado_cta
+            estado_cta = v_parametros.estado_cta,
+            prioridad = v_parametros.prioridad
 			where id_proveedor_cta_bancaria=v_parametros.id_proveedor_cta_bancaria;
 
 			--Definicion de la respuesta
@@ -137,8 +187,15 @@ BEGIN
 	elsif(p_transaccion='PM_PCTABAN_ELI')then
 
 		begin
-			--Sentencia de la eliminacion
-			delete from param.tproveedor_cta_bancaria
+
+            --25-06-2019 modificacion para cambiar de estado
+            --Sentencia de la eliminacion
+			/*delete from param.tproveedor_cta_bancaria
+            where id_proveedor_cta_bancaria=v_parametros.id_proveedor_cta_bancaria;
+            */
+
+         	UPDATE param.tproveedor_cta_bancaria SET
+            estado_cta = 'Inactivo'
             where id_proveedor_cta_bancaria=v_parametros.id_proveedor_cta_bancaria;
 
             --Definicion de la respuesta

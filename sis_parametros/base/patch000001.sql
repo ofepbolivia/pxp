@@ -2101,4 +2101,34 @@ COMMENT ON COLUMN param.tforma_pago.cod_inter
 IS 'para diferenciar las formas de pago de las internacionales';
 /***********************************F-SCP-MAY-PARAM-1-11/06/2019*****************************************/
 
+/***********************************I-SCP-MAY-PARAM-0-25/06/2019*****************************************/
+ALTER TABLE param.tproveedor_cta_bancaria
+  ALTER COLUMN fw_aba_cta TYPE VARCHAR(25) COLLATE pg_catalog."default";
 
+ALTER TABLE tes.tplan_pago
+  ADD COLUMN id_proveedor_cta_bancaria INTEGER;
+
+/***********************************F-SCP-MAY-PARAM-0-25/06/2019*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-26/06/2019*****************************************/
+ALTER TABLE param.tproveedor_cta_bancaria
+  ADD COLUMN prioridad INTEGER;
+/***********************************F-SCP-MAY-PARAM-0-26/06/2019*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-12/07/2019*****************************************/
+ALTER TABLE param.tforma_pago
+  ADD COLUMN tipo VARCHAR(50);
+
+COMMENT ON COLUMN param.tforma_pago.tipo
+IS 'tipo de la forma de pago si es de Ingreso o Gasto';
+/***********************************F-SCP-MAY-PARAM-0-12/07/2019*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-23/07/2019*****************************************/
+ALTER TABLE param.tforma_pago
+  ADD COLUMN orden NUMERIC;
+/***********************************F-SCP-MAY-PARAM-0-23/07/2019*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-26/07/2019*****************************************/
+ALTER TABLE param.tforma_pago
+  ADD COLUMN codigo VARCHAR(30) DEFAULT 'a' NOT NULL;
+/***********************************F-SCP-MAY-PARAM-0-26/07/2019*****************************************/
