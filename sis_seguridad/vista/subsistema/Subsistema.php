@@ -293,6 +293,7 @@ Phx.vista.Subsistema=Ext.extend(Phx.gridInterfaz,{
 			this.getBoton('sinc_func').enable();
 			this.getBoton('aInterSis').enable();
 			this.getBoton('exp_menu').enable();
+			this.getBoton('sinc_permisos').enable();
 
 			
 			
@@ -305,6 +306,7 @@ Phx.vista.Subsistema=Ext.extend(Phx.gridInterfaz,{
 			this.getBoton('sinc_func').disable();
 			this.getBoton('aInterSis').disable();
 			this.getBoton('exp_menu').disable();
+			this.getBoton('sinc_permisos').disable();
 
 			
 			
