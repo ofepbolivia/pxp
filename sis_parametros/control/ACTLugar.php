@@ -19,9 +19,9 @@ class ACTLugar extends ACTbase{
 		}
 		/*Aumentando para listar solo los paises*/
 		if ($this->objParam->getParametro('pais') != '') {
-			$this->objParam->addFiltro("lug.tipo = ''". $this->objParam->getParametro('pais') . "''");
+			$this->objParam->addFiltro("lug.id_sql_server is not null and lug.tipo = ''". $this->objParam->getParametro('pais') . "''");
 		}
-		/*******************************************/ 
+		/*******************************************/
 		if ($this->objParam->getParametro('tipo') != '') {
 			$this->objParam->addFiltro("lug.tipo  in (''". $this->objParam->getParametro('tipo') . "'')");
 		}
