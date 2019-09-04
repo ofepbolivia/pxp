@@ -80,7 +80,7 @@ Phx.vista.FormaPago=Ext.extend(Phx.gridInterfaz,{
                 allowBlank: false,
                 anchor: '80%',
                 gwidth: 100,
-                maxLength:30
+                maxLength:20
             },
             type:'TextField',
             filters:{pfiltro:'fp.codigo',type:'string'},
