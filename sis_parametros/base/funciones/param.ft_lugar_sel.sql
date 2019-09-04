@@ -62,7 +62,8 @@ BEGIN
 						lug.id_usuario_mod,
 						usu1.cuenta as usr_reg,
 						usu2.cuenta as usr_mod,
-						lug.es_regional	
+						lug.es_regional,
+						lug.id_sql_server
 						from param.tlugar lug
 						inner join segu.tusuario usu1 on usu1.id_usuario = lug.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = lug.id_usuario_mod

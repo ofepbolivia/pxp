@@ -13,6 +13,9 @@ class ACTTipoCambio extends ACTbase{
 		$this->objParam->defecto('ordenacion','id_tipo_cambio');
 
 		$this->objParam->defecto('dir_ordenacion','asc');
+		
+		//filtro para captura de tipo de cambio para libro de bancos (transferencia entre cuentras) BVP
+		$this->objParam->getParametro('fecha_trans') != '' && $this->objParam->addFiltro("tcb.fecha = current_date  and mon.moneda = ''Dolares Americanos''");
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
 			$this->objReporte = new Reporte($this->objParam,$this);
 			$this->res = $this->objReporte->generarReporteListado('MODTipoCambio','listarTipoCambio');

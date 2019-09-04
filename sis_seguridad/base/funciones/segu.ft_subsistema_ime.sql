@@ -167,6 +167,23 @@ BEGIN
                v_resp = pxp.f_agrega_clave(v_resp,'valor',v_valor::varchar);
 
          END;
+    /*******************************
+     #TRANSACCION:   SEG_SINC_GRANTS_DB
+     #DESCRIPCION:	Sincroniza permisos de un esquema en especifico
+     #AUTOR:		franklin.espinoza
+     #FECHA:		01/08/2019
+     ***********************************/
+
+     elsif(par_transaccion = 'SEG_SINC_GRANTS_DB')then
+
+          BEGIN
+               --raise exception 'esquema: %', v_parametros.esquema;
+               perform segu.privilegios_esquema_set_objetos_dbkerp('privilegios_objetos_dbkerp',v_parametros.esquema);
+
+               v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Sicronizacion Permisos BD'::varchar);
+               v_resp = pxp.f_agrega_clave(v_resp,'estado','EXITO'::varchar);
+
+         END;
 
      else
 

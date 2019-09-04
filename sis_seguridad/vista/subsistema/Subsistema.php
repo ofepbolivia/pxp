@@ -160,7 +160,8 @@ Phx.vista.Subsistema=Ext.extend(Phx.gridInterfaz,{
                    			}
                    		});
         
-        this.addButton('testb',{text:'test',iconCls: 'blist',disabled:false,handler:this.text_func,tooltip: '<b>test action</b><br/>Sinc '});
+        //this.addButton('testb',{text:'test',iconCls: 'blist',disabled:false,handler:this.text_func,tooltip: '<b>test action</b><br/>Sinc '});
+        this.addButton('sinc_permisos',{text:'Sinc. Permisos',iconCls: 'bactfil',disabled:false,handler:this.sincPermisos,tooltip: '<b>Sincronizar Permisos Subsistema</b>'});
         
    		
    		
@@ -212,6 +213,34 @@ Phx.vista.Subsistema=Ext.extend(Phx.gridInterfaz,{
 		}
 		this.load()
 	},
+
+    sincPermisos: function(){
+        var esquema = (this.getSelectedData().codigo).toLowerCase();
+        Phx.CP.loadingShow();
+        Ext.Ajax.request({
+            url:'../../sis_seguridad/control/Subsistema/sincronizarPermisosDB',
+            params:{esquema:esquema},
+            success:function (resp) {
+                var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+
+                Phx.CP.loadingHide();
+                if (reg.ROOT.datos.estado == 'EXITO'){
+                    Ext.Msg.show({
+                        title: 'Información',
+                        msg: '<b>La Sincronización de objetos de Base de Datos del Esquema <span style="color: red;"> '+esquema+'</span> se realizo con Exito.</b>',
+                        buttons: Ext.Msg.OK,
+                        width: 364,
+                        icon: Ext.Msg.INFO
+                    });
+                }
+
+            },
+            failure: this.conexionFailure,
+            timeout:this.timeout,
+            scope:this
+        });
+    },
+
 	text_func :function(){
             Phx.CP.loadingShow();
             Ext.Ajax.request({
@@ -264,6 +293,7 @@ Phx.vista.Subsistema=Ext.extend(Phx.gridInterfaz,{
 			this.getBoton('sinc_func').enable();
 			this.getBoton('aInterSis').enable();
 			this.getBoton('exp_menu').enable();
+			this.getBoton('sinc_permisos').enable();
 
 			
 			
@@ -276,6 +306,7 @@ Phx.vista.Subsistema=Ext.extend(Phx.gridInterfaz,{
 			this.getBoton('sinc_func').disable();
 			this.getBoton('aInterSis').disable();
 			this.getBoton('exp_menu').disable();
+			this.getBoton('sinc_permisos').disable();
 
 			
 			

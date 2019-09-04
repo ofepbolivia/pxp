@@ -106,16 +106,16 @@ EOF;
 
         if ($nota >= 91 and $nota<= 100) {
             $this->writeHTML('<p>'.$gen.':</p>
-       <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la Evaluación de <b>Desempeño de la Gestión '.$gestion.'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
-                            <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso mis felicitaciones  por su trabajo en Boliviana de Aviación.</p>
+       <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la <b>Evaluación de Desempeño de la Gestión '.$gestion.'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
+                            <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso el agradecimiento y felicitación por su desempeño tesonero y compromiso con nuestros valores corporativos.</p>                            
                             <p>'.$recomendacion.'</p>
-                            <p align="justica">Seguro de que estos resultados obtenidos serán replicados y mejorados en adelante, reciba usted mis consideraciones distinguidas.</p>
+                            <p align="justica">Seguro de que estos resultados obtenidos serán replicados en adelante, reciba usted mis consideraciones distinguidas.</p>
                             ',true);
             $this->firmas();
         } elseif ($nota >= 81 and $nota<=90) {
             $this->writeHTML('<p>'.$gen.':</p>
        <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la <b>Evaluación de Desempeño de la Gestión '.$gestion.'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
-                            <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso mis felicitaciones  por su trabajo en Boliviana de Aviación.  </p>
+                            <p align="justica">En este sentido, expreso mis felicitaciones  por su desempeño en Boliviana de Aviación.</p>
                             <p>'.$recomendacion.'</p>
                             <p align="justica">Seguro de que estos resultados obtenidos serán replicados y mejorados en adelante, reciba usted mis consideraciones distinguidas.</p>
                             ',true);
@@ -124,9 +124,9 @@ EOF;
         } elseif ($nota >= 0 and $nota <= 80) {
             $this->writeHTML('<p>'.$gen.':</p>
        <p align="justica">De acuerdo a procedimientos establecidos tengo a bien comunicar, que habiéndose realizado la Evaluación de Desempeño de la Gestión '.$gestion.', se evidencia que usted ha obtenido una calificación de <b>suficiente</b> en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
-                            <p align="justica">En este sentido, se sugiere tomar en cuenta las siguientes observaciones que reflejan la evaluación del desempeño gestión '.$gestion.', a fin de mejorar su desempeño:  </p>
+                            <p align="justica">En este sentido, a fin de mejorar su desempeño se sugiere tomar en cuenta las siguientes observaciones que reflejan la Evaluación de Desempeño Gestión '.$array["gestion"].':</p>
                             <p>'.$recomendacion.'</p>
-                            <p align="justica">Seguro de que estas observaciones serán corregidas oportunamente, reciba usted mis consideraciones distinguidas.</p>
+                            <p align="justica">Con este motivo, saludo a usted atentamente.</p>
                             ',true);
             $this->firmas();
         }

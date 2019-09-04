@@ -125,7 +125,7 @@ BEGIN
                                   ORDER BY g.orden_logico,eg.fk_id_gui';
                                   
                                   raise notice 'antes query: %',clock_timestamp();
-              
+              raise notice 'v_consulta: %', v_consulta;
               return v_consulta;
            
         ELSE

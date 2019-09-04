@@ -38,6 +38,8 @@ $body$
     v_id_alarma				integer;
     v_id_gestion			integer;
 	v_data_func				record;
+
+	v_contador				integer = 0;
   BEGIN
 
     v_nombre_funcion:='orga.ft_uo_funcionario_ime';
@@ -57,26 +59,29 @@ $body$
 
         -- verificar si la uo permite multiples asignaciones de funcionario
         --RAC NO ESTA FUNCIOANNDO ESTO DEL CARGO INDIVIDUAL
-        /*if (select count(*)=1
-           from orga.tuo_funcionario where id_uo=v_parametros.id_uo and estado_reg=v_parametros.estado_reg and
+        if (select count(*)=1
+           from orga.tuo_funcionario where id_uo=v_parametros.id_uo and estado_reg='activo' and tipo = 'oficial' and
             id_uo=(select id_uo from orga.tuo where  id_uo=v_parametros.id_uo and estado_reg='activo' and cargo_individual='si')) then
                       raise exception 'El cargo es individual y ya existe otro funcionario asignado actualmente';
-        end if;*/
-
-        --verficar que el funcionario no este activo en dos unidades simultaneamente
-
-        /* if ( ((select count(id_funcionario) from
-                    orga.tuo_funcionario  UOF
-                    where     id_funcionario=v_parametros.id_funcionario AND uof.estado_reg='activo' ))>0) then
-
-                    raise exception 'El Funcionario se encuentra en otro cargo vigente primero inactive su asignacion actual';
-         end if;
+        end if;
 
         --insercion de nuevo uo
         if exists (select 1 from orga.tuo_funcionario where id_funcionario=v_parametros.id_funcionario and
-        id_uo=v_parametros.id_uo and estado_reg='activo') then
+        id_uo=v_parametros.id_uo and estado_reg='activo' and tipo = 'oficial' and (fecha_finalizacion > current_date or fecha_finalizacion is null)) then
            raise exception 'Insercion no realizada. El funcionacio ya esta asignado a la unidad';
-        end if;*/
+        end if;
+
+        --verficar que el funcionario no este activo en dos unidades simultaneamente
+		    select count(ouf.id_funcionario)
+        into v_contador
+        from orga.tuo_funcionario  ouf
+        where ouf.id_funcionario=v_parametros.id_funcionario and ouf.estado_reg='activo' and ouf.tipo = 'oficial' and
+        (ouf.estado_funcional = 'activo' or (ouf.fecha_finalizacion > current_date or fecha_finalizacion is null));
+
+         if v_contador > 0 then
+			    raise exception 'El Funcionario se encuentra en otro cargo vigente primero inactive su asignacion actual';
+         end if;
+
         v_mail_resp = pxp.f_get_variable_global('orga_mail_resp_cargo_presupuesto');
 
         select po_id_gestion from into v_id_gestion
@@ -113,7 +118,7 @@ $body$
         into v_data_func
         from orga.tuo_funcionario tuo
         inner join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
-        where tuo.id_funcionario = v_parametros.id_funcionario and tuo.id_cargo = v_parametros.id_cargo and
+        where tuo.id_funcionario = v_parametros.id_funcionario and tuo.id_cargo = v_parametros.id_cargo and tuo.estado_reg = 'activo' and
         (v_parametros.fecha_asignacion between date_trunc('month',tuo.fecha_asignacion) and date_trunc('month',tuo.fecha_asignacion) +'1month' ::interval -'1sec' ::interval)
         limit 1;
 
@@ -196,7 +201,8 @@ $body$
           fecha_finalizacion = v_parametros.fecha_finalizacion,
           certificacion_presupuestaria = v_parametros.certificacion_presupuestaria,
           codigo_ruta = v_parametros.codigo_ruta,
-          estado_funcional = v_parametros.estado_funcional
+          estado_funcional = v_parametros.estado_funcional,
+          fecha_asignacion = v_parametros.fecha_asignacion
         where id_uo=v_parametros.id_uo
               and id_uo_funcionario=v_parametros.id_uo_funcionario;
 

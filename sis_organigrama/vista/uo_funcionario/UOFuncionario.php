@@ -464,6 +464,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 		this.mostrarComponente(this.Cmp.tipo);
 		//this.mostrarComponente(this.Cmp.estado_funcional);
 		//this.ocultarComponente(this.Cmp.fecha_finalizacion);
+
 		this.ocultarComponente(this.Cmp.observaciones_finalizacion);
 		Phx.vista.uo_funcionario.superclass.onButtonNew.call(this);
 		//seteamos un valor fijo que vienen de la vista maestro para id_gui 
@@ -473,13 +474,16 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 		//llamamos primero a la funcion new de la clase padre por que reseta el valor los componentes
 		this.ocultarComponente(this.Cmp.id_cargo);
 		this.ocultarComponente(this.Cmp.id_funcionario);
-		this.ocultarComponente(this.Cmp.fecha_asignacion);
+		//this.ocultarComponente(this.Cmp.fecha_asignacion);
 		this.ocultarComponente(this.Cmp.tipo);
 		this.mostrarComponente(this.Cmp.fecha_finalizacion);
 		//this.mostrarComponente(this.Cmp.estado_funcional);
 		this.getComponente('fecha_finalizacion').visible=true;
+
 		Phx.vista.uo_funcionario.superclass.onButtonEdit.call(this);
-		
+
+        this.getComponente('fecha_asignacion').setMinValue(new Date(2007,12,31));
+
 		if (this.Cmp.fecha_finalizacion.getValue() == '' || this.Cmp.fecha_finalizacion.getValue() == undefined) {
 			this.Cmp.observaciones_finalizacion.reset();
 			this.Cmp.observaciones_finalizacion.allowBlank = true;

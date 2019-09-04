@@ -138,7 +138,7 @@ $body$
                           LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
                           inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
                           left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
-                          left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10
+                          left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10 and tar.id_archivo_fk is null
                           WHERE ';
 
 		else
@@ -207,7 +207,7 @@ $body$
                           LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
                           inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
                           left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
-                          left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10
+                          left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10 and tar.id_archivo_fk is null
                           WHERE FUNCIO.estado_reg = ''activo'' and (FUNCIO.fecha_ingreso between ''1/1/2019''::date and ''31/12/2019''::date) and ';
         end if;
         v_consulta := v_consulta || v_parametros.filtro;
@@ -272,7 +272,7 @@ $body$
                             LEFT JOIN param.tlugar LUG on LUG.id_lugar = PERSON2.id_lugar
                             inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
 						    left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
-						    left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10
+						    left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10 and tar.id_archivo_fk is null
                             WHERE ';
         v_consulta:=v_consulta||v_parametros.filtro;
         if (pxp.f_existe_parametro(par_tabla, 'tipo') and
@@ -862,7 +862,7 @@ $body$
         end if;*/
 		if v_parametros.estado_func = 'altas' then
         	v_filtro = 'tuo.fecha_asignacion between '''||v_parametros.fecha_ini||'''::date and '''||v_parametros.fecha_fin||'''::date';
-            v_inner = '';
+          v_inner  =  'tuo.id_funcionario not in (select tu.id_funcionario from orga.tuo_funcionario tu where tu.fecha_finalizacion between '''||(v_parametros.fecha_ini - interval '1 month')::date||'''::date and '''||(v_parametros.fecha_fin - interval '1 month')::date||'''::date) and  '::varchar;
         else
         	v_filtro = 'tuo.fecha_finalizacion between '''||v_parametros.fecha_ini||'''::date and '''||v_parametros.fecha_fin||'''::date';
             v_inner  = 'tuo.id_funcionario not in (select tu.id_funcionario from orga.tuo_funcionario tu where tu.fecha_asignacion between '''||(v_parametros.fecha_ini + interval '1 month')::date||'''::date and '''||(v_parametros.fecha_fin + interval '1 month')::date||'''::date) and  '::varchar;
@@ -908,11 +908,14 @@ $body$
                             0::numeric as bono_frontera,
                             tes.haber_basico::numeric as total_ganado,
                             tar.nombre_archivo,
-                            tar.extension
+                            tar.extension,
+                            tuo.observaciones_finalizacion as motivo_fin,
+                            tcon.nombre as nombre_contrato
 
                             FROM orga.tfuncionario FUNCIO
                             inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario
                             inner join orga.tcargo tca on tca.id_cargo = tuo.id_cargo
+                            inner join orga.ttipo_contrato tcon on tcon.id_tipo_contrato = tca.id_tipo_contrato
                             inner join orga.tescala_salarial tes on tes.id_escala_salarial = tca.id_escala_salarial
                             inner join orga.toficina tof on tof.id_oficina = tca.id_oficina
                             inner join param.tlugar tlo on tlo.id_lugar = tca.id_lugar
@@ -946,7 +949,7 @@ $body$
             end if;*/
             if v_parametros.estado_func = 'altas' then
         		v_filtro = 'tuo.fecha_asignacion between '''||v_parametros.fecha_ini||'''::date and '''||v_parametros.fecha_fin||'''::date';
-            	v_inner = '';
+            v_inner  =  'tuo.id_funcionario not in (select tu.id_funcionario from orga.tuo_funcionario tu where tu.fecha_finalizacion between '''||(v_parametros.fecha_ini - interval '1 month')::date||'''::date and '''||(v_parametros.fecha_fin - interval '1 month')::date||'''::date) and  '::varchar;
         	else
         		v_filtro = 'tuo.fecha_finalizacion between '''||v_parametros.fecha_ini||'''::date and '''||v_parametros.fecha_fin||'''::date';
             	v_inner  = 'tuo.id_funcionario not in (select tu.id_funcionario from orga.tuo_funcionario tu where tu.fecha_asignacion between '''||(v_parametros.fecha_ini + interval '1 month')::date||'''::date and '''||(v_parametros.fecha_fin + interval '1 month')::date||'''::date) and  '::varchar;
@@ -956,6 +959,7 @@ $body$
                             FROM orga.tfuncionario FUNCIO
                             inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario
                             inner join orga.tcargo tca on tca.id_cargo = tuo.id_cargo
+                            inner join orga.ttipo_contrato tcon on tcon.id_tipo_contrato = tca.id_tipo_contrato
                             inner join orga.toficina tof on tof.id_oficina = tca.id_oficina
                             inner join param.tlugar tlo on tlo.id_lugar = tca.id_lugar
                             INNER JOIN SEGU.vpersona PERSON ON PERSON.id_persona=FUNCIO.id_persona

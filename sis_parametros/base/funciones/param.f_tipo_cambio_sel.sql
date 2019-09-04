@@ -86,6 +86,7 @@ BEGIN
 					    from param.ttipo_cambio tcb
 					    inner join segu.tusuario usu1 on usu1.id_usuario = tcb.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = tcb.id_usuario_mod
+						 inner join param.tmoneda mon on mon.id_moneda = tcb.id_moneda
 					    where ';
 			
 			--Definicion de la respuesta		    

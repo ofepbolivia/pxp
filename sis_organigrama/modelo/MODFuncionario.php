@@ -592,6 +592,8 @@ class MODFuncionario extends MODbase{
         $this->captura('total_ganado','numeric');
         $this->captura('nombre_archivo','varchar');
         $this->captura('extension','varchar');
+        $this->captura('motivo_fin','varchar');
+        $this->captura('nombre_contrato','varchar');
 
         //Ejecuta la funcion
         $this->armarConsulta();
