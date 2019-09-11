@@ -47,6 +47,77 @@ BEGIN
 
     	begin
 
+            --Sentencia de la consulta
+			v_consulta:='select
+                            moneda.id_moneda,
+                            moneda.prioridad,
+                            moneda.origen,
+                            moneda.tipo_actualizacion,
+                            moneda.estado_reg,
+                            moneda.codigo,
+                            moneda.moneda,
+                            moneda.tipo_moneda,
+                            moneda.id_usuario_reg,
+                            moneda.fecha_reg,
+                            moneda.id_usuario_mod,
+                            moneda.fecha_mod,
+                            usu1.cuenta as usr_reg,
+                            usu2.cuenta as usr_mod,
+                            moneda.triangulacion,
+                            moneda.contabilidad,
+                            moneda.codigo_internacional,
+                            moneda.show_combo,
+                            moneda.actualizacion
+						from param.tmoneda moneda
+						inner join segu.tusuario usu1 on usu1.id_usuario = moneda.id_usuario_reg
+						left join segu.tusuario usu2 on usu2.id_usuario = moneda.id_usuario_mod
+				        where ';
+
+			--Definicion de la respuesta
+			v_consulta:=v_consulta||v_parametros.filtro;
+			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
+
+			--Devuelve la respuesta
+			return v_consulta;
+
+		end;
+
+	/*********************************
+ 	#TRANSACCION:  'PM_MONEDA_CONT'
+ 	#DESCRIPCION:	Conteo de registros
+ 	#AUTOR:		admin
+ 	#FECHA:		05-02-2013 18:17:03
+	***********************************/
+
+	elsif(p_transaccion='PM_MONEDA_CONT')then
+
+		begin
+			--Sentencia de la consulta de conteo de registros
+			v_consulta:='select count(id_moneda)
+					    from param.tmoneda moneda
+					    inner join segu.tusuario usu1 on usu1.id_usuario = moneda.id_usuario_reg
+						left join segu.tusuario usu2 on usu2.id_usuario = moneda.id_usuario_mod
+					    where ';
+
+			--Definicion de la respuesta
+			v_consulta:=v_consulta||v_parametros.filtro;
+
+			--Devuelve la respuesta
+			return v_consulta;
+
+		end;
+
+    /*********************************
+ 	#TRANSACCION:  'PM_MONEDAEST_SEL'
+ 	#DESCRIPCION:	Consulta de datos
+ 	#AUTOR:		Maylee Perez Pastor
+ 	#FECHA:		11-09-2019 18:17:03
+	***********************************/
+
+	elsif(p_transaccion='PM_MONEDAEST_SEL')then
+
+    	begin
+
             v_estacion = pxp.f_get_variable_global('ESTACION_inicio');
 
             IF v_estacion = 'BOL' THEN
@@ -91,21 +162,29 @@ BEGIN
 		end;
 
 	/*********************************
- 	#TRANSACCION:  'PM_MONEDA_CONT'
+ 	#TRANSACCION:  'PM_MONEDAEST_CONT'
  	#DESCRIPCION:	Conteo de registros
- 	#AUTOR:		admin
- 	#FECHA:		05-02-2013 18:17:03
+ 	#AUTOR:		Maylee Perez Pastor
+ 	#FECHA:		11-09-2019 18:17:03
 	***********************************/
 
-	elsif(p_transaccion='PM_MONEDA_CONT')then
+	elsif(p_transaccion='PM_MONEDAEST_CONT')then
 
 		begin
+                v_estacion = pxp.f_get_variable_global('ESTACION_inicio');
+
+                IF v_estacion = 'BOL' THEN
+                  v_tipo_moneda=  'moneda.tipo_moneda = ''base'' ';
+                ELSIF v_estacion in ('BUE', 'MIA','SAO','MAD') THEN
+                  v_tipo_moneda =  'moneda.tipo_moneda in (''base'', ''ref'') ';
+                END IF;
+
 			--Sentencia de la consulta de conteo de registros
 			v_consulta:='select count(id_moneda)
 					    from param.tmoneda moneda
 					    inner join segu.tusuario usu1 on usu1.id_usuario = moneda.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = moneda.id_usuario_mod
-					    where ';
+					    where '|| v_tipo_moneda ||' and ';
 
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
@@ -114,6 +193,7 @@ BEGIN
 			return v_consulta;
 
 		end;
+
 
 	else
 
@@ -136,3 +216,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION param.f_moneda_sel (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;
