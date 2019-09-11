@@ -25,10 +25,12 @@ class ACTMoneda extends ACTbase{
 		if($this->objParam->getParametro('filtrar') == 'si' ){
               $this->objParam->addFiltro("show_combo = ''si''");    
         }
-		
-		if($this->objParam->getParametro('filtrar_base') == 'si' ){
+
+		//se comenta para que tengan opcion las estaciones internacionales para los dos tipos de monedas y bol continua listando su moneda base
+		/*if($this->objParam->getParametro('filtrar_base') == 'si' ){
               $this->objParam->addFiltro("tipo_moneda = ''base''");    
         }
+		*/
          
 		
 		
