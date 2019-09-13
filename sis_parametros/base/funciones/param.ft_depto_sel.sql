@@ -261,23 +261,6 @@ BEGIN
 
           BEGIN
 
-			--(may) filtro para FONDO EN AVANCE segun su estacion lista el depto
-
-              v_estacion = pxp.f_get_variable_global('ESTACION_inicio');
-
-              IF v_estacion = 'BOL' THEN
-                v_filtro_depto =  'OP-CBB';
-              ELSIF v_estacion = 'BUE' THEN
-                v_filtro_depto =  'OP - BUE';
-              ELSIF v_estacion = 'MIA' THEN
-                v_filtro_depto =  'OP - MIA';
-              ELSIF v_estacion = 'SAO' THEN
-                v_filtro_depto =  'OP - SAO';
-              ELSIF v_estacion = 'MAD' THEN
-                v_filtro_depto =  'OP - MAD';
-              END IF;
-            ----
-
           IF (pxp.f_existe_parametro(par_tabla,'codigo_subsistema')) THEN
           	v_codadd = ' (SUBSIS.codigo = ''' ||v_parametros.codigo_subsistema||''') and ';
 
@@ -341,7 +324,7 @@ BEGIN
                             LEFT JOIN segu.tusuario USUMOD on USUMOD.id_usuario=DEPPTO.id_usuario_mod
                             LEFT JOIN segu.vpersona PERMOD on PERMOD.id_persona=USUMOD.id_persona
                              '||v_inner||'
-                            WHERE   DEPPTO.estado_reg = ''activo'' and DEPPTO.codigo = '''||v_filtro_depto||''' and '||v_codadd;
+                            WHERE   DEPPTO.estado_reg = ''activo''  and '||v_codadd;
 
 
                v_consulta:=v_consulta||v_parametros.filtro;
@@ -361,24 +344,6 @@ BEGIN
 
      elsif(par_transaccion='PM_DEPFILUSU_CONT')then
         BEGIN
-
-           --(may) filtro para FONDO EN AVANCE segun su estacion lista el depto
-
-              v_estacion = pxp.f_get_variable_global('ESTACION_inicio');
-
-              IF v_estacion = 'BOL' THEN
-                v_filtro_depto =  'OP-CBB';
-              ELSIF v_estacion = 'BUE' THEN
-                v_filtro_depto =  'OP - BUE';
-              ELSIF v_estacion = 'MIA' THEN
-                v_filtro_depto =  'OP - MIA';
-              ELSIF v_estacion = 'SAO' THEN
-                v_filtro_depto =  'OP - SAO';
-              ELSIF v_estacion = 'MAD' THEN
-                v_filtro_depto =  'OP - MAD';
-              END IF;
-            ----
-
 
           v_codadd = '';
           IF (pxp.f_existe_parametro(par_tabla,'codigo_subsistema')) THEN
@@ -431,7 +396,7 @@ BEGIN
                             LEFT JOIN segu.tusuario USUMOD on USUMOD.id_usuario=DEPPTO.id_usuario_mod
                             LEFT JOIN segu.vpersona PERMOD on PERMOD.id_persona=USUMOD.id_persona
                              '||v_inner||'
-                            WHERE DEPPTO.estado_reg = ''activo'' and DEPPTO.codigo = '''||v_filtro_depto||''' and   '||v_codadd;
+                            WHERE DEPPTO.estado_reg = ''activo'' and   '||v_codadd;
 
                raise notice '%',v_consulta;
 
@@ -611,6 +576,294 @@ BEGIN
          END;
 
 
+     /*******************************
+     #TRANSACCION:  PM_DEPFILUSULIS_SEL
+     #DESCRIPCION:	Listado departametos por estacion
+     #AUTOR:		Maylee Perez Pastor
+     #FECHA:		11-09-2019
+    ***********************************/
+
+
+     elsif(par_transaccion='PM_DEPFILUSULIS_SEL')then
+
+          v_codadd = '';
+
+
+          BEGIN
+
+			--(may) filtro para FONDO EN AVANCE segun su estacion lista el depto
+
+              v_estacion = pxp.f_get_variable_global('ESTACION_inicio');
+
+              IF v_estacion = 'BOL' THEN
+                v_filtro_depto =  'OP-CBB';
+              ELSIF v_estacion = 'BUE' THEN
+                v_filtro_depto =  'OP - BUE';
+              ELSIF v_estacion = 'MIA' THEN
+                v_filtro_depto =  'OP - MIA';
+              ELSIF v_estacion = 'SAO' THEN
+                v_filtro_depto =  'OP - SAO';
+              ELSIF v_estacion = 'MAD' THEN
+                v_filtro_depto =  'OP - MAD';
+              END IF;
+            ----
+
+          IF (pxp.f_existe_parametro(par_tabla,'codigo_subsistema')) THEN
+          	v_codadd = ' (SUBSIS.codigo = ''' ||v_parametros.codigo_subsistema||''') and ';
+
+          END IF;
+
+
+          v_filadd = '';
+
+           v_inner='';
+
+          IF   par_administrador != 1 THEN
+
+              select
+              pxp.list(uge.id_grupo::text)
+              into
+              v_filadd
+             from segu.tusuario_grupo_ep uge
+             where  uge.id_usuario = par_id_usuario;
+
+
+             IF  v_filadd is NULL THEN
+
+                 raise exception 'El usuario no tiene ningun grupo EP-UO asignado';
+
+              END IF;
+
+              v_inner =  '
+                          inner join param.tdepto_uo_ep due on due.id_depto =DEPPTO.id_depto
+                          inner join param.tgrupo_ep gep on gep.estado_reg = ''activo'' and
+
+                                 ((gep.id_uo = due.id_uo  and gep.id_ep = due.id_ep )
+                               or
+                                 (gep.id_uo = due.id_uo  and gep.id_ep is NULL )
+                               or
+                                 (gep.id_uo is NULL and gep.id_ep = due.id_ep )) and gep.id_grupo in ('||COALESCE(v_filadd,'0')||') ';
+
+
+
+
+          END IF;
+
+               v_consulta:='SELECT
+                            DISTINCT
+                            DEPPTO.id_depto,
+                            DEPPTO.codigo,
+                            DEPPTO.nombre,
+                            DEPPTO.nombre_corto,
+                            DEPPTO.id_subsistema,
+                            DEPPTO.estado_reg,
+                            DEPPTO.fecha_reg,
+                            DEPPTO.id_usuario_reg,
+                            DEPPTO.fecha_mod,
+                            DEPPTO.id_usuario_mod,
+                            SUBSIS.codigo||'' - ''||SUBSIS.nombre as desc_subsistema
+                            FROM param.tdepto DEPPTO
+                            INNER JOIN segu.tsubsistema SUBSIS on SUBSIS.id_subsistema=DEPPTO.id_subsistema
+                            INNER JOIN segu.tusuario USUREG on USUREG.id_usuario=DEPPTO.id_usuario_reg
+                            INNER JOIN segu.vpersona PERREG on PERREG.id_persona=USUREG.id_persona
+                            LEFT JOIN segu.tusuario USUMOD on USUMOD.id_usuario=DEPPTO.id_usuario_mod
+                            LEFT JOIN segu.vpersona PERMOD on PERMOD.id_persona=USUMOD.id_persona
+                             '||v_inner||'
+                            WHERE   DEPPTO.estado_reg = ''activo'' and DEPPTO.codigo = '''||v_filtro_depto||''' and '||v_codadd;
+
+
+               v_consulta:=v_consulta||v_parametros.filtro;
+               v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
+               raise notice    '--->  % % %',v_filadd,par_id_usuario,v_consulta;
+               return v_consulta;
+
+
+         END;
+
+   /*******************************
+   #TRANSACCION: PM_DEPFILUSULIS_CONT
+   #DESCRIPCION:	Listado departametos filtrado por los grupos ep del usuarios
+   #AUTOR:		RAc
+   #FECHA:		11-09-2019
+  ***********************************/
+
+     elsif(par_transaccion='PM_DEPFILUSULIS_CONT')then
+        BEGIN
+
+           --(may) filtro para FONDO EN AVANCE segun su estacion lista el depto
+
+              v_estacion = pxp.f_get_variable_global('ESTACION_inicio');
+
+              IF v_estacion = 'BOL' THEN
+                v_filtro_depto =  'OP-CBB';
+              ELSIF v_estacion = 'BUE' THEN
+                v_filtro_depto =  'OP - BUE';
+              ELSIF v_estacion = 'MIA' THEN
+                v_filtro_depto =  'OP - MIA';
+              ELSIF v_estacion = 'SAO' THEN
+                v_filtro_depto =  'OP - SAO';
+              ELSIF v_estacion = 'MAD' THEN
+                v_filtro_depto =  'OP - MAD';
+              END IF;
+            ----
+
+
+          v_codadd = '';
+          IF (pxp.f_existe_parametro(par_tabla,'codigo_subsistema')) THEN
+          	v_codadd = ' (SUBSIS.codigo = ''' ||v_parametros.codigo_subsistema||''') and ';
+
+          END IF;
+
+          v_filadd = '';
+
+          v_inner='';
+
+
+         IF   par_administrador != 1 THEN
+
+              select
+              pxp.list(uge.id_grupo::text)
+              into
+              v_filadd
+             from segu.tusuario_grupo_ep uge
+             where  uge.id_usuario = par_id_usuario;
+
+              IF  v_filadd is NULL THEN
+
+                 raise exception 'El usuario no tiene ningun grupo EP-UO asignado';
+
+              END IF;
+
+
+              v_inner =  '
+                          inner join param.tdepto_uo_ep due on due.id_depto =DEPPTO.id_depto
+                          inner join param.tgrupo_ep gep on gep.estado_reg = ''activo'' and
+
+                                 ((gep.id_uo = due.id_uo  and gep.id_ep = due.id_ep )
+                               or
+                                 (gep.id_uo = due.id_uo  and gep.id_ep is NULL )
+                               or
+                                 (gep.id_uo is NULL and gep.id_ep = due.id_ep )) and gep.id_grupo in ('||v_filadd||') ';
+
+
+
+
+          END IF;
+
+               v_consulta:='SELECT
+                                  count(DISTINCT DEPPTO.id_depto)
+                            FROM param.tdepto DEPPTO
+                            INNER JOIN segu.tsubsistema SUBSIS on SUBSIS.id_subsistema=DEPPTO.id_subsistema
+                            INNER JOIN segu.tusuario USUREG on USUREG.id_usuario=DEPPTO.id_usuario_reg
+                            INNER JOIN segu.vpersona PERREG on PERREG.id_persona=USUREG.id_persona
+                            LEFT JOIN segu.tusuario USUMOD on USUMOD.id_usuario=DEPPTO.id_usuario_mod
+                            LEFT JOIN segu.vpersona PERMOD on PERMOD.id_persona=USUMOD.id_persona
+                             '||v_inner||'
+                            WHERE DEPPTO.estado_reg = ''activo'' and DEPPTO.codigo = '''||v_filtro_depto||''' and   '||v_codadd;
+
+               raise notice '%',v_consulta;
+
+               v_consulta:=v_consulta||v_parametros.filtro;
+
+
+               return v_consulta;
+         END;
+
+  /*******************************
+       #TRANSACCION:  PM_DEPLISPRI_SEL
+       #DESCRIPCION:	Listado de departamento filtrados por prioridad 3 (deptos internacionales)
+       #AUTOR:		Maylee Perez Pastor
+       #FECHA:		10-09-2019
+      ***********************************/
+           elsif(par_transaccion='PM_DEPLISPRI_SEL')then
+
+                BEGIN
+
+                v_filadd = '';
+                --raise exception 'llega %',v_filadd;
+                IF (pxp.f_existe_parametro(par_tabla,'codigo_subsistema')) THEN
+                  v_filadd = ' (SUBSIS.codigo = ''' ||v_parametros.codigo_subsistema||''') and ';
+
+                END IF;
+
+               /* IF   par_administrador != 1 THEN
+
+                     v_id_deptos =  param.f_get_lista_deptos_x_usuario(par_id_usuario, v_parametros.codigo_subsistema);
+                    IF(v_id_deptos='')THEN
+                       v_id_deptos = '0';
+                    END IF;
+
+                    v_filadd='(DEPPTO.id_depto  in ('||v_id_deptos||')) and';
+                 END IF; */
+
+
+
+                     v_consulta:='SELECT
+                                  DEPPTO.id_depto,
+                                  DEPPTO.codigo,
+                                  DEPPTO.nombre,
+                                  DEPPTO.nombre_corto,
+                                  DEPPTO.id_subsistema,
+                                  DEPPTO.estado_reg,
+                                  DEPPTO.fecha_reg,
+                                  DEPPTO.id_usuario_reg,
+                                  DEPPTO.fecha_mod,
+                                  DEPPTO.id_usuario_mod,
+                                  SUBSIS.codigo||'' - ''||SUBSIS.nombre as desc_subsistema
+
+                                  FROM param.tdepto DEPPTO
+                                  INNER JOIN segu.tsubsistema SUBSIS on SUBSIS.id_subsistema=DEPPTO.id_subsistema
+
+                                  WHERE DEPPTO.estado_reg =''activo'' and DEPPTO.prioridad = 3 and '||v_filadd;
+
+
+
+                     v_consulta:=v_consulta||v_parametros.filtro;
+                     v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
+                     raise notice '%',v_consulta;
+                     return v_consulta;
+
+
+               END;
+
+       /*******************************
+       #TRANSACCION:  PM_DEPLISPRI_CONT
+       #DESCRIPCION:	cuenta la cantidad de departamentos por prioridad para combos (internacionales)
+       #AUTOR:		Maylee Perez Pastor
+       #FECHA:		10-09-2019
+      ***********************************/
+
+           elsif(par_transaccion='PM_DEPLISPRI_CONT')then
+              BEGIN
+               v_filadd = '';
+                IF (pxp.f_existe_parametro(par_tabla,'codigo_subsistema')) THEN
+                  v_filadd = ' (SUBSIS.codigo = ''' ||v_parametros.codigo_subsistema||''') and ';
+
+                END IF;
+
+              /*  IF   par_administrador != 1 THEN
+
+                      v_id_deptos =  param.f_get_lista_deptos_x_usuario(par_id_usuario, v_parametros.codigo_subsistema);
+                      IF(v_id_deptos='')THEN
+                         v_id_deptos = '0';
+                      END IF;
+
+                      v_filadd='(DEPPTO.id_depto  in ('||v_id_deptos||')) and';
+                END IF; */
+
+                     v_consulta:='SELECT
+                                        count(DEPPTO.id_depto)
+                                  FROM param.tdepto DEPPTO
+                                  INNER JOIN segu.tsubsistema SUBSIS on SUBSIS.id_subsistema=DEPPTO.id_subsistema
+
+                                  WHERE DEPPTO.estado_reg =''activo'' and DEPPTO.prioridad = 3 and '||v_filadd;
+
+                     v_consulta:=v_consulta||v_parametros.filtro;
+                      raise notice '%',v_consulta;
+                     return v_consulta;
+               END;
+
+
      else
          raise exception 'No existe la opcion';
 
@@ -633,3 +886,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION param.ft_depto_sel (par_administrador integer, par_id_usuario integer, par_tabla varchar, par_transaccion varchar)
+  OWNER TO postgres;
