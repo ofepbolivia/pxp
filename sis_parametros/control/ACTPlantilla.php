@@ -81,6 +81,10 @@ class ACTPlantilla extends ACTbase{
             $this->objParam->addFiltro("id_plantilla=".$this->objParam->getParametro('id_plantilla'));
         }
 
+        if($this->objParam->getParametro('fil_id_plantilla') == true){
+            $this->objParam->addFiltro("id_plantilla in (41, 42)");
+        }
+
         if($this->objParam->getParametro('tipo_plantilla')!=''){
             $this->objParam->addFiltro("plt.tipo_plantilla=''".$this->objParam->getParametro('tipo_plantilla')."''");
         }
