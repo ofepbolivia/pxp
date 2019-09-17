@@ -372,9 +372,9 @@ header("content-type: text/javascript; charset=UTF-8");
                 this.Cmp.id_proveedor.setValue(record.id_proveedor);
             }
 
-
-
             Phx.vista.FormProvCta.superclass.onSubmit.call(this,o);
+
+
         },
 
         successSave:function(resp)
@@ -382,7 +382,7 @@ header("content-type: text/javascript; charset=UTF-8");
 
             var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
             // Phx.CP.getPagina(this.maestro.id_padre).cargarCuenta(reg.ROOT.datos.nro_cuenta, this.Cmp.nro_cuenta.getValue());
-            Phx.CP.getPagina(this.maestro.id_padre).cargarCuenta(reg.ROOT.datos.id_proveedor_cta_bancaria, this.Cmp.id_proveedor_cta_bancaria.getValue());
+            Phx.CP.getPagina(this.maestro.id_padre).cargarCuenta(reg.ROOT.datos.id_proveedor_cta_bancaria, this.Cmp.nro_cuenta.getValue());
             Phx.CP.loadingHide();
             this.close();
             this.onDestroy();
