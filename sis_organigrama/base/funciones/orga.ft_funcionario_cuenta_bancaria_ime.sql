@@ -111,7 +111,8 @@ BEGIN
 			id_institucion = v_parametros.id_institucion,
 			nro_cuenta = v_parametros.nro_cuenta,
 			fecha_mod = now(),
-			id_usuario_mod = p_id_usuario
+			id_usuario_mod = p_id_usuario,
+      estado_reg	= v_parametros.estado_reg
 			where id_funcionario_cuenta_bancaria=v_parametros.id_funcionario_cuenta_bancaria;
                
 			--Definicion de la respuesta
