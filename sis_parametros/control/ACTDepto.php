@@ -110,7 +110,10 @@ class ACTDepto extends ACTbase
             //17-07-2019 modificacion temporalmente para FONDOS EN AVANCE respecto para la prioridad
             //$this->objParam->addFiltro( '('.$this->objParam->getParametro('id_lugar')."::integer =ANY(DEPPTO.id_lugares) or  prioridad = 1)");
             //18-07-2019 se realiza distinto listado de depto para los de FONDO EN AVANCE
-            $this->objParam->addFiltro('(' . $this->objParam->getParametro('id_lugar') . "::integer =ANY(DEPPTO.id_lugares))");
+            //$this->objParam->addFiltro('(' . $this->objParam->getParametro('id_lugar') . "::integer =ANY(DEPPTO.id_lugares))");
+            //19-09-2019 vuelve el mismo filtro porque hay otro function para Fondos en Avance y se necesita filtrar por los dos departamentos su dep donde esta y de cochabamba-a peticion de Roberto Villa
+            $this->objParam->addFiltro( '('.$this->objParam->getParametro('id_lugar')."::integer =ANY(DEPPTO.id_lugares) or  prioridad = 1)");
+
         }
 
         if ($this->objParam->getParametro('modulo') != '') {
