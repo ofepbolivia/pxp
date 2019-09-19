@@ -179,9 +179,9 @@ class ACTDepto extends ACTbase
         $this->objParam->defecto('ordenacion', 'depto');
         $this->objParam->defecto('dir_ordenacion', 'asc');
 
-        if ($this->objParam->getParametro('id_lugar') != '') {
+       /* if ($this->objParam->getParametro('id_lugar') != '') {
             $this->objParam->addFiltro('(' . $this->objParam->getParametro('id_lugar') . "::integer =ANY(DEPPTO.id_lugares) )");
-        }
+        }*/
 
         if ($this->objParam->getParametro('modulo') != '') {
             $this->objParam->addFiltro("DEPPTO.modulo = ''" . $this->objParam->getParametro('modulo') . "''");
