@@ -208,6 +208,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 this.getComponente('id_lugar').setRawValue(record.data.nombre_lugar);
 
                 this.getComponente('ci').setValue(record.data.ci);
+                this.getComponente('id_tipo_doc_identificacion').setValue(record.data.id_tipo_doc_identificacion);
                 this.getComponente('expedicion').setValue(record.data.expedicion);
                 this.getComponente('estado_civil').setValue(record.data.estado_civil);
                 this.getComponente('discapacitado').setValue(record.data.discapacitado);
@@ -418,7 +419,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         totalProperty: 'total',
                         fields: ['id_persona','nombre_completo1','ci','tipo_documento','num_documento','expedicion','nombre','ap_paterno','ap_materno',
                             'correo','celular1','telefono1','telefono2','celular2',{name:'fecha_nacimiento', type: 'date', dateFormat:'Y-m-d'},
-                            'genero','direccion','id_lugar', 'estado_civil', 'discapacitado', 'carnet_discapacitado','nacionalidad', 'nombre_lugar'],
+                            'genero','direccion','id_lugar', 'estado_civil', 'discapacitado', 'carnet_discapacitado','nacionalidad', 'nombre_lugar','id_tipo_doc_identificacion'],
                         // turn on remote sorting
                         remoteSort: true,
                         baseParams: {par_filtro:'p.nombre_completo1#p.ci', es_funcionario:'si'}

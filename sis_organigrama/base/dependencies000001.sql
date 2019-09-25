@@ -572,3 +572,13 @@ SELECT funcio.id_funcionario,
 FROM orga.tfuncionario funcio
 JOIN segu.vpersona person ON funcio.id_persona = person.id_persona;
 /*********************************F-DEP-FEA-ORGA-0-30/07/2019***********************************/
+
+/************************************I-DEP-FEA-ORGA-0-06/09/2019*************************************************/
+CREATE TRIGGER f_trig_replicacion_testructura_uo
+  AFTER INSERT
+  ON orga.testructura_uo
+
+FOR EACH ROW
+  EXECUTE PROCEDURE sqlserver.f_migrar_testructura_uo();
+
+/************************************F-DEP-FEA-ORGA-0-06/09/2019*************************************************/

@@ -109,21 +109,30 @@ Phx.vista.FuncionarioCuentaBancaria=Ext.extend(Phx.gridInterfaz,{
 				grid:true,
 				form:false
 		},
-		{
-			config:{
-				name: 'estado_reg',
-				fieldLabel: 'Estado Reg.',
-				allowBlank: true,
-				anchor: '80%',
-				gwidth: 100,
-				maxLength:10
-			},
-				type:'TextField',
-				filters:{pfiltro:'funcue.estado_reg',type:'string'},
-				id_grupo:1,
-				grid:true,
-				form:false
-		},
+        {
+            config:{
+                name: 'estado_reg',
+                fieldLabel: 'Estado Reg.',
+                allowBlank: true,
+                anchor: '80%',
+                gwidth: 100,
+                maxLength:10,
+                typeAhead: true,
+                triggerAction: 'all',
+                lazyRender:true,
+                mode: 'local',
+                store:['activo','inactivo']
+            },
+            type:'ComboBox',
+            filters:{
+                type: 'list',
+                options: ['activo','inactivo'],
+            },
+            filters:{pfiltro:'funcue.estado_reg',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
 		{
 			config:{
 				name: 'fecha_reg',
