@@ -329,18 +329,15 @@ class MODDepto extends MODbase{
 
     }
 
-    //filtro de deptos para de las estaciones internacionales
+    //filtro de deptos para  las estaciones internacionales en Registro de Comprobantes(contador)EXT
     function listarDeptoFiltradoPrioridadEXT(){
         //Definicion de variables para ejecucion del procedimiento
         $this->procedimiento='param.ft_depto_sel';// nombre procedimiento almacenado
-        $this->transaccion='PM_DEPFILUSULIS_SEL';//nombre de la transaccion
+        $this->transaccion='PM_DEPLISPRI_SEL';//nombre de la transaccion
         $this->tipo_procedimiento='SEL';//tipo de transaccion
 
-
         //Definicion de la lista del resultado del query
-        $this->setParametro('id_subsistema','id_subsistema','integer');
         $this->setParametro('codigo_subsistema','codigo_subsistema','varchar');
-        $this->setParametro('tipo_filtro','tipo_filtro','varchar');
 
         //defino varialbes que se captran como retornod e la funcion
         $this->captura('id_depto','integer');

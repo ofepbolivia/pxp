@@ -205,7 +205,7 @@ class ACTDepto extends ACTbase
 
     }
 
-    //filtro de deptos para de las estaciones internacionales
+    //filtro de deptos para las estaciones internacionales en Registro de Comprobantes(contador)EXT
     function listarDeptoFiltradoPrioridadEXT()
     {
 
@@ -215,10 +215,8 @@ class ACTDepto extends ACTbase
 
         if ($this->objParam->getParametro('id_lugar') != '') {
             $this->objParam->addFiltro('(' . $this->objParam->getParametro('id_lugar') . "::integer =ANY(DEPPTO.id_lugares)  or prioridad = 3)");
-            /*
-                    if( $this->objParam->getParametro('modulo') != '' ) {
-                        $this->objParam->addFiltro("DEPPTO.modulo = ''".$this->objParam->getParametro('modulo')."''");
-                    }        }*/
+
+        }
 
 
             if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {
@@ -231,22 +229,8 @@ class ACTDepto extends ACTbase
 
             }
 
-            if ($this->objParam->getParametro('_adicionar') != '') {
-
-                $respuesta = $this->res->getDatos();
-
-
-                array_unshift($respuesta, array('id_depto' => '0',
-                    'codigo' => 'Todos',
-                    'nombre' => 'Todos',
-                    'nombre_corto' => 'Todos',
-                    'id_subsistema' => 'Todos',
-                    'estado_reg' => 'Todos',
-                    'desc_subsistema' => 'Todos'));
-                $this->res->setDatos($respuesta);
-            }
             $this->res->imprimirRespuesta($this->res->generarJson());
-        }
+
     }
 
 

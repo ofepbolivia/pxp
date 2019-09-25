@@ -780,23 +780,11 @@ BEGIN
                 BEGIN
 
                 v_filadd = '';
+
                 --raise exception 'llega %',v_filadd;
                 IF (pxp.f_existe_parametro(par_tabla,'codigo_subsistema')) THEN
                   v_filadd = ' (SUBSIS.codigo = ''' ||v_parametros.codigo_subsistema||''') and ';
-
                 END IF;
-
-               /* IF   par_administrador != 1 THEN
-
-                     v_id_deptos =  param.f_get_lista_deptos_x_usuario(par_id_usuario, v_parametros.codigo_subsistema);
-                    IF(v_id_deptos='')THEN
-                       v_id_deptos = '0';
-                    END IF;
-
-                    v_filadd='(DEPPTO.id_depto  in ('||v_id_deptos||')) and';
-                 END IF; */
-
-
 
                      v_consulta:='SELECT
                                   DEPPTO.id_depto,
@@ -836,20 +824,11 @@ BEGIN
            elsif(par_transaccion='PM_DEPLISPRI_CONT')then
               BEGIN
                v_filadd = '';
+
                 IF (pxp.f_existe_parametro(par_tabla,'codigo_subsistema')) THEN
                   v_filadd = ' (SUBSIS.codigo = ''' ||v_parametros.codigo_subsistema||''') and ';
 
                 END IF;
-
-              /*  IF   par_administrador != 1 THEN
-
-                      v_id_deptos =  param.f_get_lista_deptos_x_usuario(par_id_usuario, v_parametros.codigo_subsistema);
-                      IF(v_id_deptos='')THEN
-                         v_id_deptos = '0';
-                      END IF;
-
-                      v_filadd='(DEPPTO.id_depto  in ('||v_id_deptos||')) and';
-                END IF; */
 
                      v_consulta:='SELECT
                                         count(DEPPTO.id_depto)
