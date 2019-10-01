@@ -97,7 +97,7 @@ BEGIN
                                   where  funpla.id_funcionario = planc.id_funcionario
                                   and colval.codigo_columna = ''COTIZABLE''
                                   and pla.fecha_planilla =
-                                                        (select p.fecha_planilla
+                                                        (select distinct  p.fecha_planilla
                                                           from plani.tplanilla p
                                                           where 
                                                           p.id_tipo_planilla = 1
