@@ -195,7 +195,7 @@ BEGIN
             */
 
          	UPDATE param.tproveedor_cta_bancaria SET
-            estado_cta = 'Inactivo'
+            estado_reg = 'Inactivo'
             where id_proveedor_cta_bancaria=v_parametros.id_proveedor_cta_bancaria;
 
             --Definicion de la respuesta
