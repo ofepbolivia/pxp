@@ -30,7 +30,7 @@ BEGIN
       select count(tf.id_feriado)
       into v_cont
       from rec.tferiados tf
-      where tf.fecha = p_fecha;
+      where tf.fecha = p_fecha and tf.tipo = 0;
 
       if(v_cont>0)then
       	return true;
