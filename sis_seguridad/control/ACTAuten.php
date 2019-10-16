@@ -33,7 +33,12 @@ class ACTAuten extends ACTbase {
 	////////////////
 	//   Metodos
 	////////////////
-	
+
+function getSesionHost(){
+    echo "{host:'".$_SESSION['_HOST']."'}";
+    exit;
+}
+
 	function prepararLlavesSession(){
 		//Se obtiene el primer primo
 		$this->funciones= $this->create('MODSesion');

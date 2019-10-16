@@ -2137,3 +2137,8 @@ ALTER TABLE param.tforma_pago
 ALTER TABLE param.tlugar
   ADD COLUMN id_sql_server INTEGER;
 /***********************************F-SCP-IRVA-PARAM-0-20/08/2019*****************************************/
+
+/***********************************I-SCP-FEA-PARAM-0-01/10/2019*****************************************/
+ALTER TABLE param.tproveedor
+  ADD COLUMN id_beneficiario VARCHAR(15);
+/***********************************F-SCP-FEA-PARAM-0-01/10/2019*****************************************/
