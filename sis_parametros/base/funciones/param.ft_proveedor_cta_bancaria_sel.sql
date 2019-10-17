@@ -139,6 +139,7 @@ BEGIN
                         left join param.tinstitucion instben on instben.id_institucion=pctaban.id_banco_beneficiario
 						inner join segu.tusuario usu1 on usu1.id_usuario = pctaban.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = pctaban.id_usuario_mod
+
 				        where pctaban.estado_reg = ''activo'' and pctaban.estado_cta = ''Activo'' and ';
 
 			--Definicion de la respuesta
@@ -162,7 +163,7 @@ BEGIN
 			--Sentencia de la consulta de conteo de registros
 			v_consulta:='select count(id_proveedor_cta_bancaria)
 					    from param.tproveedor_cta_bancaria pctaban
-					    inner join segu.tusuario usu1 on usu1.id_usuario = pctaban.id_usuario_reg
+                        inner join segu.tusuario usu1 on usu1.id_usuario = pctaban.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = pctaban.id_usuario_mod
 					    where pctaban.estado_reg = ''activo'' and pctaban.estado_cta = ''Activo'' and ';
 
@@ -173,6 +174,7 @@ BEGIN
 			return v_consulta;
 
 		end;
+
 
 	else
 
