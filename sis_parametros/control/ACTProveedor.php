@@ -91,6 +91,16 @@ class ACTProveedor extends ACTbase{
 			$this->objFunc=$this->create('MODProveedor');
 			$this->res=$this->objFunc->listarProveedorCombos();
 		}
+		if($this->objParam->getParametro('_adicionar')!=''){
+
+            $respuesta = $this->res->getDatos();
+
+            array_unshift ( $respuesta, array(  'id_proveedor'=>'0',
+                'rotulo_comercial'=>'Todos', 'desc_proveedor'=>'Todos'
+            ));
+            //		var_dump($respuesta);
+            $this->res->setDatos($respuesta);
+        }
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
 				

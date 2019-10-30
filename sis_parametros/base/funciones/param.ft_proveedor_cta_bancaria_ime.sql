@@ -34,6 +34,8 @@ DECLARE
     v_banco_beneficiario	varchar;
     v_proveedor				varchar;
     v_nro_cuenta			varchar;
+    v_desc_funcionario		varchar;
+    v_fecha_reg				date;
 
 BEGIN
 
@@ -51,29 +53,24 @@ BEGIN
 
         begin
 
-        	--controles para que no se repita el numero de cuenta bancaria
-        	 select vp.desc_proveedor, p.nro_cuenta
-             into v_proveedor, v_nro_cuenta
+        	--(may) controles para que no se repita el numero de cuenta bancaria
+
+             select vp.desc_proveedor, p.nro_cuenta, fp.desc_funcionario1, p.fecha_reg
+             into v_proveedor, v_nro_cuenta, v_desc_funcionario, v_fecha_reg
              from param.tproveedor_cta_bancaria p
              inner join param.vproveedor vp on vp.id_proveedor = p.id_proveedor
-             where p.id_proveedor= v_parametros.id_proveedor;
+             inner join segu.tusuario usu1 on usu1.id_usuario = p.id_usuario_reg
+             left join orga.vfuncionario_persona fp on fp.id_persona = usu1.id_persona
+             where p.nro_cuenta =  v_parametros.nro_cuenta;
 
-             IF   exists(select 1
-                          from param.tproveedor_cta_bancaria p
-                          where p.estado_reg = 'activo'
-                          and  p.nro_cuenta =  v_parametros.nro_cuenta
-                          and p.id_proveedor= v_parametros.id_proveedor ) THEN
+            IF   exists(select 1
+                        from param.tproveedor_cta_bancaria p
+                        where p.estado_reg = 'activo'
+                        and  p.nro_cuenta =  v_parametros.nro_cuenta ) THEN
 
-                 raise exception 'Número de Cuenta ya registrado con el Proveedor %',UPPER(v_proveedor);
-             END IF;
+                 raise exception 'Número de Cuenta % ya registrado por %, para el Proveedor % , en fecha %. ',v_nro_cuenta, v_desc_funcionario, UPPER(v_proveedor),v_fecha_reg ;
+             	END IF;
 
-             IF   exists(select 1
-                          from param.tproveedor_cta_bancaria p
-                          where p.estado_reg = 'activo'
-                          and  p.nro_cuenta =  v_parametros.nro_cuenta ) THEN
-
-                 raise exception 'Número de Cuenta ya registrado con el Proveedor %',UPPER(v_proveedor);
-             END IF;
             --
 
 

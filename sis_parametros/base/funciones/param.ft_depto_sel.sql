@@ -283,7 +283,9 @@ BEGIN
 
              IF  v_filadd is NULL THEN
 
-                 raise exception 'El usuario no tiene ningun grupo EP-UO asignado';
+                 --(may) 22-10-2019
+                 --raise exception 'El usuario no tiene ningun grupo EP-UO asignado';
+              	raise exception 'Usted no tiene permisos sobre los centros de costo que puede ejecutar, favor contactarse con la Unidad de Presupuestos para la asignación de permisos. (El usuario no tiene ningún Grupo EP-UO asignado) ';
 
               END IF;
 
@@ -367,7 +369,10 @@ BEGIN
 
               IF  v_filadd is NULL THEN
 
-                 raise exception 'El usuario no tiene ningun grupo EP-UO asignado';
+                 --(may) 22-10-2019
+                 --raise exception 'El usuario no tiene ningun grupo EP-UO asignado';
+              	raise exception 'Usted no tiene permisos sobre los centros de costo que puede ejecutar, favor contactarse con la Unidad de Presupuestos para la asignación de permisos. (El usuario no tiene ningún Grupo EP-UO asignado) ';
+
 
               END IF;
 
@@ -630,7 +635,10 @@ BEGIN
 
              IF  v_filadd is NULL THEN
 
-                 raise exception 'El usuario no tiene ningun grupo EP-UO asignado';
+                 --(may) 22-10-2019
+                 --raise exception 'El usuario no tiene ningun grupo EP-UO asignado';
+              	raise exception 'Usted no tiene permisos sobre los centros de costo que puede ejecutar, favor contactarse con la Unidad de Presupuestos para la asignación de permisos. (El usuario no tiene ningún Grupo EP-UO asignado) ';
+
 
               END IF;
 
@@ -730,7 +738,10 @@ BEGIN
 
               IF  v_filadd is NULL THEN
 
-                 raise exception 'El usuario no tiene ningun grupo EP-UO asignado';
+                --(may) 22-10-2019
+                 --raise exception 'El usuario no tiene ningun grupo EP-UO asignado';
+              	raise exception 'Usted no tiene permisos sobre los centros de costo que puede ejecutar, favor contactarse con la Unidad de Presupuestos para la asignación de permisos. (El usuario no tiene ningún Grupo EP-UO asignado) ';
+
 
               END IF;
 
@@ -865,6 +876,3 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
-
-ALTER FUNCTION param.ft_depto_sel (par_administrador integer, par_id_usuario integer, par_tabla varchar, par_transaccion varchar)
-  OWNER TO postgres;
