@@ -381,13 +381,18 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 		ActSave:'../../sis_organigrama/control/EstructuraUo/guardarEstructuraUo',
 		ActDel:'../../sis_organigrama/control/EstructuraUo/eliminarEstructuraUo',	
 		ActList:'../../sis_organigrama/control/EstructuraUo/listarEstructuraUo',
-	    enableDD:false,
+        ActDragDrop:'../../sis_organigrama/control/EstructuraUo/procesarDragDrop',
+        //id_store : 'id_uo',
+        enableDD:true,
 		expanded:false,
 		fheight:'80%',
 		fwidth:'50%',
 		textRoot:'Estructura Organizacional',
 		id_nodo:'id_uo',
 		id_nodo_p:'id_uo_padre',
+        idNodoDD : 'id_uo',
+        idOldParentDD : 'id_uo_padre',
+        idTargetDD : 'id_uo',
 		fields: [
 		'id', //identificador unico del nodo (concatena identificador de tabla con el tipo de nodo)
 		      //porque en distintas tablas pueden exitir idetificadores iguales
@@ -408,6 +413,21 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 			field: 'id',
 			direction:'ASC'
 		},
+
+        onNodeDrop : function(o) {
+            this.ddParams = {
+                tipo_nodo : o.dropNode.attributes.tipo_nodo
+            };
+            this.idTargetDD = 'id_uo';
+            if (o.dropNode.attributes.tipo_nodo == 'raiz' || o.dropNode.attributes.tipo_nodo == 'hijo') {
+                this.idNodoDD = 'id_uo';
+                this.idOldParentDD = 'id_uo_padre';
+            } else if(o.dropNode.attributes.tipo_nodo == 'item') {
+                this.idNodoDD = 'id_item';
+                this.idOldParentDD = 'id_p';
+            }
+            Phx.vista.EstructuraUo.superclass.onNodeDrop.call(this, o);
+        },
 		onButtonAct:function(){
 			
 			this.sm.clearSelections();
@@ -462,8 +482,8 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 		
 		//sobrecarga prepara menu
 		preparaMenu:function(n) {
-		this.getBoton('btnCargo').enable();
-		Phx.vista.EstructuraUo.superclass.preparaMenu.call(this,n);
+		    this.getBoton('btnCargo').enable();
+		    Phx.vista.EstructuraUo.superclass.preparaMenu.call(this,n);
 		},
 		liberaMenu : function () {
 			this.getBoton('btnCargo').disable();

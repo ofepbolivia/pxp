@@ -61,13 +61,13 @@ $body$
         --RAC NO ESTA FUNCIOANNDO ESTO DEL CARGO INDIVIDUAL
         if (select count(*)=1
            from orga.tuo_funcionario where id_uo=v_parametros.id_uo and estado_reg='activo' and tipo = 'oficial' and
-            id_uo=(select id_uo from orga.tuo where  id_uo=v_parametros.id_uo and estado_reg='activo' and cargo_individual='si')) then
+            id_uo=(select id_uo from orga.tuo where  id_uo=v_parametros.id_uo and estado_reg='activo' and cargo_individual='si') AND v_parametros.tipo = 'oficial') then
                       raise exception 'El cargo es individual y ya existe otro funcionario asignado actualmente';
         end if;
 
         --insercion de nuevo uo
         if exists (select 1 from orga.tuo_funcionario where id_funcionario=v_parametros.id_funcionario and
-        id_uo=v_parametros.id_uo and estado_reg='activo' and tipo = 'oficial' and (fecha_finalizacion > current_date or fecha_finalizacion is null)) then
+        id_uo=v_parametros.id_uo and estado_reg='activo' and tipo = 'oficial' and (fecha_finalizacion > current_date or fecha_finalizacion is null)) AND v_parametros.tipo = 'oficial' then
            raise exception 'Insercion no realizada. El funcionacio ya esta asignado a la unidad';
         end if;
 
@@ -78,7 +78,7 @@ $body$
         where ouf.id_funcionario=v_parametros.id_funcionario and ouf.estado_reg='activo' and ouf.tipo = 'oficial' and
         (ouf.estado_funcional = 'activo' or (ouf.fecha_finalizacion > current_date or fecha_finalizacion is null));
 
-         if v_contador > 0 then
+         if v_contador > 0 AND v_parametros.tipo = 'oficial' then
 			    raise exception 'El Funcionario se encuentra en otro cargo vigente primero inactive su asignacion actual';
          end if;
 

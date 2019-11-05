@@ -246,6 +246,44 @@ BEGIN
                v_resp = pxp.f_agrega_clave(v_resp,'id_uo',v_parametros.id_uo::varchar);
 
         END;
+    /*******************************
+    #TRANSACCION:	RH_ESTRUO_DRAG_DROP
+    #DESCRIPCION:	Cambiar el padre de un nodo en el arbol de UO
+    #AUTOR:			franklin.espinoza
+    #FECHA:			16/10/2019
+    #RESUMEN:
+      ***********************************/
+    ELSEIF (par_transaccion='RH_ESTRUO_DRAG_DROP') THEN
+      BEGIN
+        -- 1) si point es igual append
+          IF (v_parametros.punto='append') then
+                update orga.testructura_uo  set
+                  id_uo_padre = v_parametros.id_target
+                  where id_uo_hijo = v_parametros.id_nodo;
+
+                  insert into orga.tmod_estructura_uo(
+                    id_uo_padre,
+                    id_uo_hijo,
+                      id_uo_padre_old,
+                    estado_reg,
+                    id_usuario_reg,
+                    fecha_reg
+                  )values(
+                    v_parametros.id_target,
+                      v_parametros.id_nodo,
+                      v_parametros.id_old_parent,
+                    'activo',
+                     par_id_usuario,
+                     now()
+                  );
+          ELSE
+        --	2) regresar error point no soportados
+            raise exception 'POINT no soportado %',v_parametros.punto;
+          END IF;
+
+          v_resp = pxp.f_agrega_clave(v_resp,'mensaje','DRANG AND DROP exitoso id_nodo='||v_parametros.id_nodo||' id_target= '|| v_parametros.id_target||'  id_old_gui='|| v_parametros.id_old_parent);
+          return v_resp;
+      END;
         
    
     else
