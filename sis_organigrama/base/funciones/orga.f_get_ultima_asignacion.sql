@@ -17,7 +17,9 @@ BEGIN
    select tuo.id_uo_funcionario
    into v_id_uo_funcionario
    from orga.tuo_funcionario tuo
-   where tuo.id_funcionario = p_id_funcionario
+   inner join orga.tcargo tc on tc.id_cargo = tuo.id_cargo
+   inner join orga.ttipo_contrato ttc on ttc.id_tipo_contrato = tc.id_tipo_contrato
+   where tuo.id_funcionario = p_id_funcionario and tuo.estado_reg = 'activo' and tuo.tipo = 'oficial' and ttc.codigo in ('PLA', 'EVE')
    order by tuo.fecha_asignacion desc limit 1;
   
   return v_id_uo_funcionario;

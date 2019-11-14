@@ -683,7 +683,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     fieldLabel: "Apellido Paterno",
                     gwidth: 130,
                     name: 'ap_paterno',
-                    allowBlank:false,
+                    allowBlank:true,
                     maxLength:150,
 
                     anchor:'100%'
