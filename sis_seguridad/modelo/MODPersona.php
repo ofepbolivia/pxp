@@ -123,10 +123,11 @@ class MODPersona extends MODbase{
         $this->setParametro('id_usuario','id_usuario','integer');
         //defino varialbes que se captran como retornod e la funcion
         $this->captura('id_persona','integer');
+        $this->captura('nombre_archivo','varchar');//15/11/2019
         $this->captura('extension','varchar');
         //nombre varialbe de envio, tipo dato, columna que serra el nombre foto retorno, ruta para guardar archivo, crear miniatura, almacenar en sesion, nombre variale sesion
         // $this->captura('foto','bytea','id_persona','extension','sesion','foto');
-        $this->captura('foto','bytea','id_persona','extension','archivo','../../sis_seguridad/control/foto_persona/');
+       //15/11/2019 $this->captura('foto','bytea','id_persona','extension','archivo','../../sis_seguridad/control/foto_persona/');
         //$this->captura('foto','bytea','id_persona','extension','archivo','./');
 
 

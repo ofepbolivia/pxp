@@ -193,12 +193,21 @@ BEGIN
           --  Se arma la consulta de personas
           BEGIN
 
-               v_consulta:='SELECT p.id_persona,
+               /*v_consulta:='SELECT p.id_persona,
                              p.extension,
                              p.foto
                           FROM segu.tpersona p
                           inner join segu.tusuario u on u.id_persona = p.id_persona
-                          WHERE u.id_usuario='||v_parametros.id_usuario;
+                          WHERE u.id_usuario='||v_parametros.id_usuario;*/
+                --Cambio Alan 15/11/2019
+				          v_consulta='select  per.id_persona,
+                					            tar.nombre_archivo,
+                                      tar.extension
+                              from param.tarchivo tar
+                                    inner join orga.tfuncionario funcio on funcio.id_funcionario=tar.id_tabla and tar.id_tipo_archivo = 10
+                                    inner join segu.tpersona per on per.id_persona=funcio.id_persona
+                                    inner join segu.tusuario usu on usu.id_persona= per.id_persona
+                               where usu.id_usuario='||v_parametros.id_usuario;
 
                 raise notice '%',v_consulta;
 
