@@ -805,6 +805,17 @@ COMMENT ON COLUMN orga.tfuncionario.codigo_rc_iva
 IS 'codigo relacionado con impuestos nacionales';
 /*****************************F-SCP-FEA-ORGA-0-24/07/2019*************/
 
+/*****************************I-SCP-FEA-ORGA-0-17/10/2019*************/
+CREATE TABLE orga.tmod_estructura_uo (
+  id_mod_estrutura_uo SERIAL,
+  id_uo_padre INTEGER NOT NULL,
+  id_uo_hijo INTEGER NOT NULL,
+  id_uo_padre_old INTEGER,
+  CONSTRAINT tmod_estructura_uo_pkey PRIMARY KEY(id_mod_estrutura_uo)
+) INHERITS (pxp.tbase)
+WITH (oids = false);
+
+/*****************************F-SCP-FEA-ORGA-0-17/10/2019*************/
 
 
 

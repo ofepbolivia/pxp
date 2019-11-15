@@ -80,9 +80,13 @@ class ACTPlantilla extends ACTbase{
         if($this->objParam->getParametro('id_plantilla')!=''){
             $this->objParam->addFiltro("id_plantilla=".$this->objParam->getParametro('id_plantilla'));
         }
-
+        //(may) Nota de Credito y Debito
         if($this->objParam->getParametro('fil_id_plantilla') == true){
             $this->objParam->addFiltro("id_plantilla in (41, 42)");
+        }
+        //(may) facturas por comision
+        if($this->objParam->getParametro('comision_id_plantilla') == true){
+            $this->objParam->addFiltro("id_plantilla in (36)");
         }
 
         if($this->objParam->getParametro('tipo_plantilla')!=''){

@@ -2142,3 +2142,29 @@ ALTER TABLE param.tlugar
 ALTER TABLE param.tproveedor
   ADD COLUMN id_beneficiario VARCHAR(15);
 /***********************************F-SCP-FEA-PARAM-0-01/10/2019*****************************************/
+
+/***********************************I-SCP-IRVA-PARAM-0-06/11/2019*****************************************/
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN tipo_punto_venta VARCHAR(200) [];
+
+COMMENT ON COLUMN param.tconcepto_ingas.tipo_punto_venta
+IS 'el tipo de punto de venta (ato,cto)';
+
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN punto_venta_asociado INTEGER [];
+
+COMMENT ON COLUMN param.tconcepto_ingas.punto_venta_asociado
+IS 'Lista de los puntos de venta que seran asociados';
+
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN id_moneda INTEGER;
+
+ ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN precio NUMERIC(18,2);
+
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN requiere_descripcion VARCHAR(2);
+
+ALTER TABLE param.tconcepto_ingas
+    ADD COLUMN excento VARCHAR(2);
+/***********************************F-SCP-IRVA-PARAM-0-06/11/2019*****************************************/

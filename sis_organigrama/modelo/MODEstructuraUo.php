@@ -131,6 +131,22 @@ class MODEstructuraUo extends MODbase {
 		$this->ejecutarConsulta();
 		return $this->respuesta;
 	}
+
+    function procesarDragDrop() {
+        $this->procedimiento = 'orga.ft_estructura_uo_ime';
+        $this->transaccion = 'RH_ESTRUO_DRAG_DROP';
+        $this->tipo_procedimiento = 'IME';
+
+        $this->setParametro('punto', 'point', 'varchar');
+        $this->setParametro('id_nodo', 'id_nodo', 'integer');
+        $this->setParametro('id_old_parent', 'id_old_parent', 'integer');
+        $this->setParametro('id_target', 'id_target', 'integer');
+        $this->setParametro('tipo_nodo', 'tipo_nodo', 'varchar');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
 	
 
 }

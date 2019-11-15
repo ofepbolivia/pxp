@@ -577,7 +577,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
             var fecha_actual = new Date();
             fecha_actual.setMonth(fecha_actual.getMonth());
             //this.Cmp.fecha_asignacion.setValue(new Date(fecha_actual.getFullYear(),fecha_actual.getMonth(),1));
-            this.getComponente('fecha_asignacion').setMinValue(new Date(fecha_actual.getFullYear(),fecha_actual.getMonth(),1));
+            //this.getComponente('fecha_asignacion').setMinValue(new Date(fecha_actual.getFullYear(),fecha_actual.getMonth(),1));
         }, this);
 
 		this.Cmp.fecha_asignacion.on('blur', function () {
