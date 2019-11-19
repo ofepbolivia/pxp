@@ -60,7 +60,7 @@ class Respuestas extends MYPDF{
         $array = $data;
         $url_imagen = dirname(__FILE__) . '/../../lib/imagenes/logos/logo.jpg';
         $f_actual = date_format(date_create($array["fecha_solicitud"]), 'd/m/Y');
-        if ($this->datos[0]["gestion"] == 2018 && $this->datos[0]["fecha_solicitud"] > '2019-11-08'){            
+        if ($this->datos[0]["gestion"] == 2018 && $array["fecha_solicitud"] > '2019-11-08'){            
             $f_actual = '08/11/2019';
         }  
         $nro_cite_dce = $array["cite"];
