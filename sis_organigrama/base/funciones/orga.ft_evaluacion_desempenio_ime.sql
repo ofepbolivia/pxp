@@ -801,6 +801,10 @@ BEGIN
             inner join orga.tuo ger ON ger.id_uo = orga.f_get_uo_gerencia(ca.id_uo, NULL::integer, NULL::date)
             where ca.id_funcionario = v_id_funcionario  and (ca.fecha_finalizacion is null or ca.fecha_finalizacion >= now()::date);
 
+    if exists(select 1
+        from orga.tevaluacion_desempenio de
+        where de.id_funcionario = v_id_funcionario and de.gestion = v_parametros.gestion
+        and de.estado = 'borrador')then 
 		if exists (select 1
             from orga.tevaluacion_desempenio de
             where de.id_funcionario = v_id_funcionario and de.gestion = v_parametros.gestion) then
@@ -1052,6 +1056,7 @@ BEGIN
 
 
           end if;
+        end if;
 
             end loop;
             end if;

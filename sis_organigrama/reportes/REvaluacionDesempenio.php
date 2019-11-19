@@ -6,6 +6,10 @@ class REvaluacionDesempenio extends  ReportePDF{
         $url_imagen = dirname(__FILE__) . '/../../lib/images/Logo-BoA.png';
 
         $f_actual = date_format(date_create($this->datos[0]["fecha_solicitud"]), 'd/m/Y');
+        if ($this->datos[0]["gestion"] == 2018 && $this->datos[0]["fecha_solicitud"] > '2019-11-08'){            
+            $f_actual = '08/11/2019';
+        }        
+        
         $nro_cite_dce = $this->datos[0]["cite"];
 
 
