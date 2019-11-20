@@ -72,7 +72,8 @@ DECLARE
     v_codigo 					varchar;
     v_mensaje					varchar;
     v_mjs						varchar;
-	v_registro_eva    			varchar;	
+	v_registro_eva    			varchar;
+    v_estado_evaluacion			varchar;	
 
 BEGIN
 
@@ -801,13 +802,20 @@ BEGIN
             inner join orga.tuo ger ON ger.id_uo = orga.f_get_uo_gerencia(ca.id_uo, NULL::integer, NULL::date)
             where ca.id_funcionario = v_id_funcionario  and (ca.fecha_finalizacion is null or ca.fecha_finalizacion >= now()::date);
 
-    if exists(select 1
+    -- Modificado por (breydi.vasquez)19/11/2019
+    -- control existencia de funcionario en la cabecera evaluacion, se modifica si la evaluacion esta en estado borrador
+        select de.estado into v_estado_evaluacion
+        from orga.tevaluacion_desempenio de
+        where de.id_funcionario = v_id_funcionario 
+        and de.gestion = v_parametros.gestion;
+
+    /*if exists(select 1
         from orga.tevaluacion_desempenio de
         where de.id_funcionario = v_id_funcionario and de.gestion = v_parametros.gestion
         and de.estado = 'borrador')then 
 		if exists (select 1
             from orga.tevaluacion_desempenio de
-            where de.id_funcionario = v_id_funcionario and de.gestion = v_parametros.gestion) then
+            where de.id_funcionario = v_id_funcionario and de.gestion = v_parametros.gestion) then*/
  /*
 			update orga.tevaluacion_desempenio  set
             cargo_actual_memo=v_datos.nombre_cargo,
@@ -816,6 +824,10 @@ BEGIN
                               where c.id_temporal_cargo =v_id_cargo),
             id_cargo_evaluado=v_id_cargo           
             where id_funcionario = v_id_funcionario and gestion = v_parametros.gestion;*/
+
+        if v_estado_evaluacion is not null then 
+            
+            if v_estado_evaluacion = 'borrador' then              
 
              select 	de.nro_tramite,
                     de.id_proceso_wf,
@@ -878,7 +890,8 @@ BEGIN
                                                                 fecha_correo,
                                                                 plantilla,
                                                                 ip,
-                                                                fecha_receptor
+                                                                fecha_receptor,
+                                                                cargo_actual_memo
                                                               )
                                                               VALUES (
                                                                 p_id_usuario,
@@ -906,7 +919,8 @@ BEGIN
                                                                 v_registo.fecha_correo,
                                                                 v_registo.plantilla,
                                                                 v_registo.ip,
-                                                                v_registo.fecha_receptor
+                                                                v_registo.fecha_receptor,
+                                                                v_registo.cargo_actual_memo
                                                               );
 
             delete from orga.tevaluacion_desempenio de
@@ -999,7 +1013,8 @@ BEGIN
             v_registo.cargo_actual_memo,
             v_id_cargo            
 			);
-		end if;
+		 end if;
+        end if;
 
 
         else
@@ -1054,8 +1069,7 @@ BEGIN
         where c.id_temporal_cargo =v_id_cargo and c.estado_reg='activo'),
         v_id_cargo;
 
-
-          end if;
+          
         end if;
 
             end loop;
