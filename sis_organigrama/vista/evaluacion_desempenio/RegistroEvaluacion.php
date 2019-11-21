@@ -81,7 +81,7 @@ header("content-type: text/javascript; charset=UTF-8");
             this.finCons = true;
             this.getBoton('CorreoCorreos').setVisible(false);
             this.getBoton('CorreoFuncionario').setVisible(false);
-            //this.getBoton('edit').setVisible(false);                                              
+            this.getBoton('edit').setVisible(false);                                              
         },
         gruposBarraTareas:[
             {name:'0_70',title:'<font color="red"><H1 align="center"><i class="fa fa-list-ul"> Malo</i> 0 - 70 </h1></font>',grupo:1,height:0},
@@ -103,7 +103,7 @@ header("content-type: text/javascript; charset=UTF-8");
                       this.store.baseParams.pes_estado = name;                      
                       if(this.store.baseParams.pes_estado == '0_70'){                      	
                       	this.getBoton('CorreoCorreos').setVisible(false);
-                      	this.getBoton('edit').setVisible(true);
+                      	this.getBoton('edit').setVisible(false);
                       	this.getBoton('CorreoFuncionario').setVisible(false);                      	                      	                      	
                       }
                       else if(this.store.baseParams.pes_estado == '71_80'){
