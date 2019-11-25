@@ -40,6 +40,7 @@ $body$
 	v_data_func				record;
 
 	v_contador				integer = 0;
+	v_tipo            varchar;
   BEGIN
 
     v_nombre_funcion:='orga.ft_uo_funcionario_ime';
@@ -60,7 +61,7 @@ $body$
         -- verificar si la uo permite multiples asignaciones de funcionario
         --RAC NO ESTA FUNCIOANNDO ESTO DEL CARGO INDIVIDUAL
         if (select count(*)=1
-           from orga.tuo_funcionario where id_uo=v_parametros.id_uo and estado_reg='activo' and tipo = 'oficial' and
+           from orga.tuo_funcionario where id_uo=v_parametros.id_uo and estado_reg='activo' and tipo = 'oficial' and (fecha_finalizacion is null or current_date <= fecha_finalizacion) and
             id_uo=(select id_uo from orga.tuo where  id_uo=v_parametros.id_uo and estado_reg='activo' and cargo_individual='si') AND v_parametros.tipo = 'oficial') then
                       raise exception 'El cargo es individual y ya existe otro funcionario asignado actualmente';
         end if;
@@ -181,7 +182,14 @@ $body$
               a.fecha_finalizacion > v_parametros.fecha_asignacion
               and a.id_uo != v_parametros.id_uo))>0) then
 
-          raise exception 'El Funcionario se encuentra en otro cargo vigente primero inactive su asignacion actual';
+          select tuo.tipo
+          into v_tipo
+          from orga.tuo_funcionario tuo
+          where tuo.id_uo_funcionario = v_parametros.id_uo_funcionario;
+
+          if v_tipo = 'oficial' then
+			      raise exception 'El Funcionario se encuentra en otro cargo vigente primero inactive su asignacion actual';
+          end if;
         end if;
 
 
