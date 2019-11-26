@@ -296,7 +296,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         xtype: 'fieldset',
                         title: 'PERSONA',
                         layout: 'column',
-                        columnWidth: .75,
+                        columnWidth: .73,
                         border: true,
                         //bodyStyle: 'padding-right:10px;',
                         padding: '0 10 0 10',

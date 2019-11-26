@@ -46,6 +46,7 @@ class MODEstructuraUo extends MODbase {
 			$this->captura('checked','varchar');
 			$this->captura('id_nivel_organizacional','integer');
 			$this->captura('nombre_nivel','varchar');
+			$this->captura('prioridad','varchar');
 			$this->armarConsulta();
 			/*echo $this->consulta;
 			exit;*/
@@ -77,7 +78,8 @@ class MODEstructuraUo extends MODbase {
 		$this->setParametro('correspondencia','correspondencia','varchar');
 		$this->setParametro('gerencia','gerencia','varchar');
 		$this->setParametro('id_nivel_organizacional','id_nivel_organizacional','integer');
-		
+		$this->setParametro('prioridad','prioridad','varchar');
+
 	    	//Ejecuta la instruccion
 	  //  echo '....'.$this->getConsulta(); exit;
 		$this->armarConsulta();
@@ -107,6 +109,7 @@ class MODEstructuraUo extends MODbase {
 		$this->setParametro('correspondencia','correspondencia','varchar');
 		$this->setParametro('gerencia','gerencia','varchar');
 		$this->setParametro('id_nivel_organizacional','id_nivel_organizacional','integer');
+        $this->setParametro('prioridad','prioridad','varchar');
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 				
