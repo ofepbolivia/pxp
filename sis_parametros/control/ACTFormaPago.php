@@ -28,10 +28,13 @@ class ACTFormaPago extends ACTbase{
 		$this->objParam->defecto('ordenacion','orden');
 		$this->objParam->defecto('dir_ordenacion','asc');
         //se filtra para mostrar las formas de pago para obligaciones de pago
-        $this->objParam->addFiltro("fp.codigo not in  (''transferencia_interna'' , ''transf_interna_debe'',''transf_interna_haber'',''debito_automatico'',''transferencia_carta'',''transferencia_exterior'') ");
+        $this->objParam->addFiltro("fp.codigo not in  (''transferencia_interna'' , ''transf_interna_debe'',''transf_interna_haber'',''transferencia_carta'',''transferencia_exterior'') ");
 
         if($this->objParam->getParametro('cheque')=='no'){
             $this->objParam->addFiltro("fp.desc_forma_pago != ''Cheque''");
+        }
+        if($this->objParam->getParametro('tipo')!=''){
+            $this->objParam->addFiltro("fp.codigo = ''".$this->objParam->getParametro('tipo')."''");
         }
 
         if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
