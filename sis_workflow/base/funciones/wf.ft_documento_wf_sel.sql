@@ -34,7 +34,7 @@ DECLARE
     v_id_tipo_estado_siguiente  integer[]; 
     v_cantidad_siguiente    integer;
     v_id_tipo_estado      integer;
-          
+    v_fecha_ini		date;
 BEGIN
 
   v_nombre_funcion = 'wf.ft_documento_wf_sel';
@@ -65,6 +65,11 @@ BEGIN
                             ew.estado_reg= 'activo'                                        
              inner join wf.ttipo_proceso tp on tp.id_tipo_proceso = pw.id_tipo_proceso
              where pw.id_proceso_wf = v_parametros.id_proceso_wf;
+
+           select s.fecha_solicitud::date
+           into   v_fecha_ini
+           from   mat.tsolicitud s
+           where  s.id_proceso_wf = v_parametros.id_proceso_wf;
                
            if (v_parametros.todos_documentos = 'si') then            
              
@@ -121,9 +126,13 @@ BEGIN
                         usu2.cuenta as usr_mod,
                         tp.codigo as codigo_tipo_proceso,
                         td.codigo as codigo_tipo_documento,
-                        td.nombre as nombre_tipo_documento,
+                        CASE
+                         WHEN to_date('''|| COALESCE (v_fecha_ini, '20190901') ||''',''YYYY-MM-DD'') > to_date(''20190901'',''YYYYMMDD'') and td.nombre in (''Documento de Contratación del Exterior'',''Documento de Contratacion del Exterior'') THEN
+                         	''Detalle Items Requeridos''
+                         ELSE
+                         	td.nombre
+                        END AS nombre_tipo_documento,
                         td.descripcion as descripcion_tipo_documento,
-                        
                         pw.nro_tramite,
                         pw.codigo_proceso,
                         pw.descripcion as descripcion_proceso_wf,

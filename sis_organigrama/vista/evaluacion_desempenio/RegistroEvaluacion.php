@@ -134,6 +134,9 @@ header("content-type: text/javascript; charset=UTF-8");
         	var rec = this.getSelectedData();        	
         	var tb =this.tbar;    	            
             Phx.vista.RegistroEvaluacion.superclass.preparaMenu.call(this,n);
+            if(rec.estado == 'enviado' || rec.estado == 'revisado'){
+                this.getBoton('CorreoFuncionario').disable();
+            }
             if(rec.nota >= 71 && rec.nota <= 80){
             	if(rec.estado == 'enviado' || rec.estado == 'revisado'){
             		this.getBoton('edit').disable();            		

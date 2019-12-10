@@ -582,3 +582,134 @@ FOR EACH ROW
   EXECUTE PROCEDURE sqlserver.f_migrar_testructura_uo();
 
 /************************************F-DEP-FEA-ORGA-0-06/09/2019*************************************************/
+/************************************I-DEP-BVP-ORGA-0-25/11/2019*************************************************/
+CREATE OR REPLACE VIEW orga.vfuncionario_ultimo_cargo(
+    id_uo_funcionario,
+    id_funcionario,
+    desc_funcionario1,
+    desc_funcionario2,
+    id_uo,
+    nombre_cargo,
+    fecha_asignacion,
+    fecha_finalizacion,
+    num_doc,
+    ci,
+    codigo,
+    email_empresa,
+    estado_reg_fun,
+    estado_reg_asi,
+    id_cargo,
+    descripcion_cargo,
+    cargo_codigo,
+    nombre_unidad)
+AS
+  SELECT uof.id_uo_funcionario,
+         funcio.id_funcionario,
+         person.nombre_completo1 AS desc_funcionario1,
+         person.nombre_completo2 AS desc_funcionario2,
+         uo.id_uo,
+         uo.nombre_cargo,
+         uof.fecha_asignacion,
+         uof.fecha_finalizacion,
+         person.num_documento AS num_doc,
+         person.ci,
+         funcio.codigo,
+         funcio.email_empresa,
+         funcio.estado_reg AS estado_reg_fun,
+         uof.estado_reg AS estado_reg_asi,
+         car.id_cargo,
+         car.nombre AS descripcion_cargo,
+         car.codigo AS cargo_codigo,
+         uo.nombre_unidad
+  FROM orga.tfuncionario funcio
+       JOIN segu.vpersona person ON funcio.id_persona = person.id_persona
+       JOIN orga.tuo_funcionario uof ON uof.id_funcionario =
+         funcio.id_funcionario
+       JOIN orga.tuo uo ON uo.id_uo = uof.id_uo
+       JOIN orga.tcargo car ON car.id_cargo = uof.id_cargo
+  WHERE uof.estado_reg::text = 'activo'::text AND  uof.tipo = 'oficial' 
+       and (uof.fecha_asignacion IN (
+                                   SELECT max(tuo.fecha_asignacion) AS max
+                                   FROM orga.tuo_funcionario tuo
+                                   WHERE tuo.tipo::text = 'oficial'::text AND
+                                         tuo.estado_reg::text = 'activo'::text
+  AND
+                                         tuo.id_funcionario =
+                                           funcio.id_funcionario
+                                   GROUP BY tuo.id_funcionario
+        ));
+/************************************F-DEP-BVP-ORGA-0-25/1/2019*************************************************/
+
+/************************************I-DEP-BVP-ORGA-0-26/11/2019*************************************************/
+CREATE VIEW orga.vmaxfecha_asig_funcionario (
+    id_funcionario,
+    fecha_asinacion_max)
+AS
+SELECT tuo.id_funcionario,
+    max(tuo.fecha_asignacion) AS fecha_asinacion_max
+FROM orga.tuo_funcionario tuo
+WHERE tuo.tipo::text = 'oficial'::text AND tuo.estado_reg::text = 'activo'::text
+GROUP BY tuo.id_funcionario;
+
+CREATE OR REPLACE VIEW orga.vfuncionario_ultimo_cargo(
+    id_uo_funcionario,
+    id_funcionario,
+    desc_funcionario1,
+    desc_funcionario2,
+    id_uo,
+    nombre_cargo,
+    fecha_asignacion,
+    fecha_finalizacion,
+    num_doc,
+    ci,
+    codigo,
+    email_empresa,
+    estado_reg_fun,
+    estado_reg_asi,
+    id_cargo,
+    descripcion_cargo,
+    cargo_codigo,
+    nombre_unidad,
+    lugar_nombre,
+    id_lugar,
+    id_oficina,
+    oficina_nombre,
+    oficina_direccion)
+AS
+  SELECT uof.id_uo_funcionario,
+         funcio.id_funcionario,
+         person.nombre_completo1 AS desc_funcionario1,
+         person.nombre_completo2 AS desc_funcionario2,
+         uo.id_uo,
+         uo.nombre_cargo,
+         uof.fecha_asignacion,
+         uof.fecha_finalizacion,
+         person.num_documento AS num_doc,
+         person.ci,
+         funcio.codigo,
+         funcio.email_empresa,
+         funcio.estado_reg AS estado_reg_fun,
+         uof.estado_reg AS estado_reg_asi,
+         car.id_cargo,
+         car.nombre AS descripcion_cargo,
+         car.codigo AS cargo_codigo,
+         uo.nombre_unidad,
+         lu.nombre AS lugar_nombre,
+         lu.id_lugar,
+         of . id_oficina,
+         of . nombre AS oficina_nombre,
+         of . direccion AS oficina_direccion         
+  FROM orga.tfuncionario funcio
+       JOIN segu.vpersona person ON funcio.id_persona = person.id_persona
+       JOIN orga.tuo_funcionario uof ON uof.id_funcionario =
+         funcio.id_funcionario
+       JOIN orga.tuo uo ON uo.id_uo = uof.id_uo
+       JOIN orga.tcargo car ON car.id_cargo = uof.id_cargo
+       JOIN orga.toficina of ON of . id_oficina = car.id_oficina
+       JOIN param.tlugar lu ON lu.id_lugar = of . id_lugar       
+       JOIN orga.vmaxfecha_asig_funcionario maxf ON maxf.id_funcionario =
+         funcio.id_funcionario
+  WHERE uof.estado_reg::text = 'activo'::text AND
+        uof.tipo::text = 'oficial'::text AND
+        uof.fecha_asignacion = maxf.fecha_asinacion_max;
+/************************************F-DEP-BVP-ORGA-0-26/1/2019*************************************************/

@@ -27,7 +27,7 @@ DECLARE
 	v_nombre_funcion        text;
 	v_mensaje_error         text;
 	v_id_temporal_cargo	integer;
-			    
+	v_control           integer;
 BEGIN
 
     v_nombre_funcion = 'orga.ft_temporal_cargo_ime';
@@ -43,6 +43,14 @@ BEGIN
 	if(p_transaccion='OR_TCARGO_INS')then
 					
         begin
+          select count(ttc.nombre)
+          into v_control
+          from orga.ttemporal_cargo ttc
+          where ttc.nombre = trim(v_parametros.nombre);
+
+          if v_control != 0 then
+            raise 'Estimado Usuario: <br>El cargo ya fue creado.';
+          end if;
         	--Sentencia de la insercion
         	insert into orga.ttemporal_cargo(
 			id_temporal_jerarquia_aprobacion,

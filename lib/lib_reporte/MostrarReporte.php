@@ -35,7 +35,7 @@ class MostrarReporte
         }
         else{
              header("Content-type: text/html");
-             echo '<H1><B>El archivo a sido  eliminado</B></H1>';    
+             echo '<H1><B>El archivo ha sido  eliminado</B></H1>';    
             
         }
         exit;

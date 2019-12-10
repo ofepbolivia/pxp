@@ -176,7 +176,7 @@ Phx.vista.EstructuraUo=function(config){
                }
            },
            type: 'ComboBox',
-           id_grupo: 0,
+           id_grupo: 1,
            filters: {pfiltro: 'tcargo.nombre',type: 'string'},
            grid: true,
            form: true
@@ -219,7 +219,7 @@ Phx.vista.EstructuraUo=function(config){
 				
 			},
 			type:'ComboBox',
-			id_grupo:0,
+			id_grupo:1,
 			form:true
 		},
 		
@@ -244,7 +244,7 @@ Phx.vista.EstructuraUo=function(config){
 				
 			   },
 			type:'ComboBox',
-			id_grupo:0,
+			id_grupo:1,
 			form:true
 		},
 		{
@@ -270,13 +270,13 @@ Phx.vista.EstructuraUo=function(config){
 				
 			},
 			type:'ComboBox',
-			id_grupo:0,
+			id_grupo:1,
 			form:true
 		},
 		{
 			config:{
 				name:'correspondencia',
-				fieldLabel:'Corresponden cia',
+				fieldLabel:'Correspondencia',
 				typeAhead: true,
 				allowBlank:false,
 	    		triggerAction: 'all',
@@ -296,7 +296,7 @@ Phx.vista.EstructuraUo=function(config){
 				
 			},
 			type:'ComboBox',
-			id_grupo:0,
+			id_grupo:1,
 			form:true
 		}
 		,
@@ -323,9 +323,22 @@ Phx.vista.EstructuraUo=function(config){
 				
 			},
 			type:'ComboBox',
-			id_grupo:0,
+			id_grupo:1,
 			form:true
-		}
+		},
+           {
+               config:{
+                   fieldLabel: "Prioridad",
+                   gwidth: 120,
+                   name: 'prioridad',
+                   allowBlank:true,
+                   anchor:'100%'
+
+               },
+               type:'TextField',
+               id_grupo:0,
+               form:true
+           },
 		];
 		
 		Phx.vista.EstructuraUo.superclass.constructor.call(this,config);
@@ -385,8 +398,8 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
         //id_store : 'id_uo',
         enableDD:true,
 		expanded:false,
-		fheight:'80%',
-		fwidth:'50%',
+		fheight:'75%',
+		fwidth:'70%',
 		textRoot:'Estructura Organizacional',
 		id_nodo:'id_uo',
 		id_nodo_p:'id_uo_padre',
@@ -408,7 +421,7 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 		'nombre_unidad',
 		'nombre_cargo',
 		'presupuesta',
-		'nodo_base','correspondencia','gerencia'],
+		'nodo_base','correspondencia','gerencia','prioridad'],
 		sortInfo:{
 			field: 'id',
 			direction:'ASC'
@@ -577,30 +590,51 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 		bsave:false,// boton para eliminar
 		
 		//DEFINIE LA ubicacion de los datos en el formulario
-	Grupos:[{ 
-			 layout: 'column',
-			 items:[{
-				    xtype:'fieldset',
-                    layout: 'form',
-                    border: true,
-                    title: 'Datos principales',
-                    bodyStyle: 'padding:0 10px 0;',
-                    columnWidth: '1',
-                    items:[],
-		            id_grupo:0
-                  }
-                  
-                  /*{  
-                    xtype:'fieldset',
-                    layout: 'form',
-                    border: true,
-                    title: 'Orden y rutas',
-                    bodyStyle: 'padding:0 10px 0;',
-                    columnWidth: '.5',
-                    
-                    items:[],
-                    id_grupo:1
-                 }*/] }]
+
+
+        Grupos: [
+            {
+                layout: 'column',
+                border: false,
+                labelAlign: 'top',
+                defaults: {
+                    border: false
+                },
+
+                items: [
+                    {
+                        bodyStyle: 'padding-right:10px;',
+                        items: [
+
+                            {
+                                xtype: 'fieldset',
+                                title: '<b style="color: green;">DATOS UO<b>',
+                                autoHeight: true,
+                                items: [],
+                                id_grupo: 0
+
+                            }
+
+                        ],
+                        columnWidth: .5
+                    },
+                    {
+                        bodyStyle: 'padding-right:10px;',
+                        items: [
+                            {
+                                xtype: 'fieldset',
+                                title: '<b style="color: green;">DATOS CARGO<b>',
+                                autoHeight: true,
+                                items: [],
+                                id_grupo: 1
+                            }
+                        ],
+                        columnWidth: .5
+                    }
+
+                ]
+            }
+        ]
 			
 
 

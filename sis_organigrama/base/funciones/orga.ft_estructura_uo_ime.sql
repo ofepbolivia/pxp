@@ -34,6 +34,9 @@ v_id_uo  				    integer;
 --10-04-2012: sincronizacion de UO entre BD
 v_respuesta_sinc            varchar;
 
+--variables para drag and drop
+v_consulta					varchar = '';
+v_unidad					record;
 BEGIN
 
   
@@ -77,7 +80,8 @@ BEGIN
                    nodo_base, 
                    correspondencia, 
                    gerencia,
-                   id_nivel_organizacional)
+                   id_nivel_organizacional,
+                   prioridad)
                values(
                  upper(v_parametros.codigo), 
                  v_parametros.nombre_unidad, 
@@ -91,7 +95,8 @@ BEGIN
                  v_parametros.nodo_base, 
                  v_parametros.correspondencia, 
                  v_parametros.gerencia,
-                 v_parametros.id_nivel_organizacional)
+                 v_parametros.id_nivel_organizacional,
+                 v_parametros.prioridad)
                  
                RETURNING id_uo into v_id_uo;
 
@@ -169,7 +174,8 @@ BEGIN
                    nodo_base=v_parametros.nodo_base,
                    correspondencia=v_parametros.correspondencia,
                    gerencia=v_parametros.gerencia,
-                   id_nivel_organizacional = v_parametros.id_nivel_organizacional
+                   id_nivel_organizacional = v_parametros.id_nivel_organizacional,
+                   prioridad = v_parametros.prioridad
                 where id_uo=v_parametros.id_uo;
                 
                /* --10-04-2012: sincronizacion de UO entre BD
@@ -217,7 +223,7 @@ BEGIN
               --2) se fija que no tenga funcionarios en estado activo asignados a este uo 
               if exists ( select DISTINCT 1 
                           from orga.tuo_funcionario uof
-                          where uof.id_uo = v_parametros.id_uo and uof.estado_reg='activo') then
+                          where uof.id_uo = v_parametros.id_uo and uof.estado_reg='activo' and uof.estado_funcional = 'activo') then
              
                              
                         raise exception 'Eliminacion no realizada. La Unidad que se intenta eliminar tiene relaciones vigentes con empleados';
@@ -276,6 +282,34 @@ BEGIN
                      par_id_usuario,
                      now()
                   );
+
+            select tu.nombre_unidad, tu.descripcion, tu.codigo, tu.correspondencia, tu.id_nivel_organizacional, tu.estado_reg
+            into v_unidad
+            from orga.tuo tu
+            where tu.id_uo = v_parametros.id_nodo;
+
+            v_consulta =  'exec Ende_Organigrama "DRAG", '||v_parametros.id_nodo||', '||
+          v_parametros.id_target||', "'||coalesce(v_unidad.nombre_unidad,'')||'", "'||coalesce(v_unidad.descripcion,'')||'", "'||
+          coalesce(v_unidad.codigo,'')||'", "'||coalesce(v_unidad.correspondencia,'')||'", null, '||extract(year from current_date)||',  '||v_unidad.id_nivel_organizacional||
+                ', "'||v_unidad.estado_reg||'";';
+
+            INSERT INTO sqlserver.tmigracion
+            (
+              id_usuario_reg,
+              consulta,
+              estado,
+              respuesta,
+              operacion,
+              cadena_db
+            )
+            VALUES (
+              par_id_usuario,
+              v_consulta,
+              'pendiente',
+              null,
+              'DRAG',
+              pxp.f_get_variable_global('cadena_db_sql_2')
+            );
           ELSE
         --	2) regresar error point no soportados
             raise exception 'POINT no soportado %',v_parametros.punto;
