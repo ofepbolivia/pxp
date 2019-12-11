@@ -305,7 +305,7 @@ BEGIN
                                 where id_tabla = json_extract_path_text(v_parametros,'id_tabla')::integer and tc.estado_reg = 'activo' and ce.estado_reg = 'activo'
                                 and te.codigo = json_extract_path_text(v_parametros,'tipo_estado')::varchar) loop
             	if v_tabla.bd_nombre_tabla = 'contrato' and v_columnas.bd_nombre_columna::varchar='numero' THEN
-                	v_numero=leg.f_verificar_numero_contrato(v_tabla.bd_nombre_tabla::varchar,json_extract_path_text(v_parametros,'numero')::varchar);
+                perform leg.f_verificar_numero_contrato(v_tabla.bd_nombre_tabla::varchar,json_extract_path_text(v_parametros,'numero')::varchar,json_extract_path_text(v_parametros,'id_' ||v_tabla.bd_nombre_tabla)::INTEGER,'modificar');
                 end if;
 
                 if (v_columnas.bd_tipo_columna in ('integer', 'bigint', 'boolean', 'numeric')) then
