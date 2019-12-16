@@ -40,7 +40,7 @@ DECLARE
     v_registros_uo	record;
     v_funcionarios_uo integer[];
     v_funcionario record;
-    
+    v_estado_pp varchar;
     
 			    
 BEGIN
@@ -92,50 +92,50 @@ BEGIN
              ----------12/12/2019 (alan.felipez) funcionario especial para Excepciones de conceptos al momento de pasar a un siguiente estado
              ------------------------------------------------------------
              SELECT pp.id_obligacion_pago
-             into v_ob_pago
+             into v_ob_pago, v_estado_pp
              from tes.tplan_pago pp
              where pp.id_estado_wf = v_parametros.id_estado_wf;
+               if v_estado_pp='borrador' then
+                     for v_registros_ob_det in (select *
+                                  from tes.tobligacion_det
+                                                where id_obligacion_pago=v_ob_pago)loop
+                      ---consultamos si el detalle de la obligacion pertenece a alguna excepcion
 
-             for v_registros_ob_det in (select *
-             							from tes.tobligacion_det
-                                        where id_obligacion_pago=v_ob_pago)loop
-             	---consultamos si el detalle de la obligacion pertenece a alguna excepcion
+                      if exists (SELECT 1
+                              from tes.tconcepto_excepcion conex
+                                      inner join orga.tuo uo on uo.id_uo = conex.id_uo
+                                      inner join param.tconcepto_ingas cig on cig.id_concepto_ingas = conex.id_concepto_ingas
+                                      inner join segu.tusuario usu1 on usu1.id_usuario = conex.id_usuario_reg
+                                      left join segu.tusuario usu2 on usu2.id_usuario = conex.id_usuario_mod
+                                    where conex.id_concepto_ingas=v_registros_ob_det.id_concepto_ingas) then
 
-             	if exists (SELECT 1
-                			from tes.tconcepto_excepcion conex
-                              inner join orga.tuo uo on uo.id_uo = conex.id_uo
-                              inner join param.tconcepto_ingas cig on cig.id_concepto_ingas = conex.id_concepto_ingas
-                              inner join segu.tusuario usu1 on usu1.id_usuario = conex.id_usuario_reg
-                              left join segu.tusuario usu2 on usu2.id_usuario = conex.id_usuario_mod
-                            where conex.id_concepto_ingas=v_registros_ob_det.id_concepto_ingas) then
+                                select
+                                conex.id_concepto_excepcion,
+                                conex.id_uo,
+                                conex.estado_reg,
+                                conex.id_concepto_ingas
 
-                        select
-                        conex.id_concepto_excepcion,
-                        conex.id_uo,
-                        conex.estado_reg,
-                        conex.id_concepto_ingas
+                                into v_registros_uo
+                                from tes.tconcepto_excepcion conex
+                                      inner join orga.tuo uo on uo.id_uo = conex.id_uo
+                                      inner join param.tconcepto_ingas cig on cig.id_concepto_ingas = conex.id_concepto_ingas
+                                      inner join segu.tusuario usu1 on usu1.id_usuario = conex.id_usuario_reg
+                                      left join segu.tusuario usu2 on usu2.id_usuario = conex.id_usuario_mod
+                                where conex.id_concepto_ingas=v_registros_ob_det.id_concepto_ingas;
+                                    ----recuperar el encargado de la unidad organizacional de la excepcion
+                                    select orga.f_get_funcionarios_x_uo(v_registros_uo.id_uo,now()::date)
+                                    into v_funcionarios_uo;
 
-                        into v_registros_uo
-                        from tes.tconcepto_excepcion conex
-                              inner join orga.tuo uo on uo.id_uo = conex.id_uo
-                              inner join param.tconcepto_ingas cig on cig.id_concepto_ingas = conex.id_concepto_ingas
-                              inner join segu.tusuario usu1 on usu1.id_usuario = conex.id_usuario_reg
-                              left join segu.tusuario usu2 on usu2.id_usuario = conex.id_usuario_mod
-                        where conex.id_concepto_ingas=v_registros_ob_det.id_concepto_ingas;
-                            ----recuperar el encargado de la unidad organizacional de la excepcion
-                            select orga.f_get_funcionarios_x_uo(v_registros_uo.id_uo,now()::date)
-                            into v_funcionarios_uo;
-
-                            v_consulta='select fun.id_funcionario,
-                            			(per.nombre ||'' ''|| per.apellido_paterno ||'' ''||per.apellido_materno)::text as desc_funcionario,
-                                          (''gerente'')::text as desc_funcionario_cargo,
-                                          (''1'')::integer as prioridad
-                             			from segu.tpersona per
-                                          inner join orga.tfuncionario fun on fun.id_persona = per.id_persona
-                                       where fun.id_funcionario='||v_funcionarios_uo[1];
+                                    v_consulta='select fun.id_funcionario,
+                                          (per.nombre ||'' ''|| per.apellido_paterno ||'' ''||per.apellido_materno)::text as desc_funcionario,
+                                                  (''gerente'')::text as desc_funcionario_cargo,
+                                                  (''1'')::integer as prioridad
+                                          from segu.tpersona per
+                                                  inner join orga.tfuncionario fun on fun.id_persona = per.id_persona
+                                               where fun.id_funcionario='||v_funcionarios_uo[1];
+                        end if;
+                     end loop;
                 end if;
-             end loop;
-                
                      
 			--Devuelve la respuesta
 			return v_consulta;
