@@ -1111,6 +1111,66 @@ header("content-type: text/javascript; charset=UTF-8");
 
             {
                 config:{
+                    name:'id_especialidad_nivel',
+                    fieldLabel:'Nombre Título',
+                    allowBlank:true,
+                    emptyText:'Seleccione una opción',
+
+                    store:new Ext.data.JsonStore(
+                        {
+                            url: '../../sis_organigrama/control/EspecialidadNivel/listarEspecialidadNivel',
+                            id: 'id_especialidad_nivel',
+                            root: 'datos',
+                            sortInfo:{
+                                field: 'nombre',
+                                direction: 'ASC'
+                            },
+                            totalProperty: 'total',
+                            fields: ['id_especialidad_nivel','nombre', 'codigo', 'abreviatura'],
+                            // turn on remote sorting
+                            remoteSort: true,
+                            baseParams:{par_filtro:'nombre#codigo', firma:'si'}
+                        }),
+                    valueField: 'id_especialidad_nivel',
+                    displayField: 'nombre',
+                    gdisplayField:'nombre',
+                    hiddenName: 'id_especialidad_nivel',
+                    forceSelection : true,
+                    typeAhead : false,
+                    triggerAction : 'all',
+                    lazyRender : true,
+                    mode : 'remote',
+                    pageSize : 10,
+                    queryDelay : 1000,
+                    anchor : '100%',
+                    gwidth : 250,
+                    minChars : 2,
+                    renderer : function(value, p, record) {
+                        return String.format('{0}', record.data['desc_titulo']);
+                    },
+                    enableMultiSelect : false,
+                    resizable: true,
+                    tpl: new Ext.XTemplate([
+                        '<tpl for=".">',
+                        '<div class="x-combo-list-item">',
+                        '<div class="awesomecombo-item {checked}">',
+                        '<p><b>Abreviatura: {abreviatura}</b></p>',
+                        '</div><p><b>Nombre: </b> <span style="color: green;">{nombre}</span></p>',
+                        '</div></tpl>'
+                    ])
+                },
+                type:'AwesomeCombo',
+                id_grupo:1,
+                filters:{
+                    type: 'string',
+                    pfiltro:'td.nombre'
+                },
+                grid:true,
+                form:true
+            },
+
+            {
+                config:{
                     fieldLabel: "Teléfono 1",
                     gwidth: 120,
                     name: 'telefono1',
@@ -1370,6 +1430,8 @@ header("content-type: text/javascript; charset=UTF-8");
             'nombre_lugar_ofi',
             'codigo_rc_iva',
             {name:'id_tipo_doc_identificacion', type: 'numeric'},
+            {name:'id_especialidad_nivel', type: 'numeric'},
+            {name:'desc_titulo', type: 'string'},
 
         ],
         sortInfo:{

@@ -210,7 +210,7 @@ BEGIN
 		               antiguedad_anterior,
 					   id_biometrico,
                        es_tutor,
-                       codigo_rc_iva)
+                       codigo_rc_iva,id_especialidad_nivel)
                values(
                       v_codigo_empleado,
                         v_parametros.id_persona,
@@ -224,7 +224,7 @@ BEGIN
                         v_parametros.antiguedad_anterior,
                         v_id_biometrico,
                         v_parametros.es_tutor,
-                        v_parametros.codigo_rc_iva)
+                        v_parametros.codigo_rc_iva, v_parametros.id_especialidad_nivel)
                RETURNING id_funcionario into v_id_funcionario;
 
 
@@ -315,7 +315,8 @@ BEGIN
                     --telefono_ofi= v_parametros.telefono_ofi,
                     antiguedad_anterior =  v_parametros.antiguedad_anterior,
                     es_tutor = v_parametros.es_tutor,
-                    codigo_rc_iva = v_parametros.codigo_rc_iva
+                    codigo_rc_iva = v_parametros.codigo_rc_iva,
+                    id_especialidad_nivel = v_parametros.id_especialidad_nivel
                 where id_funcionario=v_parametros.id_funcionario;
 			end if;
                v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Funcionario modificado con exito '||v_parametros.id_funcionario);
@@ -437,8 +438,8 @@ BEGIN
                     		  <tr>
                         	  <td style="width: 100%; color: #ffffff;" align="center">
                               <br/>
-                              <img src="http://www.boa.bo/Content/Aniversarios/fi.png" width="200" ><br />
-                              <span >Ing. Ronald S. Casso Casso</span><br />
+
+                              <span >Lic. Juan Carlos Ossio Vidal</span><br />
                               <span >GERENTE GENERAL</span><br />
                               <span >Empresa Pública Nacional Estratégica</span><br />
                               <span >Boliviana de Aviaci&oacute;n - BoA</span>
@@ -454,7 +455,7 @@ BEGIN
         					  </tr>
     						  </table>
 							  </div>';
-
+--<!--<img src="http://www.boa.bo/Content/Aniversarios/fi.png" width="200" ><br />-->
                 v_titulo = ''|| v_registros.nombre || ' ' || COALESCE(v_registros.ap_paterno,'')::varchar || ' ' || COALESCE(v_registros.ap_materno,'')::varchar || '';
                 v_acceso_directo = '';
                 v_clase = '';

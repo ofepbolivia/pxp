@@ -124,7 +124,9 @@ $body$
                           tof.nombre as nombre_oficina,
                           tlo.nombre as nombre_lugar_ofi,
                           FUNCIO.codigo_rc_iva,
-                          PERSON2.id_tipo_doc_identificacion
+                          PERSON2.id_tipo_doc_identificacion,
+                          ten.id_especialidad_nivel,
+                          ten.nombre as desc_titulo
                           FROM orga.tfuncionario FUNCIO
                           inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario AND
                           tuo.fecha_asignacion  in (select fecha_asignacion
@@ -139,7 +141,8 @@ $body$
                           inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
                           left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
                           left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10 and tar.id_archivo_fk is null
-                          WHERE ';
+                          left join orga.tespecialidad_nivel ten on ten.id_especialidad_nivel = FUNCIO.id_especialidad_nivel
+                          WHERE tuo.estado_reg = ''activo'' and ';
 
 		else
         	v_consulta:='SELECT
@@ -194,7 +197,9 @@ $body$
                             tof.nombre as nombre_oficina,
                             tlo.nombre as nombre_lugar_ofi,
                             FUNCIO.codigo_rc_iva,
-                            PERSON2.id_tipo_doc_identificacion
+                            PERSON2.id_tipo_doc_identificacion,
+                            ten.id_especialidad_nivel,
+                          ten.nombre as desc_titulo
 
                           FROM orga.tfuncionario FUNCIO
                           left join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario
@@ -208,6 +213,7 @@ $body$
                           inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
                           left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
                           left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10 and tar.id_archivo_fk is null
+                          left join orga.tespecialidad_nivel ten on ten.id_especialidad_nivel = FUNCIO.id_especialidad_nivel
                           WHERE FUNCIO.estado_reg = ''activo'' and (FUNCIO.fecha_ingreso between ''1/1/2019''::date and ''31/12/2019''::date) and ';
         end if;
         v_consulta := v_consulta || v_parametros.filtro;
@@ -223,7 +229,7 @@ $body$
           end if;
         end if;
 
-        v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
+        v_consulta:=v_consulta||' order by PERSON.nombre_completo2 asc limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
 		RAISE NOTICE 'v_consulta: %',v_consulta;
         return v_consulta;
 
@@ -254,6 +260,7 @@ $body$
         v_consulta = 'insert into tt_orga_filtro
                       select  tuo.id_funcionario, max(tuo.fecha_asignacion)
                       from orga.tuo_funcionario tuo
+                      where tuo.tipo = ''oficial'' and tuo.estado_reg = ''activo''
                       group by  tuo.id_funcionario';
 
         execute(v_consulta);
@@ -273,7 +280,8 @@ $body$
                             inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
 						    left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
 						    left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10 and tar.id_archivo_fk is null
-                            WHERE ';
+						    left join orga.tespecialidad_nivel ten on ten.id_especialidad_nivel = FUNCIO.id_especialidad_nivel
+                            WHERE tuo.estado_reg = ''activo'' and ';
         v_consulta:=v_consulta||v_parametros.filtro;
         if (pxp.f_existe_parametro(par_tabla, 'tipo') and
             pxp.f_existe_parametro(par_tabla, 'fecha') and

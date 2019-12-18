@@ -818,4 +818,43 @@ WITH (oids = false);
 /*****************************F-SCP-FEA-ORGA-0-17/10/2019*************/
 
 
+/*****************************I-SCP-FEA-ORGA-0-18/12/2019*************/
+
+ALTER TABLE orga.tfuncionario
+ADD COLUMN id_especialidad_nivel INTEGER;
+
+ALTER TABLE orga.tespecialidad_nivel
+ADD COLUMN abreviatura VARCHAR(5);
+
+/*****************************F-SCP-FEA-ORGA-0-18/12/2019*************/
+
+/*****************************I-SCP-FEA-ORGA-1-18/12/2019*************/
+
+ALTER TABLE orga.tespecialidad_nivel
+ADD COLUMN firma CHAR(2);
+
+COMMENT ON COLUMN orga.tespecialidad_nivel.firma
+IS 'bandera para filtrado.';
+
+/*****************************F-SCP-FEA-ORGA-1-18/12/2019*************/
+
+/*****************************I-SCP-FEA-ORGA-2-18/12/2019*************/
+UPDATE orga.tespecialidad_nivel SET
+nombre = 'Licenciado'
+WHERE id_especialidad_nivel = 1;
+/*****************************F-SCP-FEA-ORGA-2-18/12/2019*************/
+
+/*****************************I-SCP-FEA-ORGA-3-18/12/2019*************/
+UPDATE orga.tespecialidad_nivel SET
+firma = 'si'
+WHERE id_especialidad_nivel in (1,5);
+/*****************************F-SCP-FEA-ORGA-3-18/12/2019*************/
+
+/*****************************I-SCP-FEA-ORGA-4-18/12/2019*************/
+UPDATE orga.tespecialidad_nivel SET
+abreviatura = 'Lic.'
+WHERE id_especialidad_nivel in (1);
+/*****************************F-SCP-FEA-ORGA-4-18/12/2019*************/
+
+
 

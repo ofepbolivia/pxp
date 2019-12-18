@@ -484,7 +484,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 
         this.getComponente('fecha_asignacion').setMinValue(new Date(2007,12,31));
 
-		if (this.Cmp.fecha_finalizacion.getValue() == '' || this.Cmp.fecha_finalizacion.getValue() == undefined) {
+		if (this.Cmp.fecha_finalizacion.getValue() == '' || this.Cmp.fecha_finalizacion.getValue() == undefined || this.Cmp.fecha_finalizacion.getValue() == null) {
 			this.Cmp.observaciones_finalizacion.reset();
 			this.Cmp.observaciones_finalizacion.allowBlank = true;
 			this.ocultarComponente(this.Cmp.observaciones_finalizacion);

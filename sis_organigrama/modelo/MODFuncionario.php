@@ -76,6 +76,8 @@ class MODFuncionario extends MODbase{
         $this->captura('nombre_lugar_ofi','varchar');
         $this->captura('codigo_rc_iva','varchar');
         $this->captura('id_tipo_doc_identificacion','integer');
+        $this->captura('id_especialidad_nivel','integer');
+        $this->captura('desc_titulo','varchar');
 
 
         //Ejecuta la funcion
@@ -308,6 +310,7 @@ class MODFuncionario extends MODbase{
         $this->setParametro('direccion','direccion','varchar');
         $this->setParametro('codigo_rc_iva','codigo_rc_iva','varchar');
         $this->setParametro('id_tipo_doc_identificacion','id_tipo_doc_identificacion','integer');
+        $this->setParametro('id_especialidad_nivel','id_especialidad_nivel','integer');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -364,6 +367,7 @@ class MODFuncionario extends MODbase{
         $this->setParametro('estado_correo','estado_correo','varchar');
         $this->setParametro('codigo_rc_iva','codigo_rc_iva','varchar');
         $this->setParametro('id_tipo_doc_identificacion','id_tipo_doc_identificacion','integer');
+        $this->setParametro('id_especialidad_nivel','id_especialidad_nivel','integer');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
