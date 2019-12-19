@@ -278,7 +278,11 @@ BEGIN
                               '''||COALESCE (v_iniciales,'NA')||'''::varchar as iniciales,
                                '''||COALESCE (v_fun_emetido,'NA')||'''::varchar as fun_imitido,
                                c.estado,
-                               ca.codigo as nro_item
+                               ca.codigo as nro_item,
+                              (select initcap( cart.desc_funcionario1)
+                              from orga.vfuncionario_cargo cart
+                              where cart.nombre_cargo = ''Gerente Administrativo Financiero'' and cart.id_funcionario =2711)  as nuevo_jefe
+
                               from orga.tcertificado_planilla c
                               inner join orga.vfuncionario_cargo  fu on fu.id_funcionario = c.id_funcionario and( fu.fecha_finalizacion is null or  fu.fecha_finalizacion >= now())
                               inner join orga.tcargo ca on ca.id_cargo = fu.id_cargo
@@ -378,7 +382,11 @@ BEGIN
                               '''||COALESCE (v_iniciales,'NA')||'''::varchar as iniciales,
                                '''||COALESCE (v_fun_emetido,'NA')||'''::varchar as fun_imitido,
                                c.estado,
-                               ca.codigo as nro_item
+                               ca.codigo as nro_item,
+                              (select initcap(cart.desc_funcionario1)
+                              from orga.vfuncionario_cargo cart
+                              where cart.nombre_cargo = ''Gerente Administrativo Financiero'' and cart.id_funcionario =2711)  as nuevo_jefe
+                                                             
                               from orga.tcertificado_planilla c
                               inner join orga.vfuncionario_cargo  fu on fu.id_funcionario = c.id_funcionario and( fu.fecha_finalizacion is null or  fu.fecha_finalizacion >= now())
                               inner join orga.tcargo ca on ca.id_cargo = fu.id_cargo

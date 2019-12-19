@@ -194,9 +194,11 @@ class MODCertificadoPlanilla extends MODbase{
         $this->captura('iniciales','varchar');
         $this->captura('fun_imitido','varchar');
         $this->captura('estado','varchar');
-		$this->captura('nro_item','varchar');
+        $this->captura('nro_item','varchar');        
+        $this->captura('nuevo_jefe','text');
         //Ejecuta la instruccion
         $this->armarConsulta();
+        //echo($this->consulta);exit;
         $this->ejecutarConsulta();
       //var_dump($this->respuesta); exit;
         //Devuelve la respuesta
@@ -234,9 +236,11 @@ class MODCertificadoPlanilla extends MODbase{
         $this->captura('iniciales','varchar');
         $this->captura('fun_imitido','varchar');
         $this->captura('estado','varchar');
-		$this->captura('nro_item','varchar');
+        $this->captura('nro_item','varchar');
+        $this->captura('nuevo_jefe','text');
         //Ejecuta la instruccion
         $this->armarConsulta();
+        //echo($this->consulta);exit;
         $this->ejecutarConsulta();
       //var_dump($this->respuesta); exit;
         //Devuelve la respuesta

@@ -12,21 +12,54 @@ class RCertificadoPDF extends  ReportePDF{
         }else{
             $tipo = 'de la interesada';
         }
+
+        $fecha = $this->datos[0]['fecha_solicitud'];        
+        
+        if ($fecha >= '2019-12-18'){
+            $firma_gerente = '/../media/firma_eduardo_degadillo_poepsel.png';
+            $w = 200;
+            $h = 120;
+            $cargo = 'Gerente Administrativo Financiero';  
+            $jefe = $this->datos[0]['nuevo_jefe']; 
+            $gen_gerente = 'El suscrito';                     
+            $siglas = 'JDP';
+            $firma_responsable = $this->datos[0]['nuevo_jefe'];
+        }else{
+            $firma_gerente = '/../media/firma.png';
+            $cargo = 'Jefe de Recursos Humanos';
+            $w = 160;
+            $h = 120;
+            $jefe = $this->datos[0]['jefa_recursos'];
+            $gen_gerente = 'La suscrita';
+            $siglas = 'GAG';
+            $firma_responsable = $this->datos[0]['jefa_recursos'];
+        }
+
         $this->SetFont('times', '', 15);
         $html = '<p align="center"><b><u>CERTIFICADO</u></b></p>';
         $this->writeHTML($html);
-        $cabecera = '<p style="font-family:Century Gothic, serif; font-style:italic;text-align: justify">La suscrita Lic. '.$this->datos[0]['jefa_recursos'].' <b>Jefe de Recursos Humanos</b> de la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA", a solicitud '.$tipo.'</p>';
+        $cabecera = '<p style="font-family:Century Gothic, serif; font-style:italic;text-align: justify">'.$gen_gerente.' Lic. '.$jefe.' <b>'.$cargo.'</b> de la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA", a solicitud '.$tipo.'</p>';
         $this->ln(10);
         $this->SetFont('times', '', 13);
         $this->writeHTML($cabecera);
     }
     public function Footer()
     {
+        $fecha_f= $this->datos[0]['fecha_solicitud'];        
+        if ($fecha_f >= '2019-12-18'){
+            $firma_gerente_f = '/../media/firma_eduardo_degadillo_poepsel.png';
+            $siglas = 'JDP';
+            $firma_responsable_f = $this->datos[0]['nuevo_jefe'];
+        }else{
+            $firma_gerente_f = '/../media/firma.png';
+            $siglas = 'GAG';        
+            $firma_responsable_f = $this->datos[0]['nuevo_jefe'];
+        }                
         $this->SetY(-15);
         $this->SetFont('helvetica', 'I', 6);
-        $this->Cell(0, 0, 'GAG/'.$this->datos[0]['iniciales'], 0, 1, 'L');
+        $this->Cell(0, 0, $siglas.'/'.$this->datos[0]['iniciales'], 0, 1, 'L');
         $this->Cell(0, 0, 'Cc/Arch', 0, 0, 'L');
-        $html = 'Numero Tramite: '.$this->datos[0]['nro_tramite']."\n".'Fecha Solicitud: '.$this->datos[0]['fecha_solicitud']."\n".'Funcionario: '.$this->datos[0]['nombre_funcionario']."\n".'Firmado Por: '.$this->datos[0]['jefa_recursos']."\n".'Emitido Por: '.$this->datos[0]['fun_imitido'];
+        $html = 'Numero Tramite: '.$this->datos[0]['nro_tramite']."\n".'Fecha Solicitud: '.$this->datos[0]['fecha_solicitud']."\n".'Funcionario: '.$this->datos[0]['nombre_funcionario']."\n".'Firmado Por: '.$firma_responsable_f."\n".'Emitido Por: '.$this->datos[0]['fun_imitido'];
         $style = array(
             'border' => 2,
             'vpadding' => 'auto',
@@ -38,12 +71,12 @@ class RCertificadoPDF extends  ReportePDF{
         );
         if($this->datos[0]['estado'] == 'emitido') {
             $this->write2DBarcode($html, 'QRCODE,M', 160, 210, 30, 30, $style, 'N');
-            $this->Image(dirname(__FILE__) . '/../media/firma.png', 98, 220, 35, 35, '', '', '', false, 300, '', false, false, 0);
+            $this->Image(dirname(__FILE__) .$firma_gerente_f, 98, 220, 35, 35, '', '', '', false, 300, '', false, false, 0);
         }
 
     }
     function setDatos($datos) {
-        $this->datos = $datos;
+        $this->datos = $datos;        
     }
     function reporteGeneral(){
         if ($this->datos[0]['genero'] == 'Sr'){
@@ -61,7 +94,7 @@ class RCertificadoPDF extends  ReportePDF{
         $this->writeHTML($html);
         $this->ln(8);
         $this->SetFont('', '', 13);
-        $cuerpo = '<p style="font-family:Century Gothic, serif; font-style:italic;text-align: justify">Que, de la revisión de la carpeta que cursa en el Área de Recursos Humanos, se evidencia que '.$gen.' <b>'.$this->datos[0]['genero'].'. '.$this->datos[0]['nombre_funcionario'].'</b> con C.I. '.$this->datos[0]['ci'].' '.$this->datos[0]['expedicion'].', ingresó a la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA"
+        $cuerpo = '<p style="font-family:Century Gothic, serif; font-style:italic;text-align: justify">Que, de la revisión de la carpeta que cursa en el Departamento de Recursos Humanos, se evidencia que '.$gen.' <b>'.$this->datos[0]['genero'].'. '.$this->datos[0]['nombre_funcionario'].'</b> con C.I. '.$this->datos[0]['ci'].' '.$this->datos[0]['expedicion'].', ingresó a la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA"
          el '.$this->fechaLiteral($this->datos[0]['fecha_contrato']).', y actualmente ejerce el cargo de <b>'.$this->datos[0]['nombre_cargo'].' con Nº de ítem '.$this->datos[0]['nro_item'].'</b>, dependiente de la '.$this->datos[0]['nombre_unidad'].', con una remuneración mensual de Bs. '.number_format($this->datos[0]['haber_basico'],2,",",".") .'.- ('.$this->datos[0]['haber_literal'].' Bolivianos). </p><br>';
         $this->writeHTML($cuerpo);
         $viaticos='<p style="font-family:Century Gothic, serif; font-style:italic;text-align: justify">Asimismo a solicitud expresa se informa que '.$gen.' '.$tra.' ha percibido en los últimos tres meses por concepto de viáticos un promedio mensual de '.number_format($this->datos[0]['importe_viatico'],2,",",".").'.- ('.$this->datos[0]['literal_importe_viatico'].' Bolivianos) aclarándose que el <b>Viático</b> es la suma que reconoce la empresa a la persona comisionada, <b>para cubrir gastos del viaje.</b></p><br>';
