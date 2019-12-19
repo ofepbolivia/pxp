@@ -211,7 +211,7 @@ BEGIN
         where u.id_usuario = p_id_usuario;
 
 
-        select f.desc_funcionario1
+        select initcap(f.desc_funcionario1)
         into
         v_fun_emetido
         from wf.testado_wf w
@@ -316,7 +316,7 @@ BEGIN
         inner join orga.vfuncionario_persona p on p.id_persona = u.id_persona
         where u.id_usuario = p_id_usuario;
 
-        select f.desc_funcionario1
+        select initcap(f.desc_funcionario1)
         into
         v_fun_emetido
         from wf.testado_wf w

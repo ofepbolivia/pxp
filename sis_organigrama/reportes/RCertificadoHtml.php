@@ -23,8 +23,8 @@ class RCertificadoHtml{
         
         if ($fecha >= '2019-12-18'){
             $firma_gerente = '../../../sis_organigrama/media/firma_eduardo_degadillo_poepsel.png';
-            $w = 200;
-            $h = 120;
+            $w = 300;
+            $h = 140;
             $cargo = 'Gerente Administrativo Financiero';  
             $jefe = $datos['nuevo_jefe']; 
             $gen_gerente = 'El suscrito';                     
