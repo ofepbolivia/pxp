@@ -103,8 +103,8 @@ BEGIN
                                                           p.id_tipo_planilla = 1
                                                           and p.id_periodo = (select p.id_periodo
                                                                                 from param.tperiodo p
-                                                                                where  planc.fecha_solicitud between p.fecha_ini and p.fecha_fin
-                                                                                ) - 1)) as  haber_basico,                              
+                                                                                where (planc.fecha_solicitud - interval ''1 month'') between p.fecha_ini and p.fecha_fin
+                                                                                ))) as  haber_basico,                              
                               pe.expedicion,
                               planc.impreso,
                               planc.impreso as control,
@@ -238,8 +238,8 @@ BEGIN
                                                           p.id_tipo_planilla = 1
                                                           and p.id_periodo = (select p.id_periodo
                                                                                 from param.tperiodo p
-                                                                                where  c.fecha_solicitud between p.fecha_ini and p.fecha_fin
-                                                                                ) - 1)) as  haber_basico,                              
+                                                                                where  (c.fecha_solicitud - interval ''1 month'') between p.fecha_ini and p.fecha_fin
+                                                                                ))) as  haber_basico,                              
                               pe.ci,
                               pe.expedicion,
                               CASE
@@ -264,8 +264,8 @@ BEGIN
                                                           p.id_tipo_planilla = 1
                                                           and p.id_periodo = (select p.id_periodo
                                                                                 from param.tperiodo p
-                                                                                where  c.fecha_solicitud between p.fecha_ini and p.fecha_fin
-                                                                                ) - 1))              
+                                                                                where  (c.fecha_solicitud - interval ''1 month'')  between p.fecha_ini and p.fecha_fin
+                                                                                )))              
                                             
                               )))::varchar as haber_literal,
                               (select initcap( cart.desc_funcionario1)
@@ -343,8 +343,8 @@ BEGIN
                                                           p.id_tipo_planilla = 1
                                                           and p.id_periodo = (select p.id_periodo
                                                                                 from param.tperiodo p
-                                                                                where  c.fecha_solicitud between p.fecha_ini and p.fecha_fin
-                                                                                ) - 1)) as  haber_basico,                             
+                                                                                where  (c.fecha_solicitud - interval ''1 month'') between p.fecha_ini and p.fecha_fin
+                                                                                ))) as  haber_basico,                             
                               pe.ci,
                               pe.expedicion,
                               CASE
@@ -369,8 +369,8 @@ BEGIN
                                                             p.id_tipo_planilla = 1
                                                             and p.id_periodo = (select p.id_periodo
                                                                                   from param.tperiodo p
-                                                                                  where  c.fecha_solicitud between p.fecha_ini and p.fecha_fin
-                                                                                  ) - 1))                              
+                                                                                  where  (c.fecha_solicitud - interval ''1 month'') between p.fecha_ini and p.fecha_fin
+                                                                                  )))                              
                                )))::varchar as haber_literal,
                               (select initcap( cart.desc_funcionario1)
                               from orga.vfuncionario_cargo cart
@@ -433,8 +433,8 @@ BEGIN
                                                         p.id_tipo_planilla = 1
                                                         and p.id_periodo = (select p.id_periodo
                                                                               from param.tperiodo p
-                                                                              where  planc.fecha_solicitud between p.fecha_ini and p.fecha_fin
-                                                                              ) - 1)
+                                                                              where  (planc.fecha_solicitud - interval ''1 month'') between p.fecha_ini and p.fecha_fin
+                                                                              ))
                                                                                
                                           ) as  remuneracion                           
                             from orga.tcertificado_planilla planc
