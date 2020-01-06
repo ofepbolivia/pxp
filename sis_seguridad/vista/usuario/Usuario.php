@@ -1,9 +1,9 @@
 <?php
-/**  
+/**
 *@package pXP
 *@file Usuario.php
 *@author KPLIAN (JRR)
-*@date 14-02-2011 
+*@date 14-02-2011
 *@description  Vista para desplegar lista de usuarios
 */
 header("content-type: text/javascript; charset=UTF-8");
@@ -12,7 +12,7 @@ header("content-type: text/javascript; charset=UTF-8");
 Phx.vista.usuario=Ext.extend(Phx.gridInterfaz,{
 	constructor:function(config){
 	this.maestro=config.maestro;
-	
+
 
 
 //function render_id_rol(value, p, record){return String.format('{0}', record.data['rol']);}
@@ -21,7 +21,7 @@ Phx.vista.usuario=Ext.extend(Phx.gridInterfaz,{
 	this.init();
 	this.load({params:{start:0, limit:50}});
 	this.addButton('aInterSis',{text:'Themes',iconCls: 'blist',disabled:false,handler:this.inittest,tooltip: '<b>Configuracion de Themas</b><br/>Permite disenar un tema personalizado'});
-    
+
 
 },
 inittest:function(){
@@ -46,8 +46,8 @@ tabEnter:true,
 
 	       		},
 	       		type:'Field',
-	       		form:true 
-	       		
+	       		form:true
+
 	       	},
 	       	{
 	       			config:{
@@ -91,21 +91,21 @@ tabEnter:true,
 	       			    tdata:{},
 	       			    tcls:'persona',
 	       			    pid:this.idContenedor,
-	       			
+
 	       				renderer:function (value, p, record){return String.format('{0}', record.data['desc_person']);}
 	       			},
 	       			type:'TrigguerCombo',
 	       			bottom_filter:true,
 	       			id_grupo:0,
-	       			filters:{	
+	       			filters:{
 	       				        pfiltro:'nombre_completo1',
 	       						type:'string'
 	       					},
-	       		   
+
 	       			grid:true,
 	       			form:true
 	       	},
-	       	
+
 	       	{
 	       			config:{
 	       				name:'id_clasificador',
@@ -141,7 +141,7 @@ tabEnter:true,
 	       				width:250,
 	       				minChars:2,
 		       			 enableMultiSelect:true,
-	       			
+
 	       				renderer:function(value, p, record){return String.format('{0}', record.data['descripcion']);}
 
 	       			},
@@ -153,13 +153,13 @@ tabEnter:true,
 	       			grid:true,
 	       			form:true
 	       	},
-	       	
+
 	       	{
 	       		config:{
 	       			fieldLabel: "Cuenta",
 	       			gwidth: 120,
 	       			name: 'cuenta',
-	       			allowBlank:false,	
+	       			allowBlank:false,
 	       			maxLength:100,
 	       			minLength:1,
 	       			anchor:'100%'
@@ -176,7 +176,7 @@ tabEnter:true,
 	       			id:'contrasena_'+this.idContenedor,
 	       			fieldLabel: "Contrasena",
 	       			name: 'contrasena',
-	       			allowBlank:false,	
+	       			allowBlank:false,
 	       			maxLength:100,
 	       			minLength:1,
 	       			anchor:'100%',
@@ -189,7 +189,7 @@ tabEnter:true,
 	       					return 'La contraseña es demasiado débil (Debe tener un mínimo de 8 caracteres y contener mayusculas, minusculas, números y caracteres especiales)';
 	       				}
 	       			}*/
-	       			
+
 	       		},
 	       		type:'TextField',
 	       		filters:{type:'string'},
@@ -202,7 +202,7 @@ tabEnter:true,
 	       			fieldLabel: "Confirmar Contrasena",
 	       			name: 'conf_contrasena',
 	       			mapeo:'contrasena',
-	       			allowBlank:false,	
+	       			allowBlank:false,
 	       			maxLength:100,
 	       			minLength:1,
 	       			anchor:'100%',
@@ -226,11 +226,11 @@ tabEnter:true,
 
 	       		},
 	       		type:'Field',
-	       		form:true 
-	       		
+	       		form:true
+
 	       	}
 	       	,
-	       	
+
 	       	 {
 	       		config:{
 	       			fieldLabel: "Fecha Caducidad",
@@ -253,7 +253,7 @@ tabEnter:true,
 	       			fieldLabel:'Estilo Interfaz',
 	       			allowBlank:false,
 	       			emptyText:'Estilo...',
-	       			
+
 	       			typeAhead: true,
 	       		    triggerAction: 'all',
 	       		    lazyRender:true,
@@ -262,13 +262,13 @@ tabEnter:true,
 	       		    valueField: 'estilo',
 	       		   // displayField: 'descestilo',
 	       		    store:['xtheme-blue.css','xtheme-gray.css','xtheme-access.css','verdek/css/xtheme-verdek.css','lilamarti/css/xtheme-lilamarti.css','rosaguy/css/xtheme-rosaguy.css']
-	       		    
+
 	       		},
 	       		type:'ComboBox',
 	       		id_grupo:0,
-	       		filters:{	
+	       		filters:{
 	       		         type: 'list',
-	       				 options: ['xtheme-blue.css','xtheme-gray.css','xtheme-access.css','verdek/css/xtheme-verdek.css','lilamarti/css/xtheme-lilamarti.css','rosaguy/css/xtheme-rosaguy.css'],	
+	       				 options: ['xtheme-blue.css','xtheme-gray.css','xtheme-access.css','verdek/css/xtheme-verdek.css','lilamarti/css/xtheme-lilamarti.css','rosaguy/css/xtheme-rosaguy.css'],
 	       		 	},
 	       		grid:true,
 	       		form:true
@@ -279,7 +279,7 @@ tabEnter:true,
 	       			fieldLabel:'Autentificación',
 	       			allowBlank:false,
 	       			emptyText:'Auten...',
-	       			
+
 	       			typeAhead: true,
 	       		    triggerAction: 'all',
 	       		    lazyRender:true,
@@ -288,18 +288,18 @@ tabEnter:true,
 	       		    valueField: 'autentificacion',
 	       		   // displayField: 'descestilo',
 	       		    store:['local','ldap']
-	       		    
+
 	       		},
 	       		type:'ComboBox',
 	       		id_grupo:0,
-	       		filters:{	
+	       		filters:{
 	       		         type: 'list',
-	       				 options: ['local','ldap'],	
+	       				 options: ['local','ldap'],
 	       		 	},
 	       		grid:true,
 	       		form:true
 	       	},
-	       	
+
 	       	{
 	       		config:{
 	       				fieldLabel: "fecha_reg",
@@ -332,7 +332,7 @@ tabEnter:true,
        					// turn on remote sorting
        					remoteSort: true,
        					baseParams:{par_filtro:'rol'}
-       					
+
        				}),
        				valueField: 'id_rol',
        				displayField: 'rol',
@@ -346,7 +346,7 @@ tabEnter:true,
        				width:250,
        				minChars:2,
 	       			enableMultiSelect:true
-       			
+
        				//renderer:function(value, p, record){return String.format('{0}', record.data['descripcion']);}
 
        			},
@@ -392,33 +392,33 @@ tabEnter:true,
 	{name:'estilo'},
 	'id_roles','autentificacion'
       //  {name:'usuario_externo', type: 'string'}
-	
-		
+
+
 	],
 	sortInfo:{
-		field: 'nombre',
+		field: 'desc_person',
 		direction: 'ASC'
 	},
-	
-	
-	
+
+
+
 	/*onButtonEdit:function(){
 		this.getComponente('conf_contrasena').disable();
 		Phx.vista.usuario.superclass.onButtonEdit.call(this);
 	},*/
-	
-	
+
+
 	// para configurar el panel south para un hijo
-	
+
 	/*
 	 * south:{
 	 * url:'../../../sis_seguridad/vista/usuario_regional/usuario_regional.php',
 	 * title:'Regional', width:150
 	 *  },
-	 */	
+	 */
 	bdel:true,// boton para eliminar
 	bsave:true,// boton para eliminar
-	
+
 	onSubmit : function(o) {
 		  this.Cmp.contrasena_old.setValue(encodeURIComponent(this.Cmp.contrasena_old.getValue()));
 		  this.Cmp.contrasena.setValue(encodeURIComponent(this.Cmp.contrasena.getValue()));
@@ -426,19 +426,19 @@ tabEnter:true,
 		  Phx.vista.usuario.superclass.onSubmit.call(this,o);
 	},
 
-	
+
     tabeast:[
          {
           url:'../../../sis_seguridad/vista/usuario_rol/UsuarioRol.php',
-          title:'Roles', 
+          title:'Roles',
           width:400,
           cls:'usuario_rol'
          },
           {
           url:'../../../sis_seguridad/vista/usuario_grupo_ep/UsuarioGrupoEp.php',
-          title:'EP\'', 
+          title:'EP\'',
           width:400,
-          cls:'UsuarioGrupoEp'    
+          cls:'UsuarioGrupoEp'
           },
         {
             url:'../../../sis_seguridad/vista/usuario_externo/UsuarioExterno.php',
@@ -448,10 +448,10 @@ tabEnter:true,
         }
 
         ]
-	
 
-		  
-		  
-		 
+
+
+
+
 })
 </script>
