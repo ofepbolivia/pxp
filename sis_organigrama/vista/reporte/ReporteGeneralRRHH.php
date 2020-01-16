@@ -130,9 +130,8 @@ header("content-type: text/javascript; charset=UTF-8");
                         '<tpl for=".">',
                         '<div class="x-combo-list-item">',
                         '<div class="awesomecombo-item {checked}">',
-                        '<p><b>Código: {codigo}</b></p>',
-                        '</div><p><b>Nombre: </b> <span style="color: green;">{nombre}</span></p>',
-                        '<p><b>Tipo: </b> <span style="color: green;">{tipo_archivo}</span></p>',
+                        '<p> <span style="color: green;"><b>Nombre: {nombre}</b><span> </p>',
+                        '</div>',
                         '</div></tpl>'
                     ]),
                     valueField: 'id_tipo_archivo',

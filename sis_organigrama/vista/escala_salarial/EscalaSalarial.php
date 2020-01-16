@@ -40,6 +40,22 @@ Phx.vista.EscalaSalarial=Ext.extend(Phx.gridInterfaz,{
 			type:'Field',
 			form:true 
 		},
+        /*{
+            config:{
+                name: 'id_categoria_salarial',
+                fieldLabel: 'ID CAT. SAL.',
+                allowBlank: false,
+                anchor: '80%',
+                gwidth: 100,
+                maxLength:20
+            },
+            type:'TextField',
+            filters:{pfiltro:'escsal.id_categoria_salarial',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:true,
+            bottom_filter: true
+        },*/
 		{
 			config:{
 				name: 'codigo',

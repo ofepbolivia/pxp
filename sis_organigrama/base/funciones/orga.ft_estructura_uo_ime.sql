@@ -96,7 +96,7 @@ BEGIN
                  v_parametros.correspondencia, 
                  v_parametros.gerencia,
                  v_parametros.id_nivel_organizacional,
-                 v_parametros.prioridad)
+                 case when v_parametros.prioridad = '' then null else  v_parametros.prioridad end)
                  
                RETURNING id_uo into v_id_uo;
 
@@ -175,7 +175,7 @@ BEGIN
                    correspondencia=v_parametros.correspondencia,
                    gerencia=v_parametros.gerencia,
                    id_nivel_organizacional = v_parametros.id_nivel_organizacional,
-                   prioridad = v_parametros.prioridad
+                   prioridad = case when v_parametros.prioridad = '' then null else  v_parametros.prioridad end
                 where id_uo=v_parametros.id_uo;
                 
                /* --10-04-2012: sincronizacion de UO entre BD

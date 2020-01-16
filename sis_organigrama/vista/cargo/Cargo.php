@@ -1,4 +1,4 @@
-<?php
+m<?php
 /**
  *@package pXP
  *@file gen-Cargo.php
@@ -293,7 +293,8 @@ header("content-type: text/javascript; charset=UTF-8");
                     filters:{pfiltro:'cargo.codigo',type:'string'},
                     id_grupo:1,
                     grid:true,
-                    form:true
+                    form:true,
+                    bottom_filter : true
                 },
                 {
                     config:{

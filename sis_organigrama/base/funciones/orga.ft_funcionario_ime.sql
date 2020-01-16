@@ -268,7 +268,7 @@ BEGIN
                 );
                 --end if;
             else
-                if exists (select 1 from orga.tfuncionario
+                /*if exists (select 1 from orga.tfuncionario
                 			where id_funcionario!=v_parametros.id_funcionario
                 			and codigo=v_parametros.codigo
                 			and estado_reg='activo') then
@@ -279,7 +279,7 @@ BEGIN
                 			where id_funcionario!=v_parametros.id_funcionario
                 			and id_persona=v_parametros.id_persona and estado_reg='activo') then
                   raise exception 'Insercion no realizada. Esta persona ya está registrada como funcionario';
-               end if;
+               end if;*/
 
                 update segu.tpersona set
                     nombre = upper(v_parametros.nombre),

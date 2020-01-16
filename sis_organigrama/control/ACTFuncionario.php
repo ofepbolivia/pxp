@@ -121,6 +121,8 @@ class ACTFuncionario extends ACTbase{
         // parametros de ordenacion por defecto
         $this->objParam->defecto('ordenacion','PERSON.nombre_completo1');
         $this->objParam->defecto('dir_ordenacion','asc');
+        $this->objParam->defecto('puntero','0');
+        $this->objParam->defecto('cantidad','50');
         $this->objParam->addFiltro("FUNCIO.estado_reg = ''activo''");
 
 
@@ -133,7 +135,6 @@ class ACTFuncionario extends ACTbase{
         if($this->objParam->getParametro('id_persona') != ''){
             $this->objParam->addFiltro("FUNCIO.id_persona= ".$this->objParam->getParametro('id_persona'));
         }
-
 
         //si aplicar filtro de usuario, fitlramos el listado segun el funionario del usuario
         if($this->objParam->getParametro('nombre_empleado')!=''){
@@ -372,9 +373,10 @@ class ACTFuncionario extends ACTbase{
     function listarDocumentos(){
         $this->objParam->defecto('ordenacion','tf.desc_funcionario2');
         $this->objParam->defecto('dir_ordenacion','asc');
-        if($this->objParam->getParametro('id_uo') != '') {
+
+        /*if($this->objParam->getParametro('id_uo') != '') {
             $this->objParam->addFiltro(" ger.id_uo = " . $this->objParam->getParametro('id_uo'));
-        }
+        }*/
 
         if($this->objParam->getParametro('estado_func')=='activo'){
             $this->objParam->addFiltro("(tf.estado_reg = ''activo'' and current_date <= coalesce (uo.fecha_finalizacion, ''31/12/9999''::date))");
@@ -460,6 +462,17 @@ class ACTFuncionario extends ACTbase{
     function dispararControlAsignacionCargo(){
         $this->objFunc=$this->create('MODFuncionario');
         $this->res=$this->objFunc->dispararControlAsignacionCargo($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
+    //{"franklin.espinoza":"16/01/2020", "descripcion":"Obtiene el lugar de Operaciones de un funcionario"}
+    function getLugarFuncionario(){
+
+        $this->objParam->defecto('ordenacion','lug.codigo');
+        $this->objParam->defecto('dir_ordenacion','asc');
+
+        $this->objFunc=$this->create('MODFuncionario');
+        $this->res=$this->objFunc->getLugarFuncionario($this->objParam);
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
 

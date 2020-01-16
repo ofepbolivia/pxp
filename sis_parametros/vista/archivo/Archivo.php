@@ -609,7 +609,22 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 			}
         }else if (fieldName == 'remove') {
             if (record.data['extension'].length != 0) {
-               this.removeArchivoGrilla(record);
+                //{"franklin.espinoza":"15/01/2020", "descripcion":"validacion de confirmacion para eliminar archivo"}
+                Ext.Msg.show({
+                    title: 'Eliminar Archivo',
+                    msg: '<b style="color: red;">Esta seguro de eliminar el Archivo</b>',
+                    fn: function (btn){
+                        if(btn == 'ok'){
+                            this.removeArchivoGrilla(record);
+                        }
+                    },
+                    buttons: Ext.Msg.OKCANCEL,
+                    width: 350,
+                    maxWidth:500,
+                    icon: Ext.Msg.WARNING,
+                    scope:this
+                });
+               //this.removeArchivoGrilla(record);
             } else {
                 alert('No se ha subido ningun archivo para este documento');
             }

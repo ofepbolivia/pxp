@@ -77,7 +77,7 @@ $body$
         into v_contador
         from orga.tuo_funcionario  ouf
         where ouf.id_funcionario=v_parametros.id_funcionario and ouf.estado_reg='activo' and ouf.tipo = 'oficial' and
-        (ouf.estado_funcional = 'activo' or (ouf.fecha_finalizacion > current_date or fecha_finalizacion is null));
+        ouf.estado_funcional = 'activo' and (ouf.fecha_finalizacion > current_date or fecha_finalizacion is null);
 
          if v_contador > 0 AND v_parametros.tipo = 'oficial' then
 			    raise exception 'El Funcionario se encuentra en otro cargo vigente primero inactive su asignacion actual';

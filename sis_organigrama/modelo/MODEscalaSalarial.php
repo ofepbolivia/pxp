@@ -78,6 +78,7 @@ class MODEscalaSalarial extends MODbase{
 				
 		//Define los parametros para la funcion
 		$this->setParametro('id_escala_salarial','id_escala_salarial','int4');
+        //$this->setParametro('id_categoria_salarial','id_categoria_salarial','int4');
 		$this->setParametro('aprobado','aprobado','varchar');
 		$this->setParametro('fecha_ini','fecha_ini','date');
 		$this->setParametro('estado_reg','estado_reg','varchar');
