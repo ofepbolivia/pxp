@@ -104,6 +104,7 @@ class MODRol extends MODbase{
 		//Definicion de la lista del resultado del query
 		$this->captura('id_rol','integer');
 		$this->captura('nombre','text');
+		$this->captura('cargo','varchar');
 		//Ejecuta la funcion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
