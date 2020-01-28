@@ -144,7 +144,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     pageSize: 15,
                     queryDelay: 1000,
                     minChars: 2,
-                    width : 408,
+                    width : 350,
                     enableMultiSelect: true
                 },
 

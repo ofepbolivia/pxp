@@ -330,12 +330,12 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 	       		mode: 'local',
 				gwidth: 150,
                 anchor:'100%',
-				store:['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia', 'renuncia_tacita' ,'transferencia']
+				store:['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia', 'renuncia_tacita' ,'transferencia', 'desvinculación']
 			},
 				type:'ComboBox',
 				filters:{	
 	       		         type: 'list',
-	       				 options: ['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia','renuncia_tacita','transferencia'],
+	       				 options: ['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia','renuncia_tacita','transferencia', 'desvinculación'],
 	       		 	},
 				id_grupo:0,
 				grid:true,

@@ -131,6 +131,7 @@ header("content-type: text/javascript; charset=UTF-8");
             this.getComponente('id_biometrico').setVisible(false);
             this.getComponente('email_empresa').setVisible(false);
             this.getComponente('estado_reg').setVisible(true);
+            this.getComponente('id_persona').disable();
 
         },
 

@@ -68,21 +68,21 @@ BEGIN
      if(par_transaccion='RH_FUNCIO_INS')then
 
 
-          BEGIN --RAISE EXCEPTION 'COMUNIQUESE CON EL DEPTO. INFORMATICO';
+          BEGIN --RAISE EXCEPTION 'COMUNIQUESE CON EL DEPTO. INFORMATICO %', v_parametros.id_persona;
 			  v_id_persona = v_parametros.id_persona;
               if(v_parametros.id_persona is null)then
-              --CI
-          		if exists(select 1 from segu.tpersona
-          					where ci = v_parametros.ci) then
-          			raise exception 'Este número de Carnet de Identidad ya fue registrado';
-          		end if;
-          		--Nombre completo
-          		if exists(select 1 from segu.tpersona
-          					where upper(nombre) = upper(v_parametros.nombre)
-          					and upper(apellido_paterno) = upper(v_parametros.ap_paterno)
-          					and upper(apellido_materno) = upper(v_parametros.ap_materno)) then
-          			raise exception 'Persona ya registrada';
-          		end if;
+                --CI
+                if exists(select 1 from segu.tpersona
+                      where ci = v_parametros.ci) then
+                  raise exception 'Este número de Carnet de Identidad ya fue registrado';
+                end if;
+                --Nombre completo
+                if exists(select 1 from segu.tpersona
+                      where upper(nombre) = upper(v_parametros.nombre)
+                      and upper(apellido_paterno) = upper(v_parametros.ap_paterno)
+                      and upper(apellido_materno) = upper(v_parametros.ap_materno)) then
+                  raise exception 'Persona ya registrada';
+                end if;
 
 
                	insert into segu.tpersona (
@@ -135,31 +135,49 @@ BEGIN
                if exists(select 1 from orga.tfuncionario where id_persona=v_id_persona and estado_reg='activo') then
                   raise exception 'Insercion no realizada. Esta persona ya está registrada como funcionario';
                end if;
-
+--raise 'valores: %, %, %',v_parametros.id_persona is not null, v_parametros.id_persona, v_id_persona;
 			   -- Update datos civiles Persona si es Natural.
                if(v_parametros.id_persona is not null)then
-                 update segu.tpersona set
-                          nombre = upper(v_parametros.nombre),
-                          apellido_paterno = upper(v_parametros.ap_paterno),
-                          apellido_materno = upper(v_parametros.ap_materno),
-                          fecha_nacimiento = v_parametros.fecha_nacimiento,
-                          genero = v_parametros.genero,
-                          nacionalidad = v_parametros.nacionalidad,
-                          --id_lugar = v_parametros.id_lugar,
-                          --tipo_documento = v_parametros.tipo_documento,
-                          ci = v_parametros.ci,
-                          expedicion = v_parametros.expedicion,
-                          estado_civil = v_parametros.estado_civil,
-                          discapacitado = v_parametros.discapacitado,
-                          carnet_discapacitado = v_parametros.carnet_discapacitado,
-                          correo = v_parametros.correo,
-                          celular1 = v_parametros.celular1,
-                          telefono1 = v_parametros.telefono1,
-                          telefono2 = v_parametros.telefono2,
-                          celular2 = v_parametros.celular2,
-                          direccion = v_parametros.direccion,
-                          id_tipo_doc_identificacion = v_parametros.id_tipo_doc_identificacion
-                 where id_persona = v_parametros.id_persona;
+
+                 select tp.*
+                 into v_persona
+                 from segu.tpersona tp
+                 where tp.id_persona = v_id_persona;
+
+                 if ( v_persona.nombre != upper(v_parametros.nombre) or v_persona.apellido_paterno != upper(v_parametros.ap_paterno) or
+                    v_persona.apellido_materno != upper(v_parametros.ap_materno) or v_persona.fecha_nacimiento != v_parametros.fecha_nacimiento or
+                    v_persona.genero != v_parametros.genero or v_persona.nacionalidad != v_parametros.nacionalidad or v_persona.ci != v_parametros.ci or
+                    v_persona.expedicion != v_parametros.expedicion or v_persona.estado_civil != v_parametros.estado_civil or
+                    v_persona.discapacitado != v_parametros.discapacitado or v_persona.carnet_discapacitado != v_parametros.carnet_discapacitado or
+                    v_persona.correo != v_parametros.correo or v_persona.celular1 != v_parametros.celular1 or v_persona.telefono1 != v_parametros.telefono1 or
+                    v_persona.telefono2 != v_parametros.telefono2 or v_persona.celular2 != v_parametros.celular2 or v_persona.direccion != v_parametros.direccion or
+                    v_persona.id_tipo_doc_identificacion != v_parametros.id_tipo_doc_identificacion ) then
+
+                    --RAISE EXCEPTION 'ENTRA %', v_parametros.id_persona;
+                     update segu.tpersona set
+                              nombre = upper(v_parametros.nombre),
+                              apellido_paterno = upper(v_parametros.ap_paterno),
+                              apellido_materno = upper(v_parametros.ap_materno),
+                              fecha_nacimiento = v_parametros.fecha_nacimiento,
+                              genero = v_parametros.genero,
+                              nacionalidad = v_parametros.nacionalidad,
+                              --id_lugar = v_parametros.id_lugar,
+                              --tipo_documento = v_parametros.tipo_documento,
+                              ci = v_parametros.ci,
+                              expedicion = v_parametros.expedicion,
+                              estado_civil = v_parametros.estado_civil,
+                              discapacitado = v_parametros.discapacitado,
+                              carnet_discapacitado = v_parametros.carnet_discapacitado,
+                              correo = v_parametros.correo,
+                              celular1 = v_parametros.celular1,
+                              telefono1 = v_parametros.telefono1,
+                              telefono2 = v_parametros.telefono2,
+                              celular2 = v_parametros.celular2,
+                              direccion = v_parametros.direccion,
+                              id_tipo_doc_identificacion = v_parametros.id_tipo_doc_identificacion
+                     where id_persona = v_parametros.id_persona;
+                 end if;
+                 --RAISE EXCEPTION ' NO ENTRA %', v_parametros.id_persona;
               end if;
 
 			  select tp.apellido_materno, tp.apellido_paterno, tp.nombre
@@ -193,7 +211,7 @@ BEGIN
                if exists (select 1 from orga.tfuncionario where codigo = v_codigo_empleado and estado_reg='activo') then
                   raise exception 'Insercion no realizada. CODIGO EN USO';
                end if;
-
+--RAISE EXCEPTION ' v_codigo_empleado %', v_codigo_empleado;
                --Obtener el correlativo biometrico.
                SELECT nextval('orga.tfuncionario_id_biometrico_seq') INTO v_id_biometrico;
                --raise exception 'v_id_biometrico: %, %, %', v_id_biometrico,v_codigo_empleado, v_parametros.id_persona;
@@ -238,7 +256,7 @@ BEGIN
  #FECHA:		25-01-2011
 ***********************************/
      elsif(par_transaccion='RH_FUNCIO_MOD')then
-     	BEGIN
+     	BEGIN --RAISE EXCEPTION 'UPDATE:  %', v_parametros.id_persona;
           	if pxp.f_existe_parametro(par_tabla, 'estado_correo') then
             	update orga.tfuncionario set
                 	email_empresa=v_parametros.email_empresa

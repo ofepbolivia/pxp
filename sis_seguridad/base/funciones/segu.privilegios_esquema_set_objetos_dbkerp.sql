@@ -8,6 +8,7 @@ DECLARE
    objeto 		text;
 
 BEGIN
+
    		FOR objeto IN
       		SELECT tablename FROM pg_tables WHERE schemaname = p_schema
       		UNION
@@ -16,7 +17,7 @@ BEGIN
       		SELECT viewname FROM pg_views WHERE schemaname = p_schema LOOP
 
           RAISE NOTICE 'Asignando todos los privilegios a % sobre %.%', p_user, p_schema, objeto;
-          EXECUTE 'GRANT SELECT,INSERT,UPDATE,DELETE,REFERENCES,TRIGGER ON "' || p_schema || '"."' || objeto || '" TO ' || p_user ;
+          EXECUTE 'GRANT ALL PRIVILEGES ON "' || p_schema || '"."' || objeto || '" TO ' || p_user ;
 
         END LOOP;
 
