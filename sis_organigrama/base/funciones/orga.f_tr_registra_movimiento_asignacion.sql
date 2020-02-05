@@ -36,7 +36,8 @@ DECLARE
     v_cont_reg				integer = 0;
 BEGIN
 	v_nombre_funcion = 'orga.f_tr_registra_movimiento_asignacion';
-	for v_record in select tuo.id_funcionario, tuo.id_cargo, tuo.id_uo, tuo.fecha_asignacion, tuo.fecha_finalizacion, tcon.codigo, tcon.nombre, vf.desc_funcionario1 as nombre_emp
+	for v_record in select tuo.id_funcionario, tuo.id_cargo, tuo.id_uo, tuo.fecha_asignacion, tuo.fecha_finalizacion, tcon.codigo, tcon.nombre, vf.desc_funcionario1 as nombre_emp,
+	                       tc.nombre as nombre_cargo, tuo.tipo
     				from orga.tuo_funcionario tuo
                     inner join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
                     inner join orga.tcargo tc on tc.id_cargo = tuo.id_cargo
@@ -80,6 +81,8 @@ BEGIN
 
               v_plantilla = v_hora_saludo||' estimado Administrador:</b><br>
                 <p>El motivo del presente es '||v_complemento||' para el funcionario <b>'||coalesce(v_rec_funcionario.desc_funcionario1, 'Comunicarse con Franklin Espinoza')||'</b>:<br>
+                <b>Cargo:</b> '||coalesce(v_record.nombre_cargo,'Por Definirse')||'<br>
+                <b>Tipo Asignación:</b> '||coalesce(upper(v_record.tipo),'Por Definirse')||'<br>
                 <b>Tipo de Contrato:</b> '||coalesce(v_record.nombre,'Por Definirse')||'<br>
                 <b>Tipo Movimiento:</b> '||coalesce(v_tipo_movimiento,'Por Definirse')||'<br>
                 <b>Fecha Asignación:</b> '||coalesce(to_char(v_record.fecha_asignacion, 'dd/mm/yyyy'),'')||'<br>
@@ -148,7 +151,9 @@ BEGIN
                                    when current_time between '12:00:00'::time and '19:00:00'::time then '<b>Buenas tardes'::varchar end;
 
                 v_plantilla = v_hora_saludo||' estimado Administrador:</b><br>
-                  <p>El motivo del presente es '||v_complemento||' para el funcionario <b>'||coalesce(v_rec_funcionario.desc_funcionario1, 'Comunicarse con Franklin Espinoza')||'</b>.<br>
+                  <p>El motivo del presente es '||v_complemento||' para el funcionario <b>'||coalesce(v_rec_funcionario.desc_funcionario1, 'Comunicarse con Franklin Espinoza')||'</b>:<br>
+                  <b>Cargo:</b> '||coalesce(v_record.nombre_cargo,'Por Definirse')||'<br>
+                  <b>Tipo Asignación:</b> '||coalesce(upper(v_record.tipo),'Por Definirse')||'<br>
                   <b>Tipo de Contrato:</b> '||coalesce(v_record_fin.nombre,'Por Definirse')||'<br>
                   <b>Tipo Movimiento:</b> '||coalesce(v_tipo_movimiento,'Por Definirse')||'<br>
                   <b>Fecha Asignación:</b> '||coalesce(to_char(v_record_fin.fecha_asignacion, 'dd/mm/yyyy'),'')||'<br>

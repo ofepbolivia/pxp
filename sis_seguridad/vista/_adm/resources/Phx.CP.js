@@ -1849,9 +1849,18 @@ Phx.CP=function(){
             habilitado:'no',
             iniciarWebSocket : function () {
 
-
                 var hostname = window.location.hostname;
-                Phx.CP.webSocket.conn = new WebSocket('ws://'+hostname+':'+Phx.CP.config_ini.puerto_websocket+'?sessionIDPXP='+Ext.util.Cookies.get('PHPSESSID'));
+                var protocol = window.location.protocol;
+                var ws;
+                var folder;
+                if(protocol === 'http:'){
+                    ws = 'ws';
+                    folder = '';
+                }else{
+                    ws = 'wss';
+                    folder = '/wss/kerp';
+                }
+                Phx.CP.webSocket.conn = new WebSocket(ws+'://'+hostname+folder+':'+Phx.CP.config_ini.puerto_websocket+'?sessionIDPXP='+Ext.util.Cookies.get('PHPSESSID'));
                 console.log(Phx.CP.webSocket.conn);
                 Phx.CP.webSocket.conn.onopen = function (e) {
                     console.log(e)
