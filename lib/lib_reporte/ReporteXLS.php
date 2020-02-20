@@ -18,6 +18,7 @@ class ReporteXLS
 	function __construct($nom_archivo,$titulo){
 		//ini_set('memory_limit','512M');
 		set_time_limit(400);
+		$titulo = substr($titulo, 0,30);
 		$cacheMethod = PHPExcel_CachedObjectStorageFactory:: cache_to_phpTemp;
 		$cacheSettings = array('memoryCacheSize'  => '10MB');
 		PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
@@ -78,7 +79,7 @@ class ReporteXLS
 		//echo $this->nombre_archivo; exit;
 		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
 		$this->docexcel->setActiveSheetIndex(0);
-		$this->objWriter = PHPExcel_IOFactory::createWriter($this->docexcel, 'Excel5');
+		$this->objWriter = PHPExcel_IOFactory::createWriter($this->docexcel, 'Excel2007');
 		$this->objWriter->save("../../../reportes_generados/$this->nombre_archivo");
 		//ini_set('memory_limit','128M');
 		//unset($this->docexcel);

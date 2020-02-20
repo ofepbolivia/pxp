@@ -1,6 +1,16 @@
 <?php
 //incluimos la libreria
-session_start();
+if (version_compare(phpversion(), '5.4.0', '<')) {
+     if(session_id() == '') {
+        session_start();
+     }
+ }
+ else
+ {
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+ }
 include(dirname(__FILE__).'/../DatosGenerales.php');
 require_once(dirname(__FILE__).'/../tcpdf/config/lang/spa.php');
 require_once(dirname(__FILE__).'/../tcpdf/tcpdf.php');
@@ -184,7 +194,7 @@ class ReportePDF extends MYPDF
 		$this->Cell($ancho, 0, $_SESSION['_REP_NOMBRE_SISTEMA'], '', 0, 'R');
 		$this->Ln();
 		$fecha_rep = date("d-m-Y H:i:s");
-		$this->Cell($ancho, 0, "Fecha : ".$fecha_rep, '', 0, 'L');
+		$this->Cell($ancho, 0, "Fecha Impresion : ".$fecha_rep, '', 0, 'L');
 		$this->Ln($line_width);
 		$this->Ln();
 		$barcode = $this->getBarcode();

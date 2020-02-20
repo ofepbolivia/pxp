@@ -139,9 +139,7 @@ class ExcelInput{
 
         $objFunc=new MODColumnasArchivoExcel($objParam);
         $res = $objFunc->listarColumnasArchivoExcelporCodigoArchivo();
-
         $this->setArrayColumnas($res->datos);
-        return $res;
     }
 
     function configuracionArchivoInicial($codigo){

@@ -269,7 +269,7 @@ class MYPDF extends TCPDF {
 		 *****************************************************/
 		
         foreach ($row as $column) {
-            if ($numbers && $this->tablenumbersHD[$index] > 0) {
+            if ($numbers && $this->tablenumbers[$index] > 0) {
             	$column = number_format ( $column , $this->tablenumbersHD[$index] , '.' , ',' );
             }
 			$datos_res = $this->getHeightV2($column, $this->tablewidthsHD[$index]);			 

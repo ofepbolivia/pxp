@@ -24,10 +24,10 @@ class Reporte
 
 		$this->objParam=$pParam;
 		$this->control = $control;
-
 		if($this->objParam->getParametro('titulo')!=''){
 			$this->titulo=$this->objParam->getParametro('titulo');
 		}
+		
 		//Genera el nombre del archivo (aleatorio + titulo)
 		$this->nombreArchivo=uniqid(md5(session_id()).$this->titulo);
 
@@ -90,7 +90,6 @@ class Reporte
 	 */
 	function generarReporteListado($nombre_clase,$metodo_ejecutar){
 		$puntero=0;
-
 		$this->objParam->addParametroConsulta('puntero','0');
 		$this->objParam->addParametroConsulta('cantidad',$_SESSION['cantidad_reportes']);
 		
@@ -148,6 +147,7 @@ class Reporte
 			
 			$puntero=$puntero+$_SESSION['cantidad_reportes'];
 		}
+		
 		$this->objReporteFormato->generarReporte();
 		
 		$this->mensajeExito=new Mensaje();

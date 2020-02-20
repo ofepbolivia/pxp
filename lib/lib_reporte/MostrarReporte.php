@@ -4,7 +4,7 @@ class MostrarReporte
     
     function __construct($fileName){
         $fileExtension = substr(strrchr($fileName,'.'),1);
-        //var_dump('llega');exit;
+
         if (file_exists(dirname(__FILE__)."/../../../reportes_generados/".$fileName)) {
             if ($fileExtension == 'pdf' || $fileExtension == 'PDF') {
                 header('Content-type: application/pdf');
@@ -35,7 +35,7 @@ class MostrarReporte
         }
         else{
              header("Content-type: text/html");
-             echo '<H1><B>El archivo ha sido  eliminado</B></H1>';    
+             echo '<H1><B>El archivo a sido  eliminado</B></H1>';    
             
         }
         exit;

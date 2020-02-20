@@ -8,7 +8,6 @@
 $pxpRestClient = PxpRestClient::connect('erpmobile.obairlines.bo', 'rest/',443,'https')->setCredentialsPxp('notificaciones','Mund0libre');
 //$pxpRestClient = PxpRestClient::connect('192.168.11.82', 'kerp_capacitacion/pxp/lib/rest/')->setCredentialsPxp('admin','123');
 
-
 /*$res = $pxpRestClient->doPost('seguridad/aesEncryption',
     array(	"value"=>"jrivera",
         "key"=>'123'));

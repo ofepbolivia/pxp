@@ -86,21 +86,15 @@ class conexion
 		$informixserver = 'sai1';
 		*/
 		#Only needed if INFORMIXDIR is not already set
-		//Moidificado MMV validacion cuando se pierda la conexion con el servidor informix
-        try {
-            putenv("INFORMIXDIR=/opt/informix");
-            $dbh = "informix:host=" . $_SESSION['_HOST_INFORMIX'] . ";service=informixport;database=" . $_SESSION['_DATABASE_INFORMIX'] . ";server=" . $_SESSION['_SERVER_INFORMIX'] . "; protocol=onsoctcp;charset=utf8";
-            if($conexion = new PDO($dbh, $_SESSION['_USER_INFORMIX'], $_SESSION['_PASS_INFORMIX'])){
-                return $conexion;
-			}else{
-            	return 0;
-			}
-        	}
-		catch (Exception $e){
-            //TODO manejo de errores
-            throw new Exception('Error al conectar a la base de datos los datos por PDO'.$conexion);
-        }
-
+		
+		putenv("INFORMIXDIR=/opt/informix");
+		$dbh = "informix:host=".$_SESSION['_HOST_INFORMIX'].";service=informixport;database=".$_SESSION['_DATABASE_INFORMIX'].";server=".$_SESSION['_SERVER_INFORMIX']."; protocol=onsoctcp;charset=utf8";
+		
+		
+		
+		$conexion = new PDO($dbh,$_SESSION['_USER_INFORMIX'],$_SESSION['_PASS_INFORMIX']);
+		
+		return $conexion;
 
 		
 	}
