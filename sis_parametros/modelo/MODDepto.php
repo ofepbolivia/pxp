@@ -292,8 +292,75 @@ class MODDepto extends MODbase{
 		$this->ejecutarConsulta();
 		return $this->respuesta;
 	}
-	
-	
+    //18-07-2019 modificacion de lista solo mostrar obligaciones de pago Cochabamba con prioridad 1
+    //funcion para en listar depto si es para un FONDO EN AVACE//
+    function listarDeptoFiltradoXUsuarioFA(){
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento='param.ft_depto_sel';// nombre procedimiento almacenado
+        $this->transaccion='PM_DEPFILUSULIS_SEL';//nombre de la transaccion
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+
+
+        //Definicion de la lista del resultado del query
+        $this->setParametro('id_subsistema','id_subsistema','integer');
+        $this->setParametro('codigo_subsistema','codigo_subsistema','varchar');
+        $this->setParametro('tipo_filtro','tipo_filtro','varchar');
+
+        //defino varialbes que se captran como retornod e la funcion
+        $this->captura('id_depto','integer');
+        $this->captura('codigo','varchar');
+        $this->captura('nombre','varchar');
+        $this->captura('nombre_corto','varchar');
+        $this->captura('id_subsistema','integer');
+
+        $this->captura('estado_reg','varchar');
+        $this->captura('fecha_reg','timestamp');
+        $this->captura('id_usuario_reg','integer');
+        $this->captura('fecha_mod','timestamp');
+        $this->captura('id_usuario_mod','integer');
+        $this->captura('desc_subsistema','text');
+
+
+        //Ejecuta la funcion
+        $this->armarConsulta();
+
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+
+    }
+
+    //filtro de deptos para  las estaciones internacionales en Registro de Comprobantes(contador)EXT
+    function listarDeptoFiltradoPrioridadEXT(){
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento='param.ft_depto_sel';// nombre procedimiento almacenado
+        $this->transaccion='PM_DEPLISPRI_SEL';//nombre de la transaccion
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+
+        //Definicion de la lista del resultado del query
+        $this->setParametro('codigo_subsistema','codigo_subsistema','varchar');
+
+        //defino varialbes que se captran como retornod e la funcion
+        $this->captura('id_depto','integer');
+        $this->captura('codigo','varchar');
+        $this->captura('nombre','varchar');
+        $this->captura('nombre_corto','varchar');
+        $this->captura('id_subsistema','integer');
+
+        $this->captura('estado_reg','varchar');
+        $this->captura('fecha_reg','timestamp');
+        $this->captura('id_usuario_reg','integer');
+        $this->captura('fecha_mod','timestamp');
+        $this->captura('id_usuario_mod','integer');
+        $this->captura('desc_subsistema','text');
+
+
+        //Ejecuta la funcion
+        $this->armarConsulta();
+
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+
+    }
 	
 }
 ?>

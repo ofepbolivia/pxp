@@ -87,8 +87,9 @@ BEGIN
                                 UO.gerencia,
                                 ''false''::varchar as checked,
                                 UO.id_nivel_organizacional,
-                                nivorg.nombre_nivel
-                            FROM orga.tuo UO '
+                                nivorg.nombre_nivel,
+                            UO.prioridad
+                             FROM orga.tuo UO '
                             ||v_join|| ' join orga.testructura_uo euo
                                   on UO.id_uo=euo.id_uo_hijo  and euo.estado_reg=''activo''
                             INNER JOIN segu.tusuario USUREG ON  UO.id_usuario_reg=USUREG.id_usuario

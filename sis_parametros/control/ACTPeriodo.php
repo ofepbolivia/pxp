@@ -29,9 +29,19 @@ class ACTPeriodo extends ACTbase{
 			
 			$this->res=$this->objFunc->listarPeriodo($this->objParam);
 		}
+        if($this->objParam->getParametro('_adicionar')!=''){
+            $respuesta = $this->res->getDatos();
+            array_unshift ( $respuesta, array(  'id_periodo'=>'0',
+                'periodo'=>'--TODOS--',
+                'id_gestion'=>'0',
+                'literal'=>'--TODOS--'));
+            //var_dump($respuesta);
+            $this->res->setDatos($respuesta);
+        }
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
-				
+
+
 	function insertarPeriodo(){
 		$this->objFunc=$this->create('MODPeriodo');	
 		if($this->objParam->insertar('id_periodo')){

@@ -91,6 +91,16 @@ class ACTProveedor extends ACTbase{
 			$this->objFunc=$this->create('MODProveedor');
 			$this->res=$this->objFunc->listarProveedorCombos();
 		}
+		if($this->objParam->getParametro('_adicionar')!=''){
+
+            $respuesta = $this->res->getDatos();
+
+            array_unshift ( $respuesta, array(  'id_proveedor'=>'0',
+                'rotulo_comercial'=>'Todos', 'desc_proveedor'=>'Todos'
+            ));
+            //		var_dump($respuesta);
+            $this->res->setDatos($respuesta);
+        }
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
 				
@@ -127,6 +137,30 @@ class ACTProveedor extends ACTbase{
    function anteriorEstadoProveedor(){
         $this->objFunc=$this->create('MODProveedor');  
         $this->res=$this->objFunc->anteriorEstadoProveedor($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
+    function listarProveedorCtaBan(){
+        $this->objParam->defecto('ordenacion','id_proveedor');
+        $this->objParam->defecto('dir_ordenacion','asc');
+
+        if($this->objParam->getParametro('prov_estado')=='borrador'){
+            $this->objParam->addFiltro("provee.estado in (''borrador'')");
+        }
+        if($this->objParam->getParametro('prov_estado')=='en_proceso'){
+            $this->objParam->addFiltro("provee.estado not in (''borrador'',''aprobado'',''anulado'')");
+        }
+        if($this->objParam->getParametro('prov_estado')=='finalizados'){
+            $this->objParam->addFiltro("provee.estado in (''aprobado'',''anulado'')");
+        }
+
+        if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+            $this->objReporte = new Reporte($this->objParam, $this);
+            $this->res = $this->objReporte->generarReporteListado('MODProveedor','listarProveedorCtaBan');
+        } else{
+            $this->objFunc=$this->create('MODProveedor');
+            $this->res=$this->objFunc->listarProveedorCtaBan();
+        }
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
 			

@@ -66,16 +66,20 @@ class ACTReporte extends ACTbase{
 
         $this->objFunc=$this->create('MODReporte');
         if($this->objParam->getParametro('configuracion_reporte') == 'documentos'){
-            $this->res=$this->objFunc->reporteListaDocumentos($this->objParam);
+            $this->headers = $this->objFunc->headerDocumentos($this->objParam);
+            $this->objFunc=$this->create('MODReporte');
+            $this->res = $this->objFunc->reporteListaDocumentos($this->objParam);
             $titulo_archivo = 'Lista de Documentos';
         }
 
         $this->datos=$this->res->getDatos();
+        $this->headers=$this->headers->getDatos();
 
         $nombreArchivo = uniqid(md5(session_id()).$titulo_archivo).'.xls';
         $this->objParam->addParametro('nombre_archivo',$nombreArchivo);
         $this->objParam->addParametro('titulo_archivo',$titulo_archivo);
         $this->objParam->addParametro('datos',$this->datos);
+        $this->objParam->addParametro('headers',$this->headers);
 
         if($this->objParam->getParametro('configuracion_reporte') == 'documentos'){
             $this->objReporte = new RDocumentosRHDXls($this->objParam);

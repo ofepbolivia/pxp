@@ -121,6 +121,7 @@ BEGIN
 			id_usuario_mod = p_id_usuario,
 			fecha_mod = now(),
       fecha_ini = v_parametros.fecha_ini
+      /*,id_categoria_salarial = v_parametros.id_categoria_salarial*/
 			where id_escala_salarial=v_parametros.id_escala_salarial;
 			
 			if (v_parametros.fecha_ini is not null and v_reg_old.haber_basico != v_parametros.haber_basico) then

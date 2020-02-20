@@ -119,14 +119,23 @@ BEGIN
        elseif(p_transaccion='SEG_USROL_SEL')then
 
           BEGIN
+		  /*Aumentando esta parte para filtrar usuarios que aun tiene fecha de caducidad vigente (Ismael Valdivia 28/01/2019)*/
+          /*us.fecha_caducidad >= now()::date*/
 
           v_consulta:='select  	ts.id_rol,
-								p.nombre_completo1 as nombre
+								p.nombre_completo1 as nombre,
+                                COALESCE (car.nombre_cargo,''NO ES FUNCIONARIO'') AS cargo
 								from segu.tusuario us
                                 inner join segu.tusuario_rol ro on ro.id_usuario = us.id_usuario and ro.estado_reg = ''activo''
                                 inner join segu.trol ts on ts.id_rol =ro.id_rol and ts.estado_reg = ''activo''
                                 inner join segu.vpersona p on p.id_persona = us.id_persona
-                                where';
+
+                                /*Aumentando estas condiciones (Ismael Valdivia 28/01/2020)*/
+                                left join orga.vfuncionario fun on fun.id_persona = p.id_persona
+                                left join orga.vfuncionario_ultimo_cargo car on car.id_funcionario = fun.id_funcionario
+                                /******************************/
+
+                                where us.fecha_caducidad >= now()::date and';
 
           v_consulta:=v_consulta||v_parametros.filtro;
           v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
@@ -137,13 +146,21 @@ BEGIN
 
 
           BEGIN
+          /*Aumentando esta parte para filtrar usuarios que aun tiene fecha de caducidad vigente (Ismael Valdivia 28/01/2019)*/
+          /*us.fecha_caducidad >= now()::date*/
 
                v_consulta:='select  count(	ts.id_rol)
 								from segu.tusuario us
                                 inner join segu.tusuario_rol ro on ro.id_usuario = us.id_usuario and ro.estado_reg = ''activo''
                                 inner join segu.trol ts on ts.id_rol =ro.id_rol and ts.estado_reg = ''activo''
                                 inner join segu.vpersona p on p.id_persona = us.id_persona
-                                where';
+
+                                /*Aumentando estas condiciones (Ismael Valdivia 28/01/2020)*/
+                                left join orga.vfuncionario fun on fun.id_persona = p.id_persona
+                                left join orga.vfuncionario_ultimo_cargo car on car.id_funcionario = fun.id_funcionario
+                                /******************************/
+
+                                where us.fecha_caducidad >= now()::date and';
                v_consulta:=v_consulta||v_parametros.filtro;
                return v_consulta;
          END;
@@ -171,3 +188,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION segu.ft_rol_sel (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;

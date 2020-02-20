@@ -97,14 +97,14 @@ BEGIN
                                   where  funpla.id_funcionario = planc.id_funcionario
                                   and colval.codigo_columna = ''COTIZABLE''
                                   and pla.fecha_planilla =
-                                                        (select p.fecha_planilla
+                                                        (select distinct  p.fecha_planilla
                                                           from plani.tplanilla p
                                                           where 
                                                           p.id_tipo_planilla = 1
                                                           and p.id_periodo = (select p.id_periodo
                                                                                 from param.tperiodo p
-                                                                                where  planc.fecha_solicitud between p.fecha_ini and p.fecha_fin
-                                                                                ) - 1)) as  haber_basico,                              
+                                                                                where (planc.fecha_solicitud - interval ''1 month'') between p.fecha_ini and p.fecha_fin
+                                                                                ))) as  haber_basico,                              
                               pe.expedicion,
                               planc.impreso,
                               planc.impreso as control,
@@ -211,7 +211,7 @@ BEGIN
         where u.id_usuario = p_id_usuario;
 
 
-        select f.desc_funcionario1
+        select initcap(f.desc_funcionario1)
         into
         v_fun_emetido
         from wf.testado_wf w
@@ -232,14 +232,14 @@ BEGIN
                                         where  funpla.id_funcionario = c.id_funcionario
                                         and colval.codigo_columna = ''COTIZABLE''
                                         and pla.fecha_planilla = 
-                                                          (select p.fecha_planilla
+                                                          (select distinct  p.fecha_planilla
                                                           from plani.tplanilla p
                                                           where 
                                                           p.id_tipo_planilla = 1
                                                           and p.id_periodo = (select p.id_periodo
                                                                                 from param.tperiodo p
-                                                                                where  c.fecha_solicitud between p.fecha_ini and p.fecha_fin
-                                                                                ) - 1)) as  haber_basico,                              
+                                                                                where  (c.fecha_solicitud - interval ''1 month'') between p.fecha_ini and p.fecha_fin
+                                                                                ))) as  haber_basico,                              
                               pe.ci,
                               pe.expedicion,
                               CASE
@@ -258,14 +258,14 @@ BEGIN
                                         where  funpla.id_funcionario = c.id_funcionario
                                         and colval.codigo_columna = ''COTIZABLE''
                                         and pla.fecha_planilla = 
-                                                          (select p.fecha_planilla
+                                                          (select distinct  p.fecha_planilla
                                                           from plani.tplanilla p
                                                           where 
                                                           p.id_tipo_planilla = 1
                                                           and p.id_periodo = (select p.id_periodo
                                                                                 from param.tperiodo p
-                                                                                where  c.fecha_solicitud between p.fecha_ini and p.fecha_fin
-                                                                                ) - 1))              
+                                                                                where  (c.fecha_solicitud - interval ''1 month'')  between p.fecha_ini and p.fecha_fin
+                                                                                )))              
                                             
                               )))::varchar as haber_literal,
                               (select initcap( cart.desc_funcionario1)
@@ -278,7 +278,11 @@ BEGIN
                               '''||COALESCE (v_iniciales,'NA')||'''::varchar as iniciales,
                                '''||COALESCE (v_fun_emetido,'NA')||'''::varchar as fun_imitido,
                                c.estado,
-                               ca.codigo as nro_item
+                               ca.codigo as nro_item,
+                              (select initcap( cart.desc_funcionario1)
+                              from orga.vfuncionario_cargo cart
+                              where cart.nombre_cargo = ''Gerente Administrativo Financiero'' and cart.id_funcionario =2711)  as nuevo_jefe
+
                               from orga.tcertificado_planilla c
                               inner join orga.vfuncionario_cargo  fu on fu.id_funcionario = c.id_funcionario and( fu.fecha_finalizacion is null or  fu.fecha_finalizacion >= now())
                               inner join orga.tcargo ca on ca.id_cargo = fu.id_cargo
@@ -312,7 +316,7 @@ BEGIN
         inner join orga.vfuncionario_persona p on p.id_persona = u.id_persona
         where u.id_usuario = p_id_usuario;
 
-        select f.desc_funcionario1
+        select initcap(f.desc_funcionario1)
         into
         v_fun_emetido
         from wf.testado_wf w
@@ -333,14 +337,14 @@ BEGIN
                                         where  funpla.id_funcionario = c.id_funcionario
                                         and colval.codigo_columna = ''COTIZABLE''
                                         and pla.fecha_planilla =                                                           
-                                                          (select p.fecha_planilla
+                                                          (select distinct p.fecha_planilla
                                                           from plani.tplanilla p
                                                           where 
                                                           p.id_tipo_planilla = 1
                                                           and p.id_periodo = (select p.id_periodo
                                                                                 from param.tperiodo p
-                                                                                where  c.fecha_solicitud between p.fecha_ini and p.fecha_fin
-                                                                                ) - 1)) as  haber_basico,                             
+                                                                                where  (c.fecha_solicitud - interval ''1 month'') between p.fecha_ini and p.fecha_fin
+                                                                                ))) as  haber_basico,                             
                               pe.ci,
                               pe.expedicion,
                               CASE
@@ -359,14 +363,14 @@ BEGIN
                                           where  funpla.id_funcionario = c.id_funcionario
                                           and colval.codigo_columna = ''COTIZABLE''
                                           and pla.fecha_planilla = 
-                                                            (select p.fecha_planilla
+                                                            (select distinct  p.fecha_planilla
                                                             from plani.tplanilla p
                                                             where 
                                                             p.id_tipo_planilla = 1
                                                             and p.id_periodo = (select p.id_periodo
                                                                                   from param.tperiodo p
-                                                                                  where  c.fecha_solicitud between p.fecha_ini and p.fecha_fin
-                                                                                  ) - 1))                              
+                                                                                  where  (c.fecha_solicitud - interval ''1 month'') between p.fecha_ini and p.fecha_fin
+                                                                                  )))                              
                                )))::varchar as haber_literal,
                               (select initcap( cart.desc_funcionario1)
                               from orga.vfuncionario_cargo cart
@@ -378,7 +382,11 @@ BEGIN
                               '''||COALESCE (v_iniciales,'NA')||'''::varchar as iniciales,
                                '''||COALESCE (v_fun_emetido,'NA')||'''::varchar as fun_imitido,
                                c.estado,
-                               ca.codigo as nro_item
+                               ca.codigo as nro_item,
+                              (select initcap(cart.desc_funcionario1)
+                              from orga.vfuncionario_cargo cart
+                              where cart.nombre_cargo = ''Gerente Administrativo Financiero'' and cart.id_funcionario =2711)  as nuevo_jefe
+                                                             
                               from orga.tcertificado_planilla c
                               inner join orga.vfuncionario_cargo  fu on fu.id_funcionario = c.id_funcionario and( fu.fecha_finalizacion is null or  fu.fecha_finalizacion >= now())
                               inner join orga.tcargo ca on ca.id_cargo = fu.id_cargo
@@ -419,14 +427,14 @@ BEGIN
                                       where  funpla.id_funcionario = planc.id_funcionario
                                       and colval.codigo_columna = ''COTIZABLE''
                                       and pla.fecha_planilla = 
-                                                        (select p.fecha_planilla
+                                                        (select distinct  p.fecha_planilla
                                                         from plani.tplanilla p
                                                         where 
                                                         p.id_tipo_planilla = 1
                                                         and p.id_periodo = (select p.id_periodo
                                                                               from param.tperiodo p
-                                                                              where  planc.fecha_solicitud between p.fecha_ini and p.fecha_fin
-                                                                              ) - 1)
+                                                                              where  (planc.fecha_solicitud - interval ''1 month'') between p.fecha_ini and p.fecha_fin
+                                                                              ))
                                                                                
                                           ) as  remuneracion                           
                             from orga.tcertificado_planilla planc

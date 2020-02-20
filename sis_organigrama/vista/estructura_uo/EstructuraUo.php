@@ -137,10 +137,52 @@ Phx.vista.EstructuraUo=function(config){
 			id_grupo:0,
 			form:true
 		},
-	
+
+        {
+           config: {
+               name: 'nombre_cargo',
+               fieldLabel: 'Cargo',
+               allowBlank: false,
+               emptyText: 'Elija una opción...',
+               store: new Ext.data.JsonStore({
+                   url: '../../sis_organigrama/control/TemporalCargo/listarTemporalCargo',
+                   id: 'id_temporal_cargo',
+                   root: 'datos',
+                   sortInfo: {
+                       field: 'nombre',
+                       direction: 'ASC'
+                   },
+                   totalProperty: 'total',
+                   fields: ['id_temporal_cargo', 'nombre'],
+                   remoteSort: true,
+                   baseParams: {par_filtro: 'cargo.nombre'}
+               }),
+               valueField: 'nombre',
+               displayField: 'nombre',
+               gdisplayField: 'nombre',
+               hiddenName: 'nombre',
+               forceSelection: false,
+               typeAhead: false,
+               triggerAction: 'all',
+               lazyRender: true,
+               mode: 'remote',
+               pageSize: 15,
+               queryDelay: 1000,
+               anchor: '100%',
+               gwidth: 200,
+               minChars: 2,
+               renderer : function(value, p, record) {
+                   return String.format('{0}', record.data['nombre']);
+               }
+           },
+           type: 'ComboBox',
+           id_grupo: 1,
+           filters: {pfiltro: 'tcargo.nombre',type: 'string'},
+           grid: true,
+           form: true
+        },
 		
-		
-		{
+		/*{
 			config:{
 				fieldLabel: "Cargo",
 				gwidth: 120,
@@ -152,7 +194,7 @@ Phx.vista.EstructuraUo=function(config){
 			type:'TextField',
 			id_grupo:0,
 			form:true
-		},
+		},*/
 		{
 			config:{
 				fieldLabel: "Cargo Individual",
@@ -177,7 +219,7 @@ Phx.vista.EstructuraUo=function(config){
 				
 			},
 			type:'ComboBox',
-			id_grupo:0,
+			id_grupo:1,
 			form:true
 		},
 		
@@ -202,7 +244,7 @@ Phx.vista.EstructuraUo=function(config){
 				
 			   },
 			type:'ComboBox',
-			id_grupo:0,
+			id_grupo:1,
 			form:true
 		},
 		{
@@ -228,13 +270,13 @@ Phx.vista.EstructuraUo=function(config){
 				
 			},
 			type:'ComboBox',
-			id_grupo:0,
+			id_grupo:1,
 			form:true
 		},
 		{
 			config:{
 				name:'correspondencia',
-				fieldLabel:'Corresponden cia',
+				fieldLabel:'Correspondencia',
 				typeAhead: true,
 				allowBlank:false,
 	    		triggerAction: 'all',
@@ -254,7 +296,7 @@ Phx.vista.EstructuraUo=function(config){
 				
 			},
 			type:'ComboBox',
-			id_grupo:0,
+			id_grupo:1,
 			form:true
 		}
 		,
@@ -281,9 +323,22 @@ Phx.vista.EstructuraUo=function(config){
 				
 			},
 			type:'ComboBox',
-			id_grupo:0,
+			id_grupo:1,
 			form:true
-		}
+		},
+           {
+               config:{
+                   fieldLabel: "Prioridad",
+                   gwidth: 120,
+                   name: 'prioridad',
+                   allowBlank:true,
+                   anchor:'100%'
+
+               },
+               type:'TextField',
+               id_grupo:0,
+               form:true
+           },
 		];
 		
 		Phx.vista.EstructuraUo.superclass.constructor.call(this,config);
@@ -299,7 +354,7 @@ Phx.vista.EstructuraUo=function(config){
 		);*/
 		
 		this.addButton('btnCargo',	{
-				text: 'Cargos',
+				text: 'Items',
 				iconCls: 'bcargo',
 				disabled: false,
 				handler: this.onBtnCargos,
@@ -339,13 +394,18 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 		ActSave:'../../sis_organigrama/control/EstructuraUo/guardarEstructuraUo',
 		ActDel:'../../sis_organigrama/control/EstructuraUo/eliminarEstructuraUo',	
 		ActList:'../../sis_organigrama/control/EstructuraUo/listarEstructuraUo',
-	    enableDD:false,
+        ActDragDrop:'../../sis_organigrama/control/EstructuraUo/procesarDragDrop',
+        //id_store : 'id_uo',
+        enableDD:true,
 		expanded:false,
-		fheight:'80%',
-		fwidth:'50%',
+		fheight:'75%',
+		fwidth:'70%',
 		textRoot:'Estructura Organizacional',
 		id_nodo:'id_uo',
 		id_nodo_p:'id_uo_padre',
+        idNodoDD : 'id_uo',
+        idOldParentDD : 'id_uo_padre',
+        idTargetDD : 'id_uo',
 		fields: [
 		'id', //identificador unico del nodo (concatena identificador de tabla con el tipo de nodo)
 		      //porque en distintas tablas pueden exitir idetificadores iguales
@@ -361,11 +421,26 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 		'nombre_unidad',
 		'nombre_cargo',
 		'presupuesta',
-		'nodo_base','correspondencia','gerencia'],
+		'nodo_base','correspondencia','gerencia','prioridad'],
 		sortInfo:{
 			field: 'id',
 			direction:'ASC'
 		},
+
+        onNodeDrop : function(o) {
+            this.ddParams = {
+                tipo_nodo : o.dropNode.attributes.tipo_nodo
+            };
+            this.idTargetDD = 'id_uo';
+            if (o.dropNode.attributes.tipo_nodo == 'raiz' || o.dropNode.attributes.tipo_nodo == 'hijo') {
+                this.idNodoDD = 'id_uo';
+                this.idOldParentDD = 'id_uo_padre';
+            } else if(o.dropNode.attributes.tipo_nodo == 'item') {
+                this.idNodoDD = 'id_item';
+                this.idOldParentDD = 'id_p';
+            }
+            Phx.vista.EstructuraUo.superclass.onNodeDrop.call(this, o);
+        },
 		onButtonAct:function(){
 			
 			this.sm.clearSelections();
@@ -406,7 +481,7 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 			var node = this.sm.getSelectedNode();
 			var data = node.attributes;
 			Phx.CP.loadWindows('../../../sis_organigrama/vista/cargo/Cargo.php',
-					'Cargos por Unidad',
+					'Items por Unidad',
 					{
 						width:1000,
 						height:600
@@ -420,8 +495,8 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 		
 		//sobrecarga prepara menu
 		preparaMenu:function(n) {
-		this.getBoton('btnCargo').enable();
-		Phx.vista.EstructuraUo.superclass.preparaMenu.call(this,n);
+		    this.getBoton('btnCargo').enable();
+		    Phx.vista.EstructuraUo.superclass.preparaMenu.call(this,n);
 		},
 		liberaMenu : function () {
 			this.getBoton('btnCargo').disable();
@@ -515,30 +590,51 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 		bsave:false,// boton para eliminar
 		
 		//DEFINIE LA ubicacion de los datos en el formulario
-	Grupos:[{ 
-			 layout: 'column',
-			 items:[{
-				    xtype:'fieldset',
-                    layout: 'form',
-                    border: true,
-                    title: 'Datos principales',
-                    bodyStyle: 'padding:0 10px 0;',
-                    columnWidth: '1',
-                    items:[],
-		            id_grupo:0
-                  }
-                  
-                  /*{  
-                    xtype:'fieldset',
-                    layout: 'form',
-                    border: true,
-                    title: 'Orden y rutas',
-                    bodyStyle: 'padding:0 10px 0;',
-                    columnWidth: '.5',
-                    
-                    items:[],
-                    id_grupo:1
-                 }*/] }]
+
+
+        Grupos: [
+            {
+                layout: 'column',
+                border: false,
+                labelAlign: 'top',
+                defaults: {
+                    border: false
+                },
+
+                items: [
+                    {
+                        bodyStyle: 'padding-right:10px;',
+                        items: [
+
+                            {
+                                xtype: 'fieldset',
+                                title: '<b style="color: green;">DATOS UO<b>',
+                                autoHeight: true,
+                                items: [],
+                                id_grupo: 0
+
+                            }
+
+                        ],
+                        columnWidth: .5
+                    },
+                    {
+                        bodyStyle: 'padding-right:10px;',
+                        items: [
+                            {
+                                xtype: 'fieldset',
+                                title: '<b style="color: green;">DATOS CARGO<b>',
+                                autoHeight: true,
+                                items: [],
+                                id_grupo: 1
+                            }
+                        ],
+                        columnWidth: .5
+                    }
+
+                ]
+            }
+        ]
 			
 
 

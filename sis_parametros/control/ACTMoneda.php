@@ -25,10 +25,11 @@ class ACTMoneda extends ACTbase{
 		if($this->objParam->getParametro('filtrar') == 'si' ){
               $this->objParam->addFiltro("show_combo = ''si''");    
         }
-		
+
 		if($this->objParam->getParametro('filtrar_base') == 'si' ){
               $this->objParam->addFiltro("tipo_moneda = ''base''");    
         }
+
          
 		
 		
@@ -64,6 +65,34 @@ class ACTMoneda extends ACTbase{
 		$this->res=$this->objFunc->getMonedaBase($this->objParam);
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
+
+    function listarMonedaSegunEstacionInter(){
+        $this->objParam->defecto('ordenacion','id_moneda');
+
+        $this->objParam->defecto('dir_ordenacion','asc');
+
+        if($this->objParam->getParametro('id_moneda')!=''){
+            $this->objParam->addFiltro("id_moneda =".$this->objParam->getParametro('id_moneda'));
+        }
+
+        if($this->objParam->getParametro('id_moneda_defecto')!='' && $this->objParam->getParametro('id_moneda_defecto') != 0){
+            $this->objParam->addFiltro("id_moneda =".$this->objParam->getParametro('id_moneda_defecto'));
+        }
+
+        if($this->objParam->getParametro('filtrar') == 'si' ){
+            $this->objParam->addFiltro("show_combo = ''si''");
+        }
+
+        if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+            $this->objReporte = new Reporte($this->objParam,$this);
+            $this->res = $this->objReporte->generarReporteListado('MODMoneda','listarMonedaSegunEstacionInter');
+        } else{
+            $this->objFunc=$this->create('MODMoneda');
+
+            $this->res=$this->objFunc->listarMonedaSegunEstacionInter($this->objParam);
+        }
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 			
 }
 

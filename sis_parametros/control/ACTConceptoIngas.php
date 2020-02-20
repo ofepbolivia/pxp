@@ -96,6 +96,10 @@ class ACTConceptoIngas extends ACTbase{
 		 if($this->objParam->getParametro('id_concepto_ingas')!=''){
               $this->objParam->addFiltro("conig.id_concepto_ingas =''".$this->objParam->getParametro('id_concepto_ingas')."''");    
          }
+
+        if($this->objParam->getParametro('id_partida')!=''){
+            $this->objParam->addFiltro("par.id_partida =''".$this->objParam->getParametro('id_partida')."''");
+        }
          
         
         

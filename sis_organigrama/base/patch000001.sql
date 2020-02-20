@@ -783,7 +783,78 @@ ALTER TABLE orga.tfuncionario
   DROP COLUMN id_oficina;
 /*****************************F-SCP-FEA-ORGA-0-18/10/2017*************/
 
+/*****************************I-SCP-FEA-ORGA-0-11/07/2019*************/
+ALTER TABLE orga.tuo_funcionario
+  ADD COLUMN estado_funcional VARCHAR(15);
 
+ALTER TABLE orga.tuo_funcionario
+  ALTER COLUMN estado_funcional SET DEFAULT 'activo'::character varying;
+
+COMMENT ON COLUMN orga.tuo_funcionario.estado_funcional
+IS '(F.E.A)Campo que indica si una asignacion de cargo esta vigente.';
+
+ALTER TABLE orga.tuo_funcionario
+  ADD COLUMN codigo_ruta VARCHAR(50);
+/*****************************F-SCP-FEA-ORGA-0-11/07/2019*************/
+
+/*****************************I-SCP-FEA-ORGA-0-24/07/2019*************/
+ALTER TABLE orga.tfuncionario
+  ADD COLUMN codigo_rc_iva VARCHAR(50);
+
+COMMENT ON COLUMN orga.tfuncionario.codigo_rc_iva
+IS 'codigo relacionado con impuestos nacionales';
+/*****************************F-SCP-FEA-ORGA-0-24/07/2019*************/
+
+/*****************************I-SCP-FEA-ORGA-0-17/10/2019*************/
+CREATE TABLE orga.tmod_estructura_uo (
+  id_mod_estrutura_uo SERIAL,
+  id_uo_padre INTEGER NOT NULL,
+  id_uo_hijo INTEGER NOT NULL,
+  id_uo_padre_old INTEGER,
+  CONSTRAINT tmod_estructura_uo_pkey PRIMARY KEY(id_mod_estrutura_uo)
+) INHERITS (pxp.tbase)
+WITH (oids = false);
+
+/*****************************F-SCP-FEA-ORGA-0-17/10/2019*************/
+
+
+/*****************************I-SCP-FEA-ORGA-0-18/12/2019*************/
+
+ALTER TABLE orga.tfuncionario
+ADD COLUMN id_especialidad_nivel INTEGER;
+
+ALTER TABLE orga.tespecialidad_nivel
+ADD COLUMN abreviatura VARCHAR(5);
+
+/*****************************F-SCP-FEA-ORGA-0-18/12/2019*************/
+
+/*****************************I-SCP-FEA-ORGA-1-18/12/2019*************/
+
+ALTER TABLE orga.tespecialidad_nivel
+ADD COLUMN firma CHAR(2);
+
+COMMENT ON COLUMN orga.tespecialidad_nivel.firma
+IS 'bandera para filtrado.';
+
+/*****************************F-SCP-FEA-ORGA-1-18/12/2019*************/
+
+/*****************************I-SCP-FEA-ORGA-2-18/12/2019*************/
+UPDATE orga.tespecialidad_nivel SET
+nombre = 'Licenciado'
+WHERE id_especialidad_nivel = 1;
+/*****************************F-SCP-FEA-ORGA-2-18/12/2019*************/
+
+/*****************************I-SCP-FEA-ORGA-3-18/12/2019*************/
+UPDATE orga.tespecialidad_nivel SET
+firma = 'si'
+WHERE id_especialidad_nivel in (1,5);
+/*****************************F-SCP-FEA-ORGA-3-18/12/2019*************/
+
+/*****************************I-SCP-FEA-ORGA-4-18/12/2019*************/
+UPDATE orga.tespecialidad_nivel SET
+abreviatura = 'Lic.'
+WHERE id_especialidad_nivel in (1);
+/*****************************F-SCP-FEA-ORGA-4-18/12/2019*************/
 
 
 

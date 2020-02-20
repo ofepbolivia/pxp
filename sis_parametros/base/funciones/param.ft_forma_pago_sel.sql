@@ -15,7 +15,6 @@ $body$
  COMENTARIOS:
 ***************************************************************************
  HISTORIAL DE MODIFICACIONES:
-
  DESCRIPCION:
  AUTOR:
  FECHA:
@@ -57,17 +56,20 @@ BEGIN
                                   fp.id_usuario_reg::integer,
                                   usu1.cuenta::varchar as usr_reg,
                                   usu2.cuenta::varchar as usr_mod,
-                                  fp.id_usuario_mod::integer
-
+                                  fp.id_usuario_mod::integer,
+                                  fp.tipo,
+                                  fp.orden,
+                                  fp.codigo
                           from param.tforma_pago fp
                           inner join segu.tusuario usu1 on usu1.id_usuario = fp.id_usuario_reg
                           left join segu.tusuario usu2 on usu2.id_usuario = fp.id_usuario_mod
-                          where fp.estado_reg = ''activo'' and ';
+                          where fp.estado_reg = ''activo''
+                          and ';
 
 
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
-			--v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
+			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
 
 			--Devuelve la respuesta
 			return v_consulta;
@@ -89,7 +91,8 @@ BEGIN
 					    from param.tforma_pago fp
                           inner join segu.tusuario usu1 on usu1.id_usuario = fp.id_usuario_reg
                           left join segu.tusuario usu2 on usu2.id_usuario = fp.id_usuario_mod
-                          where fp.estado_reg = ''activo'' and ';
+                          where fp.estado_reg = ''activo''
+                          and ';
 
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
@@ -109,7 +112,7 @@ BEGIN
 	elsif(p_transaccion='PM_FORDEPAFI_SEL')then
 
     	begin
-
+		--listado para obligaciones de pago , tipo=Gasto
         	v_estacion = pxp.f_get_variable_global('ESTACION_inicio');
 
             IF v_estacion = 'BOL' THEN
@@ -134,18 +137,19 @@ BEGIN
                                   fp.id_usuario_reg::integer,
                                   usu1.cuenta::varchar as usr_reg,
                                   usu2.cuenta::varchar as usr_mod,
-                                  fp.id_usuario_mod::integer
-
+                                  fp.id_usuario_mod::integer,
+                                  fp.orden,
+                                  fp.codigo
                           from param.tforma_pago fp
                           inner join segu.tusuario usu1 on usu1.id_usuario = fp.id_usuario_reg
                           left join segu.tusuario usu2 on usu2.id_usuario = fp.id_usuario_mod
-                          where  (''' ||v_filtro|| '''=ANY(fp.cod_inter)) and fp.estado_reg = ''activo'' and ';
+                          where  (''' ||v_filtro|| '''=ANY(fp.cod_inter)) and fp.tipo = ''Gasto'' and fp.estado_reg = ''activo''
+                          and ';
 
 
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
-			--v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
-
+			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
 			--Devuelve la respuesta
 			return v_consulta;
 
@@ -179,7 +183,8 @@ BEGIN
 					    from param.tforma_pago fp
                           inner join segu.tusuario usu1 on usu1.id_usuario = fp.id_usuario_reg
                           left join segu.tusuario usu2 on usu2.id_usuario = fp.id_usuario_mod
-                          where  (''' ||v_filtro|| '''=ANY(fp.cod_inter)) and fp.estado_reg = ''activo'' and ';
+                          where  (''' ||v_filtro|| '''=ANY(fp.cod_inter)) and fp.tipo = ''Gasto'' and fp.estado_reg = ''activo''
+                          and ';
 
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
@@ -209,5 +214,4 @@ LANGUAGE 'plpgsql'
 VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
-PARALLEL UNSAFE
 COST 100;

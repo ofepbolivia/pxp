@@ -9,15 +9,40 @@ class RCertificadoHtml{
             $tipo = 'del interesado';
             $gen = 'el';
             $tra = 'trabajor';
-            $tipol = 'al interesado';
+            $tipol = 'al interesado';            
         }else{
             $tipo = 'de la interesada';
             $gen = 'la';
             $tra = 'trabajadora';
             $tipol = 'a la interesada';
+            
         }
 
-        $cadena = 'Numero Tramite: '.$datos['nro_tramite']."\n".'Fecha Solicitud: '.$datos['fecha_solicitud']."\n".'Funcionario: '.$datos['nombre_funcionario']."\n".'Firmado Por: '.$datos['jefa_recursos']."\n".'Emitido Por: '.$datos['fun_imitido'];
+        //$fecha = date("d/m/Y");
+        $fecha = $datos['fecha_solicitud'];        
+        
+        if ($fecha >= '2019-12-18'){
+            $firma_gerente = '../../../sis_organigrama/media/firma_eduardo_degadillo_poepsel.png';
+            $w = 300;
+            $h = 140;
+            $cargo = 'Gerente Administrativo Financiero';  
+            $jefe = $datos['nuevo_jefe']; 
+            $gen_gerente = 'El suscrito';                     
+            $siglas = 'JDP';
+            $firma_responsable = $datos['nuevo_jefe'];
+        }else{
+            $firma_gerente = '../../../sis_organigrama/media/firma.png';
+            $cargo = 'Jefe de Recursos Humanos';
+            $w = 160;
+            $h = 120;
+            $jefe = $datos['jefa_recursos'];
+            $gen_gerente = 'La suscrita';
+            $siglas = 'GAG';
+            $firma_responsable = $datos['jefa_recursos'];
+        }
+        
+
+        $cadena = 'Numero Tramite: '.$datos['nro_tramite']."\n".'Fecha Solicitud: '.$datos['fecha_solicitud']."\n".'Funcionario: '.$datos['nombre_funcionario']."\n".'Firmado Por: '.$firma_responsable."\n".'Emitido Por: '.$datos['fun_imitido'];
         $barcodeobj = new TCPDF2DBarcode($cadena, 'QRCODE,M');
 
 
@@ -50,7 +75,7 @@ class RCertificadoHtml{
 </tr>
 <tr>
 <td >&nbsp;</td>
-<td><p style="text-align: justify"> <FONT FACE="Century Gothic" style="font-size: 12pt;" >La suscrita Lic. '.$datos['jefa_recursos'].' <b>Jefe de Recursos Humanos</b> de la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA", a solicitud '.$tipo.'</FONT></p>
+<td><p style="text-align: justify"> <FONT FACE="Century Gothic" style="font-size: 12pt;" >'.$gen_gerente.' Lic. '.$jefe.' <b>'.$cargo.'</b> de la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA", a solicitud '.$tipo.'</FONT></p>
 </td>
 <td>&nbsp;</td>
 </tr>
@@ -61,7 +86,7 @@ class RCertificadoHtml{
 </tr>
 <tr>
 <td>&nbsp;</td>
-<td><p style="text-align: justify"><FONT FACE="Century Gothic" style="font-size: 12pt;" >Que, de la revisión de la carpeta que cursa en el Área de Recursos Humanos, se evidencia que '.$gen.' <b>'.$datos['genero'].'. '.$datos['nombre_funcionario'].'</b> con C.I. '.$datos['ci'].' '.$datos['expedicion'].', ingresó a la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA"
+<td><p style="text-align: justify"><FONT FACE="Century Gothic" style="font-size: 12pt;" >Que, de la revisión de la carpeta que cursa en el Departamento de Recursos Humanos, se evidencia que '.$gen.' <b>'.$datos['genero'].'. '.$datos['nombre_funcionario'].'</b> con C.I. '.$datos['ci'].' '.$datos['expedicion'].', ingresó a la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA"
          el '.$this->obtenerFechaEnLetra($datos['fecha_contrato']).', y actualmente ejerce el cargo de <b>'.$datos['nombre_cargo'].', con Nº de item '.$datos['nro_item'].'</b>, dependiente de la '.$datos['nombre_unidad'].', con una remuneración mensual de Bs. '.number_format($datos['haber_basico'],2,",",".") .'.- ('.$datos['haber_literal'].' Bolivianos).</FONT></p>
 </td>
 <td>&nbsp;</td>
@@ -79,7 +104,7 @@ class RCertificadoHtml{
 
         $this->html.='<tr>
 <td>&nbsp;</td>
-<td align="justify"><FONT FACE="Century Gothic" style="font-size: 12pt;">Es cuando se certifica, para fines de derecho que convengan '.$tipol.'.<br><br>Cochabamba '.$this->obtenerFechaEnLetra($datos['fecha_solicitud']).'.</FONT>
+<td align="justify"><FONT FACE="Century Gothic" style="font-size: 12pt;">Es cuanto se certifica, para fines de derecho que convengan '.$tipol.'.<br><br>Cochabamba, '.$this->obtenerFechaEnLetra($datos['fecha_solicitud']).'.</FONT>
 </td>
 <td>&nbsp;</td>
 </tr>
@@ -90,8 +115,8 @@ class RCertificadoHtml{
 <tr style="height: 80px;">
 
 <td></td>
-<td align="left"> <img src = "../../../reportes_generados/'.$this->codigoQr ($cadena,$datos['nro_tramite']).'" align= "right " width="90" height="90" title="impreso"/><br><br><FONT FACE="Century Gothic" SIZE=1 >GAG/'.$datos['iniciales'].'<br/>Cc/Arch</FONT></td>
-<td align="center"  ><img src = "../../../sis_organigrama/media/firma.png" align= "right " width="160" height="120" title="impreso"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td align="left"> <img src = "../../../reportes_generados/'.$this->codigoQr ($cadena,$datos['nro_tramite']).'" align= "right " width="90" height="90" title="impreso"/><br><br><FONT FACE="Century Gothic" SIZE=1 >'.$siglas.'/'.$datos['iniciales'].'<br/>Cc/Arch</FONT></td>
+<td align="center"  ><img src = "'.$firma_gerente.'" align= "right " width="'.$w.'" height="'.$h.'" title="impreso"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 </tr>
 <tr style="height: 50px;">
 

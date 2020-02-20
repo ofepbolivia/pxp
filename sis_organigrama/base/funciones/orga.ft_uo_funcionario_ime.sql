@@ -37,8 +37,10 @@ $body$
     v_cargo					record;
     v_id_alarma				integer;
     v_id_gestion			integer;
+	v_data_func				record;
 
-
+	v_contador				integer = 0;
+	v_tipo            varchar;
   BEGIN
 
     v_nombre_funcion:='orga.ft_uo_funcionario_ime';
@@ -58,42 +60,45 @@ $body$
 
         -- verificar si la uo permite multiples asignaciones de funcionario
         --RAC NO ESTA FUNCIOANNDO ESTO DEL CARGO INDIVIDUAL
-        /*if (select count(*)=1
-           from orga.tuo_funcionario where id_uo=v_parametros.id_uo and estado_reg=v_parametros.estado_reg and
-            id_uo=(select id_uo from orga.tuo where  id_uo=v_parametros.id_uo and estado_reg='activo' and cargo_individual='si')) then
+        if (select count(*)=1
+           from orga.tuo_funcionario where id_uo=v_parametros.id_uo and estado_reg='activo' and tipo = 'oficial' and (fecha_finalizacion is null or current_date <= fecha_finalizacion) and
+            id_uo=(select id_uo from orga.tuo where  id_uo=v_parametros.id_uo and estado_reg='activo' and cargo_individual='si') AND v_parametros.tipo = 'oficial') then
                       raise exception 'El cargo es individual y ya existe otro funcionario asignado actualmente';
-        end if;*/
-
-        --verficar que el funcionario no este activo en dos unidades simultaneamente
-
-        /* if ( ((select count(id_funcionario) from
-                    orga.tuo_funcionario  UOF
-                    where     id_funcionario=v_parametros.id_funcionario AND uof.estado_reg='activo' ))>0) then
-
-                    raise exception 'El Funcionario se encuentra en otro cargo vigente primero inactive su asignacion actual';
-         end if;
+        end if;
 
         --insercion de nuevo uo
         if exists (select 1 from orga.tuo_funcionario where id_funcionario=v_parametros.id_funcionario and
-        id_uo=v_parametros.id_uo and estado_reg='activo') then
+        id_uo=v_parametros.id_uo and estado_reg='activo' and tipo = 'oficial' and (fecha_finalizacion > current_date or fecha_finalizacion is null)) AND v_parametros.tipo = 'oficial' then
            raise exception 'Insercion no realizada. El funcionacio ya esta asignado a la unidad';
-        end if;*/
+        end if;
+
+        --verficar que el funcionario no este activo en dos unidades simultaneamente
+		    select count(ouf.id_funcionario)
+        into v_contador
+        from orga.tuo_funcionario  ouf
+        where ouf.id_funcionario=v_parametros.id_funcionario and ouf.estado_reg='activo' and ouf.tipo = 'oficial' and
+        ouf.estado_funcional = 'activo' and (ouf.fecha_finalizacion > current_date or fecha_finalizacion is null);
+
+         if v_contador > 0 AND v_parametros.tipo = 'oficial' then
+			    raise exception 'El Funcionario se encuentra en otro cargo vigente primero inactive su asignacion actual';
+         end if;
+
         v_mail_resp = pxp.f_get_variable_global('orga_mail_resp_cargo_presupuesto');
-        
-        select po_id_gestion from into v_id_gestion 
+
+        select po_id_gestion from into v_id_gestion
         param.f_get_periodo_gestion(v_parametros.fecha_asignacion);
-        
+
         if (v_mail_resp is not null and v_mail_resp != '' ) then
-        	if(not exists (select 1 
+        	if(not exists (select 1
             	from orga.tcargo_presupuesto cp
                 where estado_reg = 'activo' and cp.id_cargo = v_parametros.id_cargo
                 and cp.id_gestion = v_id_gestion) ) then
-                
+
                 select *,tc.codigo as tipo_contrato into v_cargo
                 from orga.tcargo c
                 inner join orga.ttipo_contrato tc on tc.id_tipo_contrato = c.id_tipo_contrato
                 where c.id_cargo = v_parametros.id_cargo;
-                
+
                 if (v_cargo.tipo_contrato in ('PLA','EVE')) then
                 	v_id_alarma = (select param.f_inserta_alarma_dblink (1,'Cargo asignado sin asignacion presupuestaria',
                     		'El cargo ' || v_cargo.nombre || '  con numero de item ' || v_cargo.codigo || ' e identificador ' || v_cargo.id_cargo || ' , no tiene relacion presupuestaria y ha sido asignado a un empleado. Favor realizar la asignacion',
@@ -106,15 +111,32 @@ $body$
           raise exception 'La fecha de finalización no puede ser menor o igual a la fecha de asignación';
         end if;
 
+
+
+        select tuo.id_uo_funcionario, vf.desc_funcionario1 as nombre_func,
+        date_trunc('month',tuo.fecha_asignacion)::date as fecha_ini,
+        (date_trunc('month',tuo.fecha_asignacion) +'1month' ::interval -'1sec' ::interval)::date as fecha_fin
+        into v_data_func
+        from orga.tuo_funcionario tuo
+        inner join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
+        where tuo.id_funcionario = v_parametros.id_funcionario and tuo.id_cargo = v_parametros.id_cargo and tuo.estado_reg = 'activo' and
+        (v_parametros.fecha_asignacion between date_trunc('month',tuo.fecha_asignacion) and date_trunc('month',tuo.fecha_asignacion) +'1month' ::interval -'1sec' ::interval)
+        limit 1;
+
+        if  v_data_func is not null then
+          raise exception 'Estimado Usuario: Ya registro una asignación para el funcionario, % en el intervalo de fechas: de % a % ',v_data_func.nombre_func,
+          to_char(v_data_func.fecha_ini,'dd/mm/yyyy'), to_char(v_data_func.fecha_fin,'dd/mm/yyyy');
+        end if;
+
         INSERT INTO orga.tuo_funcionario
         (	id_uo, 						id_funcionario, 						fecha_asignacion,
            fecha_finalizacion,			id_cargo,								observaciones_finalizacion,
            nro_documento_asignacion,	fecha_documento_asignacion,				id_usuario_reg,
-           tipo)
+           tipo, certificacion_presupuestaria, codigo_ruta, estado_funcional)
         values(		v_parametros.id_uo, 		v_parametros.id_funcionario,			v_parametros.fecha_asignacion,
                    v_parametros.fecha_finalizacion,v_parametros.id_cargo,				v_parametros.observaciones_finalizacion,
                    v_parametros.nro_documento_asignacion,v_parametros.fecha_documento_asignacion,par_id_usuario,
-                   v_parametros.tipo)
+                   v_parametros.tipo, v_parametros.certificacion_presupuestaria, v_parametros.codigo_ruta, v_parametros.estado_funcional)
         RETURNING id_uo_funcionario INTO v_id_uo_funcionario;
 
 
@@ -153,15 +175,22 @@ $body$
 
         --verficar que el funcionario no este activo en dos unidades simultaneamente
         --raise exception '%    %',v_parametros.id_funcionario,v_parametros.id_uo;
-        if ( ((select count(id_funcionario) from
+        /*if ( ((select count(id_funcionario) from
           orga.tuo_funcionario  a
         where a.id_funcionario=v_parametros.id_funcionario
               and a.estado_reg = 'activo' and
               a.fecha_finalizacion > v_parametros.fecha_asignacion
               and a.id_uo != v_parametros.id_uo))>0) then
 
-          raise exception 'El Funcionario se encuentra en otro cargo vigente primero inactive su asignacion actual';
-        end if;
+          select tuo.tipo
+          into v_tipo
+          from orga.tuo_funcionario tuo
+          where tuo.id_uo_funcionario = v_parametros.id_uo_funcionario;
+
+          if v_tipo = 'oficial' then
+			      raise exception 'El Funcionario se encuentra en otro cargo vigente primero inactive su asignacion actual';
+          end if;
+        end if;*/
 
 
 
@@ -177,7 +206,11 @@ $body$
           observaciones_finalizacion = v_parametros.observaciones_finalizacion,
           nro_documento_asignacion = v_parametros.nro_documento_asignacion,
           fecha_documento_asignacion = v_parametros.fecha_documento_asignacion,
-          fecha_finalizacion = v_parametros.fecha_finalizacion
+          fecha_finalizacion = v_parametros.fecha_finalizacion,
+          certificacion_presupuestaria = v_parametros.certificacion_presupuestaria,
+          codigo_ruta = v_parametros.codigo_ruta,
+          estado_funcional = v_parametros.estado_funcional,
+          fecha_asignacion = v_parametros.fecha_asignacion
         where id_uo=v_parametros.id_uo
               and id_uo_funcionario=v_parametros.id_uo_funcionario;
 

@@ -119,9 +119,9 @@ header("content-type: text/javascript; charset=UTF-8");
         },
     cmbGestion : new Ext.form.ComboBox({
         name:'gestion',
-        store:['2019','2018','2017','2016','2015','2014','2013','2012','2011','2010','2009','2008','2007','2006','2005','2004'],
+        store:['2020', '2019','2018','2017','2016','2015','2014','2013','2012','2011','2010','2009','2008','2007','2006','2005','2004'],
         typeAhead: true,
-        value: '2019',
+        value: '2020',
         mode: 'local',
         triggerAction: 'all',
         emptyText:'Géstion...',

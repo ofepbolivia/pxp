@@ -514,6 +514,9 @@ Ext.namespace('Phx','Phx.vista');
 Phx.CP=function(){
     var menu,hd,mainPanel,win_login,form_login,sw_auten=false,sw_auten_veri=false,estilo_vista;
     // para el filtro del menu
+    var host=localStorage.getItem("host");
+
+
     var filter,hiddenPkgs=[];
     var contNodo = 0;
     if (typeof window.localStorage != "undefined") {
@@ -588,6 +591,10 @@ Phx.CP=function(){
                 }
             }
         },
+        setHost:function(host_){
+            localStorage.setItem("host", host_);
+        },
+
 
         // funcion que se ejcuta despues de una autentificacion exitosa
         // para dibujar los paneles de menu y mainpanel
@@ -900,7 +907,8 @@ Phx.CP=function(){
                         var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
                         var _im ='../../../lib/imagenes/NoPerfilImage.jpg';
                         if(reg.datos[0].extension){
-                            _im ='../../../sis_seguridad/control/foto_persona/'+reg.datos[0].foto;
+                            _im='../../../../../uploaded_files/sis_parametros/Archivo/'+reg.datos[0].nombre_archivo+'.'+reg.datos[0].extension;
+                            //_im ='../../../sis_seguridad/control/foto_persona/'+reg.datos[0].foto;
                         }
                         Ext.Element.get('2rn').update('<img src="'+_im+'" align="center" width="35" height="35"  style="margin-left:5px;margin-top:1px;margin-bottom:1px"/> ');
 
@@ -953,10 +961,35 @@ Phx.CP=function(){
                     iconCls: 'x-status-valid'
                 })
             });
+            var title_;
+                 Ext.Ajax.request({
+                url:'../../sis_seguridad/control/Auten/getSesionHost',
+                params: {tipo:'prueba'},
+                success: function(resp){
+                            var resp_=Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+                            console.log('datos',resp);
+                            //host_=resp_.host;
+                            Phx.CP.setHost(resp_.host);
 
+                        },
+                failure: Phx.CP.conexionFailure
+            });
+
+            if (host == "172.17.58.34"){
+                title_= 'ERP BOA 2';
+            }
+            else if(host == "172.17.97.132"){
+                title_= 'ERP BOA - BUE';
+
+            }
+            else{
+                title_= 'ERP BOA 2';
+            }
+            //alert(host);
             // ventana para el login
-            win_login = new Ext.Window({
-                title: 'PXP',
+           win_login = new Ext.Window({
+                //title: 'ERP BOA 2',
+                title: title_,
                 modal:true,
                 width:320,
                 height:180,
@@ -1816,9 +1849,18 @@ Phx.CP=function(){
             habilitado:'no',
             iniciarWebSocket : function () {
 
-
                 var hostname = window.location.hostname;
-                Phx.CP.webSocket.conn = new WebSocket('ws://'+hostname+':'+Phx.CP.config_ini.puerto_websocket+'?sessionIDPXP='+Ext.util.Cookies.get('PHPSESSID'));
+                var protocol = window.location.protocol;
+                var ws;
+                var folder;
+                if(protocol === 'http:'){
+                    ws = 'ws';
+                    folder = '';
+                }else{
+                    ws = 'wss';
+                    folder = '/wss/kerp';
+                }
+                Phx.CP.webSocket.conn = new WebSocket(ws+'://'+hostname+folder+':'+Phx.CP.config_ini.puerto_websocket+'?sessionIDPXP='+Ext.util.Cookies.get('PHPSESSID'));
                 console.log(Phx.CP.webSocket.conn);
                 Phx.CP.webSocket.conn.onopen = function (e) {
                     console.log(e)

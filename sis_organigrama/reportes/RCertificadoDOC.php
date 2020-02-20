@@ -24,16 +24,33 @@ Class RCertificadoDOC {
             $tra = 'trabajadora';
         }
 
+        //$fecha = date("d/m/Y");
+        $fecha = $this->dataSource[0]['fecha_solicitud'];
+        
         if(($this->dataSource[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses') ||
 		($this->dataSource[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses(Factura)')){
-            $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(dirname(__FILE__).'/cer_viatico.docx');
+            if ($fecha >= '2019-12-18'){
+                $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(dirname(__FILE__).'/cer_viatico_gen.docx');
+                $firma_resonsable = $this->dataSource[0]['nuevo_jefe'];
+            }else{
+                $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(dirname(__FILE__).'/cer_viatico.docx');
+                $firma_resonsable = $this->dataSource[0]['jefa_recursos'];
+            }            
+            
         }else{
-            $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(dirname(__FILE__).'/cer_general.docx');
+            if ($fecha >= '2019-12-18'){
+                $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(dirname(__FILE__).'/cer_general_gen.docx');
+                $firma_resonsable = $this->dataSource[0]['nuevo_jefe'];
+            }else{
+                $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor(dirname(__FILE__).'/cer_general.docx');
+                $firma_resonsable = $this->dataSource[0]['jefa_recursos'];
+            }
+            
         }
-
-
-        setlocale(LC_ALL,"es_ES@euro","es_ES","esp");
+        
+        setlocale(LC_ALL,"es_ES@euro","es_ES","esp");        
         $templateProcessor->setValue('JEFA_RECURSOS', $this->dataSource[0]['jefa_recursos']);
+        $templateProcessor->setValue('NUEVO_JEFE', $this->dataSource[0]['nuevo_jefe']);
         $templateProcessor->setValue('INTERESADO', $tipo);
         $templateProcessor->setValue('LA', $gen);
         $templateProcessor->setValue('INTERESADA', $tipol);
@@ -47,7 +64,7 @@ Class RCertificadoDOC {
         $templateProcessor->setValue('MONTO', number_format($this->dataSource[0]['haber_basico'],2,",","."));
         $templateProcessor->setValue('INICIALES', $this->dataSource[0]['iniciales']);
         $templateProcessor->setValue('LITERAL', $this->dataSource[0]['haber_literal']);
-        $templateProcessor->setValue('FECHA_SOLICITUD', $this->obtenerFechaEnLetra($this->dataSource[0]['fecha_solicitud']));
+        $templateProcessor->setValue('FECHA_SOLICITUD', $this->obtenerFechaEnLetra($this->dataSource[0]['fecha_solicitud']));        
         if(($this->dataSource[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses') ||
 		($this->dataSource[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses(Factura)')){
             $templateProcessor->setValue('TRABAJADORA', $tra);
@@ -55,7 +72,7 @@ Class RCertificadoDOC {
             $templateProcessor->setValue('VIATICO_LITERAL', $this->dataSource[0]['literal_importe_viatico']);
 
         }
-        $cadena = 'Numero Tramite: '.$this->dataSource[0]['nro_tramite']."\n".'Fecha Solicitud: '.$this->dataSource[0]['fecha_solicitud']."\n".'Funcionario: '.$this->dataSource[0]['nombre_funcionario']."\n".'Firmado Por: '.$this->dataSource[0]['jefa_recursos']."\n".'Emitido Por: '.$this->dataSource[0]['fun_imitido'];
+        $cadena = 'Numero Tramite: '.$this->dataSource[0]['nro_tramite']."\n".'Fecha Solicitud: '.$this->dataSource[0]['fecha_solicitud']."\n".'Funcionario: '.$this->dataSource[0]['nombre_funcionario']."\n".'Firmado Por: '.$firma_resonsable."\n".'Emitido Por: '.$this->dataSource[0]['fun_imitido'];
         if($this->dataSource[0]['estado'] == 'emitido') {
             $templateProcessor->setImg('QR', array('src' => $this->codigoQr($cadena, $this->dataSource[0]['nro_tramite']), 'swh' => '90'));
         }else{

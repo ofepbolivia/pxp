@@ -275,7 +275,7 @@ BEGIN
     /*********************************    
     #TRANSACCION:  'WF_TABLAINS_UPD'
     #DESCRIPCION:   Modificacion de registros en tabla autogenerada del workflow
-    #AUTOR:     admin   
+    #AUTOR:     admin   mod Alan Felipez
     #FECHA:     07-05-2014 21:39:40
     ***********************************/
 
@@ -285,28 +285,33 @@ BEGIN
 
             select lower(s.codigo) as esquema, t.*
             into v_tabla
-            from wf.ttabla t 
+            from wf.ttabla t
             inner join wf.ttipo_proceso tp on t.id_tipo_proceso = tp.id_tipo_proceso
             inner join wf.tproceso_macro pm on pm.id_proceso_macro = tp.id_proceso_macro
             inner join segu.tsubsistema s on pm.id_subsistema = s.id_subsistema
             where t.id_tabla = json_extract_path_text(v_parametros,'id_tabla')::integer;
-            
-            v_query = ' update ' || v_tabla.esquema || '.t' || v_tabla.bd_nombre_tabla || ' set 
+
+
+
+            v_query = ' update ' || v_tabla.esquema || '.t' || v_tabla.bd_nombre_tabla || ' set
                         id_usuario_mod = ' || p_id_usuario || ',
                         fecha_mod = ''' || now()::date  || '''';
-                        
-            
-            v_values = ''; 
+
+
+            v_values = '';
             for v_columnas in ( select tc.* from wf.ttipo_columna tc
                                 inner join wf.tcolumna_estado ce on ce.id_tipo_columna = tc.id_tipo_columna and ce.momento in ('registrar', 'exigir')
                                 inner join wf.ttipo_estado te on ce.id_tipo_estado = te.id_tipo_estado
                                 where id_tabla = json_extract_path_text(v_parametros,'id_tabla')::integer and tc.estado_reg = 'activo' and ce.estado_reg = 'activo'
                                 and te.codigo = json_extract_path_text(v_parametros,'tipo_estado')::varchar) loop
-                
+            	if v_tabla.bd_nombre_tabla = 'contrato' and v_columnas.bd_nombre_columna::varchar='numero' THEN
+                perform leg.f_verificar_numero_contrato(v_tabla.bd_nombre_tabla::varchar,json_extract_path_text(v_parametros,'numero')::varchar,json_extract_path_text(v_parametros,'id_' ||v_tabla.bd_nombre_tabla)::INTEGER,'modificar');
+                end if;
+
                 if (v_columnas.bd_tipo_columna in ('integer', 'bigint', 'boolean', 'numeric')) then
                     v_values = v_values || ',' ||v_columnas.bd_nombre_columna || '=' || coalesce (json_extract_path_text(v_parametros,v_columnas.bd_nombre_columna),'NULL');
-                elsif (v_columnas.bd_tipo_columna in ('integer[]', 'bigint[]', 'numeric[]','varchar[]')) then                   
-                    
+                elsif (v_columnas.bd_tipo_columna in ('integer[]', 'bigint[]', 'numeric[]','varchar[]')) then
+
                     v_cadena = 'array[' || coalesce (json_extract_path_text(v_parametros,v_columnas.bd_nombre_columna),'NULL')||']';
                     /*if (v_columnas.bd_nombre_columna = 'id_orden_trabajo') then
                     	raise exception 'llega%',v_cadena;
@@ -316,25 +321,26 @@ BEGIN
                     else
                         v_values = v_values || ',' ||v_columnas.bd_nombre_columna || '=' || v_cadena;
                     end if;
-                    
-                else                    
-                    v_values = v_values || ',' ||v_columnas.bd_nombre_columna || '=' || coalesce ('''' || json_extract_path_text(v_parametros,v_columnas.bd_nombre_columna) || '''','NULL');                    
-                end if;                 
+
+                else
+                    v_values = v_values || ',' ||v_columnas.bd_nombre_columna || '=' || coalesce ('''' || json_extract_path_text(v_parametros,v_columnas.bd_nombre_columna) || '''','NULL');
+                end if;
                 --raise notice 'A: %',v_values;
             end loop;
-            
-            v_query = v_query || v_values|| ' where id_' || v_tabla.bd_nombre_tabla || '=' || json_extract_path_text(v_parametros,'id_' ||v_tabla.bd_nombre_tabla);         
+
+            v_query = v_query || v_values|| ' where id_' || v_tabla.bd_nombre_tabla || '=' || json_extract_path_text(v_parametros,'id_' ||v_tabla.bd_nombre_tabla);
 
             execute (v_query);
-               
+
             --Definicion de la respuesta
-            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Tabla modificado(a)'); 
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Tabla modificado(a)');
             v_resp = pxp.f_agrega_clave(v_resp,'id_' ||v_tabla.bd_nombre_tabla,json_extract_path_text(v_parametros,'id_' ||v_tabla.bd_nombre_tabla)::varchar);
-               
+
             --Devuelve la respuesta
             return v_resp;
-            
+
         end;
+
 
     /*********************************    
     #TRANSACCION:  'WF_TABLAINS_ELI'

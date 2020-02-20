@@ -33,110 +33,60 @@ DECLARE
 	v_tipo_movimiento		varchar = '';
     v_complemento			varchar = '';
     v_titulo_correo			varchar = '';
+    v_cont_reg				integer = 0;
 BEGIN
-	v_nombre_funcion = 'orga.f_registra_movimiento_asignacion';
-	for v_record in select tuo.id_funcionario, tuo.id_cargo, tuo.id_uo, tuo.fecha_asignacion, tuo.fecha_finalizacion, tcon.codigo, tcon.nombre
+	v_nombre_funcion = 'orga.f_tr_registra_movimiento_asignacion';
+	for v_record in select tuo.id_funcionario, tuo.id_cargo, tuo.id_uo, tuo.fecha_asignacion, tuo.fecha_finalizacion, tcon.codigo, tcon.nombre, vf.desc_funcionario1 as nombre_emp,
+	                       tc.nombre as nombre_cargo, tuo.tipo
     				from orga.tuo_funcionario tuo
+                    inner join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
                     inner join orga.tcargo tc on tc.id_cargo = tuo.id_cargo
                     inner join orga.ttipo_contrato tcon on tcon.id_tipo_contrato = tc.id_tipo_contrato
     				where tuo.fecha_reg::date = current_date loop
 
-        SELECT tuo.fecha_finalizacion
-        into v_fechas_fin
-        FROM orga.tfuncionario func
-        inner join orga.tuo_funcionario tuo on tuo.id_funcionario = func.id_funcionario
-        WHERE func.id_funcionario = v_record.id_funcionario and (tuo.fecha_finalizacion between (date_trunc('month',v_record.fecha_asignacion::date) - interval '1 month')::date and (date_trunc('month', v_record.fecha_asignacion::date) - interval '1 day')::date);
+        select count(tal.id_alarma)
+        into v_cont_reg
+        from param.talarma tal
+        where tal.titulo = v_record.nombre_emp and tal.fecha = current_date;
+        --verifica si no ha sido registrado alarma para la asignacion
+        if v_cont_reg = 0 then
+          SELECT tuo.fecha_finalizacion
+          into v_fechas_fin
+          FROM orga.tfuncionario func
+          inner join orga.tuo_funcionario tuo on tuo.id_funcionario = func.id_funcionario
+          WHERE func.id_funcionario = v_record.id_funcionario and (tuo.fecha_finalizacion between (date_trunc('month',v_record.fecha_asignacion::date) - interval '1 month')::date and (date_trunc('month', v_record.fecha_asignacion::date) - interval '1 day')::date);
 
-        if v_fechas_fin is not null then
-        	v_tipo_movimiento = 'RENOVACIÓN';
-            v_complemento = ' indicarle que se realizó un movimiento ';
-        	v_titulo_correo = 'Renovación Contrato';
-        else
-        	v_tipo_movimiento = 'ALTA';
-            v_complemento = ' solicitar cuenta de correo ';
-            v_titulo_correo = 'Alta Cuenta de Correo';
-        end if;
-        --raise exception 'llega: %',v_record.id_funcionario;
-        if v_record.codigo in ('PLA', 'EVE', 'CONS', 'PEXTE', 'PEXT') then
-
-          select tf.desc_funcionario1, tfu.email_empresa
-          into v_rec_funcionario
-          from orga.vfuncionario tf
-          inner join orga.tfuncionario tfu on tfu.id_funcionario = tf.id_funcionario
-          where tf.id_funcionario = v_record.id_funcionario;
-
-          --if v_rec_funcionario.email_empresa = '' or v_rec_funcionario.email_empresa is null  then
-
-          v_hora_saludo = case when current_time between '08:00:00'::time and '12:00:00'::time then '<b>Buenos dias' ::varchar
-                               when current_time between '12:00:00'::time and '23:00:00'::time then '<b>Buenas tardes'::varchar end;
-
-            v_plantilla = v_hora_saludo||' estimado Administrador:</b><br>
-              <p>El motivo del presente es '||v_complemento||' para el funcionario <b>'||coalesce(v_rec_funcionario.desc_funcionario1, 'Comunicarse con Franklin Espinoza')||'</b>:<br>
-              <b>Tipo de Contrato:</b> '||coalesce(v_record.nombre,'Por Definirse')||'<br>
-              <b>Tipo Movimiento:</b> '||coalesce(v_tipo_movimiento,'Por Definirse')||'<br>
-              <b>Fecha Asignación:</b> '||coalesce(to_char(v_record.fecha_asignacion, 'dd/mm/yyyy'),'')||'<br>
-              <b>Fecha Finalización:</b> '||coalesce(to_char(v_record.fecha_finalizacion, 'dd/mm/yyyy'),'N/E')||'<br>
-              <b>Correo Empresarial:</b> '||coalesce(v_rec_funcionario.email_empresa,'Por Definirse')||'
-              </p>';
-
-            v_id_alarma :=  param.f_inserta_alarma(
-                                                null,
-                                                v_plantilla,
-                                                '../../../sis_organigrama/vista/reporte/CorreosEmpBoa.php',
-                                                now()::date,
-                                                'notificacion',
-                                                'Ninguna',
-                                                1,
-                                                'CorreosEmpBoa',
-                                                v_rec_funcionario.desc_funcionario1,--titulo
-                                                '{filtro_directo:{campo:"id_funcionario",valor:"'||v_record.id_funcionario::varchar||'"}}',
-                                                NULL::integer,
-                                                v_titulo_correo,
-                                                'correos@boa.bo,[franklin.espinoza@boa.bo;gvelasquez@boa.bo]',
-                                                null,
-                                                null
-                                                );
-
-    	end if;
-    end loop;
-
-    if current_date = ((date_trunc('month', current_date)  + interval '1 month') - interval '1 day')::date then
-      for v_record_fin in select tuo.id_funcionario, tuo.id_cargo, tuo.id_uo, tuo.fecha_asignacion, tuo.fecha_finalizacion, tcon.codigo, tcon.nombre
-                          from orga.tuo_funcionario tuo
-                          inner join orga.tcargo tc on tc.id_cargo = tuo.id_cargo
-                          inner join orga.ttipo_contrato tcon on tcon.id_tipo_contrato = tc.id_tipo_contrato
-                          where tuo.fecha_finalizacion between date_trunc('month', current_date)::date and current_date loop
-
-      	SELECT tuo.fecha_finalizacion
-        into v_fechas_fin
-        FROM orga.tfuncionario func
-        inner join orga.tuo_funcionario tuo on tuo.id_funcionario = func.id_funcionario
-        WHERE func.id_funcionario = v_record_fin.id_funcionario and (tuo.fecha_asignacion between (current_date + interval '1 day')::date and ((date_trunc('month',current_date + interval '2 month')) - interval '1 day')::date);
-
-        if v_fechas_fin is null or v_fechas_fin = '' then
-
-          v_tipo_movimiento = 'BAJA';
-          v_complemento = ' indicarle que se realizó un movimiento ';
-
-          if v_record_fin.codigo in ('PLA', 'EVE', 'CONS', 'PEXTE', 'PEXT') then
+          if v_fechas_fin is not null then
+              v_tipo_movimiento = 'RENOVACIÓN';
+              v_complemento = ' indicarle que se realizó un movimiento ';
+              v_titulo_correo = 'Renovación Contrato';
+          else
+              v_tipo_movimiento = 'ALTA';
+              v_complemento = ' solicitar cuenta de correo ';
+              v_titulo_correo = 'Alta Cuenta de Correo';
+          end if;
+          --raise exception 'llega: %',v_record.id_funcionario;
+          if v_record.codigo in ('PLA', 'EVE', 'CONS', 'PEXTE', 'PEXT') then
 
             select tf.desc_funcionario1, tfu.email_empresa
             into v_rec_funcionario
             from orga.vfuncionario tf
             inner join orga.tfuncionario tfu on tfu.id_funcionario = tf.id_funcionario
-            where tf.id_funcionario = v_record_fin.id_funcionario;
+            where tf.id_funcionario = v_record.id_funcionario;
 
             --if v_rec_funcionario.email_empresa = '' or v_rec_funcionario.email_empresa is null  then
 
             v_hora_saludo = case when current_time between '08:00:00'::time and '12:00:00'::time then '<b>Buenos dias' ::varchar
-                                 when current_time between '12:00:00'::time and '19:00:00'::time then '<b>Buenas tardes'::varchar end;
+                                 when current_time between '12:00:00'::time and '23:00:00'::time then '<b>Buenas tardes'::varchar end;
 
               v_plantilla = v_hora_saludo||' estimado Administrador:</b><br>
-                <p>El motivo del presente es '||v_complemento||' para el funcionario <b>'||coalesce(v_rec_funcionario.desc_funcionario1, 'Comunicarse con Franklin Espinoza')||'</b>.<br>
-                <b>Tipo de Contrato:</b> '||coalesce(v_record_fin.nombre,'Por Definirse')||'<br>
+                <p>El motivo del presente es '||v_complemento||' para el funcionario <b>'||coalesce(v_rec_funcionario.desc_funcionario1, 'Comunicarse con Franklin Espinoza')||'</b>:<br>
+                <b>Cargo:</b> '||coalesce(v_record.nombre_cargo,'Por Definirse')||'<br>
+                <b>Tipo Asignación:</b> '||coalesce(upper(v_record.tipo),'Por Definirse')||'<br>
+                <b>Tipo de Contrato:</b> '||coalesce(v_record.nombre,'Por Definirse')||'<br>
                 <b>Tipo Movimiento:</b> '||coalesce(v_tipo_movimiento,'Por Definirse')||'<br>
-                <b>Fecha Asignación:</b> '||coalesce(to_char(v_record_fin.fecha_asignacion, 'dd/mm/yyyy'),'')||'<br>
-                <b>Fecha Finalización:</b> '||coalesce(to_char(v_record_fin.fecha_finalizacion, 'dd/mm/yyyy'),'N/E')||'<br>
+                <b>Fecha Asignación:</b> '||coalesce(to_char(v_record.fecha_asignacion, 'dd/mm/yyyy'),'')||'<br>
+                <b>Fecha Finalización:</b> '||coalesce(to_char(v_record.fecha_finalizacion, 'dd/mm/yyyy'),'N/E')||'<br>
                 <b>Correo Empresarial:</b> '||coalesce(v_rec_funcionario.email_empresa,'Por Definirse')||'
                 </p>';
 
@@ -146,20 +96,91 @@ BEGIN
                                                   '../../../sis_organigrama/vista/reporte/CorreosEmpBoa.php',
                                                   now()::date,
                                                   'notificacion',
-                                                  'Ninguna',
+                                                  v_record.nombre,--'Ninguna',
                                                   1,
                                                   'CorreosEmpBoa',
                                                   v_rec_funcionario.desc_funcionario1,--titulo
-                                                  '{filtro_directo:{campo:"id_funcionario",valor:"'||v_record_fin.id_funcionario::varchar||'"}}',
+                                                  '{filtro_directo:{campo:"id_funcionario",valor:"'||v_record.id_funcionario::varchar||'"}}',
                                                   NULL::integer,
-                                                  'Baja Cuenta de Correo',
+                                                  v_titulo_correo,
                                                   'correos@boa.bo,[franklin.espinoza@boa.bo;gvelasquez@boa.bo]',
                                                   null,
                                                   null
                                                   );
 
           end if;
-      	end if;
+        end if;
+    end loop;
+
+    if current_date = ((date_trunc('month', current_date)  + interval '1 month') - interval '1 day')::date then
+      for v_record_fin in select tuo.id_funcionario, tuo.id_cargo, tuo.id_uo, tuo.fecha_asignacion, tuo.fecha_finalizacion, tcon.codigo, tcon.nombre, vf.desc_funcionario1 as nombre_emp
+                          from orga.tuo_funcionario tuo
+                          inner join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
+                          inner join orga.tcargo tc on tc.id_cargo = tuo.id_cargo
+                          inner join orga.ttipo_contrato tcon on tcon.id_tipo_contrato = tc.id_tipo_contrato
+                          where tuo.fecha_finalizacion between date_trunc('month', current_date)::date and current_date loop
+        select count(tal.id_alarma)
+        into v_cont_reg
+        from param.talarma tal
+        where tal.titulo = v_record_fin.nombre_emp and tal.fecha = current_date;
+
+        if v_cont_reg = 0 then
+
+          SELECT tuo.fecha_finalizacion
+          into v_fechas_fin
+          FROM orga.tfuncionario func
+          inner join orga.tuo_funcionario tuo on tuo.id_funcionario = func.id_funcionario
+          WHERE func.id_funcionario = v_record_fin.id_funcionario and (tuo.fecha_asignacion between (current_date + interval '1 day')::date and ((date_trunc('month',current_date + interval '2 month')) - interval '1 day')::date);
+
+          if v_fechas_fin is null then
+
+            v_tipo_movimiento = 'BAJA';
+            v_complemento = ' indicarle que se realizó un movimiento ';
+
+            if v_record_fin.codigo in ('PLA', 'EVE', 'CONS', 'PEXTE', 'PEXT') then
+
+              select tf.desc_funcionario1, tfu.email_empresa
+              into v_rec_funcionario
+              from orga.vfuncionario tf
+              inner join orga.tfuncionario tfu on tfu.id_funcionario = tf.id_funcionario
+              where tf.id_funcionario = v_record_fin.id_funcionario;
+
+              --if v_rec_funcionario.email_empresa = '' or v_rec_funcionario.email_empresa is null  then
+
+              v_hora_saludo = case when current_time between '08:00:00'::time and '12:00:00'::time then '<b>Buenos dias' ::varchar
+                                   when current_time between '12:00:00'::time and '19:00:00'::time then '<b>Buenas tardes'::varchar end;
+
+                v_plantilla = v_hora_saludo||' estimado Administrador:</b><br>
+                  <p>El motivo del presente es '||v_complemento||' para el funcionario <b>'||coalesce(v_rec_funcionario.desc_funcionario1, 'Comunicarse con Franklin Espinoza')||'</b>:<br>
+                  <b>Cargo:</b> '||coalesce(v_record.nombre_cargo,'Por Definirse')||'<br>
+                  <b>Tipo Asignación:</b> '||coalesce(upper(v_record.tipo),'Por Definirse')||'<br>
+                  <b>Tipo de Contrato:</b> '||coalesce(v_record_fin.nombre,'Por Definirse')||'<br>
+                  <b>Tipo Movimiento:</b> '||coalesce(v_tipo_movimiento,'Por Definirse')||'<br>
+                  <b>Fecha Asignación:</b> '||coalesce(to_char(v_record_fin.fecha_asignacion, 'dd/mm/yyyy'),'')||'<br>
+                  <b>Fecha Finalización:</b> '||coalesce(to_char(v_record_fin.fecha_finalizacion, 'dd/mm/yyyy'),'N/E')||'<br>
+                  <b>Correo Empresarial:</b> '||coalesce(v_rec_funcionario.email_empresa,'Por Definirse')||'
+                  </p>';
+
+                v_id_alarma :=  param.f_inserta_alarma(
+                                                    null,
+                                                    v_plantilla,
+                                                    '../../../sis_organigrama/vista/reporte/CorreosEmpBoa.php',
+                                                    now()::date,
+                                                    'notificacion',
+                                                    v_record_fin.nombre,--'Ninguna',
+                                                    1,
+                                                    'CorreosEmpBoa',
+                                                    v_rec_funcionario.desc_funcionario1,--titulo
+                                                    '{filtro_directo:{campo:"id_funcionario",valor:"'||v_record_fin.id_funcionario::varchar||'"}}',
+                                                    NULL::integer,
+                                                    'Baja Cuenta de Correo',
+                                                    'correos@boa.bo,[franklin.espinoza@boa.bo;gvelasquez@boa.bo]',
+                                                    null,
+                                                    null
+                                                    );
+            end if;
+          end if;
+        end if;
       end loop;
     end if;
 

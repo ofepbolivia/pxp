@@ -577,3 +577,10 @@ select pxp.f_insert_testructura_gui ('PLACE', 'PROCRH');
 select pxp.f_insert_testructura_gui ('CEE', 'PROCRH');
 /*****************************F-DAT-MMV-ORGA-0-12/10/2017*************/
 
+
+/*****************************I-DAT-FEA-ORGA-0-18/12/2019*************/
+INSERT INTO orga.tespecialidad_nivel ("id_usuario_reg", "id_usuario_mod", "fecha_reg", "fecha_mod", "estado_reg", "id_usuario_ai", "usuario_ai", "id_especialidad_nivel", "codigo", "nombre", "abreviatura")
+VALUES (612, NULL, E'2019-12-18 17:07:34', E'2019-12-18 17:07:34', E'activo', NULL, NULL, 5, E'ING', E'Ingeniero', E'Ing.');
+/*****************************F-DAT-FEA-ORGA-0-18/12/2019*************/
+
+

@@ -22,7 +22,7 @@ class MODFuncionario extends MODbase{
         $this->setParametro('tipo','tipo','varchar');
         $this->setParametro('fecha','fecha','date');
         $this->setParametro('id_uo','id_uo','integer');
-        //$this->setParametro('estado_func','estado_func','varchar');
+        $this->setParametro('estado_func','estado_func','varchar');
         //Definicion de la lista del resultado del query
 
         //defino varialbes que se captran como retornod e la funcion
@@ -74,7 +74,10 @@ class MODFuncionario extends MODbase{
         $this->captura('nombre_cargo','varchar');
         $this->captura('nombre_oficina','varchar');
         $this->captura('nombre_lugar_ofi','varchar');
-        //$this->captura('oficina_pais','varchar');
+        $this->captura('codigo_rc_iva','varchar');
+        $this->captura('id_tipo_doc_identificacion','integer');
+        $this->captura('id_especialidad_nivel','integer');
+        $this->captura('desc_titulo','varchar');
 
 
         //Ejecuta la funcion
@@ -279,8 +282,8 @@ class MODFuncionario extends MODbase{
         $this->setParametro('estado_reg','estado_reg','varchar');
         $this->setParametro('fecha_ingreso','fecha_ingreso','date');
         $this->setParametro('email_empresa','email_empresa','varchar');
-        $this->setParametro('interno','interno','varchar');
-        $this->setParametro('telefono_ofi','telefono_ofi','varchar');
+        //$this->setParametro('interno','interno','varchar');
+        //$this->setParametro('telefono_ofi','telefono_ofi','varchar');
         $this->setParametro('antiguedad_anterior','antiguedad_anterior','integer');
 
         $this->setParametro('estado_civil','estado_civil','varchar');
@@ -302,9 +305,12 @@ class MODFuncionario extends MODbase{
         $this->setParametro('telefono2','telefono2','varchar');
         $this->setParametro('celular2','celular2','varchar');
 
-        $this->setParametro('tipo_documento','tipo_documento','varchar');
+        //$this->setParametro('tipo_documento','tipo_documento','varchar');
         $this->setParametro('expedicion','expedicion','varchar');
         $this->setParametro('direccion','direccion','varchar');
+        $this->setParametro('codigo_rc_iva','codigo_rc_iva','varchar');
+        $this->setParametro('id_tipo_doc_identificacion','id_tipo_doc_identificacion','integer');
+        $this->setParametro('id_especialidad_nivel','id_especialidad_nivel','integer');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -331,8 +337,8 @@ class MODFuncionario extends MODbase{
         $this->setParametro('estado_reg','estado_reg','varchar');
         $this->setParametro('fecha_ingreso','fecha_ingreso','date');
         $this->setParametro('email_empresa','email_empresa','varchar');
-        $this->setParametro('interno','interno','varchar');
-        $this->setParametro('telefono_ofi','telefono_ofi','varchar');
+        //$this->setParametro('interno','interno','varchar');
+        //$this->setParametro('telefono_ofi','telefono_ofi','varchar');
         $this->setParametro('antiguedad_anterior','antiguedad_anterior','integer');
 
         $this->setParametro('estado_civil','estado_civil','varchar');
@@ -354,11 +360,14 @@ class MODFuncionario extends MODbase{
         $this->setParametro('telefono2','telefono2','varchar');
         $this->setParametro('celular2','celular2','varchar');
 
-        $this->setParametro('tipo_documento','tipo_documento','varchar');
+        //$this->setParametro('tipo_documento','tipo_documento','varchar');
         $this->setParametro('expedicion','expedicion','varchar');
         $this->setParametro('direccion','direccion','varchar');
 
         $this->setParametro('estado_correo','estado_correo','varchar');
+        $this->setParametro('codigo_rc_iva','codigo_rc_iva','varchar');
+        $this->setParametro('id_tipo_doc_identificacion','id_tipo_doc_identificacion','integer');
+        $this->setParametro('id_especialidad_nivel','id_especialidad_nivel','integer');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -404,6 +413,9 @@ class MODFuncionario extends MODbase{
         $this->transaccion='ORGA_FUN_DOC_SEL';
         $this->tipo_procedimiento='SEL';//tipo de transaccion
 
+        $this->setParametro('id_uo','id_uo','integer');
+        $this->setParametro('id_lugar','id_lugar','integer');
+
         //Definicion de la lista del resultado del query
         $this->captura('desc_funcionario','varchar');
         $this->captura('id_funcionario','int4');
@@ -442,18 +454,18 @@ class MODFuncionario extends MODbase{
         $this->captura('sumario','varchar');
         $this->captura('pendientes_extrabajadores','varchar');
 
-        $this->captura('cargo','varchar');
+        //$this->captura('cargo','varchar');
         $this->captura('url_foto','varchar');
         $this->captura('estado_reg','varchar');
         $this->captura('fecha_ingreso','date');
         $this->captura('fecha_finalizacion','date');
-        $this->captura('nombre_cargo','varchar');
+        $this->captura('cargo','varchar');
         $this->captura('nombre_oficina','varchar');
         $this->captura('nombre_lugar_ofi','varchar');
 
         $this->captura('descripcion','varchar');
         $this->captura('id_lugar','int4');
-        $this->captura('id_uo','int4');
+        //$this->captura('id_uo','int4');
 
 
 
@@ -553,6 +565,7 @@ class MODFuncionario extends MODbase{
         $this->captura('id_persona','integer');
         $this->captura('desc_person','text');
         $this->captura('ci','varchar');
+        $this->captura('expedicion','varchar');
         $this->captura('num_documento','integer');
         $this->captura('telefono1','varchar');
         $this->captura('celular1','varchar');
@@ -579,6 +592,16 @@ class MODFuncionario extends MODbase{
         $this->captura('fecha_reg','timestamp');
         $this->captura('fecha_mod','timestamp');
 
+        $this->captura('desc_nivel_salarial','varchar');
+        $this->captura('haber_basico','numeric');
+        $this->captura('bono_antiguedad','numeric');
+        $this->captura('bono_frontera','numeric');
+        $this->captura('total_ganado','numeric');
+        $this->captura('nombre_archivo','varchar');
+        $this->captura('extension','varchar');
+        $this->captura('motivo_fin','varchar');
+        $this->captura('nombre_contrato','varchar');
+
         //Ejecuta la funcion
         $this->armarConsulta();
         //echo $this->getConsulta(); exit;
@@ -599,6 +622,39 @@ class MODFuncionario extends MODbase{
         //Ejecuta la instruccion
         $this->armarConsulta();
 
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
+
+    //{"franklin.espinoza":"16/01/2020", "descripcion":"Obtiene el lugar de Operaciones de un funcionario"}
+    function getLugarFuncionario(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='orga.ft_funcionario_sel';
+        $this->transaccion='ORGA_LUG_FUNC_SEL';
+        $this->tipo_procedimiento='SEL';
+        //Define los parametros para la funcion
+
+        $this->setCount(false);
+
+        $this->captura('id_lugar','int4');
+        $this->captura('codigo','varchar');
+        $this->captura('estado_reg','varchar');
+        $this->captura('id_lugar_fk','int4');
+        $this->captura('nombre','varchar');
+        $this->captura('sw_impuesto','varchar');
+        $this->captura('sw_municipio','varchar');
+        $this->captura('tipo','varchar');
+        $this->captura('fecha_reg','timestamp');
+        $this->captura('id_usuario_reg','int4');
+        $this->captura('fecha_mod','timestamp');
+        $this->captura('id_usuario_mod','int4');
+        $this->captura('usr_reg','varchar');
+        $this->captura('usr_mod','varchar');
+        $this->captura('es_regional','varchar');
+        $this->captura('id_sql_server','int4');
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        //echo $this->getConsulta(); exit;
         $this->ejecutarConsulta();
         return $this->respuesta;
     }

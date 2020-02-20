@@ -51,7 +51,21 @@ Phx.vista.UsuarioRol=Ext.extend(Phx.gridInterfaz,{
         type:'TextField',
         grid:true,
         form:false
-        }
+			},
+				{
+			 config:{
+					 name: 'cargo',
+					 fieldLabel: 'Cargo',
+					 allowBlank: true,
+					 anchor: '80%',
+					 gwidth: 200,
+					 maxLength:100
+
+			 },
+			 type:'TextField',
+			 grid:true,
+			 form:false
+			 }
 	    ],
     tam_pag:50,
 	title:'Usuario Rol',
@@ -59,7 +73,8 @@ Phx.vista.UsuarioRol=Ext.extend(Phx.gridInterfaz,{
 	id_store:'nombre',
 	fields: [
 		{name:'id_rol', type: 'numeric'},
-		{name:'nombre', type: 'string'}
+		{name:'nombre', type: 'string'},
+		{name:'cargo', type: 'string'}
 
 	],
     sortInfo:{

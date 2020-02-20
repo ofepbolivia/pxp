@@ -144,6 +144,45 @@ class MODMoneda extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
+
+    function listarMonedaSegunEstacionInter(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='param.f_moneda_sel';
+        $this->transaccion='PM_MONEDAEST_SEL';
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+
+        //Definicion de la lista del resultado del query
+        $this->captura('id_moneda','int4');
+        $this->captura('prioridad','int4');
+        $this->captura('origen','varchar');
+        $this->captura('tipo_actualizacion','varchar');
+        $this->captura('estado_reg','varchar');
+        $this->captura('codigo','varchar');
+        $this->captura('moneda','varchar');
+        $this->captura('tipo_moneda','varchar');
+        $this->captura('id_usuario_reg','int4');
+        $this->captura('fecha_reg','timestamp');
+        $this->captura('id_usuario_mod','int4');
+        $this->captura('fecha_mod','timestamp');
+        $this->captura('usr_reg','varchar');
+        $this->captura('usr_mod','varchar');
+        $this->captura('triangulacion','varchar');
+        $this->captura('contabilidad','varchar');
+        $this->captura('codigo_internacional','varchar');
+        $this->captura('show_combo','varchar');
+        $this->captura('actualizacion','varchar');
+
+
+
+
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
 		
 }
 ?>

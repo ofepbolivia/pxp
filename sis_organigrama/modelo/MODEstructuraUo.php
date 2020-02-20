@@ -46,6 +46,7 @@ class MODEstructuraUo extends MODbase {
 			$this->captura('checked','varchar');
 			$this->captura('id_nivel_organizacional','integer');
 			$this->captura('nombre_nivel','varchar');
+			$this->captura('prioridad','varchar');
 			$this->armarConsulta();
 			/*echo $this->consulta;
 			exit;*/
@@ -77,7 +78,8 @@ class MODEstructuraUo extends MODbase {
 		$this->setParametro('correspondencia','correspondencia','varchar');
 		$this->setParametro('gerencia','gerencia','varchar');
 		$this->setParametro('id_nivel_organizacional','id_nivel_organizacional','integer');
-		
+		$this->setParametro('prioridad','prioridad','varchar');
+
 	    	//Ejecuta la instruccion
 	  //  echo '....'.$this->getConsulta(); exit;
 		$this->armarConsulta();
@@ -107,6 +109,7 @@ class MODEstructuraUo extends MODbase {
 		$this->setParametro('correspondencia','correspondencia','varchar');
 		$this->setParametro('gerencia','gerencia','varchar');
 		$this->setParametro('id_nivel_organizacional','id_nivel_organizacional','integer');
+        $this->setParametro('prioridad','prioridad','varchar');
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 				
@@ -131,6 +134,22 @@ class MODEstructuraUo extends MODbase {
 		$this->ejecutarConsulta();
 		return $this->respuesta;
 	}
+
+    function procesarDragDrop() {
+        $this->procedimiento = 'orga.ft_estructura_uo_ime';
+        $this->transaccion = 'RH_ESTRUO_DRAG_DROP';
+        $this->tipo_procedimiento = 'IME';
+
+        $this->setParametro('punto', 'point', 'varchar');
+        $this->setParametro('id_nodo', 'id_nodo', 'integer');
+        $this->setParametro('id_old_parent', 'id_old_parent', 'integer');
+        $this->setParametro('id_target', 'id_target', 'integer');
+        $this->setParametro('tipo_nodo', 'tipo_nodo', 'varchar');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
 	
 
 }

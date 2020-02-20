@@ -66,18 +66,24 @@ BEGIN
                                   PERREG.nombre_completo2 AS USUREG,
                                   PERMOD.nombre_completo2 AS USUMOD,
                                   cargo.id_cargo,
-                                  (coalesce(''Cod: '' || cargo.codigo || ''---Id: '' || cargo.id_cargo,  ''Id: '' || cargo.id_cargo)|| '' -- '' || cargo.nombre) ::text,
+                                  --(coalesce(''Cod: '' || cargo.codigo || ''---Id: '' || cargo.id_cargo,  ''Id: '' || cargo.id_cargo)|| '' -- '' || cargo.nombre) ::text,
+                                  (coalesce('' <b style= "color:red;">Id: [</b><b> '' || cargo.id_cargo|| ''  </b><b style= "color:red;"> ] Item: [</b><b> '' || cargo.codigo ,  ''</b><b style= "color:red;"> ] Id: [</b><b>'' || cargo.id_cargo)|| ''  </b><b style= "color:red;"> ] Cargo: [ </b><b>'' || cargo.nombre||''</b><b style= "color:red;"> ]</b>'') ::text,
                                   UOFUNC.observaciones_finalizacion,
                                   UOFUNC.nro_documento_asignacion,
                                   UOFUNC.fecha_documento_asignacion,
-                                  UOFUNC.tipo
-
-                            FROM orga.tuo_funcionario UOFUNC
+                                  UOFUNC.tipo,
+								                  UOFUNC.codigo_ruta,
+                                  UOFUNC.estado_funcional,
+                                  UOFUNC.certificacion_presupuestaria,
+                                  tes.nombre as nombre_escala,
+                                  tes.haber_basico
+                             FROM orga.tuo_funcionario UOFUNC
                             INNER JOIN orga.tuo UO ON UO.id_uo=UOFUNC.id_uo
                             INNER JOIN orga.vfuncionario FUNCIO ON FUNCIO.id_funcionario=UOFUNC.id_funcionario
                             INNER JOIN segu.tusuario USUREG ON  UO.id_usuario_reg=USUREG.id_usuario
                             INNER JOIN SEGU.vpersona PERREG ON PERREG.id_persona=USUREG.id_persona
                             LEFT JOIN orga.tcargo cargo ON cargo.id_cargo = UOFUNC.id_cargo
+                            left join orga.tescala_salarial tes on tes.id_escala_salarial = cargo.id_escala_salarial
                             LEFT JOIN SEGU.tusuario USUMOD ON USUMOD.id_usuario=UO.id_usuario_mod
                             LEFT JOIN SEGU.vpersona PERMOD ON PERMOD.id_persona=USUMOD.id_persona
                             WHERE  UOFUNC.estado_reg !=''inactivo'' and ';

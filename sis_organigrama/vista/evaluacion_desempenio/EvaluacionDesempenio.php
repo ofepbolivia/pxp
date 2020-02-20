@@ -785,17 +785,20 @@ Phx.vista.EvaluacionDesempenio=Ext.extend(Phx.gridInterfaz,{
         this.reload();
     },
     onEvaluacionesTodos :function () {
-        Phx.CP.loadingShow();
-        Ext.Ajax.request({
-            url:'../../sis_organigrama/control/EvaluacionDesempenio/traerEvaluaciones',
-            params:{gestion: this.cmbGestion.getValue(),
-                id_uo:this.cmbGerencia.getValue()
-            },
-            success: this.successSinc,
-            failure: this.conexionFailure,
-            timeout: this.timeout,
-            scope: this
-        });
+        var seguro = confirm('Esta seguro? La accion traera la informacion de los funcionarios y sus notas, del sistema de evaluacion personal.');
+        if(seguro){
+            Phx.CP.loadingShow();
+            Ext.Ajax.request({
+                url:'../../sis_organigrama/control/EvaluacionDesempenio/traerEvaluaciones',
+                params:{gestion: this.cmbGestion.getValue(),
+                    id_uo:this.cmbGerencia.getValue()
+                },
+                success: this.successSinc,
+                failure: this.conexionFailure,
+                timeout: this.timeout,
+                scope: this
+            });
+        }
     },
     successSinc: function(resp) {
         Phx.CP.loadingHide();

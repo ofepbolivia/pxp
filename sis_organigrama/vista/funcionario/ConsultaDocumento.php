@@ -19,14 +19,14 @@ header("content-type: text/javascript; charset=UTF-8");
         title:'Consulta Documentos',
         id_store:'id_funcionario',
         constructor: function(config) {
-          this.initButtons=[this.cmbGerencia];
-          this.maestro=config.maestro;
+            this.initButtons=[this.etiqueta_ini, this.cmbGerencia,this.etiqueta_fin, this.cmbLugar];
+            this.maestro=config.maestro;
 
 
             Phx.vista.ConsultaDocumento.superclass.constructor.call(this,config);
 
-            /*this.tbar.items.items[1].menu.items.items.splice(1,1);
-            this.tbar.items.items[1].text = 'Exportar CSV';*/
+
+
             this.init();
             this.finCons = true;
             this.store.baseParams.estado_func = 'activo';
@@ -48,61 +48,104 @@ header("content-type: text/javascript; charset=UTF-8");
                 tooltip: '<b>Imprimir Reporte</b><br>Genera reporte de los documentos de un funcionario.'
             });
 
-          /*  this.cmbGerencia.on('select', function(){
-                if( this.validarFiltros() ){
-                          this.capturaFiltros();
-                     }
-            },this);*/
 
-              this.cmbGerencia.on('select', function( combo, record, index){
-                    this.capturaFiltros();
-                },this);
-          /*  this.store.baseParams.id_uo = -1;
-          this.load({params: {start: 0, limit: this.tam_pag}});*/
+            this.cmbGerencia.on('select', function( combo, record, index){
 
+                this.cmbLugar.reset();
+                this.cmbLugar.modificado = true;
+                this.capturaFiltrosGerencia(combo,record, index);
+            },this);
+
+            this.cmbLugar.on('select', function( combo, record, index){
+                this.cmbGerencia.reset();
+                this.cmbGerencia.modificado = true;
+                this.capturaFiltrosLugar(combo,record, index);
+            },this);
 
         },
+
+        validarFiltrosGerencia : function() {
+            if (this.cmbGerencia.getValue() ) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+
+        validarFiltrosLugar : function() {
+            if(this.cmbLugar.getValue()) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+
+
+        capturaFiltrosGerencia : function(combo, record, index) {
+            if(this.validarFiltrosGerencia()){
+                this.store.baseParams.id_lugar = null;
+                this.store.baseParams.id_uo=this.cmbGerencia.getValue();
+                this.load({params: {start: 0, limit: this.tam_pag}});//this.load();
+            }
+        },
+
+        capturaFiltrosLugar : function(combo, record, index) {
+            if(this.validarFiltrosLugar()){
+                this.store.baseParams.id_uo = null;
+                this.store.baseParams.id_lugar=this.cmbLugar.getValue();
+                this.load({params: {start: 0, limit: this.tam_pag}});//this.load();
+            }
+        },
+
+        etiqueta_ini : new Ext.form.Label({
+            name: 'etiqueta_ini',
+            grupo: [0,1],
+            fieldLabel: 'Gerencia:',
+            text: 'Gerencia:',
+            //style: {color: 'green', font_size: '12pt'},
+            readOnly:true,
+            anchor: '150%',
+            gwidth: 150,
+            format: 'd/m/Y',
+            hidden : false,
+            style: 'font-size: 170%; font-weight: bold; background-image: none;color: green;'
+        }),
+
+        etiqueta_fin : new Ext.form.Label({
+            name: 'etiqueta_fin',
+            grupo: [0,1],
+            fieldLabel: 'Lugar:',
+            text: 'Lugar:',
+            //style: {color: 'red', font_size: '12pt'},
+            readOnly:true,
+            anchor: '150%',
+            gwidth: 150,
+            format: 'd/m/Y',
+            hidden : false,
+            style: 'font-size: 170%; font-weight: bold; background-image: none; color: green;'
+        }),
 
         gruposBarraTareas: [
             {name:  'activo', title: '<h1 style="text-align: center; color: green; font-weight: bold;"><i class="fa fa-user fa-2x" aria-hidden="true"></i> ACTIVOS</h1>',grupo: 0, height: 0} ,
             {name: 'inactivo', title: '<h1 style="text-align: center; color: red; font-weight: bold;"><i class="fa fa-user-times fa-2x" aria-hidden="true"></i> INACTIVOS</h1>', grupo: 0, height: 0}
         ],
         actualizarSegunTab: function(name, indice){
-              if(this.finCons){
+            if(this.finCons){
+                if (this.validarFiltrosGerencia()){
+                    this.store.baseParams.id_lugar = null
+                    this.store.baseParams.id_uo = this.cmbGerencia.getValue();
+                    this.store.baseParams.estado_func = name;
+                    this.load({params: {start: 0, limit: this.tam_pag}});
+                }else if (this.validarFiltrosLugar()){
+                    this.store.baseParams.id_uo = null;
+                    this.store.baseParams.id_lugar = this.cmbLugar.getValue();
+                    this.store.baseParams.estado_func = name;
+                    this.load({params: {start: 0, limit: this.tam_pag}});
 
-                  if(!this.validarFiltros()){
-                      alert('Especifique la Gerencia a la que Pertenece');
-                  }
-                  else
-                  {
-                      this.store.baseParams.id_uo=this.cmbGerencia.getValue();
-                      this.store.baseParams.estado_func = name;
-                      console.log('entradita', name);
-                      this.load({params: {start: 0, limit: this.tam_pag}});
-
-
-                      /*if(this.store.baseParams.estado_func == 'activo'){
-
-                        this.load({params: {start: 0, limit: this.tam_pag}});
-
-                      }
-                      else if(this.store.baseParams.estado_func == 'inactivo'){
-
-                        this.load({params: {start: 0, limit: this.tam_pag}});
-                      }*/
-                    }
+                }
             }
 
-          },
-        /*actualizarSegunTab: function(name, indice){
-            /*if(name == 'activo')
-                this.store.baseParams.estado_func = 'activo';
-            else*/
-
-
-          /*  this.store.baseParams.estado_func = name;
-            this.load({params: {start: 0, limit: 50}});
-        },*/
+        },
 
         Atributos:[
             {
@@ -171,7 +214,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     }
                 },
                 type: 'TextField',
-                filters: {pfiltro:'tc.nombre', type:'string'},
+                filters: {pfiltro:'tca.nombre', type:'string'},
                 id_grupo: 0,
                 form:false,
                 grid:true,
@@ -194,7 +237,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 id_grupo: 0,
                 form:false,
                 grid:true,
-             bottom_filter : true
+                bottom_filter : true
             },
 
             {
@@ -1046,10 +1089,10 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:'estado_reg', type: 'string'},
             {name: 'fecha_ingreso', type: 'date', dateFormat: 'Y-m-d'},
             {name:'fecha_finalizacion', type: 'date', dateFormat:'Y-m-d'},
-            {name:'nombre_cargo', type: 'string'},
+            //{name:'nombre_cargo', type: 'string'},
             {name:'nombre_oficina', type: 'string'},
             {name:'nombre_lugar_ofi', type: 'string'},
-            {name:'id_uo', type: 'numeric'},
+            //{name:'id_uo', type: 'numeric'},
             {name:'descripcion', type: 'string'},
             {name:'id_lugar', type: 'numeric'},
 
@@ -1060,70 +1103,82 @@ header("content-type: text/javascript; charset=UTF-8");
             direction: 'ASC'
 
         },
-        /*onReloadPage: function (m) {
 
-        },*/
+        cmbGerencia: new Ext.form.ComboBox({
+            fieldLabel: 'Gerencia',
+            grupo:[0,1,2],
+            allowBlank: true,
+            blankText:'Seleccione Gerencia',
+            emptyText:'Seleccione Gerencia........',
+            name:'id_uo',
+            store:new Ext.data.JsonStore(
+                {
+                    url: '../../sis_organigrama/control/Uo/listarUoIrva',
+                    id: 'id_uo',
+                    root: 'datos',
+                    sortInfo:{
+                        field: 'nombre_unidad',
+                        direction: 'ASC'
+                    },
+                    totalProperty: 'total',
+                    fields: ['id_uo','codigo','nombre_unidad','nombre_cargo','presupuesta','correspondencia', 'id_lugar'],
+                    // turn on remote sorting
+                    remoteSort: true,
+                    baseParams:{par_filtro:'nombre_unidad',gerencia: 'si'/*, restringir: 'si'*/}
+                }),
+            valueField: 'id_uo',
+            tpl:'<tpl for="."><div class="x-combo-list-item"><p><font color="blue"><b>{nombre_unidad}</b></font></p><p><b>Codigo: <font color="red">{codigo}</font></b></p></div></tpl>',
+            triggerAction: 'all',
+            displayField: 'nombre_unidad',
+            hiddenName: 'id_uo',
+            mode:'remote',
+            pageSize:50,
+            queryDelay:500,
+            listWidth:'280',
+            width:220
 
-        validarFiltros : function() {
-			if (this.cmbGerencia.getValue() ) {
-
-				return true;
-			} else {
-				return false;
-			}
-		},
-
-    capturaFiltros : function(combo, record, index) {
-      if(this.validarFiltros()){
-
-        this.store.baseParams.id_uo=this.cmbGerencia.getValue();
-
-        console.log('ENTRADA',this.store.baseParams.estado_func);
-        //this.Cmp.id_funcionario.store.baseParams ={par_filtro: 'fu.desc_funcionario1', gerencia:gerencias};
-          this.load();
-      }
-
-      //  this.load({params: {start: 0, limit: this.tam_pag}});
-
-
-
-
-		},
-
-    cmbGerencia: new Ext.form.ComboBox({
-        fieldLabel: 'Gerencia',
-        grupo:[0,1,2],
-        allowBlank: false,
-        blankText:'Seleccione Gerencia',
-        emptyText:'Seleccione Gerencia........',
-        name:'id_uo',
-        store:new Ext.data.JsonStore(
-            {
-                url: '../../sis_organigrama/control/Uo/listarUoIrva',
-                id: 'id_uo',
+        }),
+        cmbLugar: new Ext.form.ComboBox({
+            name: 'id_lugar',
+            fieldLabel : 'Estación',
+            grupo:[0,1,2],
+            allowBlank : true,
+            emptyText : 'Seleccione Lugar...',
+            store: new Ext.data.JsonStore({
+                url: '../../sis_organigrama/control/Funcionario/getLugarFuncionario',
+                id: 'id_lugar',
                 root: 'datos',
-                sortInfo:{
-                    field: 'nombre_unidad',
+                fields: ['id_lugar','codigo','nombre'],
+                totalProperty: 'total',
+                sortInfo: {
+                    field: 'codigo',
                     direction: 'ASC'
                 },
-                totalProperty: 'total',
-                fields: ['id_uo','codigo','nombre_unidad','nombre_cargo','presupuesta','correspondencia'],
-                // turn on remote sorting
-                remoteSort: true,
-                baseParams:{par_filtro:'nombre_unidad',gerencia: 'si'/*, restringir: 'si'*/}
+                baseParams:{par_filtro:'lug.codigo#lug.nombre'}
             }),
-        valueField: 'id_uo',
-        tpl:'<tpl for="."><div class="x-combo-list-item"><p><font color="blue"><b>{nombre_unidad}</b></font></p><p><b>Codigo: <font color="red">{codigo}</font></b></p></div></tpl>',
-        triggerAction: 'all',
-        displayField: 'nombre_unidad',
-        hiddenName: 'id_uo',
-        mode:'remote',
-        pageSize:50,
-        queryDelay:500,
-        listWidth:'280',
-        width:220
+            tpl: new Ext.XTemplate([
+                '<tpl for=".">',
+                '<div class="x-combo-list-item">',
+                '<div class="awesomecombo-item {checked}">',
+                '<p><b>Código: {codigo}</b></p>',
+                '</div><p><b>Nombre: </b> <span style="color: green;">{nombre}</span></p>',
+                '</div></tpl>'
+            ]),
+            valueField: 'id_lugar',
+            displayField: 'nombre',
+            forceSelection: false,
+            typeAhead: false,
+            triggerAction: 'all',
+            lazyRender: true,
+            mode: 'remote',
+            pageSize: 15,
+            queryDelay: 1000,
+            minChars: 2,
+            width : 230,
+            listWidth:'230',
+            enableMultiSelect: true
+        }),
 
-    }),
         preparaMenu: function(n)
         {	var rec = this.getSelectedData();
             var tb =this.tbar;

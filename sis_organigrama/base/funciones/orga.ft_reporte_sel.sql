@@ -161,27 +161,76 @@ BEGIN
     		--Sentencia de la consulta
 			v_consulta:='
 
-                     select
+            select
         			 (''(''||tuo.codigo||'')''||tuo.nombre_unidad)::varchar as gerencia,
-                     tf.desc_funcionario2::varchar AS desc_funcionario,
+               tf.desc_funcionario2::varchar AS desc_funcionario,
         			 tf.id_funcionario,
-                     tf.ci,
-                     tc.nombre as cargo,
-                     tf.fecha_ingreso,
-                     orga.f_get_documentos_func(tf.id_funcionario, '''||v_parametros.tipo_archivo||'''::varchar) as documento
+               tf.ci,
+               tc.nombre as cargo,
+               tf.fecha_ingreso,
+               orga.f_get_documentos_list_func(tf.id_funcionario, '''||v_parametros.tipo_archivo||'''::varchar) as documento
 					 from orga.vfuncionario_biometrico tf
-                     inner JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario and (current_date <= uof.fecha_finalizacion or  uof.fecha_finalizacion is null)
-                     inner JOIN orga.tuo tuo on tuo.id_uo = orga.f_get_uo_gerencia(uof.id_uo,uof.id_funcionario,current_date)
-     				 inner JOIN orga.tcargo tc ON tc.id_cargo = uof.id_cargo
-                     where tf.estado_reg = ''activo'' and tc.estado_reg = ''activo''
-                     order by gerencia,desc_funcionario ';
+           inner JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario and (current_date <= uof.fecha_finalizacion or  uof.fecha_finalizacion is null)
+           inner JOIN orga.tuo tuo on tuo.id_uo = orga.f_get_uo_gerencia(uof.id_uo,uof.id_funcionario,current_date)
+     			 inner JOIN orga.tcargo tc ON tc.id_cargo = uof.id_cargo
+     			 inner join orga.ttipo_contrato ttc on ttc.id_tipo_contrato = tc.id_tipo_contrato
+           where tf.estado_reg = ''activo'' and tc.estado_reg = ''activo'' and uof.estado_reg = ''activo'' and uof.tipo = ''oficial''
+           and ttc.codigo in (''PLA'',''EVE'')
+           order by gerencia,desc_funcionario ';
 
             RAISE NOTICE 'v_consulta: %', v_consulta;
 			--Devuelve la respuesta
 			return v_consulta;
 
 		end;
+	/*********************************
+ 	#TRANSACCION:  'ORGA_HEADER_DOC_SEL'
+ 	#DESCRIPCION:	cabeceras lista de documentos
+ 	#AUTOR:		f.e.a
+ 	#FECHA:		13-3-2019 17:29:14
+	***********************************/
 
+	elsif(p_transaccion='ORGA_HEADER_DOC_SEL')then
+
+    	begin
+    	--Sentencia de la consulta
+			v_consulta:='
+				WITH archivos AS (
+    				 select tta.id_tipo_archivo,
+                     tta.codigo,
+                     tta.nombre
+                     from param.ttipo_archivo tta
+                     where tta.id_tipo_archivo = any (string_to_array('''||v_parametros.tipo_archivo||''', '','')::integer[])
+                     order by tta.id_tipo_archivo asc
+				)
+
+                SELECT
+                TO_JSON(ROW_TO_JSON(jsonData) :: TEXT) #>> ''{}'' AS headers
+                FROM (
+                       SELECT
+                         (
+                           SELECT ARRAY_TO_JSON(ARRAY_AGG(ROW_TO_JSON(t_archivos))) as header
+                           FROM
+                             (
+                               SELECT fil.codigo, fil.nombre,
+                                 (
+                                   SELECT string_to_array(pxp.list(ROW_TO_JSON(t_campos)::varchar),'','') as campos
+                                   FROM
+                                     (
+                                       select
+                                       tfta.nombre as clave
+                                       from param.tfield_tipo_archivo tfta
+                                       where tfta.id_tipo_archivo = fil.id_tipo_archivo
+                                     ) t_campos
+                                 )
+                               FROM archivos fil
+                             ) t_archivos
+                         )
+                     ) jsonData ';
+			--Devuelve la respuesta
+			return v_consulta;
+
+		end;
 	else
 
 		raise exception 'Transaccion inexistente';

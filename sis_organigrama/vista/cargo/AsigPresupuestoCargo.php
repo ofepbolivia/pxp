@@ -90,6 +90,37 @@ header("content-type: text/javascript; charset=UTF-8");
                     tooltip: 'Centros de Costo asociados al cargo'
                 }
             );
+
+            this.addButton('btnClon',{
+                grupo:[0],
+                text: 'Clonar Presupuestos',
+                iconCls: 'bchecklist',
+                disabled: false,
+                handler: this.clonarPresupuesto,
+                tooltip: '<b>Clonar Presupuestos </b><br/>Clonar los presupuestos para la siguiente gestión'
+            });
+        },
+
+        clonarPresupuesto: function(){
+            Phx.CP.loadingShow();
+            Ext.Ajax.request({
+                url: '../../sis_organigrama/control/Cargo/clonarPresupuesto',
+                params:{
+                    id_gestion: 0
+                },
+                success:function(resp){
+                    Phx.CP.loadingHide();
+                    var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+                    if(!reg.ROOT.error){
+                        this.reload();
+                    }else{
+                        alert('Ocurrió un error durante el proceso')
+                    }
+                },
+                failure: this.conexionFailure,
+                timeout:this.timeout,
+                scope:this
+            });
         },
 
         cmbActivos: new Ext.form.ComboBox({
@@ -422,7 +453,8 @@ header("content-type: text/javascript; charset=UTF-8");
                 filters:{pfiltro:'cargo.codigo',type:'string'},
                 id_grupo:1,
                 grid:true,
-                form:true
+                form:true,
+                bottom_filter: true
             },
             {
                 config:{
