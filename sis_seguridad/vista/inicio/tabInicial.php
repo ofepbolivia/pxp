@@ -31,7 +31,7 @@ header("content-type: text/javascript; charset=UTF-8");
     <?php echo $_SESSION['_PLANTIILA'];?>
 
     <tr height="20%">
-        <td colspan="2"><div align="center"><font color="white"><a  href="http://www.boa.bo/"   TARGET="_new" >Powered by BoA</a></font></div></td>
+        <td colspan="2"><div align="center"><font color="#15467b" size="10pt">2da Versión</font></div></td>
     </tr>
 </table>
 </body>
