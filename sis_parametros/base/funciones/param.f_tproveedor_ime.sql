@@ -162,15 +162,43 @@ BEGIN
 
 
                     insert into param.tproveedor
-                    (id_usuario_reg, 				fecha_reg,					estado_reg,
-                     id_institucion,				id_persona,					tipo,
-                     numero_sigma,					codigo,						nit,
-                     id_lugar,						rotulo_comercial, 			contacto)
-                    values
-                    (p_id_usuario,					now(),						'activo',
-                    v_parametros.id_institucion,	v_parametros.id_persona,	v_parametros.tipo,
-                    v_parametros.numero_sigma,		v_codigo_gen,		v_parametros.nit,
-                    v_parametros.id_lugar,			UPPER(v_parametros.rotulo_comercial),	v_parametros.contacto) RETURNING id_proveedor into v_id_proveedor;
+                    (id_usuario_reg,
+                     fecha_reg,
+                     estado_reg,
+                     id_institucion,
+                     id_persona,
+                     tipo,
+                     numero_sigma,
+                     codigo,
+                     nit,
+                     id_lugar,
+                     rotulo_comercial,
+                     contacto,
+
+                     condicion,
+                     actividad,
+                     num_proveedor
+
+                     )values
+
+                    (p_id_usuario,
+                    now(),
+                    'activo',
+                    v_parametros.id_institucion,
+                    v_parametros.id_persona,
+                    v_parametros.tipo,
+                    v_parametros.numero_sigma,
+                    v_codigo_gen,
+                    v_parametros.nit,
+                    v_parametros.id_lugar,
+                    UPPER(v_parametros.rotulo_comercial),
+                    v_parametros.contacto,
+
+                    v_parametros.condicion,
+                    v_parametros.actividad,
+                    v_parametros.num_proveedor
+
+                    ) RETURNING id_proveedor into v_id_proveedor;
            else
                     if (v_parametros.tipo = 'persona')then
 
@@ -189,9 +217,11 @@ BEGIN
                                    --extension,
                                    genero,
                                    fecha_nacimiento,
-                                   direccion)
+                                   direccion,
+                                   codigo_telf)
                          values(
-                                v_parametros.nombre,
+                                --v_parametros.nombre,
+                                v_parametros.nombre_persona,
                                 v_parametros.apellido_paterno,
                                 v_parametros.apellido_materno,
                                 v_parametros.ci,
@@ -204,7 +234,8 @@ BEGIN
                                 --v_parametros.extension,
                                 v_parametros.genero,
                                 v_parametros.fecha_nacimiento,
-                                v_parametros.direccion)
+                                v_parametros.direccion,
+                                v_parametros.codigo_telf)
 
                         RETURNING id_persona INTO v_id_persona;
                     else
@@ -244,7 +275,8 @@ BEGIN
                             fecha_reg,
                             id_usuario_mod,
                             fecha_mod,
-                            codigo
+                            codigo,
+                            codigo_telf_institucion
                         ) values(
                             v_parametros.fax,
                             'activo',
@@ -265,7 +297,8 @@ BEGIN
                             now(),
                             null,
                             null,
-                            COALESCE(v_parametros.codigo_institucion,v_codigo_gen)
+                            COALESCE(v_parametros.codigo_institucion,v_codigo_gen),
+                            v_parametros.codigo_telf_institucion
 
                         )RETURNING id_institucion into v_id_institucion;
                     end if;
@@ -285,7 +318,8 @@ BEGIN
                                                     nit,
                                                     id_lugar,
                                                     rotulo_comercial,
-                                                    contacto
+                                                    contacto,
+                                                    num_proveedor
                                                   )values (
                                                     p_id_usuario,
                                                     now(),
@@ -302,7 +336,8 @@ BEGIN
                                                     v_parametros.nit,
                                                     v_parametros.id_lugar,
                                                     UPPER(v_parametros.rotulo_comercial),
-                                                    v_parametros.contacto
+                                                    v_parametros.contacto,
+                                                    v_parametros.num_proveedor
                                                    )RETURNING id_proveedor into v_id_proveedor;
                 end if;
 
@@ -490,7 +525,12 @@ BEGIN
                 fecha_mod = now(),
                 rotulo_comercial = UPPER(v_parametros.rotulo_comercial),
                 contacto = v_parametros.contacto,
-                tipo = v_parametros.tipo
+                tipo = v_parametros.tipo,
+
+                condicion = v_parametros.condicion,
+                actividad = v_parametros.actividad,
+                num_proveedor = v_parametros.num_proveedor
+
             where id_proveedor=v_parametros.id_proveedor;
 
 
@@ -499,9 +539,10 @@ BEGIN
 
 
                     update  segu.tpersona  set
-                       nombre = v_parametros.nombre,
+                       --27-02-2020 (may) se comenta porq nodebe modificarsenombre y apellidos
+                     /*  nombre = v_parametros.nombre,
                        apellido_paterno = v_parametros.apellido_paterno,
-                       apellido_materno = v_parametros.apellido_materno,
+                       apellido_materno = v_parametros.apellido_materno,*/
                        ci = v_parametros.ci,
                        correo = v_parametros.correo,
                        celular1 =v_parametros.celular1,
@@ -510,12 +551,13 @@ BEGIN
                        celular2 =v_parametros.celular2,
                        genero = v_parametros.genero,
                        fecha_nacimiento =v_parametros.fecha_nacimiento,
-                       direccion = v_parametros.direccion
+                       direccion = v_parametros.direccion,
+                       codigo_telf = v_parametros.codigo_telf
                      WHERE id_persona  = v_parametros.id_persona;
 
             else
 
-                      IF   exists(select
+                  /*    IF   exists(select
                                        1
                                     from param.tinstitucion i
                                     where i.estado_reg = 'activo'
@@ -523,7 +565,7 @@ BEGIN
                                           and i.id_institucion != v_parametros.id_institucion) THEN
                              raise exception 'Ya existe una institución con esta sigla %',  v_parametros.codigo_institucion;
                          END IF;
-
+					*/
                      --Sentencia de la insercion  --modifica datos de la institucion
 
                         update  param.tinstitucion set
@@ -542,7 +584,8 @@ BEGIN
                             pag_web = v_parametros.pag_web,
                             id_usuario_mod = p_id_usuario,
                             fecha_mod = now(),
-                            codigo = v_parametros.codigo_institucion
+                            codigo = v_parametros.codigo_institucion,
+                            codigo_telf_institucion = v_parametros.codigo_telf_institucion
                        WHERE id_institucion = v_parametros.id_institucion;
 
 
