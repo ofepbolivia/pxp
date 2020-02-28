@@ -301,6 +301,75 @@ BEGIN
       return v_consulta;
             
     end;
+    /*********************************
+  #TRANSACCION:  'WF_HISDOCOP_SEL'
+  #DESCRIPCION: consulta de documentos abiertos por los usuarios
+  #AUTOR:   Breydi vasquez
+  #FECHA:   20/02/2020
+  ***********************************/
+    elsif(p_transaccion='WF_HISDOCOP_SEL')then
+
+      begin
+    			v_consulta:='select
+                				 dop.id_documento_abierto,
+                				 dop.id_documento_wf,
+                                 dop.id_documento_historico_wf,
+                                 dop.historico,
+                                 dop.url,
+                                 dop.extension,
+                                 dop.action,
+                                 dop.fecha_reg,
+                                 dop.id_usuario_reg,
+                                 usu1.cuenta as usr_reg,
+                                 usu2.cuenta as usr_mod,
+                                 carl.descripcion_cargo,
+                                 carl.desc_funcionario2,
+                                 uo.codigo||''-''||uo.nombre_unidad as desc_uo,
+                                 doc.id_proceso_wf
+                          from wf.tdocumento_abierto dop
+                          inner join segu.tusuario usu1 on usu1.id_usuario = dop.id_usuario_reg
+                          left join segu.tusuario usu2 on usu2.id_usuario = dop.id_usuario_mod
+                          inner join orga.vfuncionario_cargo carl on carl.id_uo_funcionario = dop.id_uo_funcionario
+                          inner join orga.tuo uo on uo.id_uo = dop.id_uo
+                          inner join wf.tdocumento_wf doc on doc.id_documento_wf = dop.id_documento_wf
+                          where  ';
+
+
+			--Definicion de la respuesta
+			v_consulta:=v_consulta||v_parametros.filtro;
+			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
+			raise notice '%', v_consulta;
+			--Devuelve la respuesta
+			return v_consulta;
+
+    end;
+
+    /*********************************
+  #TRANSACCION:  'WF_HISDOCOP_CONT'
+  #DESCRIPCION: conteo de documentos abiertos
+  #AUTOR:   Breydi vasquez
+  #FECHA:   20/02/2020
+  ***********************************/
+    elsif(p_transaccion='WF_HISDOCOP_CONT')then
+
+      begin
+    			v_consulta:='select  count(dop.id_documento_abierto)
+                          from wf.tdocumento_abierto dop
+                          inner join segu.tusuario usu1 on usu1.id_usuario = dop.id_usuario_reg
+                          left join segu.tusuario usu2 on usu2.id_usuario = dop.id_usuario_mod
+                          inner join orga.vfuncionario_cargo carl on carl.id_uo_funcionario = dop.id_uo_funcionario
+                          inner join orga.tuo uo on uo.id_uo = dop.id_uo
+                          inner join wf.tdocumento_wf doc on doc.id_documento_wf = dop.id_documento_wf
+                          where  ';
+
+
+			--Definicion de la respuesta
+			v_consulta:=v_consulta||v_parametros.filtro;
+
+			--Devuelve la respuesta
+			return v_consulta;
+
+    end;
           
   else
                

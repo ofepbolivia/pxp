@@ -146,20 +146,59 @@ Phx.vista.DocumentoHistoricoWf=Ext.extend(Phx.gridInterfaz,{
 		field: 'id_documento_historico_wf',
 		direction: 'ASC'
 	},
-	
+
+    taskOne: function(record) {
+        var data = "id=" + record.data['id_documento_wf'];
+        data += "&extension=" + record.data['extension'];
+        data += "&sistema=sis_workflow";
+        data += "&clase=DocumentoWf";
+        data += "&url="+record.data['url'];
+        //return  String.format('{0}',"<div style='text-align:center'><a target=_blank href = '../../../lib/lib_control/CTOpenFile.php?"+ data+"' align='center' width='70' height='70'>Abrir</a></div>");
+        window.open('../../../lib/lib_control/CTOpenFile.php?' + data);
+    },
+    taskTwo: function(record){
+        
+        Ext.Ajax.request({
+            url : '../../sis_workflow/control/DocumentoWf/insertarRegistroOpenDoc',
+            params : {
+                id_documento_historico_wf  : record.data.id_documento_historico_wf,
+                id_documento_wf	           : record.data.id_documento,
+                historico                  : 'si',
+                id_proceso_wf              : null,
+                id_tipo_documento          : null,
+                url                        : record.data.url,
+                extension                  : record.data.extension,
+                action                     : null
+            },
+            success : function (resp) {
+                var reg = Ext.decode(Ext.util.Format.trim(resp.responseText));
+                if(!reg.ROOT.error) {
+                    this.reload();
+                }
+            },
+            failure : this.conexionFailure,
+            timeout : this.timeout,
+            scope : this
+        });
+    },
 	oncellclick : function(grid, rowIndex, columnIndex, e) {
 	    var record = this.store.getAt(rowIndex);  // Get the Record
 	    var fieldName = grid.getColumnModel().getDataIndex(columnIndex); // Get field name
-	    
+
+        //Modificado por Breydi vasquez 20/02/2020
+
 	    if (fieldName == 'archivo' && record.data['url'].length!=0) {
-	    	var data = "id=" + record.data['id_documento_wf'];
-            data += "&extension=" + record.data['extension'];
-            data += "&sistema=sis_workflow";
-            data += "&clase=DocumentoWf";
-            data += "&url="+record.data['url'];
-            //return  String.format('{0}',"<div style='text-align:center'><a target=_blank href = '../../../lib/lib_control/CTOpenFile.php?"+ data+"' align='center' width='70' height='70'>Abrir</a></div>");
-            window.open('../../../lib/lib_control/CTOpenFile.php?' + data);
+            var that = this;
+            async function main() {
+                try {
+                    await Promise.all([that.taskOne(record), that.taskTwo(record)]);
+                } catch (error) {
+                    alert(error + ' Comuniquece con el Departamenteo de Sistemas');
+                }
+            }
+            main();
 	    }
+	    // fin breydi vasquez
 		
 	},
 	onReloadPage:function(m){

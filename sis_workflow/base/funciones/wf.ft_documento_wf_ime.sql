@@ -47,7 +47,11 @@ CREATE OR REPLACE FUNCTION wf.ft_documento_wf_ime (
     va_id_tipo_documentos		VARCHAR[];
     v_tamano					integer;
     v_i							integer;
-
+    -- Agregado Breydi vasquez (28/02/2020)
+    v_id_documento_abierto			integer;
+	v_id_tipo_documento			integer;
+	v_id_proceso_wf				integer;
+    v_fun_rec					record;
   BEGIN
 
     v_nombre_funcion = 'wf.ft_documento_wf_ime';
@@ -527,7 +531,73 @@ CREATE OR REPLACE FUNCTION wf.ft_documento_wf_ime (
         return v_resp;
       end;
 
+    /*********************************
+    #TRANSACCION:  'WF_INSREGOD_IME'
+    #DESCRIPCION: insertar registro de usuarios que abrieron un documento
+    #AUTOR:   breydi vasquez
+    #FECHA:   20/02/2020
+    ***********************************/
 
+    elsif(p_transaccion='WF_INSREGOD_IME')then
+      begin
+
+      		if v_parametros.historico = 'si' then
+              select  dw.id_tipo_documento, dw.id_proceso_wf
+              	into v_id_tipo_documento,v_id_proceso_wf
+              from wf.tdocumento_historico_wf hw
+              inner join wf.tdocumento_wf  dw on dw.id_documento_wf = hw.id_documento
+              where hw.id_documento_historico_wf = v_parametros.id_documento_historico_wf;
+            end if;
+
+            select vfc.id_funcionario,
+                   vfc.id_uo_funcionario
+                   into v_fun_rec
+            from segu.vusuario us
+            inner join orga.vfuncionario vf on vf.id_persona = us.id_persona
+            inner join orga.vfuncionario_cargo_lugar vfc on vfc.id_funcionario = vf.id_funcionario
+            where us.id_usuario = p_id_usuario;
+
+      		insert into
+            wf.tdocumento_abierto
+            (
+              id_usuario_reg,
+              fecha_reg,
+              estado_reg,
+              id_tipo_documento,
+              id_proceso_wf,
+              id_documento_wf,
+              id_documento_historico_wf,
+              historico,
+              url,
+              extension,
+              action,
+              id_uo,
+              id_uo_funcionario
+            )
+          VALUES (
+            p_id_usuario,
+            now(),
+            'activo',
+            coalesce(v_parametros.id_tipo_documento, v_id_tipo_documento),
+            coalesce(v_parametros.id_proceso_wf, v_id_proceso_wf),
+			v_parametros.id_documento_wf,
+            v_parametros.id_documento_historico_wf,
+            v_parametros.historico,
+            v_parametros.url,
+            v_parametros.extension,
+            v_parametros.action,
+            orga.f_get_uo_gerencia_ope(NULL, v_fun_rec.id_funcionario, now()::date),
+            v_fun_rec.id_uo_funcionario
+
+          )RETURNING id_documento_abierto into v_id_documento_abierto;
+
+        --Definicion de la respuesta
+        v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Registro exito');
+        v_resp = pxp.f_agrega_clave(v_resp,'id_documento_abierto', v_id_documento_abierto::varchar);
+
+        --Devuelve la respuesta
+        return v_resp;
+      end;
 
     else
 

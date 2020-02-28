@@ -1954,3 +1954,33 @@ IS 'Tipo de dato por defecto para el valor del tipo de propiedad';
 
 
 /*****************************F-SCP-AKFG-WF-0-21/11/2019*************/
+
+/*****************************I-SCP-BVP-WF-0-28/02/2020*************/
+CREATE TABLE wf.tdocumento_abierto (
+  id_documento_abierto SERIAL,
+  id_proceso_wf INTEGER,
+  id_tipo_documento INTEGER,
+  id_documento_wf INTEGER,
+  id_documento_historico_wf INTEGER,
+  historico VARCHAR(50) DEFAULT 'no'::character varying,
+  url VARCHAR,
+  extension VARCHAR(20),
+  action VARCHAR,
+  id_uo_funcionario INTEGER,
+  id_uo INTEGER,
+  CONSTRAINT tdocuments_open_pkey PRIMARY KEY(id_documento_abierto)
+) INHERITS (pxp.tbase)
+WITH (oids = false);
+
+ALTER TABLE wf.tdocumento_abierto
+  ALTER COLUMN id_proceso_wf SET STATISTICS 0;
+
+COMMENT ON TABLE wf.tdocumento_abierto
+IS 'Almacena informacion de los usuario que abrieron un documento escaneado o generado.';
+
+COMMENT ON COLUMN wf.tdocumento_abierto.historico
+IS 'Campo que diferencia si el documento es un historico de documentos, o es el documento oficial.';
+
+ALTER TABLE wf.tdocumento_abierto
+  OWNER TO postgres;
+/*****************************F-SCP-BVP-WF-0-28/02/2020*************/

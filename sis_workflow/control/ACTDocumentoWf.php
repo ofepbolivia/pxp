@@ -96,7 +96,26 @@ class ACTDocumentoWf extends ACTbase{
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
     
-    
+    function insertarRegistroOpenDoc(){
+        $this->objFunc=$this->create('MODDocumentoWf');
+        $this->res=$this->objFunc->insertarRegistroOpenDoc($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
+    function listarDocumentsOpens(){
+
+	    $this->objParam->getParametro('id_documento_wf')!='' && $this->objParam->addFiltro("dop.id_documento_wf = ".$this->objParam->getParametro('id_documento_wf'));
+
+        if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+            $this->objReporte = new Reporte($this->objParam,$this);
+            $this->res = $this->objReporte->generarReporteListado('MODDocumentoWf','listarDocumentsOpens');
+        } else{
+            $this->objFunc=$this->create('MODDocumentoWf');
+            $this->res=$this->objFunc->listarDocumentsOpens($this->objParam);
+        }
+
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 			
 }
 
