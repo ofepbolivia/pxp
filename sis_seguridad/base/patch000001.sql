@@ -1113,3 +1113,12 @@ ALTER TABLE segu.tprocedimiento
 CREATE INDEX idx_tusuario__id_usuario ON segu.tusuario
   USING btree (id_usuario);
 /*****************************F-SCP-RCM-SEGU-0-09/08/2017*************/
+
+/*****************************I-SCP-MAY-SEGU-0-20/02/2020*************/
+ALTER TABLE segu.tpersona
+  ADD COLUMN codigo_telf VARCHAR(30);
+
+COMMENT ON COLUMN segu.tpersona.codigo_telf
+IS 'codigo, pre fijo del numero de telefono';
+
+/*****************************F-SCP-MAY-SEGU-0-20/02/2020*************/

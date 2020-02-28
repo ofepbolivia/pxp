@@ -2168,3 +2168,37 @@ ALTER TABLE param.tconcepto_ingas
 ALTER TABLE param.tconcepto_ingas
     ADD COLUMN excento VARCHAR(2);
 /***********************************F-SCP-IRVA-PARAM-0-06/11/2019*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-20/02/2020*****************************************/
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN num_proveedor INTEGER;
+
+COMMENT ON COLUMN param.tproveedor.num_proveedor
+IS 'numero del proveedor';
+
+
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN condicion VARCHAR(50);
+
+COMMENT ON COLUMN param.tproveedor.condicion
+IS 'condicion frente al iva';
+
+
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN actividad VARCHAR(30);
+
+COMMENT ON COLUMN param.tproveedor.actividad
+IS 'actividad si es administrativo u operativo';
+
+
+ALTER TABLE param.tinstitucion
+  ADD COLUMN codigo_telf_institucion VARCHAR(30);
+
+COMMENT ON COLUMN param.tinstitucion.codigo_telf_institucion
+IS 'codigo, pre fijo del numero de telefono';
+
+
+/***********************************F-SCP-MAY-PARAM-0-20/02/2020*****************************************/

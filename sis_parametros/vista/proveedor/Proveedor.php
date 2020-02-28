@@ -13,7 +13,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 
 	register:'',
 	tipo: '',
-    fheight: 480,
+    fheight: 550,
     fwidth: 840,
 	Grupos: [
             {
@@ -81,18 +81,21 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		
 	},
 	iniciarEventos : function () {
-		Phx.vista.proveedor.superclass.iniciarEventos.call();
+		Phx.vista.proveedor.superclass.iniciarEventos.call()
 		this.getComponente('id_persona').on('select',function(c,r,n){
-			
-			if (this.register != 'update') {				
+
+			if (this.register != 'update') {
 				this.getComponente('rotulo_comercial').setValue(r.data.nombre_completo1);
 			}
+
 			
-			this.getComponente('nombre').setDisabled(true);
+			//this.getComponente('nombre').setDisabled(true);
+			this.getComponente('nombre_persona').setDisabled(true);
 			this.getComponente('apellido_paterno').setDisabled(true);
 			this.getComponente('apellido_materno').setDisabled(true);
 			this.getComponente('ci').setValue(r.data.ci);
-			this.getComponente('nombre').setValue(r.data.nombre);
+			//this.getComponente('nombre').setValue(r.data.nombre);
+			this.getComponente('nombre_persona').setValue(r.data.nombre);
 			this.getComponente('apellido_paterno').setValue(r.data.ap_paterno);
 			this.getComponente('fecha_nacimiento').setValue(r.data.fecha_nacimiento);
 			this.getComponente('direccion').setValue(r.data.direccion);
@@ -103,8 +106,9 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 			this.getComponente('celular2').setValue(r.data.celular2);
 			this.getComponente('telefono1').setValue(r.data.telefono1);
 			this.getComponente('telefono2').setValue(r.data.telefono2);
+			this.getComponente('casilla').setValue(r.data.casilla);
 			this.register='before_registered';
-			},this);
+		},this);
 			
 			
 	     	this.getComponente('id_institucion').on('select',function(c,r,n){
@@ -232,7 +236,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'codigo',
-				fieldLabel: 'codigo',
+				fieldLabel: 'Código',
 				allowBlank: true,
 				anchor: '100%',
 				gwidth: 100,
@@ -246,7 +250,24 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 			form:true,
             bottom_filter : true
 		},
-		
+        {
+            config:{
+                name: 'num_proveedor',
+                fieldLabel: 'Número de Proveedor',
+                allowBlank: true,
+                anchor: '100%',
+                gwidth: 100,
+                maxLength:50,
+                //readOnly :true,
+                style: 'color : blue;'
+            },
+            type:'NumberField',
+            filters:{pfiltro:'provee.num_proveedor',type:'string'},
+            id_grupo:0,
+            grid:true,
+            form:true,
+            bottom_filter : true
+        },
 		{
 			config:{
 				name: 'numero_sigma',
@@ -265,7 +286,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'nit',
-				fieldLabel: 'NIT',
+				fieldLabel: 'NIT / Nro de CUIT',
 				allowBlank: true,
 				anchor: '100%',
 				gwidth: 100,
@@ -301,6 +322,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 				anchor: '100%',
 				gwidth: 100,
                 style:'text-transform:uppercase;',
+                qtip: 'Rótulo Comercial / Razón Social',
 				maxLength:150
 			},
 			type:'TextField',
@@ -330,7 +352,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		config : {
 						name:'tipo',
 						qtip:'Tipo de proveedor',
-						fieldLabel : 'Tipo:',
+						fieldLabel : 'Tipo',
 						resizable:true,
 						allowBlank:true,
 		   				emptyText:'Seleccione un catálogo...',
@@ -359,7 +381,8 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		   				mode:'remote',
 		   				pageSize:10,
 		   				queryDelay:1000,
-		   				width:180,
+		   				//width:180,
+                        anchor:"100%",
 		   				minChars:2
 		    },
 			type:'ComboBox',
@@ -375,7 +398,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 			config:{
 				name: 'id_lugar',
 				fieldLabel: 'Lugar',
-				allowBlank: false,
+				allowBlank: true,
 				emptyText:'Lugar...',
 				store:new Ext.data.JsonStore(
 				{
@@ -413,6 +436,91 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 			grid:true,
 			form:true
 		},
+        {
+            config:{
+                name: 'id_lugar',
+                fieldLabel: 'Localidad',
+                allowBlank: true,
+                emptyText:'Lugar...',
+                store:new Ext.data.JsonStore(
+                    {
+                        url: '../../sis_parametros/control/Lugar/listarLugar',
+                        id: 'id_lugar',
+                        root: 'datos',
+                        sortInfo:{
+                            field: 'nombre',
+                            direction: 'ASC'
+                        },
+                        totalProperty: 'total',
+                        fields: ['id_lugar','id_lugar_fk','codigo','nombre','tipo','sw_municipio','sw_impuesto','codigo_largo'],
+                        // turn on remote sorting
+                        remoteSort: true,
+                       // baseParams:{tipos:"''departamento'',''pais'',''localidad''",par_filtro:'nombre'}
+                        baseParams:{tipos:"''localidad''",par_filtro:'nombre'}
+                    }),
+                valueField: 'id_lugar',
+                displayField: 'nombre',
+                gdisplayField:'lugar',
+                hiddenName: 'id_lugar',
+                triggerAction: 'all',
+                lazyRender:true,
+                mode:'remote',
+                pageSize:50,
+                queryDelay:500,
+                anchor:"100%",
+                gwidth:220,
+                forceSelection:true,
+                minChars:2,
+                renderer:function (value, p, record){return String.format('{0}', record.data['lugar']);}
+            },
+            type:'ComboBox',
+            filters:{pfiltro:'lug.nombre',type:'string'},
+            id_grupo:0,
+            grid:true,
+            form:true
+        },
+        {
+            config:{
+                name: 'id_lugar',
+                fieldLabel: 'Provincia',
+                allowBlank: true,
+                emptyText:'Lugar...',
+                store:new Ext.data.JsonStore(
+                    {
+                        url: '../../sis_parametros/control/Lugar/listarLugar',
+                        id: 'id_lugar',
+                        root: 'datos',
+                        sortInfo:{
+                            field: 'nombre',
+                            direction: 'ASC'
+                        },
+                        totalProperty: 'total',
+                        fields: ['id_lugar','id_lugar_fk','codigo','nombre','tipo','sw_municipio','sw_impuesto','codigo_largo'],
+                        // turn on remote sorting
+                        remoteSort: true,
+                        baseParams:{tipos:"''provincia''",par_filtro:'nombre'}
+                    }),
+                valueField: 'id_lugar',
+                displayField: 'nombre',
+                gdisplayField:'lugar',
+                hiddenName: 'id_lugar',
+                triggerAction: 'all',
+                lazyRender:true,
+                mode:'remote',
+                pageSize:50,
+                queryDelay:500,
+                anchor:"100%",
+                gwidth:220,
+                forceSelection:true,
+                minChars:2,
+                renderer:function (value, p, record){return String.format('{0}', record.data['lugar']);}
+            },
+            type:'ComboBox',
+            filters:{pfiltro:'lug.nombre',type:'string'},
+            id_grupo:0,
+            grid:true,
+            form:true
+        },
 		{
 			config:{
 				name: 'contacto',
@@ -427,6 +535,44 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 			grid:true,
 			form:true
 		},
+
+        {
+            config:{
+                name: 'condicion',
+                fieldLabel: 'Condición Frente al IVA',
+                allowBlank: true,
+                anchor: '100%',
+                gwidth: 100,
+                typeAhead:true,
+                triggerAction:'all',
+                mode:'local',
+                store:['Responsable Inscripto','Monotributo', 'Exento']
+            },
+            type:'ComboBox',
+            filters:{pfiltro:'provee.condicion',type:'string'},
+            id_grupo:0,
+            grid:false,
+            form:true
+        },
+        {
+            config:{
+                name: 'actividad',
+                fieldLabel: 'Actividad',
+                allowBlank: true,
+                anchor: '100%',
+                gwidth: 100,
+                typeAhead:true,
+                triggerAction:'all',
+                mode:'local',
+                store:['Administrativo', 'Operativa']
+            },
+            type:'ComboBox',
+            filters:{pfiltro:'provee.actividad',type:'string'},
+            id_grupo:0,
+            grid:false,
+            form:true
+        },
+
 		{
 			config:{
 				name: 'desc_dir_proveedor',
@@ -444,7 +590,8 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		},
 		{
 			config:{
-				name: 'nombre',
+				//name: 'nombre',
+				name: 'nombre_persona',
 				fieldLabel: 'Nombre',
 				allowBlank: true,
 				anchor: '100%',
@@ -452,7 +599,8 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 				maxLength:50
 			},
 			type:'TextField',
-			filters:{pfiltro:'per.nombre',type:'string'},
+			//filters:{pfiltro:'per.nombre',type:'string'},
+			filters:{pfiltro:'person.nombre_persona',type:'string'},
 			id_grupo:1,
 			grid:false,
 			form:true
@@ -482,7 +630,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 				maxLength:50
 			},
 			type:'TextField',
-			filters:{pfiltro:'per.apellido_paterno',type:'string'},
+			filters:{pfiltro:'per.apellido_materno',type:'string'},
 			id_grupo:1,
 			grid:false,
 			form:true
@@ -548,10 +696,26 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 			grid:false,
 			form:true
 		},
+        {
+            config:{
+                //name: 'casilla',
+                name: 'codigo_telf',
+                fieldLabel: 'Código Télefono',
+                allowBlank: true,
+                anchor: '100%',
+                gwidth: 100,
+                maxLength:50
+            },
+            type:'TextField',
+            //type:'NumberField',
+            id_grupo:1,
+            grid:false,
+            form:true
+        },
 		{
 			config:{
 				name: 'telefono1',
-				fieldLabel: 'Telefono1',
+				fieldLabel: 'Teléfono 1',
 				allowBlank: true,
 				anchor: '100%',
 				gwidth: 100,
@@ -566,7 +730,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'telefono2',
-				fieldLabel: 'Telefono2',
+				fieldLabel: 'Teléfono 2',
 				allowBlank: true,
 				anchor: '100%',
 				gwidth: 100,
@@ -581,7 +745,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'genero',
-				fieldLabel: 'Genero',
+				fieldLabel: 'Género',
 				allowBlank: true,
 				anchor: '100%',
 				gwidth: 100,
@@ -602,7 +766,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 				name: 'fecha_nacimiento',
 				fieldLabel: 'Fecha Nacimiento',
 				allowBlank: true,
-				anchor: '90%',
+                anchor: '100%',
 				gwidth: 100,
 				format: 'd/m/Y',
 				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
@@ -616,7 +780,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'direccion',
-				fieldLabel: 'Direccion',
+				fieldLabel: 'Dirección',
 				allowBlank: true,
 				anchor: '100%',
 				gwidth: 100,
@@ -700,6 +864,37 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 			grid:false,
 			form:true
 		},
+        {
+            config:{
+                name: 'codigo_telf',
+                fieldLabel: 'Código Télefono',
+                allowBlank: true,
+                anchor: '100%',
+                gwidth: 100,
+                maxLength:50
+            },
+            type:'NumberField',
+            id_grupo:1,
+            grid:false,
+            form:true
+        },
+        {
+            config:{
+                name: 'codigo_telf_institucion',
+                fieldLabel: 'Código Télefono',
+                allowBlank: true,
+                anchor: '100%',
+                gwidth: 100,
+                maxLength:50
+            },
+            type:'NumberField',
+            id_grupo:2,
+            grid:false,
+            form:true
+        },
+
+
+
 		{
 			config:{
 				name: 'telefono1_institucion',
@@ -966,7 +1161,17 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		{name:'pais', type: 'string'},
 		{name:'rotulo_comercial', type: 'string'},
 		{name:'nombre_proveedor', type: 'string'},'ci', 'desc_dir_proveedor','contacto',
-		'id_proceso_wf','id_estado_wf','nro_tramite','estado'
+		'id_proceso_wf','id_estado_wf','nro_tramite','estado',
+
+        {name:'condicion', type: 'string'},
+        {name:'actividad', type: 'string'},
+        'num_proveedor',
+
+        'nombre_persona',
+        'apellido_paterno',
+        'apellido_materno',
+        'codigo_telf',
+        'codigo_telf_institucion'
 	],
 
     arrayDefaultColumHidden: ['estado'],
@@ -1022,8 +1227,8 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		this.Cmp.id_persona.modificado = true;
 		
 		this.ocultarGrupo(1);
-		this.ocultarGrupo(2);	
-		
+		this.ocultarGrupo(2);
+
 		if(this.cmbProveedor.getValue()==='persona'){
 		
 		
@@ -1054,6 +1259,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 					this.getComponente('nombre_institucion').allowBlank = false;	
 					this.getComponente('nombre').allowBlank = true;	
 					this.getComponente('apellido_paterno').allowBlank = true;
+					this.getComponente('apellido_materno').allowBlank = true;
 					//this.getComponente('id_persona').allowBlank=true;
 					this.getComponente('id_persona').reset();
 					this.getComponente('id_persona').disable();
@@ -1079,14 +1285,15 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		
 		datos=this.sm.getSelected().data;
 		Phx.vista.proveedor.superclass.onButtonEdit.call(this); //sobrecarga enable select
-		
+
 		if(datos.id_persona !='' && datos.id_persona !=undefined){
 			//this.ocultarComponente(this.getComponente('id_institucion'));
 			var cmbPer = this.getComponente('id_persona');
 			//cmbPer.enable();
 			cmbPer.getStore().setBaseParam('id_persona',cmbPer.getValue());
-			cmbPer.getStore().load({ params : cmbPer.getParams() ,
-		       callback : function (r) {	       				
+            cmbPer.getStore().load({ params : cmbPer.getParams() ,
+
+                callback : function (r) {
 		    		if (r.length > 0 ) {	       				
 	    				cmbPer.setValue(r[0].data.id_persona);
 	    				cmbPer.fireEvent('select', cmbPer, r[0]);
@@ -1099,13 +1306,28 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 			this.getComponente('id_institucion').reset();			
 			this.mostrarComponente(this.getComponente('id_persona'));
 			this.ocultarComponente(this.getComponente('id_institucion'));
-			this.mostrarGrupo(1);
-			this.ocultarGrupo(2);
-			this.unblockGroup(1);
-			this.getComponente('nombre_institucion').allowBlank = true;	
-			this.getComponente('nombre').allowBlank = false;	
-			this.getComponente('apellido_paterno').allowBlank = false;
-			
+
+          //  this.getComponente('nombre').setValue(datos.nombre);
+
+            this.mostrarGrupo(1);
+            this.ocultarGrupo(2);
+            this.unblockGroup(1);
+            this.getComponente('nombre_institucion').allowBlank = true;
+
+            //27-02-2020 (may) se comenta porque no debe modificarsenombre y apellidos
+            //this.getComponente('nombre').allowBlank = false;
+            //this.getComponente('apellido_paterno').allowBlank = false;
+            this.getComponente('nombre_persona').allowBlank = true;
+            this.getComponente('apellido_paterno').allowBlank = true;
+            this.getComponente('apellido_materno').allowBlank = true;
+
+           // this.getComponente('nombre').setDisabled(true);
+            this.getComponente('nombre_persona').setDisabled(true);
+            this.getComponente('apellido_paterno').setDisabled(true);
+            this.getComponente('apellido_materno').setDisabled(true);
+
+
+
 			
 			//this.ocultarComponente(this.getComponente('tipo'));
 			//this.getComponente('tipo').setValue(datos.tipo);

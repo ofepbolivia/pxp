@@ -24,6 +24,8 @@ Phx.vista.Lugar=Ext.extend(Phx.arbInterfaz,{
 		//this.init();
 		//this.loaderTree.baseParams={id_subsistema:this.id_subsistema};
 		//this.load({params:{start:0, limit:50}})
+        this.tbar.items.get('b-edit-'+this.idContenedor).enable();
+        this.tbar.items.get('b-del-'+this.idContenedor).enable();
 	},
 			
 	Atributos:[
@@ -247,6 +249,7 @@ Phx.vista.Lugar=Ext.extend(Phx.arbInterfaz,{
 	},
 	bdel:true,
 	bsave:true,
+	bedit:true,
 	rootVisible:true,
 	//sobrecarga prepara menu
 	preparaMenu:function(n){
@@ -257,7 +260,7 @@ Phx.vista.Lugar=Ext.extend(Phx.arbInterfaz,{
 				}
 				else {
 					this.tbar.items.get('b-new-'+this.idContenedor).disable()
-				}			
+				}
 			// llamada funcion clace padre
 			Phx.vista.Lugar.superclass.preparaMenu.call(this,n)
 		},
