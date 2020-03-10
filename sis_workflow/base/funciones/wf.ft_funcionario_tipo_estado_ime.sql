@@ -109,7 +109,7 @@ BEGIN
 	            regla = v_parametros.regla
 				where id_funcionario_tipo_estado=v_parametros.id_funcionario_tipo_estado;
 			else
-				update segu.tfuncionario_tipo_estado set
+				update wf.tfuncionario_tipo_estado set
                         estado_reg = 'inactivo'
                 where id_funcionario_tipo_estado=v_parametros.id_funcionario_tipo_estado;
                 

@@ -99,7 +99,7 @@ BEGIN
                           uo.id_uo,
                           uo.presupuesta,
                           uo.gerencia, 
-                          0
+                          0::numeric
                       from orga.tuo_funcionario_ope uofun
                       inner join orga.tuo uo
                           on uo.id_uo = uofun.id_uo

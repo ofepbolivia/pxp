@@ -24,7 +24,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		ActList : '../../sis_organigrama/control/EstructuraUo/listarEstructuraUoCheck',
 		btriguerreturn:true,
 		onButtonTriguerreturn: function(){
-			this.seleccionNodos(this.root);
+			this.seleccionNodos(this.root); console.log('valores', this, this.idContenedorPadre);
 			Phx.CP.getPagina(this.idContenedorPadre).uo.setValue(this.desc_uo);
 			Phx.CP.getPagina(this.idContenedorPadre).id_estructura_uo.setValue(this.id_estructura_uo);
 			Phx.CP.getPagina(this.idContenedorPadre).id_uo.setValue(this.id_uo);
