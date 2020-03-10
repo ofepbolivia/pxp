@@ -71,6 +71,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 	capturaFiltros:function(combo, record, index){
 		this.tipo = this.cmbProveedor.getValue();
 		this.store.baseParams={tipo:this.cmbProveedor.getValue(),tipo_interfaz: this.nombreVista};
+
 		this.load({params:{start:0,limit:50}});
 	},
 	agregarArgsExtraSubmit: function(){
@@ -139,8 +140,28 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 					
 					this.register='before_registered';
 			},this);
-		
-	},		
+
+	     	//may
+            console.log('log 1', this.getComponente('id_lugar'))
+            console.log('log 2', this.getComponente('id_lugar_fk'))
+            //09-03_2020 (may) filtro para campo departamento segun el pais
+           this.getComponente('id_lugar').on('select',function(cmp, rec, indice){
+                this.Cmp.id_lugar_fk.reset();
+                this.Cmp.id_lugar_fk.store.baseParams.id_lugar_fk = rec.data.id_lugar;
+                this.Cmp.id_lugar_fk.modificado = true;
+            },this);
+
+            //09-03_2020 (may) filtro para campo ciudad segun el departamento
+            this.Cmp.id_lugar_fk.on('select',function(cmp, rec, indice){
+                this.Cmp.id_lugar_fk2.reset();
+                this.Cmp.id_lugar_fk2.store.baseParams.id_lugar_fk = rec.data.id_lugar;
+                this.Cmp.id_lugar_fk2.modificado = true;
+            },this);
+
+
+
+
+	},
 	Atributos:[
 		{
 			//configuracion del componente
@@ -397,7 +418,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'id_lugar',
-				fieldLabel: 'Lugar',
+				fieldLabel: 'País',
 				allowBlank: true,
 				emptyText:'Lugar...',
 				store:new Ext.data.JsonStore(
@@ -413,7 +434,8 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 					fields: ['id_lugar','id_lugar_fk','codigo','nombre','tipo','sw_municipio','sw_impuesto','codigo_largo'],
 					// turn on remote sorting
 					remoteSort: true,
-					baseParams:{tipos:"''departamento'',''pais'',''localidad''",par_filtro:'nombre'}
+					//baseParams:{tipos:"''departamento'',''pais'',''localidad''",par_filtro:'nombre'}
+					baseParams:{tipos:"''pais''",par_filtro:'nombre'}
 				}),
 				valueField: 'id_lugar',
 				displayField: 'nombre',
@@ -438,8 +460,50 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		},
         {
             config:{
-                name: 'id_lugar',
-                fieldLabel: 'Localidad',
+                name: 'id_lugar_fk',
+                fieldLabel: 'Departamento / Provincia',
+                allowBlank: true,
+                emptyText:'Lugar...',
+                store:new Ext.data.JsonStore(
+                    {
+                        url: '../../sis_parametros/control/Lugar/listarLugar',
+                        id: 'id_lugar',
+                        root: 'datos',
+                        sortInfo:{
+                            field: 'nombre',
+                            direction: 'ASC'
+                        },
+                        totalProperty: 'total',
+                        fields: ['id_lugar','id_lugar_fk','codigo','nombre','tipo','sw_municipio','sw_impuesto','codigo_largo'],
+                        // turn on remote sorting
+                        remoteSort: true,
+                        baseParams:{tipos:"''departamento'', ''provincia'' ",par_filtro:'nombre'}
+                    }),
+                valueField: 'id_lugar_fk',
+                displayField: 'nombre',
+                gdisplayField:'lugar',
+                hiddenName: 'id_lugar_fk',
+                triggerAction: 'all',
+                lazyRender:true,
+                mode:'remote',
+                pageSize:50,
+                queryDelay:500,
+                anchor:"100%",
+                gwidth:220,
+                forceSelection:true,
+                minChars:2,
+                renderer:function (value, p, record){return String.format('{0}', record.data['lugar']);}
+            },
+            type:'ComboBox',
+            filters:{pfiltro:'lug.nombre',type:'string'},
+            id_grupo:0,
+            grid:false,
+            form:true
+        },
+        {
+            config:{
+                name: 'id_lugar_fk2',
+                fieldLabel: 'Ciudad',
                 allowBlank: true,
                 emptyText:'Lugar...',
                 store:new Ext.data.JsonStore(
@@ -456,7 +520,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
                         // turn on remote sorting
                         remoteSort: true,
                        // baseParams:{tipos:"''departamento'',''pais'',''localidad''",par_filtro:'nombre'}
-                        baseParams:{tipos:"''localidad''",par_filtro:'nombre'}
+                        baseParams:{tipos:"''ciudad''",par_filtro:'nombre'}
                     }),
                 valueField: 'id_lugar',
                 displayField: 'nombre',
@@ -476,51 +540,10 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
             type:'ComboBox',
             filters:{pfiltro:'lug.nombre',type:'string'},
             id_grupo:0,
-            grid:true,
+            grid:false,
             form:true
         },
-        {
-            config:{
-                name: 'id_lugar',
-                fieldLabel: 'Provincia',
-                allowBlank: true,
-                emptyText:'Lugar...',
-                store:new Ext.data.JsonStore(
-                    {
-                        url: '../../sis_parametros/control/Lugar/listarLugar',
-                        id: 'id_lugar',
-                        root: 'datos',
-                        sortInfo:{
-                            field: 'nombre',
-                            direction: 'ASC'
-                        },
-                        totalProperty: 'total',
-                        fields: ['id_lugar','id_lugar_fk','codigo','nombre','tipo','sw_municipio','sw_impuesto','codigo_largo'],
-                        // turn on remote sorting
-                        remoteSort: true,
-                        baseParams:{tipos:"''provincia''",par_filtro:'nombre'}
-                    }),
-                valueField: 'id_lugar',
-                displayField: 'nombre',
-                gdisplayField:'lugar',
-                hiddenName: 'id_lugar',
-                triggerAction: 'all',
-                lazyRender:true,
-                mode:'remote',
-                pageSize:50,
-                queryDelay:500,
-                anchor:"100%",
-                gwidth:220,
-                forceSelection:true,
-                minChars:2,
-                renderer:function (value, p, record){return String.format('{0}', record.data['lugar']);}
-            },
-            type:'ComboBox',
-            filters:{pfiltro:'lug.nombre',type:'string'},
-            id_grupo:0,
-            grid:true,
-            form:true
-        },
+
 		{
 			config:{
 				name: 'contacto',
@@ -1171,7 +1194,10 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
         'apellido_paterno',
         'apellido_materno',
         'codigo_telf',
-        'codigo_telf_institucion'
+        'codigo_telf_institucion',
+
+        {name:'id_lugar_fk', type: 'numeric'},
+        {name:'id_lugar_fk2', type: 'numeric'}
 	],
 
     arrayDefaultColumHidden: ['estado'],
@@ -1366,6 +1392,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		//this.ocultarComponente(this.getComponente('codigo_institucion'));
 		this.ocultarComponente(this.getComponente('codigo_banco'));
 		//
+
 	},
 	
 

@@ -2202,3 +2202,20 @@ IS 'codigo, pre fijo del numero de telefono';
 
 
 /***********************************F-SCP-MAY-PARAM-0-20/02/2020*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-09/03/2020*****************************************/
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN id_lugar_departamento INTEGER;
+
+COMMENT ON COLUMN param.tproveedor.id_lugar_departamento
+IS 'id_lugar para el departamento';
+
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN id_lugar_ciudad INTEGER;
+
+COMMENT ON COLUMN param.tproveedor.id_lugar_ciudad
+IS 'id_lugar para la ciudad';
+
+/***********************************F-SCP-MAY-PARAM-0-09/03/2020*****************************************/

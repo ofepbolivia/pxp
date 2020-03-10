@@ -135,6 +135,9 @@ class MODProveedor extends MODbase{
 		$this->captura('codigo_telf','varchar');
 		$this->captura('codigo_telf_institucion','varchar');
 
+		$this->captura('id_lugar_fk','int4');
+		$this->captura('id_lugar_fk2','int4');
+
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -257,6 +260,9 @@ class MODProveedor extends MODbase{
 		$this->setParametro('codigo_telf','codigo_telf','varchar');
 		$this->setParametro('codigo_telf_institucion','codigo_telf_institucion','varchar');
 
+		$this->setParametro('id_lugar_fk','id_lugar_fk','int4');
+		$this->setParametro('id_lugar_fk2','id_lugar_fk2','int4');
+
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -321,6 +327,9 @@ class MODProveedor extends MODbase{
 		$this->setParametro('num_proveedor','num_proveedor','int4');
 		$this->setParametro('codigo_telf','codigo_telf','varchar');
 		$this->setParametro('codigo_telf_institucion','codigo_telf_institucion','varchar');
+
+		$this->setParametro('id_lugar_fk','id_lugar_fk','integer');
+		$this->setParametro('id_lugar_fk2','id_lugar_fk2','integer');
 
 
 		//Ejecuta la instruccion

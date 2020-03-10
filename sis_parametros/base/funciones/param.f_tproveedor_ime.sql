@@ -177,7 +177,9 @@ BEGIN
 
                      condicion,
                      actividad,
-                     num_proveedor
+                     num_proveedor,
+                     id_lugar_departamento,
+                     id_lugar_ciudad
 
                      )values
 
@@ -196,7 +198,9 @@ BEGIN
 
                     v_parametros.condicion,
                     v_parametros.actividad,
-                    v_parametros.num_proveedor
+                    v_parametros.num_proveedor,
+                    v_parametros.id_lugar_fk,
+                    v_parametros.id_lugar_fk2
 
                     ) RETURNING id_proveedor into v_id_proveedor;
            else
@@ -529,7 +533,9 @@ BEGIN
 
                 condicion = v_parametros.condicion,
                 actividad = v_parametros.actividad,
-                num_proveedor = v_parametros.num_proveedor
+                num_proveedor = v_parametros.num_proveedor,
+                id_lugar_departamento = v_parametros.id_lugar_fk,
+                id_lugar_ciudad = v_parametros.id_lugar_fk2
 
             where id_proveedor=v_parametros.id_proveedor;
 

@@ -29,6 +29,16 @@ class ACTLugar extends ACTbase{
 		if ($this->objParam->getParametro('tipos') != '') {
 			$this->objParam->addFiltro("lug.tipo  in (". $this->objParam->getParametro('tipos') . ")");
 		}
+
+		if ($this->objParam->getParametro('id_lugar_fk') != '') {
+			$this->objParam->addFiltro("lug.id_lugar_fk  in (". $this->objParam->getParametro('id_lugar_fk') . ")");
+		}
+
+		if ($this->objParam->getParametro('id_lugar_fk2') != '') {
+			$this->objParam->addFiltro("lug.id_lugar_fk  in (". $this->objParam->getParametro('id_lugar_fk') . ")");
+		}
+
+
 		$this->objFunc=$this->create('MODLugar');
 		$this->res=$this->objFunc->listarLugar();
 		$this->res->imprimirRespuesta($this->res->generarJson());
@@ -117,6 +127,31 @@ class ACTLugar extends ACTbase{
 	function eliminarLugar(){
 		$this->objFunc=$this->create('MODLugar');
 		$this->res=$this->objFunc->eliminarLugar();
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
+
+	function listarLugarClasificado(){
+		$this->objParam->defecto('ordenacion','id_lugar');
+
+		$this->objParam->defecto('dir_ordenacion','asc');
+
+		if ($this->objParam->getParametro('es_regional') != '') {
+			$this->objParam->addFiltro("lug.es_regional  in (''". $this->objParam->getParametro('es_regional') . "'')");
+		}
+		/*Aumentando para listar solo los paises*/
+		if ($this->objParam->getParametro('pais') != '') {
+			$this->objParam->addFiltro("lug.id_sql_server is not null and lug.tipo = ''". $this->objParam->getParametro('pais') . "''");
+		}
+		/*******************************************/
+		if ($this->objParam->getParametro('tipo') != '') {
+			$this->objParam->addFiltro("lug.tipo  in (''". $this->objParam->getParametro('tipo') . "'')");
+		}
+
+		if ($this->objParam->getParametro('tipos') != '') {
+			$this->objParam->addFiltro("lug.tipo  in (". $this->objParam->getParametro('tipos') . ")");
+		}
+		$this->objFunc=$this->create('MODLugar');
+		$this->res=$this->objFunc->listarLugarClasificado();
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
 
