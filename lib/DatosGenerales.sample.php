@@ -20,10 +20,10 @@
 	//nombre carpeta donde se aloja el framewoek en el servidor web
 	//la cokies solamente son admitidas en esta direccion
 	//$_SESSION["_FOLDER"] = "/web/lib/lib_control/";
-	$_SESSION["_FOLDER"] = "/";
+	$_SESSION["_FOLDER"] = "/kerp-boa/";
 
 	//nombre carpeta de logs de postgres
-	$_SESSION["_FOLDER_LOGS_BD"] = "/var/lib/pgsql/9.3/data/pg_log/";
+	$_SESSION["_FOLDER_LOGS_BD"] = "/var/lib/pgsql/11/data/pg_log/";
 
 	//nombre base de los archivos de los logs de base de datos el nombre del archivo sera :
 	//$_SESSION["_NOMBRE_LOG_BD"].-%Y-%m-%d.log
