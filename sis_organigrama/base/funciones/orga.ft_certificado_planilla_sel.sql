@@ -112,6 +112,7 @@ BEGIN
                               from orga.tcertificado_planilla planc
                               inner join segu.tusuario usu1 on usu1.id_usuario = planc.id_usuario_reg
                               inner join orga.vfuncionario_cargo fun on fun.id_funcionario = planc.id_funcionario and (fun.fecha_finalizacion is null or fun.fecha_finalizacion >= now() or fun.fecha_finalizacion >= ''20/12/2017'')
+                              and planc.fecha_solicitud between fun.fecha_asignacion and coalesce(fun.fecha_finalizacion, now())                              
                               inner join orga.tcargo car on car.id_cargo = fun.id_cargo and (car.fecha_fin is null or car.fecha_fin >= now()) and car.estado_reg = ''activo''
 							  inner join orga.tuo_funcionario ufun on ufun.id_cargo = car.id_cargo and ufun.tipo=''oficial''  and ufun.id_funcionario= planc.id_funcionario
                               inner join orga.tescala_salarial es on es.id_escala_salarial =car.id_escala_salarial
@@ -161,6 +162,7 @@ BEGIN
                       from orga.tcertificado_planilla planc
                             inner join segu.tusuario usu1 on usu1.id_usuario = planc.id_usuario_reg
                             inner join orga.vfuncionario_cargo fun on fun.id_funcionario = planc.id_funcionario and (fun.fecha_finalizacion is null or fun.fecha_finalizacion >= now() or fun.fecha_finalizacion >= ''20/12/2017'')
+                            and planc.fecha_solicitud between fun.fecha_asignacion and coalesce(fun.fecha_finalizacion, now())                                                          
                             inner join orga.tcargo car on car.id_cargo = fun.id_cargo and (car.fecha_fin is null or car.fecha_fin >= now()) and car.estado_reg = ''activo''
 							inner join orga.tuo_funcionario ufun on ufun.id_cargo = car.id_cargo and ufun.tipo=''oficial''  and ufun.id_funcionario= planc.id_funcionario
                             inner join orga.tescala_salarial es on es.id_escala_salarial =car.id_escala_salarial

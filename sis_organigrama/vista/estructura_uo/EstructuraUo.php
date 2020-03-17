@@ -565,9 +565,9 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 	/*
 	 * south:{ url:'../../sis_legal/vista/representante/representante.php',
 	 * title:'Representante', height:200 },
-	 */	
-		
-     
+	 */
+
+
 	tabsouth:[
             {
 			  url:'../../../sis_organigrama/vista/uo_funcionario/UOFuncionario.php',

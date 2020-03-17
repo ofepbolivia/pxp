@@ -21,7 +21,7 @@ class MODNivelOrganizacional extends MODbase{
 				
 		//Definicion de la lista del resultado del query
 		$this->captura('id_nivel_organizacional','int4');
-		$this->captura('numero_nivel','int4');
+		$this->captura('numero_nivel','numeric');
 		$this->captura('estado_reg','varchar');
 		$this->captura('nombre_nivel','varchar');
 		$this->captura('fecha_reg','timestamp');
@@ -46,7 +46,7 @@ class MODNivelOrganizacional extends MODbase{
 		$this->tipo_procedimiento='IME';
 				
 		//Define los parametros para la funcion
-		$this->setParametro('numero_nivel','numero_nivel','int4');
+		$this->setParametro('numero_nivel','numero_nivel','numeric');
 		$this->setParametro('estado_reg','estado_reg','varchar');
 		$this->setParametro('nombre_nivel','nombre_nivel','varchar');
 
@@ -66,7 +66,7 @@ class MODNivelOrganizacional extends MODbase{
 				
 		//Define los parametros para la funcion
 		$this->setParametro('id_nivel_organizacional','id_nivel_organizacional','int4');
-		$this->setParametro('numero_nivel','numero_nivel','int4');
+		$this->setParametro('numero_nivel','numero_nivel','numeric');
 		$this->setParametro('estado_reg','estado_reg','varchar');
 		$this->setParametro('nombre_nivel','nombre_nivel','varchar');
 
