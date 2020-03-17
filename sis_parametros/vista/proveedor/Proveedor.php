@@ -587,7 +587,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
                 typeAhead:true,
                 triggerAction:'all',
                 mode:'local',
-                store:['Administrativo', 'Operativa']
+                store:['Administrativo', 'Operativa', 'Bienes', 'Comercial']
             },
             type:'ComboBox',
             filters:{pfiltro:'provee.actividad',type:'string'},
