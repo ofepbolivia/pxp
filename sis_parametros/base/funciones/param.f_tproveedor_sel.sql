@@ -268,17 +268,16 @@ BEGIN
                         provee.pais,
                         provee.rotulo_comercial,
                         (COALESCE(provee.email,''''))::varchar as email,
-                        tprov.num_proveedor::integer,
-                        tprov.condicion
-            from param.vproveedor provee
-            left join param.tproveedor tprov on tprov.id_proveedor = provee.id_proveedor
+                        provee.num_proveedor::integer,
+                        provee.condicion
+            from param.vproveedor2 provee
             where  ';
 
             if pxp.f_existe_parametro(p_tabla,'id_lugar') then
       			v_ids = param.f_get_id_lugares(v_parametros.id_lugar);
       			v_consulta = v_consulta || 'provee.id_lugar in ('||v_ids||') and ';
       		end if;
-
+--raise exception 'llega %',v_parametros.filtro;
       --Definicion de la respuesta
       v_consulta:=v_consulta||v_parametros.filtro;
       v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
@@ -300,8 +299,7 @@ BEGIN
     begin
       --Sentencia de la consulta de conteo de registros
       v_consulta:='select count(provee.id_proveedor)
-              from param.vproveedor provee
-              left join param.tproveedor tprov on tprov.id_proveedor = provee.id_proveedor
+              from param.vproveedor2 provee
               where ';
 
 			if pxp.f_existe_parametro(p_tabla,'id_lugar') then
