@@ -80,6 +80,9 @@ class MODProveedor extends MODbase{
 		$this->captura('rotulo_comercial','varchar');
 		$this->captura('email','varchar');
 
+		$this->captura('num_proveedor','INTEGER');
+		$this->captura('condicion','VARCHAR');
+
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 		//echo $this->consulta; exit;

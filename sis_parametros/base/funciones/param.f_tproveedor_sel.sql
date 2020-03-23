@@ -255,20 +255,23 @@ BEGIN
 
       	--Sentencia de la consulta
      	 v_consulta:='select
-            			id_proveedor,
-                        id_persona,
-                        codigo,
-                        numero_sigma,
-                        tipo,
-                        id_institucion,
-                        desc_proveedor,
-                        nit,
-                        id_lugar,
-                        lugar,
-                        pais,
-                        rotulo_comercial,
-                        (COALESCE(email,''''))::varchar as email
+            			provee.id_proveedor,
+                        provee.id_persona,
+                        provee.codigo,
+                        provee.numero_sigma,
+                        provee.tipo,
+                        provee.id_institucion,
+                        provee.desc_proveedor,
+                        provee.nit,
+                        provee.id_lugar,
+                        provee.lugar,
+                        provee.pais,
+                        provee.rotulo_comercial,
+                        (COALESCE(provee.email,''''))::varchar as email,
+                        tprov.num_proveedor::integer,
+                        tprov.condicion
             from param.vproveedor provee
+            left join param.tproveedor tprov on tprov.id_proveedor = provee.id_proveedor
             where  ';
 
             if pxp.f_existe_parametro(p_tabla,'id_lugar') then
@@ -296,8 +299,9 @@ BEGIN
 
     begin
       --Sentencia de la consulta de conteo de registros
-      v_consulta:='select count(id_proveedor)
+      v_consulta:='select count(provee.id_proveedor)
               from param.vproveedor provee
+              left join param.tproveedor tprov on tprov.id_proveedor = provee.id_proveedor
               where ';
 
 			if pxp.f_existe_parametro(p_tabla,'id_lugar') then
