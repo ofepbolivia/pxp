@@ -185,7 +185,10 @@ BEGIN
                             COALESCE(plt.plantilla_qr,''''),
                             plt.sw_estacion,
                             plt.sw_punto_venta,
-                            plt.sw_cod_no_iata
+                            plt.sw_cod_no_iata,
+
+                            plt.codigo,
+                            plt.letra_tipo_plantilla
 
 						from param.tplantilla plt
 						inner join segu.tusuario usu1 on usu1.id_usuario = plt.id_usuario_reg
