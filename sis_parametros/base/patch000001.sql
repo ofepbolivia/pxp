@@ -2219,3 +2219,20 @@ COMMENT ON COLUMN param.tproveedor.id_lugar_ciudad
 IS 'id_lugar para la ciudad';
 
 /***********************************F-SCP-MAY-PARAM-0-09/03/2020*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-24/03/2020*****************************************/
+
+ALTER TABLE param.tplantilla
+  ADD COLUMN codigo VARCHAR(50);
+
+COMMENT ON COLUMN param.tplantilla.codigo
+IS 'codigo del tipo de documento';
+
+
+ALTER TABLE param.tplantilla
+  ADD COLUMN letra_tipo_plantilla VARCHAR(30);
+
+COMMENT ON COLUMN param.tplantilla.letra_tipo_plantilla
+IS 'letra de un tipo de documento';
+
+/***********************************F-SCP-MAY-PARAM-0-24/03/2020*****************************************/
