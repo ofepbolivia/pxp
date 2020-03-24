@@ -83,7 +83,10 @@ BEGIN
                             plt.sw_estacion,
                             plt.sw_punto_venta,
                             plt.sw_cod_no_iata,
-                            array_to_string(plt.cod_inter,'','',''null'')::varchar as cod_inter
+                            array_to_string(plt.cod_inter,'','',''null'')::varchar as cod_inter,
+
+                            plt.codigo,
+                            plt.letra_tipo_plantilla
 
 						from param.tplantilla plt
 						inner join segu.tusuario usu1 on usu1.id_usuario = plt.id_usuario_reg

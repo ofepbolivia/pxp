@@ -52,7 +52,10 @@ class MODPlantilla extends MODbase{
 		$this->captura('sw_codigo_no_iata','varchar');
 
         $this->captura('cod_inter','varchar');
-		
+
+        $this->captura('codigo','varchar');
+        $this->captura('letra_tipo_plantilla','varchar');
+
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
@@ -92,6 +95,9 @@ class MODPlantilla extends MODbase{
 		$this->setParametro('sw_codigo_no_iata','sw_codigo_no_iata','varchar');
 
         $this->setParametro('cod_inter','cod_inter','varchar');
+
+        $this->setParametro('codigo','codigo','varchar');
+        $this->setParametro('letra_tipo_plantilla','letra_tipo_plantilla','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -133,6 +139,9 @@ class MODPlantilla extends MODbase{
 		$this->setParametro('sw_codigo_no_iata','sw_codigo_no_iata','varchar');
 
         $this->setParametro('cod_inter','cod_inter','varchar');
+
+        $this->setParametro('codigo','codigo','varchar');
+        $this->setParametro('letra_tipo_plantilla','letra_tipo_plantilla','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -198,6 +207,9 @@ class MODPlantilla extends MODbase{
         $this->captura('sw_estacion','varchar');
         $this->captura('sw_punto_venta','varchar');
         $this->captura('sw_codigo_no_iata','varchar');
+
+        $this->captura('codigo','varchar');
+        $this->captura('letra_tipo_plantilla','varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();

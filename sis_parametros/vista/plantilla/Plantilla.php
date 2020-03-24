@@ -47,6 +47,38 @@ Phx.vista.Plantilla=Ext.extend(Phx.gridInterfaz,{
 			grid:true,
 			form:true
 		},
+
+        {
+            config:{
+                name: 'codigo',
+                fieldLabel: 'Código',
+                allowBlank: true,
+                anchor: '80%',
+                gwidth: 100,
+                maxLength:50
+            },
+            type:'TextField',
+            filters:{pfiltro:'plt.codigo',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
+
+        {
+            config:{
+                name: 'letra_tipo_plantilla',
+                fieldLabel: 'Letra',
+                allowBlank: true,
+                anchor: '80%',
+                gwidth: 100,
+                maxLength:30
+            },
+            type:'TextField',
+            filters:{pfiltro:'plt.letra_tipo_plantilla',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
         
         {
             config:{
@@ -647,7 +679,9 @@ Phx.vista.Plantilla=Ext.extend(Phx.gridInterfaz,{
 		{name:'usr_mod', type: 'string'},'sw_monto_excento',
 		'sw_descuento' ,'sw_autorizacion','sw_codigo_control','tipo_plantilla',
 		'sw_nro_dui','sw_ic','tipo_excento','valor_excento','tipo_informe',
-		'sw_qr','sw_nit','plantilla_qr', 'sw_estacion', 'sw_punto_venta', 'sw_codigo_no_iata','cod_inter'
+		'sw_qr','sw_nit','plantilla_qr', 'sw_estacion', 'sw_punto_venta', 'sw_codigo_no_iata','cod_inter',
+        {name:'codigo', type: 'string'},
+        {name:'letra_tipo_plantilla', type: 'string'}
 		
 	],
 	sortInfo:{

@@ -87,7 +87,10 @@ BEGIN
                 sw_qr,
                 sw_nit,
                 plantilla_qr,
-                cod_inter
+                cod_inter,
+
+                codigo,
+                letra_tipo_plantilla
 
 
 
@@ -115,7 +118,11 @@ BEGIN
             v_parametros.sw_qr,
             v_parametros.sw_nit,
             v_parametros.plantilla_qr,
-            string_to_array(v_parametros.cod_inter,',')::varchar[]
+            string_to_array(v_parametros.cod_inter,',')::varchar[],
+
+            v_parametros.codigo,
+            v_parametros.letra_tipo_plantilla
+
 		)RETURNING id_plantilla into v_id_plantilla;
 
 			--Definicion de la respuesta
@@ -179,7 +186,11 @@ BEGIN
               sw_estacion = v_parametros.sw_estacion,
               sw_punto_venta = v_parametros.sw_punto_venta,
               sw_cod_no_iata = v_parametros.sw_codigo_no_iata,
-              cod_inter = string_to_array(v_parametros.cod_inter,',')::varchar[]
+              cod_inter = string_to_array(v_parametros.cod_inter,',')::varchar[],
+
+              codigo = v_parametros.codigo,
+              letra_tipo_plantilla = v_parametros.letra_tipo_plantilla
+
 			where id_plantilla=v_parametros.id_plantilla;
 
 			--Definicion de la respuesta
