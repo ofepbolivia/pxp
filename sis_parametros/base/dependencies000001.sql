@@ -2268,3 +2268,48 @@ EXECUTE PROCEDURE param.ftrig_talarma();
 select pxp.f_insert_testructura_gui ('WSME', 'ALRMS');
 
 /***********************************F-DEP-FFP-PARAM-0-12/07/2017****************************************/
+
+/***********************************I-DEP-MAY-PARAM-0-23/03/2020****************************************/
+CREATE VIEW param.vproveedor2 (
+    id_proveedor,
+    id_persona,
+    codigo,
+    numero_sigma,
+    tipo,
+    id_institucion,
+    desc_proveedor,
+    nit,
+    id_lugar,
+    lugar,
+    pais,
+    email,
+    rotulo_comercial,
+    num_proveedor,
+    condicion)
+AS
+SELECT provee.id_proveedor,
+    provee.id_persona,
+    provee.codigo,
+    provee.numero_sigma,
+    provee.tipo,
+    provee.id_institucion,
+    pxp.f_iif(provee.id_persona IS NOT NULL,
+        pxp.f_iif(btrim(person.nombre_completo1) = btrim(provee.rotulo_comercial::text), person.nombre_completo1::character varying, (((person.nombre_completo1 || ' ('::text) || provee.rotulo_comercial::text) || ')'::text)::character varying), pxp.f_iif(btrim(instit.nombre::text) = btrim(provee.rotulo_comercial::text), instit.nombre, (((instit.nombre::text || ' ('::text) || btrim(provee.rotulo_comercial::text)) || ')'::text)::character varying)) AS desc_proveedor,
+    provee.nit,
+    provee.id_lugar,
+    COALESCE(lug.nombre, ''::character varying)::character varying(100) AS lugar,
+    param.f_obtener_padre_lugar(provee.id_lugar, 'pais'::character varying) AS pais,
+    pxp.f_iif(provee.id_persona IS NOT NULL, person.correo, instit.email1) AS email,
+    provee.rotulo_comercial,
+    provee.num_proveedor,
+    provee.condicion
+FROM param.tproveedor provee
+     LEFT JOIN segu.vpersona person ON person.id_persona = provee.id_persona
+     LEFT JOIN param.tinstitucion instit ON instit.id_institucion =
+         provee.id_institucion
+     LEFT JOIN param.tlugar lug ON lug.id_lugar = provee.id_lugar
+WHERE provee.estado_reg::text = 'activo'::text;
+
+ALTER VIEW param.vproveedor2
+  OWNER TO "postgres";
+/***********************************F-DEP-MAY-PARAM-0-23/03/2020****************************************/
