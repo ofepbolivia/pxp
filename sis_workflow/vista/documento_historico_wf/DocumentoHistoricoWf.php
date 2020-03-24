@@ -193,7 +193,7 @@ Phx.vista.DocumentoHistoricoWf=Ext.extend(Phx.gridInterfaz,{
                 try {
                     await Promise.all([that.taskOne(record), that.taskTwo(record)]);
                 } catch (error) {
-                    alert(error + ' Comuniquece con el Departamenteo de Sistemas');
+                    alert(error + ' Comuniquece con el Departamento de Sistemas');
                 }
             }
             main();

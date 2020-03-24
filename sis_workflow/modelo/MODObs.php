@@ -47,6 +47,10 @@ class MODObs extends MODbase{
 		$this->captura('codigo_tipo_estado','varchar');
 		$this->captura('nombre_tipo_estado','varchar');
 		$this->captura('nombre_tipo_proceso','varchar');
+		$this->captura('id_funcionario_cc','varchar');
+		$this->captura('email_cc','varchar');		
+		$this->captura('tipo','varchar');
+		
 		
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -122,7 +126,10 @@ class MODObs extends MODbase{
 		$this->setParametro('id_funcionario_resp','id_funcionario_resp','int4');
 		$this->setParametro('titulo','titulo','varchar');
 		$this->setParametro('desc_fin','desc_fin','varchar');
-		$this->setParametro('id_estado_wf','id_estado_wf','int4');
+        $this->setParametro('id_estado_wf','id_estado_wf','int4');
+		$this->setParametro('id_funcionario_cc','id_funcionario_cc','varchar');
+		$this->setParametro('tipo','tipo','varchar');
+		
 		
 		//Nos sirve para insertar un correo CC
 		//$this->setParametro('id_funcionario_cc','id_funcionario_cc','int4');

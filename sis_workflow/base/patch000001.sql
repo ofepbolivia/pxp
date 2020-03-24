@@ -1984,3 +1984,19 @@ IS 'Campo que diferencia si el documento es un historico de documentos, o es el 
 ALTER TABLE wf.tdocumento_abierto
   OWNER TO postgres;
 /*****************************F-SCP-BVP-WF-0-28/02/2020*************/
+
+/*****************************I-SCP-BVP-WF-0-24/03/2020*************/
+
+ALTER TABLE wf.tobs
+  ADD COLUMN id_funcionario_cc INTEGER[];
+
+COMMENT ON COLUMN wf.tobs.id_funcionario_cc
+IS 'Correo funcionarios en copia para correos.';
+
+ALTER TABLE wf.tobs
+  ADD COLUMN tipo VARCHAR;
+
+COMMENT ON COLUMN wf.tobs.tipo
+IS 'Tipo de observacion.';
+  
+/*****************************F-SCP-BVP-WF-0-24/03/2020*************/

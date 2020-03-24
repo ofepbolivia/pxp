@@ -81,11 +81,40 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 		},
 		{
 			config:{
+				name:'tipo',
+				fieldLabel:'Tipo Observacion',
+				qtip: 'Al seleccionar esta opción, el registro nuevo se cerrara automaticamente.',
+				typeAhead: true,
+				allowBlank:true,
+				triggerAction: 'all',
+				emptyText:'Tipo...',
+				selectOnFocus:true,
+				mode:'local',
+				store:new Ext.data.ArrayStore({
+					fields: ['ID', 'valor'],
+					data :	[
+						['respuesta_observacion','Respuesta a observación realizada al tramite']						
+					]
+				}),
+				valueField:'ID',
+				displayField:'valor',
+				gwidth:150,
+				anchor:'80%',
+				width:100
+
+			},
+			type:'ComboBox',
+			id_grupo:1,
+			grid:false,
+			form:true
+        },		
+		{
+			config:{
 				name: 'estado',
 				fieldLabel: 'Estado',
 				allowBlank: true,
 				anchor: '80%',
-				gwidth: 100,
+				gwidth: 60,
 				maxLength:20
 			},
 				type:'TextField',
@@ -105,8 +134,9 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
                 gwidth: 200,
                 valueField: 'id_funcionario',
                 gdisplayField:'desc_funcionario',//mapea al store del grid
-                anchor: '100%',
+                anchor: '80%',
                 gwidth: 200,
+				listWidth:'350',
                 baseParams: {estado_func:'todos'},
                 renderer: function (value, p, record){return String.format('{0}', record.data['desc_funcionario']);}
              },
@@ -120,6 +150,53 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
             grid:true,
             form:true
         },
+        {
+			config: {
+				name: 'id_funcionario_cc',
+				fieldLabel: 'Con Copia a',
+				allowBlank: true,
+				emptyText: 'Elija una opción...',                        
+				store: new Ext.data.JsonStore({
+					url: '../../sis_organigrama/control/Funcionario/listarFuncionarioCargo',
+					id: 'id_funcionario',
+					root: 'datos',
+					sortInfo: {
+						field: 'desc_funcionario1',
+						direction: 'ASC'
+					},
+					totalProperty: 'total',
+					fields: ['id_funcionario','desc_funcionario1','email_empresa'],
+					remoteSort: true,
+					baseParams: {par_filtro: 'FUNCAR.desc_funcionario1'}
+				}),
+				valueField: 'id_funcionario',
+				displayField: 'desc_funcionario1',
+				gdisplayField: 'desc_funcionario1',
+				tpl:'<tpl for="."><div class="x-combo-list-item"><div class="awesomecombo-item {checked}"><p><b>{desc_funcionario1}</b></p></div><p><b>Email: </b> <span style="color: green;">{email_empresa}</span></p></div></tpl>',
+				hiddenName: 'id_funcionario',
+				forceSelection:true,
+				typeAhead: true,
+				triggerAction: 'all',
+				lazyRender:true,
+				mode:'remote',
+				pageSize:10,
+				queryDelay:1000,                        
+				gwidth:260,
+				width:425,
+				minChars:2,
+				anchor:'80%',
+				listWidth:'350',				
+				enableMultiSelect:true,
+				renderer:function(value, p, record){						
+					return '<div><p><b>'+record.data['email_cc'].replace(/,/g,", ")+'</b></p>'+
+                                '<p><p></div>';
+				}                              
+			},
+			type: 'AwesomeCombo',                    
+			id_grupo:0,
+			grid: true,
+			form: true
+        },                       
 		{
 			config:{
 				name: 'titulo',
@@ -343,6 +420,9 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 		{name:'fecha_mod', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
 		{name:'usr_reg', type: 'string'},
 		{name:'usr_mod', type: 'string'},
+		{name:'id_funcionario_cc', type:'string'},
+		{name:'email_cc', type:'string'},		
+		{name:'tipo', type:'string'},		
 		'desc_funcionario','codigo_tipo_estado','nombre_tipo_estado','nombre_tipo_proceso'
 		
 	],
@@ -364,6 +444,9 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 	            
             
             this.Cmp.id_estado_wf.setValue( this.id_estado_wf );
+			this.Cmp.id_funcionario_resp.enable();
+			this.Cmp.id_funcionario_cc.show();
+			this.Cmp.tipo.enable();
 
         
     },
@@ -372,8 +455,9 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
     	
     	     //todo validar ...solo de pueden editar observaciones del mismo proceso y estado seleccionado   
             Phx.vista.Obs.superclass.onButtonEdit.call(this);
-            this.Cmp.id_funcionario_resp.disable()
-            
+            this.Cmp.id_funcionario_resp.disable();
+            this.Cmp.id_funcionario_cc.hide();
+			this.Cmp.tipo.disable();
             
      
     },
