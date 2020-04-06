@@ -95,8 +95,15 @@ BEGIN
             etapa,
             grupo_doc,
             id_tipo_estado_anterior,
-            icono
-            
+            icono,
+            /* agregado breydi vasquez 25/03/2020
+               desc: para controlar por tiempos los procesos que esten en un estado
+            */            
+            control_tiempo,
+            tiempo_estado,
+            tipo_accion,
+            funcion_cambio_estado,
+            id_funcionario_cc            
           	) values(
 			v_parametros.nombre_estado,
 			v_parametros.id_tipo_proceso,
@@ -129,7 +136,15 @@ BEGIN
             v_parametros.etapa,
             v_parametros.grupo_doc,
             v_parametros.id_tipo_estado_anterior,
-			v_parametros.icono
+			v_parametros.icono,
+            /* agregado breydi vasquez 25/03/2020
+               desc: para controlar por tiempos los procesos que esten en un estado
+            */
+            v_parametros.control_tiempo,
+            case when (v_parametros.tiempo_estado = '') then null else v_parametros.tiempo_estado::interval end,
+            v_parametros.tipo_accion,
+            v_parametros.funcion_cambio_estado,
+            string_to_array (v_parametros.id_funcionario_cc,',')::INTEGER[]          
 			)RETURNING id_tipo_estado into v_id_tipo_estado;
 			
             v_id_roles= string_to_array(v_parametros.id_roles,',');
@@ -201,7 +216,15 @@ BEGIN
             etapa = v_parametros.etapa,
             grupo_doc = v_parametros.grupo_doc,
             id_tipo_estado_anterior = v_parametros.id_tipo_estado_anterior,
-			icono = v_parametros.icono
+			icono = v_parametros.icono,
+            /* agregado breydi vasquez 25/03/2020
+               desc: para controlar por tiempos los procesos que esten en un estado
+            */
+            control_tiempo = v_parametros.control_tiempo,
+            tiempo_estado = case when (v_parametros.tiempo_estado = '') then null else v_parametros.tiempo_estado::interval end,
+            tipo_accion = v_parametros.tipo_accion,
+            funcion_cambio_estado = v_parametros.funcion_cambio_estado,
+            id_funcionario_cc = string_to_array (v_parametros.id_funcionario_cc,',')::INTEGER[]            
             where id_tipo_estado=v_parametros.id_tipo_estado;
             
             --Validacion de la no existencia de mas de un estado 'inicio' por tipo_proceso '

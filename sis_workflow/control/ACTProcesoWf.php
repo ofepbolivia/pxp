@@ -252,6 +252,13 @@ class ACTProcesoWf extends ACTbase{
         $resultSolicitud->imprimirRespuesta($resultSolicitud->generarJson());
 
     }
+
+    //breydi vasquez flujo automatico (26/03/2020)
+    function flujoAutomaticoProceso(){              
+        $this->objFunc=$this->create('MODProcesoWf');
+        $this->res=$this->objFunc->flujoAutomaticoProceso($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 			
 }
 

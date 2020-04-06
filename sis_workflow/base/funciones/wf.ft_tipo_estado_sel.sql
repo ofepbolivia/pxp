@@ -309,7 +309,13 @@ BEGIN
                         tipes.grupo_doc,
                         tipes.id_tipo_estado_anterior,
                         ''(''||tea.codigo||'') ''|| tea.nombre_estado AS desc_tipo_estado_anterior,
-                        tipes.icono
+                        tipes.icono,
+                        tipes.control_tiempo,
+                        tipes.tiempo_estado,
+                        tipes.tipo_accion,
+                        tipes.funcion_cambio_estado,                        
+                        array_to_string(tipes.id_funcionario_cc,'','')::varchar,
+                        (select pxp.list(email_empresa) from orga.vfuncionario_persona p where p.id_funcionario =ANY(tipes.id_funcionario_cc))::varchar as email_cc                        
 						from wf.ttipo_estado tipes
 						inner join segu.tusuario usu1 on usu1.id_usuario = tipes.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = tipes.id_usuario_mod
@@ -361,7 +367,11 @@ BEGIN
                         tipes.grupo_doc,
                         tipes.id_tipo_estado_anterior,
                         tea.codigo,
-                        tea.nombre_estado	';
+                        tea.nombre_estado,
+                        tipes.control_tiempo,
+                        tipes.tiempo_estado,
+                        tipes.tipo_accion,
+                        tipes.funcion_cambio_estado  ';
 			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
 
 			--Devuelve la respuesta

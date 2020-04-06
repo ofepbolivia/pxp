@@ -501,6 +501,22 @@ function listarGantWf(){
         //Devuelve la respuesta
         return $this->respuesta;
     }
-			
+            
+    //breydi vasquez flujo automatico (26/03/2020)
+    function flujoAutomaticoProceso(){
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento='wf.f_proceso_wf_ime';
+        $this->transaccion='WF_FLJAPRCS_IME';
+        $this->tipo_procedimiento='IME';
+        //definicion de variables
+        $this->tipo_conexion='seguridad';
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
+    
 }
 ?>

@@ -2000,3 +2000,43 @@ COMMENT ON COLUMN wf.tobs.tipo
 IS 'Tipo de observacion.';
   
 /*****************************F-SCP-BVP-WF-0-24/03/2020*************/
+
+/*****************************I-SCP-BVP-WF-0-03/04/2020*************/
+ALTER TABLE wf.ttipo_estado
+  ADD COLUMN control_tiempo VARCHAR(2);
+
+COMMENT ON COLUMN wf.ttipo_estado.control_tiempo
+IS 'Control para verficar si se controlara los procesos en estados por tiempo.';
+
+  
+ALTER TABLE wf.ttipo_estado
+  ADD COLUMN tiempo_estado INTERVAL;
+  
+COMMENT ON COLUMN wf.ttipo_estado.tiempo_estado
+IS 'Tiempo que estara el proceso en un estado.';
+
+ALTER TABLE wf.ttipo_estado
+  ADD COLUMN tipo_accion VARCHAR;
+
+COMMENT ON COLUMN wf.ttipo_estado.tipo_accion
+IS 'Tipo de accion a ejecutar cuando el tiempo del proceso concluya.';
+
+ALTER TABLE wf.ttipo_estado
+  ADD COLUMN funcion_cambio_estado VARCHAR;
+
+COMMENT ON COLUMN wf.ttipo_estado.funcion_cambio_estado
+IS 'Funcion a ejecutar si el tipo de accion es cambio automatico de estado.';
+
+ALTER TABLE wf.ttipo_estado
+  ADD COLUMN id_funcionario_cc integer[];
+
+ COMMENT ON COLUMN wf.ttipo_estado.id_funcionario_cc
+IS 'Lista de funcionarios a los que se enviara un correo de notificacion, de los procesos que concluyeron su tiempo limite.';
+
+ALTER TABLE wf.testado_wf
+  ADD COLUMN codigo VARCHAR;
+
+COMMENT ON COLUMN wf.testado_wf.codigo
+IS 'Codigo de evaluacion para controles.';
+
+/*****************************F-SCP-BVP-WF-0-03/04/2020*************/

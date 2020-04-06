@@ -67,7 +67,7 @@ include_once(dirname(__FILE__).'/../../sis_workflow/modelo/MODDocumentoWf.php');
 				$url_final = str_replace('sis_', '', $d['action']);
 				
 				$url_final = str_replace('/control', '', $url_final);
-				
+                //var_dump(substr($_SESSION["_FOLDER"], 1) .'pxp/lib/rest/');exit;
 				$res = $pxpRestClient->doPost($url_final,
 				    array(	"id_proceso_wf"=>$d['id_proceso_wf'],
 				    		"firmar"=>'si',
