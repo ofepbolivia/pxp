@@ -1284,7 +1284,7 @@ BEGIN
                                        te.funcion_cambio_estado,
                                        te.id_funcionario_cc,
                                        te.codigo,
-                                       ew.codigo as control
+                                       ew.codigo_wf_control as control
                                     from wf.tproceso_wf pw
                                     inner join wf.testado_wf ew  on ew.id_proceso_wf = pw.id_proceso_wf and ew.estado_reg = 'activo'
                                     inner join wf.ttipo_estado te on ew.id_tipo_estado = te.id_tipo_estado
@@ -1331,7 +1331,7 @@ BEGIN
                                
 							-- acualizar el codigo de estado wf para que se envie solo una vez el correo                              
                             update wf.testado_wf set
-                            codigo = 'enviado'
+                            codigo_wf_control = 'enviado'
                             where id_estado_wf  = v_procesos.id_estado_wf;                              
                                                                           
 						  end if;

@@ -2040,3 +2040,11 @@ COMMENT ON COLUMN wf.testado_wf.codigo
 IS 'Codigo de evaluacion para controles.';
 
 /*****************************F-SCP-BVP-WF-0-03/04/2020*************/
+
+/*****************************I-SCP-BVP-WF-0-15/04/2020*************/
+ALTER TABLE wf.testado_wf
+  RENAME COLUMN codigo TO codigo_wf_control;
+
+COMMENT ON COLUMN wf.testado_wf.codigo_wf_control
+IS 'Codigo_wf de evaluacion para controles.';
+/*****************************F-SCP-BVP-WF-0-15/04/2020*************/
