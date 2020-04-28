@@ -100,7 +100,95 @@ class MODNumTramite extends MODbase{
 
 		//Devuelve la respuesta
 		return $this->respuesta;
+    }
+
+	// breydi vasquez (24/04/2020) para reporte tramites aprobados por funcionarios
+	//ini
+    function listaTramites(){
+		//Definicion de variables para ejecucion del procedimiento
+		$this->procedimiento='wf.ft_num_tramite_sel';
+		$this->transaccion='WF_TRAPRBXFUN_SEL';
+        $this->tipo_procedimiento='SEL';
+        $this->setCount(false);
+				
+		//Define los parametros para la funcion		
+		$this->setParametro('fecha_ini','fecha_ini','date');
+		$this->setParametro('fecha_fin','fecha_fin','date');
+        $this->setParametro('id_usuario','id_usuario','int4');
+        $this->setParametro('sistema_rep','sistema_rep','varchar');
+        
+        //Captura de datos 
+        $this->captura('nro_tramite', 'varchar');
+        $this->captura('fecha_ini', 'timestamp');
+        $this->captura('fecha_fin', 'timestamp');        
+        $this->captura('anterior_estado', 'varchar');                
+        $this->captura('seguiente_estado', 'varchar');                
+        $this->captura('proveido', 'text');                
+        $this->captura('funcionario_aprobador', 'text');        
+        $this->captura('solicitante', 'text');        
+        $this->captura('proveedor', 'varchar');        
+        $this->captura('justificacion', 'varchar');                
+        $this->captura('importe', 'numeric');          
+        $this->captura('moneda', 'varchar');              
+        $this->captura('contador_estados', 'bigint');    
+		//Ejecuta la instruccion
+        $this->armarConsulta();
+        //echo($this->consulta);exit;
+		$this->ejecutarConsulta();
+
+		//Devuelve la respuesta
+		return $this->respuesta;
 	}
+    
+    function usuarioAdminTF() {
+		//Definicion de variables para ejecucion del procedimiento
+		$this->procedimiento='wf.ft_num_tramite_ime';
+		$this->transaccion='WF_GETUSADMIN_IME';
+		$this->tipo_procedimiento='IME';
+						
+		//Ejecuta la instruccion
+		$this->armarConsulta();
+		$this->ejecutarConsulta();
+
+		//Devuelve la respuesta
+		return $this->respuesta;        
+	}
+
+	function listarFuncionarioCuentas(){
+		//Definicion de variables para ejecucion del procedimientp
+		$this->procedimiento='wf.ft_num_tramite_sel';
+		$this->transaccion='WF_FUNCIOCARCS_SEL';
+		$this->tipo_procedimiento='SEL';//tipo de transaccion		
+				
+		//Definicion de la lista del resultado del query
+		$this->captura('id_usuario','integer');
+        $this->captura('cuenta','varchar');        
+        $this->captura('id_uo_funcionario','integer');
+        $this->captura('id_funcionario','integer');
+        $this->captura('desc_funcionario1','text');
+        $this->captura('desc_funcionario2','text');
+        $this->captura('id_uo','integer');
+        $this->captura('nombre_cargo','varchar');
+        $this->captura('fecha_asignacion','date');
+        $this->captura('fecha_finalizacion','date');
+        $this->captura('num_doc','integer');
+        $this->captura('ci','varchar');
+        $this->captura('codigo','varchar');
+        $this->captura('email_empresa','varchar');
+        $this->captura('id_cargo','integer');
+        $this->captura('descripcion_cargo','varchar');
+        $this->captura('cargo_codigo','varchar');                
+        $this->captura('lugar_nombre','varchar');
+        $this->captura('oficina_nombre','varchar');
+
 			
+		//Ejecuta la instruccion
+		$this->armarConsulta();		
+		$this->ejecutarConsulta();
+		
+		//Devuelve la respuesta
+		return $this->respuesta;
+	}
+	//fin
 }
 ?>

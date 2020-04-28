@@ -33,6 +33,10 @@ DECLARE
     v_codigo_siguiente varchar;
     v_cont_gestion integer;
     v_num_siguiente integer;
+
+    --breydi vasquez (20/04/2020)
+    v_funcionario		varchar;
+    v_id_fun			integer;
 			    
 BEGIN
 
@@ -141,6 +145,33 @@ BEGIN
             return v_resp;
 
 		end;
+
+	/*********************************    
+ 	#TRANSACCION:  'WF_GETUSADMIN_IME'
+ 	#DESCRIPCION:	verfica si el usuario que inicio sesion es admin
+ 	#AUTOR:		breydi vasquez 
+ 	#FECHA:		23/04/2020
+	***********************************/
+
+	elsif(p_transaccion='WF_GETUSADMIN_IME')then
+
+		begin
+            select fun.id_funcionario, fun.desc_funcionario1 into v_id_fun, v_funcionario
+            from segu.vusuario us 
+            inner join orga.vfuncionario fun on fun.id_persona = us.id_persona
+            where us.id_usuario = p_id_usuario;
+	        
+            v_resp = pxp.f_agrega_clave(v_resp,'repuesta', 'si/no administrado'::varchar);                
+            v_resp = pxp.f_agrega_clave(v_resp,'admin', p_administrador::varchar);
+            v_resp = pxp.f_agrega_clave(v_resp,'id_funcionario', v_id_fun::varchar);                
+            v_resp = pxp.f_agrega_clave(v_resp,'id_usuario', p_id_usuario::varchar);
+            v_resp = pxp.f_agrega_clave(v_resp,'funcionario', v_funcionario::varchar);                
+			--Definicion de la respuesta 
+               
+            --Devuelve la respuesta
+            return v_resp;
+            
+		end;        
          
 	else
      
