@@ -80,7 +80,7 @@ class MODProveedor extends MODbase{
 		$this->captura('rotulo_comercial','varchar');
 		$this->captura('email','varchar');
 
-		$this->captura('num_proveedor','INTEGER');
+		$this->captura('num_proveedor','varchar');
 		$this->captura('condicion','VARCHAR');
 
 		//Ejecuta la instruccion
@@ -130,7 +130,7 @@ class MODProveedor extends MODbase{
 
 		$this->captura('condicion','varchar');
 		$this->captura('actividad','varchar');
-		$this->captura('num_proveedor','int4');
+		$this->captura('num_proveedor','varchar');
 
 		$this->captura('nombre_persona','varchar');
 		$this->captura('apellido_paterno','varchar');
@@ -140,6 +140,39 @@ class MODProveedor extends MODbase{
 
 		$this->captura('id_lugar_fk','int4');
 		$this->captura('id_lugar_fk2','int4');
+
+		$this->captura('id_moneda','int4');
+		$this->captura('moneda','varchar');
+		$this->captura('dnrp','varchar');
+		$this->captura('ingreso_bruto','numeric');
+		$this->captura('tipo_habilitacion','varchar');
+		$this->captura('motivo_habilitacion','varchar');
+		$this->captura('codigo_alkym','varchar');
+		$this->captura('ccorreo','varchar');
+
+       $this->captura('codigo_externo','varchar');
+       $this->captura('codigo_fabricante','varchar');
+
+       $this->captura('fax_persona','varchar');
+		$this->captura('pag_web_persona','varchar');
+		$this->captura('observaciones_persona','varchar');
+
+
+		$this->captura('id_proveedor_alkym','int4');
+
+		$this->captura('telefono1','varchar');
+		$this->captura('direccion','varchar');
+		$this->captura('correo','varchar');
+		$this->captura('direccion_institucion','varchar');
+		$this->captura('email1_institucion','varchar');
+		$this->captura('email2_institucion','varchar');
+		$this->captura('telefono1_institucion','varchar');
+		$this->captura('fax','varchar');
+		$this->captura('pag_web','varchar');
+		$this->captura('observaciones','varchar');
+
+		$this->captura('lugar_depto','varchar');
+		$this->captura('lugar_ciudad','varchar');
 
 
 		//Ejecuta la instruccion
@@ -210,7 +243,7 @@ class MODProveedor extends MODbase{
 		$this->transaccion='PM_PROVEE_INS';
 		$this->tipo_procedimiento='IME';
 
-		//Define los parametros para la funcion
+
 		//Define los parametros para la funcion
 		$this->setParametro('id_persona','id_persona','int4');
 		$this->setParametro('codigo','codigo','varchar');
@@ -222,11 +255,11 @@ class MODProveedor extends MODbase{
 		$this->setParametro('nombre_institucion','nombre_institucion','varchar');
 		$this->setParametro('direccion_institucion','direccion_institucion','varchar');
 		$this->setParametro('casilla','casilla','bigint');
-		$this->setParametro('telefono1_institucion','telefono1_institucion','bigint');
-		$this->setParametro('telefono2_institucion','telefono2_institucion','bigint');
-		$this->setParametro('celular1_institucion','celular1_institucion','bigint');
-		$this->setParametro('celular2_institucion','celular2_institucion','bigint');
-		$this->setParametro('fax','fax','bigint');
+		$this->setParametro('telefono1_institucion','telefono1_institucion','varchar');
+		$this->setParametro('telefono2_institucion','telefono2_institucion','varchar');
+		$this->setParametro('celular1_institucion','celular1_institucion','varchar');
+		$this->setParametro('celular2_institucion','celular2_institucion','varchar');
+		$this->setParametro('fax','fax','varchar');
 		$this->setParametro('email1_institucion','email1_institucion','varchar');
 		$this->setParametro('email2_institucion','email2_institucion','varchar');
 		$this->setParametro('pag_web','pag_web','varchar');
@@ -259,15 +292,32 @@ class MODProveedor extends MODbase{
 
 		$this->setParametro('condicion','condicion','varchar');
 		$this->setParametro('actividad','actividad','varchar');
-		$this->setParametro('num_proveedor','num_proveedor','int4');
+		$this->setParametro('num_proveedor','num_proveedor','varchar');
 		$this->setParametro('codigo_telf','codigo_telf','varchar');
 		$this->setParametro('codigo_telf_institucion','codigo_telf_institucion','varchar');
 
 		$this->setParametro('id_lugar_fk','id_lugar_fk','int4');
 		$this->setParametro('id_lugar_fk2','id_lugar_fk2','int4');
 
+		$this->setParametro('id_moneda','id_moneda','int4');
+		$this->setParametro('dnrp','dnrp','varchar');
+        $this->setParametro('ingreso_bruto','ingreso_bruto','numeric');
+        $this->setParametro('tipo_habilitacion','tipo_habilitacion','varchar');
+        $this->setParametro('motivo_habilitacion','motivo_habilitacion','varchar');
+        $this->setParametro('codigo_alkym','codigo_alkym','varchar');
+        $this->setParametro('ccorreo','ccorreo','varchar');
 
-		//Ejecuta la instruccion
+        $this->setParametro('codigo_externo','codigo_externo','varchar');
+        $this->setParametro('codigo_fabricante','codigo_fabricante','varchar');
+
+        $this->setParametro('fax_persona','fax_persona','varchar');
+        $this->setParametro('pag_web_persona','pag_web_persona','varchar');
+        $this->setParametro('observaciones_persona','observaciones_persona','varchar');
+
+        $this->setParametro('id_alkym_proveedor','id_alkym_proveedor','int4');
+
+
+        //Ejecuta la instruccion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
 		//var_dump($this); exit;
@@ -293,11 +343,11 @@ class MODProveedor extends MODbase{
 		$this->setParametro('nombre_institucion','nombre_institucion','varchar');
 		$this->setParametro('direccion_institucion','direccion_institucion','varchar');
 		$this->setParametro('casilla','casilla','bigint');
-		$this->setParametro('telefono1_institucion','telefono1_institucion','bigint');
-		$this->setParametro('telefono2_institucion','telefono2_institucion','bigint');
-		$this->setParametro('celular1_institucion','celular1_institucion','bigint');
-		$this->setParametro('celular2_institucion','celular2_institucion','bigint');
-		$this->setParametro('fax','fax','bigint');
+		$this->setParametro('telefono1_institucion','telefono1_institucion','varchar');
+		$this->setParametro('telefono2_institucion','telefono2_institucion','varchar');
+		$this->setParametro('celular1_institucion','celular1_institucion','varchar');
+		$this->setParametro('celular2_institucion','celular2_institucion','varchar');
+		$this->setParametro('fax','fax','varchar');
 		$this->setParametro('email1_institucion','email1_institucion','varchar');
 		$this->setParametro('email2_institucion','email2_institucion','varchar');
 		$this->setParametro('pag_web','pag_web','varchar');
@@ -315,24 +365,40 @@ class MODProveedor extends MODbase{
 		$this->setParametro('apellido_materno','apellido_materno','varchar');*/
 		$this->setParametro('ci','ci','int4');
 		$this->setParametro('correo','correo','varchar');
-		$this->setParametro('celular1','celular1','bigint');
-		$this->setParametro('celular2','celular2','bigint');
-		$this->setParametro('telefono1','telefono1','bigint');
-		$this->setParametro('telefono2','telefono2','bigint');
+		$this->setParametro('celular1','celular1','varchar');
+		$this->setParametro('celular2','celular2','varchar');
+		$this->setParametro('telefono1','telefono1','varchar');
+		$this->setParametro('telefono2','telefono2','varchar');
 		$this->setParametro('genero','genero','varchar');
 		$this->setParametro('fecha_nacimiento','fecha_nacimiento','date');
 		$this->setParametro('direccion','direccion','varchar');
 		$this->setParametro('rotulo_comercial','rotulo_comercial','varchar');
-		$this->setParametro('contacto','contacto','text');
+		//$this->setParametro('contacto','contacto','text');
 
 		$this->setParametro('condicion','condicion','varchar');
 		$this->setParametro('actividad','actividad','varchar');
-		$this->setParametro('num_proveedor','num_proveedor','int4');
+		$this->setParametro('num_proveedor','num_proveedor','varchar');
 		$this->setParametro('codigo_telf','codigo_telf','varchar');
 		$this->setParametro('codigo_telf_institucion','codigo_telf_institucion','varchar');
 
 		$this->setParametro('id_lugar_fk','id_lugar_fk','integer');
 		$this->setParametro('id_lugar_fk2','id_lugar_fk2','integer');
+
+        $this->setParametro('id_moneda','id_moneda','int4');
+        $this->setParametro('dnrp','dnrp','varchar');
+        $this->setParametro('ingreso_bruto','ingreso_bruto','numeric');
+        $this->setParametro('tipo_habilitacion','tipo_habilitacion','varchar');
+        $this->setParametro('motivo_habilitacion','motivo_habilitacion','varchar');
+        $this->setParametro('codigo_alkym','codigo_alkym','varchar');
+        $this->setParametro('ccorreo','ccorreo','varchar');
+
+        $this->setParametro('codigo_fabricante','codigo_fabricante','varchar');
+        $this->setParametro('codigo_externo','codigo_externo','varchar');
+
+        $this->setParametro('fax_persona','fax_persona','varchar');
+        $this->setParametro('pag_web_persona','pag_web_persona','varchar');
+        $this->setParametro('observaciones_persona','observaciones_persona','varchar');
+
 
 
 		//Ejecuta la instruccion

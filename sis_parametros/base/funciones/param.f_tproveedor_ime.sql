@@ -91,8 +91,6 @@ BEGIN
 
         begin
 
-
-
            --verificar que el codigo de proveedor sea unico
            --verificar que el proveedor no se duplique  para la misma institucion
            IF  exists(select 1 from param.tproveedor p where p.estado_reg = 'activo' and p.codigo = v_codigo_gen)   THEN
@@ -179,7 +177,21 @@ BEGIN
                      actividad,
                      num_proveedor,
                      id_lugar_departamento,
-                     id_lugar_ciudad
+                     id_lugar_ciudad,
+
+                     id_moneda,
+                     dnrp,
+                     ingreso_bruto,
+                     tipo_habilitacion,
+                     motivo_habilitacion,
+                     codigo_alkym,
+                     ccorreo,
+
+                     codigo_externo,
+                     codigo_fabricante,
+
+                     /*Aumentando para el id alkym*/
+                     id_proveedor_alkym
 
                      )values
 
@@ -194,15 +206,83 @@ BEGIN
                     v_parametros.nit,
                     v_parametros.id_lugar,
                     UPPER(v_parametros.rotulo_comercial),
-                    v_parametros.contacto,
+                    'a',--v_parametros.contacto,
 
                     v_parametros.condicion,
                     v_parametros.actividad,
                     v_parametros.num_proveedor,
                     v_parametros.id_lugar_fk,
-                    v_parametros.id_lugar_fk2
+                    v_parametros.id_lugar_fk2,
+
+                    v_parametros.id_moneda,
+                    v_parametros.dnrp,
+                    v_parametros.ingreso_bruto,
+                    v_parametros.tipo_habilitacion,
+                    v_parametros.motivo_habilitacion,
+                    v_parametros.codigo_alkym,
+                    v_parametros.ccorreo,
+
+                    v_parametros.codigo_externo,
+                    v_parametros.codigo_fabricante,
+
+                    /*Aumentando para el id alkym*/
+                    v_parametros.id_alkym_proveedor
 
                     ) RETURNING id_proveedor into v_id_proveedor;
+
+
+                    --30-04-2020 (may) edit persona e institucion desde el formulario de proveedores
+                    --modificar datos basicos de persona
+                    if v_parametros.id_persona is not null then
+
+                            update  segu.tpersona  set
+                               ci = v_parametros.ci,
+                               correo = v_parametros.correo,
+                               celular1 =v_parametros.celular1,
+                               telefono1 =v_parametros.telefono1,
+                               telefono2 =v_parametros.telefono2,
+                               celular2 =v_parametros.celular2,
+                               genero = v_parametros.genero,
+                               fecha_nacimiento =v_parametros.fecha_nacimiento,
+                               direccion = v_parametros.direccion,
+                               codigo_telf = v_parametros.codigo_telf,
+
+                               fax= v_parametros.fax_persona,
+                               pag_web= v_parametros.pag_web_persona,
+                               observaciones = v_parametros.observaciones_persona
+
+                             WHERE id_persona  = v_parametros.id_persona;
+
+                    else
+
+                             --modifica datos basicos de la institucion
+
+                                update  param.tinstitucion set
+                                    fax = v_parametros.fax,
+                                    casilla = v_parametros.casilla,
+                                    direccion = v_parametros.direccion_institucion,
+                                    doc_id =  v_parametros.nit,
+                                    telefono2 = v_parametros.telefono2_institucion,
+                                    email2 = v_parametros.email2_institucion,
+                                    celular1 = v_parametros.celular1_institucion,
+                                    email1 =  v_parametros.email1_institucion,
+                                    nombre = v_parametros.nombre_institucion,
+                                    observaciones = v_parametros.observaciones,
+                                    telefono1 =  v_parametros.telefono1_institucion,
+                                    celular2 = v_parametros.celular2_institucion,
+                                    pag_web = v_parametros.pag_web,
+                                    id_usuario_mod = p_id_usuario,
+                                    fecha_mod = now(),
+                                    codigo = v_parametros.codigo_institucion,
+                                    codigo_telf_institucion = v_parametros.codigo_telf_institucion
+
+                               WHERE id_institucion = v_parametros.id_institucion;
+
+
+                    end if;
+
+
+
            else
                     if (v_parametros.tipo = 'persona')then
 
@@ -222,7 +302,13 @@ BEGIN
                                    genero,
                                    fecha_nacimiento,
                                    direccion,
-                                   codigo_telf)
+                                   codigo_telf,
+
+                                   fax,
+                                   pag_web,
+                                   observaciones
+
+                                   )
                          values(
                                 --v_parametros.nombre,
                                 v_parametros.nombre_persona,
@@ -239,7 +325,12 @@ BEGIN
                                 v_parametros.genero,
                                 v_parametros.fecha_nacimiento,
                                 v_parametros.direccion,
-                                v_parametros.codigo_telf)
+                                v_parametros.codigo_telf,
+
+                                v_parametros.fax_persona,
+                                v_parametros.pag_web_persona,
+                                v_parametros.observaciones_persona
+                                )
 
                         RETURNING id_persona INTO v_id_persona;
                     else
@@ -528,14 +619,26 @@ BEGIN
                 id_usuario_mod = p_id_usuario,
                 fecha_mod = now(),
                 rotulo_comercial = UPPER(v_parametros.rotulo_comercial),
-                contacto = v_parametros.contacto,
+                --contacto = v_parametros.contacto,
                 tipo = v_parametros.tipo,
 
                 condicion = v_parametros.condicion,
                 actividad = v_parametros.actividad,
                 num_proveedor = v_parametros.num_proveedor,
                 id_lugar_departamento = v_parametros.id_lugar_fk,
-                id_lugar_ciudad = v_parametros.id_lugar_fk2
+                id_lugar_ciudad = v_parametros.id_lugar_fk2,
+
+                id_moneda= v_parametros.id_moneda,
+                dnrp= v_parametros.dnrp,
+                ingreso_bruto= v_parametros.ingreso_bruto,
+                tipo_habilitacion= v_parametros.tipo_habilitacion,
+                motivo_habilitacion= v_parametros.motivo_habilitacion,
+                codigo_alkym= v_parametros.codigo_alkym,
+                ccorreo= v_parametros.ccorreo,
+
+                codigo_externo = v_parametros.codigo_externo,
+                codigo_fabricante = v_parametros.codigo_fabricante
+
 
             where id_proveedor=v_parametros.id_proveedor;
 
@@ -558,7 +661,12 @@ BEGIN
                        genero = v_parametros.genero,
                        fecha_nacimiento =v_parametros.fecha_nacimiento,
                        direccion = v_parametros.direccion,
-                       codigo_telf = v_parametros.codigo_telf
+                       codigo_telf = v_parametros.codigo_telf,
+
+                       fax= v_parametros.fax_persona,
+                       pag_web= v_parametros.pag_web_persona,
+                       observaciones = v_parametros.observaciones_persona
+
                      WHERE id_persona  = v_parametros.id_persona;
 
             else
@@ -592,6 +700,7 @@ BEGIN
                             fecha_mod = now(),
                             codigo = v_parametros.codigo_institucion,
                             codigo_telf_institucion = v_parametros.codigo_telf_institucion
+
                        WHERE id_institucion = v_parametros.id_institucion;
 
 

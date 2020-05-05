@@ -2236,3 +2236,83 @@ COMMENT ON COLUMN param.tplantilla.letra_tipo_plantilla
 IS 'letra de un tipo de documento';
 
 /***********************************F-SCP-MAY-PARAM-0-24/03/2020*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-27/03/2020*****************************************/
+
+ALTER TABLE param.tproveedor
+  ALTER COLUMN num_proveedor TYPE VARCHAR(50);
+
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN id_proveedor_alkym INTEGER;
+
+COMMENT ON COLUMN param.tproveedor.id_proveedor_alkym
+IS 'identificador de proveedor en alkym';
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN id_moneda INTEGER;
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN dnrp VARCHAR(800);
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN ingreso_bruto NUMERIC(18,2);
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN tipo_habilitacion VARCHAR(30);
+
+COMMENT ON COLUMN param.tproveedor.tipo_habilitacion
+IS 'si / no';
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN motivo_habilitacion VARCHAR(300);
+
+CREATE TABLE param.tproveedor_contacto (
+  id_proveedor_contacto SERIAL NOT NULL,
+  id_proveedor INTEGER,
+  nombre_contacto VARCHAR(350),
+  telefono VARCHAR(50),
+  fax VARCHAR(150),
+  area VARCHAR(300),
+  email VARCHAR(200),
+  PRIMARY KEY(id_proveedor_contacto)
+) INHERITS (pxp.tbase)
+WITH (oids = false);
+
+ALTER TABLE param.tproveedor_contacto
+  OWNER TO postgres;
+
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN codigo_alkym VARCHAR(50);
+
+COMMENT ON COLUMN param.tproveedor.codigo_alkym
+IS 'codigo proveedor alkym';
+
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN ccorreo VARCHAR(200);
+
+
+
+
+ALTER TABLE param.tproveedor_contacto
+  ADD COLUMN id_proveedor_contacto_alkym INTEGER;
+
+COMMENT ON COLUMN param.tproveedor_contacto.id_proveedor_contacto_alkym
+IS 'id_proveedor_contacto del sistema alkym';
+
+
+ALTER TABLE param.tproveedor_contacto
+  ADD COLUMN ci VARCHAR(100);
+
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN codigo_externo VARCHAR(100);
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN codigo_fabricante VARCHAR(100);
+
+
+
+/***********************************F-SCP-MAY-PARAM-0-27/03/2020*****************************************/

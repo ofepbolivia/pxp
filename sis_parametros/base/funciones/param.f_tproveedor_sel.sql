@@ -136,6 +136,7 @@ BEGIN
             elsif v_parametros.tipo='institucion' then
                 v_where:= 'provee.id_persona is null';
             end if;
+
     		--Sentencia de la consulta
 			v_consulta:='select
 						provee.id_proveedor,
@@ -185,7 +186,39 @@ BEGIN
                         instit.codigo_telf_institucion,
 
                         provee.id_lugar_departamento as id_lugar_fk,
-                        provee.id_lugar_ciudad as id_lugar_fk2
+                        provee.id_lugar_ciudad as id_lugar_fk2,
+
+                        provee.id_moneda,
+                        mon.moneda,
+                        provee.dnrp,
+                        provee.ingreso_bruto,
+                        provee.tipo_habilitacion,
+                        provee.motivo_habilitacion,
+                        provee.codigo_alkym,
+                        provee.ccorreo,
+
+                        provee.codigo_externo,
+                        provee.codigo_fabricante,
+
+                        per.fax as fax_persona,
+                        per.pag_web as pag_web_persona,
+                        per.observaciones as observaciones_persona,
+
+                        provee.id_proveedor_alkym,
+
+                        per.telefono1,
+                        per.direccion,
+                        per.correo,
+                        instit.direccion as direccion_institucion,
+                        instit.email1 as email1_institucion,
+                        instit.email2 as email2_institucion,
+                        instit.telefono1 as telefono1_institucion,
+                        instit.fax,
+                        instit.pag_web,
+                        instit.observaciones::varchar,
+                        lugdepto.nombre as lugar_depto,
+                        lugciudad.nombre as lugar_ciudad
+
 
                         from param.tproveedor provee
 						inner join segu.tusuario usu1 on usu1.id_usuario = provee.id_usuario_reg
@@ -194,6 +227,9 @@ BEGIN
                         left join segu.tpersona per on per.id_persona = person.id_persona
                         left join param.tinstitucion instit on instit.id_institucion=provee.id_institucion
                         left join param.tlugar lug on lug.id_lugar = provee.id_lugar
+                        left join param.tlugar lugdepto on lugdepto.id_lugar = provee.id_lugar_departamento
+                        left join param.tlugar lugciudad on lugciudad.id_lugar = provee.id_lugar_ciudad
+                        left join param.tmoneda mon on mon.id_moneda = provee.id_moneda
 				        where '||v_where||' and ';
 
 			--Definicion de la respuesta
@@ -229,6 +265,9 @@ BEGIN
                         left join segu.vpersona2 person on person.id_persona=provee.id_persona
                         left join param.tinstitucion instit on instit.id_institucion=provee.id_institucion
                         left join param.tlugar lug on lug.id_lugar = provee.id_lugar
+                        left join param.tlugar lugdepto on lugdepto.id_lugar = provee.id_lugar_departamento
+                        left join param.tlugar lugciudad on lugciudad.id_lugar = provee.id_lugar_ciudad
+                        left join param.tmoneda mon on mon.id_moneda = provee.id_moneda
 				        where '||v_where||' and ';
 
 			--Definicion de la respuesta
@@ -268,7 +307,7 @@ BEGIN
                         provee.pais,
                         provee.rotulo_comercial,
                         (COALESCE(provee.email,''''))::varchar as email,
-                        provee.num_proveedor::integer,
+                        provee.num_proveedor,
                         provee.condicion
             from param.vproveedor2 provee
             where  ';
