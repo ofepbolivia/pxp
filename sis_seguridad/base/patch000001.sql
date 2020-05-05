@@ -1122,3 +1122,15 @@ COMMENT ON COLUMN segu.tpersona.codigo_telf
 IS 'codigo, pre fijo del numero de telefono';
 
 /*****************************F-SCP-MAY-SEGU-0-20/02/2020*************/
+
+/*****************************I-SCP-MAY-SEGU-0-27/03/2020*************/
+ALTER TABLE segu.tpersona
+  ADD COLUMN fax VARCHAR(50);
+
+ALTER TABLE segu.tpersona
+  ADD COLUMN pag_web VARCHAR(100);
+
+ALTER TABLE segu.tpersona
+  ADD COLUMN observaciones VARCHAR(200);
+
+/*****************************F-SCP-MAY-SEGU-0-27/03/2020*************/

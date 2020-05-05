@@ -193,7 +193,7 @@ BEGIN
           --  Se arma la consulta de personas
           BEGIN
 
-               /*v_consulta:='SELECT p.id_persona,
+              /*v_consulta:='SELECT p.id_persona,
                              p.extension,
                              p.foto
                           FROM segu.tpersona p
@@ -263,6 +263,86 @@ BEGIN
                raise notice 'v_consulta: %', v_consulta;
                return v_consulta;
          END;
+
+
+     /*******************************
+       #TRANSACCION:  SEG_PERSONV2_SEL
+       #DESCRIPCION:	Selecciona Personas
+       #AUTOR:		Maylee Perez Pastor
+       #FECHA:		01/04/2020
+      ***********************************/
+           elsif(par_transaccion='SEG_PERSONV2_SEL')then
+
+                --  Se arma la consulta de personas
+                BEGIN
+
+                     v_consulta:='SELECT
+                                    p.id_persona,
+                                    p.ap_materno,
+                                    p.ap_paterno,
+                                    p.nombre,
+                                    p.nombre_completo1,
+                                    p.nombre_completo2,
+                                    p.ci,
+                                    p.correo,
+                                    p.celular1,
+                                    p.num_documento,
+                                    p.telefono1,
+                                    p.telefono2,
+                                    p.celular2,
+                                    per.fecha_nacimiento,
+                                    per.genero,
+                                    per.direccion,
+                                    td.nombre as tipo_documento,
+                                    per.expedicion,
+                                    per.id_tipo_doc_identificacion,
+                                    per.nacionalidad,
+                                    per.id_lugar,
+                                    per.discapacitado,
+                                    tl.nombre as nombre_lugar,
+
+                                    per.fax,
+                                    per.pag_web,
+                                    per.observaciones
+
+                                FROM segu.vpersona p
+                                inner join segu.tpersona per on per.id_persona = p.id_persona
+                                inner join segu.ttipo_documento td on td.id_tipo_documento = per.id_tipo_doc_identificacion
+                                left join param.tlugar tl on tl.id_lugar = per.id_lugar
+                                WHERE ';
+                     v_consulta:=v_consulta||v_parametros.filtro;
+                     v_consulta:=v_consulta || ' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
+                     --raise exception '%',v_consulta;
+                     return v_consulta;
+
+
+               END;
+
+
+
+
+      /*******************************
+       #TRANSACCION:  SEG_PERSONV2_CONT
+       #DESCRIPCION:	Cuenta Personas
+       #AUTOR:		Maylee Perez Pastor
+       #FECHA:		01/04/2020
+      ***********************************/
+
+           elsif(par_transaccion='SEG_PERSONV2_CONT')then
+
+                --se arma la sonsulta que cuenta personas
+                BEGIN
+
+                     v_consulta:='select count(p.id_persona)
+                                  FROM segu.vpersona p
+                                  inner join segu.tpersona per on per.id_persona = p.id_persona
+                                  inner join segu.ttipo_documento td on td.id_tipo_documento = per.id_tipo_doc_identificacion
+                                  left join param.tlugar tl on tl.id_lugar = per.id_lugar
+                                  WHERE ';
+                     v_consulta:=v_consulta||v_parametros.filtro;
+                     return v_consulta;
+             END;
+
 
      else
          raise exception 'No existe la opcion';
