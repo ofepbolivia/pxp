@@ -37,7 +37,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         bodyStyle: 'padding-right:5px;',
                         items: [{
                             xtype: 'fieldset',
-                            title: 'Datos Internacionales',
+                            title: 'Datos Internacionales-BUE',
                             autoHeight: true,
                             items: [],
                             id_grupo: 3
@@ -92,6 +92,15 @@ header("content-type: text/javascript; charset=UTF-8");
             this.iniciarEventos();
             this.cmbProveedor.fireEvent('select');
 
+            this.addButton('btnbeneficiario', {
+                //grupo: [0],
+                text: 'Beneficiario',
+                iconCls: 'btag_accept',
+                disabled: false,
+                handler:this.onSigepRequest,
+                tooltip: '<b>Beneficiario</b><br/>Adiciona el ID beneficiario desde el Sigep con el Documento de Identidad o Nit'
+            });
+
         },
 
         capturaFiltros: function (combo, record, index) {
@@ -133,7 +142,8 @@ header("content-type: text/javascript; charset=UTF-8");
             //(may) modificacion grupo de campos segun el id_lugar
             this.getComponente('id_lugar').on('select', function (cmp, rec, indice) {
                 //id_lugar 1 Bolivia
-                if (rec.data.id_lugar == 1 || rec.data.id_lugar == '') {
+                //id_lugar 97 BUE
+                if (rec.data.id_lugar != 97 || rec.data.id_lugar == '') {
                     this.ocultarGrupo(3);
                 }else{
                     this.mostrarGrupo(3);
@@ -617,6 +627,25 @@ header("content-type: text/javascript; charset=UTF-8");
                 id_grupo: 0,
                 grid: true,
                 form: true
+            },
+            {
+                config:{
+                    name: 'id_beneficiario',
+                    fieldLabel: 'ID Beneficiario',
+                    allowBlank: false,
+                    anchor: '100%',
+                    gwidth: 100,
+                    maxLength:15,
+                    renderer : function(value, p, record) {
+                        return String.format('<b style="color: green">{0}</b>', record.data['id_beneficiario']);
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'provee.id_beneficiario',type:'string'},
+                id_grupo:0,
+                grid:true,
+                form:false,
+                bottom_filter : true
             },
 
             {
@@ -1687,7 +1716,8 @@ header("content-type: text/javascript; charset=UTF-8");
             'observaciones',
 
             'lugar_depto',
-            'lugar_ciudad'
+            'lugar_ciudad',
+            {name:'id_beneficiario', type: 'string'}
         ],
 
         arrayDefaultColumHidden: ['estado'],
@@ -1998,7 +2028,8 @@ header("content-type: text/javascript; charset=UTF-8");
 
             //(may) modificacion grupo de campos segun el id_lugar
             //id_lugar 1 Bolivia
-            if (datos.id_lugar == 1 || datos.id_lugar == '') {
+            //id_lugar 97 BUE
+            if (datos.id_lugar != 97 || datos.id_lugar == '') {
                 this.ocultarGrupo(3);
             }else{
                 this.mostrarGrupo(3);
@@ -2377,7 +2408,102 @@ header("content-type: text/javascript; charset=UTF-8");
                 timeout: this.timeout,
                 scope: this
             });
-        }
+        },
+
+        onSigepRequest:function(){
+            Phx.CP.loadingShow();
+            var resp = this.sm.getSelected().data;
+            resp.sigep_adq='vbsigepadq';
+            console.log('Grid de Proveedor:',resp);
+            Ext.Ajax.request({
+                url: '../../sis_sigep/control/SigepAdq/consultaBeneficiario',
+                params: {
+                    id_proveedor: resp.id_proveedor,
+                },
+                success: this.successReg,
+                failure: this.failureCheck, //chequea si esta en verificacion presupeusto para enviar correo de transferencia
+                //argument: {wizard: wizard},
+                timeout: this.timeout,
+                scope: this
+            });
+
+        },
+        successReg:function(resp){
+            Phx.CP.loadingHide();
+            var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+            console.log('successReg',reg.ROOT.datos);
+            var proveedor=reg.ROOT;
+            var service_code = 'BENEF';
+            Ext.Ajax.request({
+                url: '../../sis_sigep/control/SigepAdq/registrarService',
+                params: {
+                    list: JSON.stringify(proveedor),
+                    service_code: service_code
+                },
+                success: this.successProc,
+                failure: this.failureCheck, //chequea si esta en verificacion presupeusto para enviar correo de transferencia
+                //argument: {wizard: wizard},
+                timeout: this.timeout,
+                scope: this
+            });
+            if(!reg.ROOT.error){
+                this.reload();
+            }
+        },
+        successProc:function(resp){
+            Phx.CP.loadingHide();
+            var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+            console.log('successProc;',reg);
+            var rest = reg.ROOT.datos;
+            //var proveedor = reg.ROOT.datos.id_proveedor;
+            Ext.Ajax.request({
+                url: '../../sis_sigep/control/SigepAdq/statusC31',
+                params: {
+                    id_service_request: rest.id_service_request,
+                    id_proveedor: rest.id_proveedor
+                },
+                success: this.successSta,
+                failure: this.failureCheck, //chequea si esta en verificacion presupeusto para enviar correo de transferencia
+                //argument: {wizard: wizard},
+                timeout: this.timeout,
+                scope: this
+            });
+            if(!reg.ROOT.error){
+                this.reload();
+            }
+        },
+        successSta:function(resp){
+            Phx.CP.loadingHide();
+            var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+            console.log('successSta;',reg);
+            var rest = reg.ROOT.datos;
+            //var proveedor = reg.ROOT.datos.id_proveedor;
+            Ext.Ajax.request({
+                url: '../../sis_sigep/control/SigepAdq/registrarBeneficiario',
+                params: {
+                    id_proveedor: rest.id_proveedor,
+                    id_beneficiario: rest.id_beneficiario
+                },
+                success: this.successAll,
+                failure: this.failureCheck, //chequea si esta en verificacion presupeusto para enviar correo de transferencia
+                //argument: {wizard: wizard},
+                timeout: this.timeout,
+                scope: this
+            });
+            this.reload();
+            if(reg.ROOT.datos.error){
+                //Ext.Msg.alert('ERROR SIGEP!', reg.ROOT.datos.error);
+                Ext.Msg.show({
+                    title: 'ERROR SIGEP!', //<- el título del diálogo
+                    msg: reg.ROOT.datos.error,
+                    icon: Ext.Msg.ERROR, // <- un ícono de error
+                    width: 400,
+                    buttons: Ext.Msg.OK, //<- Botones de SI y NO
+                    fn: this.callback //<- la función que se ejecuta cuando se da clic
+                });
+                this.reload();
+            }
+        },
 
 
     })

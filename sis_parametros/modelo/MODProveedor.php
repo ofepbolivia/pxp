@@ -173,6 +173,8 @@ class MODProveedor extends MODbase{
 
 		$this->captura('lugar_depto','varchar');
 		$this->captura('lugar_ciudad','varchar');
+		
+       $this->captura('id_beneficiario','varchar');
 
 
 		//Ejecuta la instruccion

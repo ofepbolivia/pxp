@@ -217,7 +217,8 @@ BEGIN
                         instit.pag_web,
                         instit.observaciones::varchar,
                         lugdepto.nombre as lugar_depto,
-                        lugciudad.nombre as lugar_ciudad
+                        lugciudad.nombre as lugar_ciudad,
+                        provee.id_beneficiario
 
 
                         from param.tproveedor provee
