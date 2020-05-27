@@ -25,6 +25,7 @@ DECLARE
 
     v_existencia		integer;
     v_registrado		varchar;
+    v_existe_fun		integer;
 
 
 BEGIN
@@ -54,6 +55,16 @@ BEGIN
         else
         	v_registrado = 'No';
         end if;
+
+
+            select count (car.id_funcionario) into v_existe_fun
+            from orga.vfuncionario_ultimo_cargo car
+            where car.ci = v_parametros.ci and (car.fecha_finalizacion is null or car.fecha_finalizacion >= now()::date);
+
+            IF (v_existe_fun = 0) then
+            	raise exception 'El Funcionario se encuentra inactivo';
+            end if;
+
 
 
         v_consulta = 'select car.id_funcionario::integer,
