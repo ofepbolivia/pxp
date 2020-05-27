@@ -51,7 +51,9 @@ BEGIN
 			id_usuario_reg,
 			fecha_reg,
 			id_usuario_mod,
-			fecha_mod
+			fecha_mod,
+			abreviatura,
+			firma
           	) values(
 			v_parametros.codigo,
 			v_parametros.nombre,
@@ -59,7 +61,9 @@ BEGIN
 			p_id_usuario,
 			now(),
 			null,
-			null
+			null,
+			v_parametros.abreviatura,
+			v_parametros.firma
 			)RETURNING id_especialidad_nivel into v_id_especialidad_nivel;
                
 			--Definicion de la respuesta
@@ -86,7 +90,9 @@ BEGIN
 			codigo = v_parametros.codigo,
 			nombre = v_parametros.nombre,
 			id_usuario_mod = p_id_usuario,
-			fecha_mod = now()
+			fecha_mod = now(),
+			abreviatura = v_parametros.abreviatura,
+			firma = v_parametros.firma
 			where id_especialidad_nivel=v_parametros.id_especialidad_nivel;
                
 			--Definicion de la respuesta

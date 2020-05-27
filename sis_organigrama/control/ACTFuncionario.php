@@ -183,6 +183,8 @@ class ACTFuncionario extends ACTbase{
             $this->objParam->addFiltro("extract (month from PERSON.fecha_nacimiento) = " . $this->objParam->getParametro('mes'));
         }
 
+        $this->objParam->addFiltro("car.nombre != ''cadet Pilot''");
+
         //crea el objetoFunSeguridad que contiene todos los metodos del sistema de seguridad
         if ($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
             $this->objReporte=new Reporte($this->objParam, $this);

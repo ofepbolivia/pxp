@@ -53,6 +53,8 @@ v_consulta					varchar;
 v_id_usuario 				integer;
 v_resultado					varchar;
 
+v_gerente					record;
+
 BEGIN
 	--raise exception 'COMUNIQUESE CON EL DEPTO. INFORMATICO';
      v_nombre_funcion:='orga.ft_funcionario_ime';
@@ -395,6 +397,17 @@ BEGIN
 
        begin
 
+        select vf.desc_funcionario1 as nombre, ten.abreviatura
+        into v_gerente
+        from orga.tcargo tcar
+        inner join orga.tuo_funcionario tuo on tuo.id_cargo = tcar.id_cargo
+        inner join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
+        inner join orga.tfuncionario tf on tf.id_funcionario = vf.id_funcionario
+        inner join orga.tespecialidad_nivel ten on ten.id_especialidad_nivel =  tf.id_especialidad_nivel
+        inner join orga.tuo uo on uo.id_uo = tuo.id_uo
+        where tuo.estado_reg = 'activo' and tuo.tipo = 'oficial' and tcar.codigo = '1' and uo.estado_reg = 'activo'
+        and current_date <= coalesce(tuo.fecha_finalizacion,'31/12/9999'::date);
+
         -- seleccionar los cumpleaneros del dia
          FOR v_registros in (SELECT FUNCIO.id_funcionario,
                                      FUNCIO.nombre::varchar,
@@ -457,7 +470,7 @@ BEGIN
                         	  <td style="width: 100%; color: #ffffff;" align="center">
                               <br/>
 
-                              <span >Lic. Juan Carlos Ossio Vidal</span><br />
+                              <span >'||v_gerente.abreviatura||' '||v_gerente.nombre||'</span><br />
                               <span >GERENTE GENERAL</span><br />
                               <span >Empresa Pública Nacional Estratégica</span><br />
                               <span >Boliviana de Aviaci&oacute;n - BoA</span>

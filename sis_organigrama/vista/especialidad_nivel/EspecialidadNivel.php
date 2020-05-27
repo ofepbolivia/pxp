@@ -61,6 +61,37 @@ Phx.vista.EspecialidadNivel=Ext.extend(Phx.gridInterfaz,{
 			grid:true,
 			form:true
 		},
+
+        {
+            config:{
+                name: 'abreviatura',
+                fieldLabel: 'Abreviatura',
+                allowBlank: false,
+                anchor: '80%',
+                gwidth: 300,
+                maxLength:100
+            },
+            type:'TextField',
+            filters:{pfiltro:'rhnies.nombre',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
+        {
+            config:{
+                name: 'firma',
+                fieldLabel: 'Firma',
+                allowBlank: false,
+                anchor: '80%',
+                gwidth: 300,
+                maxLength:100
+            },
+            type:'TextField',
+            filters:{pfiltro:'rhnies.nombre',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
 		{
 			config:{
 				name: 'estado_reg',
@@ -153,7 +184,9 @@ Phx.vista.EspecialidadNivel=Ext.extend(Phx.gridInterfaz,{
 		{name:'fecha_mod', type: 'date', dateFormat:'Y-m-d H:i:s'},
 		{name:'usr_reg', type: 'string'},
 		{name:'usr_mod', type: 'string'},
-		
+		{name:'abreviatura', type: 'string'},
+		{name:'firma', type: 'string'},
+
 	],
 	
 	south:{
