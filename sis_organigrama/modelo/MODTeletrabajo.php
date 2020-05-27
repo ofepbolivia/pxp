@@ -60,6 +60,31 @@ class MODTeletrabajo extends MODbase
           return $this->respuesta;
     }
 
+    function listarTeletrabajo()
+    {
+          $this->procedimiento = 'orga.ft_teletrabajo_sel';
+          $this->transaccion = 'ORGA_LIST_TELTRA_SEL';
+          $this->tipo_procedimiento = 'SEL';//tipo de transaccion
+
+          //Definicion de la lista del resultado del query
+          $this->captura('id_teletrabajo', 'integer');
+          $this->captura('id_funcionario', 'integer');
+          $this->captura('ci', 'varchar');
+          $this->captura('equipo_computacion', 'varchar');
+          $this->captura('tipo_de_uso', 'varchar');
+          $this->captura('cuenta_con_internet', 'varchar');
+          $this->captura('zona_domicilio', 'text');
+          $this->captura('transporte_particular', 'varchar');
+          $this->captura('tipo_transporte', 'varchar');
+          $this->captura('placa', 'varchar');
+          //Ejecuta la instruccion
+          $this->armarConsulta();
+          $this->ejecutarConsulta();
+
+          //Devuelve la respuesta
+          return $this->respuesta;
+    }
+
 
 }
 

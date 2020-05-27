@@ -33,9 +33,16 @@ class ACTTeletrabajo extends ACTbase{
 	  }else{
 		  echo "eres un robot";
 	  }
-	  
-		
+
+
 	}
+
+	function listarTeletrabajo(){
+		$this->objFunc=$this->create('MODTeletrabajo');
+			$this->res=$this->objFunc->listarTeletrabajo($this->objParam);
+		  $this->res->imprimirRespuesta($this->res->generarJson());
+	}
+
 
 }
 
