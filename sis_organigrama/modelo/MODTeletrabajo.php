@@ -51,6 +51,11 @@ class MODTeletrabajo extends MODbase
           $this->setParametro('transporte_particular', 'transporte_particular', 'varchar');
           $this->setParametro('tipo_transporte', 'tipo_transporte', 'varchar');
           $this->setParametro('placa', 'placa', 'varchar');
+          $this->setParametro('cambio_modalidad', 'cambio_modalidad', 'varchar');
+          $this->setParametro('dias_asistencia_fisica', 'dias_asistencia_fisica', 'varchar');
+          $this->setParametro('motivo_solicitud', 'motivo_solicitud', 'varchar');
+          $this->setParametro('desc_motivo_solicitud', 'desc_motivo_solicitud', 'text');
+          $this->setParametro('aplica_teletrabajo', 'aplica_teletrabajo', 'varchar');
 
           //Ejecuta la instruccion
           $this->armarConsulta();

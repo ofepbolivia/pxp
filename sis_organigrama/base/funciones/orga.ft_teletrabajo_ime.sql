@@ -58,7 +58,7 @@ BEGIN
           if (v_existencia > 0) then
               v_mensaje = 'El funcionario ya se encuentra registrado';
           else
-              v_mensaje = 'Registro existoso';
+              v_mensaje = 'Registro exitoso!!, Para su presentación a R.R.H.H., descargue su formulario en formato PDF';
 
               insert into orga.tformulario_teletrabajo( id_funcionario,
                                                       ci,
@@ -69,7 +69,12 @@ BEGIN
                                                       transporte_particular,
                                                       tipo_transporte,
                                                       placa,
-                                                      id_usuario_reg
+                                                      id_usuario_reg,
+                                                      cambio_modalidad,
+                                                      dias_asistencia_fisica,
+                                                      motivo_solicitud,
+                                                      desc_motivo_solicitud,
+                                                      aplica_teletrabajo
                                                       )VALUES(
                                                       v_parametros.id_funcionario,
                                                       v_parametros.ci,
@@ -80,7 +85,12 @@ BEGIN
                                                       v_parametros.transporte_particular,
                                                       v_parametros.tipo_transporte,
                                                       v_parametros.placa,
-                                                      p_id_usuario )RETURNING id_teletrabajo into v_id_teletrabajo;
+                                                      p_id_usuario,
+                                                      v_parametros.cambio_modalidad,
+                                                      v_parametros.dias_asistencia_fisica,
+                                                      v_parametros.motivo_solicitud,
+                                                      v_parametros.desc_motivo_solicitud,
+                                                      v_parametros.aplica_teletrabajo )RETURNING id_teletrabajo into v_id_teletrabajo;
 
 
 
@@ -124,3 +134,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.ft_teletrabajo_ime (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;

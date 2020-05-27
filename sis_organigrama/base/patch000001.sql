@@ -872,6 +872,24 @@ CREATE TABLE orga.tformulario_teletrabajo (
 ) INHERITS (pxp.tbase)
 WITH (oids = false);
 
-ALTER TABLE orga.tformulario_teletrabajo 
+ALTER TABLE orga.tformulario_teletrabajo
   OWNER TO postgres;
 /*****************************F-SCP-IRVA-ORGA-0-26/05/2020*************/
+
+/*****************************I-SCP-IRVA-ORGA-1-27/05/2020*************/
+ALTER TABLE orga.tformulario_teletrabajo
+  ADD COLUMN cambio_modalidad VARCHAR(100);
+
+ALTER TABLE orga.tformulario_teletrabajo
+  ADD COLUMN dias_asistencia_fisica VARCHAR(200);
+
+
+ALTER TABLE orga.tformulario_teletrabajo
+  ADD COLUMN motivo_solicitud VARCHAR(200);
+
+ALTER TABLE orga.tformulario_teletrabajo
+  ADD COLUMN desc_motivo_solicitud TEXT;
+
+ALTER TABLE orga.tformulario_teletrabajo
+  ADD COLUMN aplica_teletrabajo VARCHAR(2);
+/*****************************F-SCP-IRVA-ORGA-1-27/05/2020*************/
