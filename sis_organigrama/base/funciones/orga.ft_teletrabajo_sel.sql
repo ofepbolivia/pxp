@@ -90,6 +90,60 @@ BEGIN
 
 		end;
 
+    /*********************************
+ 	#TRANSACCION:  'ORGA_LIST_TELTRA_SEL'
+ 	#DESCRIPCION:	Consulta de datos
+ 	#AUTOR: 		Ismael Valdivia
+ 	#FECHA:	        26/05/2020 22:30:00
+	***********************************/
+
+	elsif(p_transaccion='ORGA_LIST_TELTRA_SEL')then
+
+    	begin
+
+
+        v_consulta = 'select tele.id_teletrabajo,
+        					 tele.id_funcionario,
+                             tele.ci,
+                             tele.equipo_computacion,
+                             tele.tipo_de_uso,
+                             tele.cuenta_con_internet,
+                             tele.zona_domicilio,
+                             tele.transporte_particular,
+                             tele.tipo_transporte,
+                             tele.placa
+        			  from orga.tformulario_teletrabajo tele
+                      where ';
+
+        	v_consulta:=v_consulta||v_parametros.filtro;
+			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
+
+        return v_consulta;
+
+
+		end;
+    /*********************************
+ 	#TRANSACCION:  'ORGA_LIST_TELTRA_CONT'
+ 	#DESCRIPCION:	Conteo de registros
+ 	#AUTOR:		Jose Mita
+ 	#FECHA:		21-06-2016 10:11:23
+	***********************************/
+
+	elsif(p_transaccion='ORGA_LIST_TELTRA_CONT')then
+
+		begin
+
+			--Sentencia de la consulta de conteo de registros
+			v_consulta:='select count(tele.id_teletrabajo)
+        			  from orga.tformulario_teletrabajo tele
+                      where ';
+
+			--Devuelve la respuesta
+            v_consulta:=v_consulta||v_parametros.filtro;
+			return v_consulta;
+
+		end;
+
 	else
 
 		raise exception 'Transaccion inexistente';
