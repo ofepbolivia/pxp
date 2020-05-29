@@ -893,3 +893,10 @@ ALTER TABLE orga.tformulario_teletrabajo
 ALTER TABLE orga.tformulario_teletrabajo
   ADD COLUMN aplica_teletrabajo VARCHAR(2);
 /*****************************F-SCP-IRVA-ORGA-1-27/05/2020*************/
+/*****************************I-SCP-IRVA-ORGA-0-29/05/2020*************/
+ALTER TABLE orga.tformulario_teletrabajo
+  ADD COLUMN estado_solicitud VARCHAR(2);
+
+ALTER TABLE orga.tformulario_teletrabajo
+  ADD COLUMN observaciones TEXT;
+/*****************************F-SCP-IRVA-ORGA-0-29/05/2020*************/

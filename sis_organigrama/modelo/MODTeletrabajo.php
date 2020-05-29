@@ -74,18 +74,45 @@ class MODTeletrabajo extends MODbase
           //Definicion de la lista del resultado del query
           $this->captura('id_teletrabajo', 'integer');
           $this->captura('id_funcionario', 'integer');
+          $this->captura('apellido_paterno', 'varchar');
+          $this->captura('apellido_materno', 'varchar');
+          $this->captura('nombre', 'varchar');
           $this->captura('ci', 'varchar');
+          $this->captura('expedicion', 'varchar');
+          $this->captura('nombre_cargo', 'varchar');
+          $this->captura('cambio_modalidad', 'varchar');
+          $this->captura('dias_asistencia_fisica', 'varchar');
+          $this->captura('motivo_solicitud', 'varchar');
+          $this->captura('desc_motivo_solicitud', 'text');
           $this->captura('equipo_computacion', 'varchar');
           $this->captura('tipo_de_uso', 'varchar');
           $this->captura('cuenta_con_internet', 'varchar');
-          $this->captura('zona_domicilio', 'text');
-          $this->captura('transporte_particular', 'varchar');
-          $this->captura('tipo_transporte', 'varchar');
-          $this->captura('placa', 'varchar');
+          $this->captura('gerencia', 'varchar');
+          $this->captura('fecha_reg','varchar');
+          $this->captura('estado_solicitud','varchar');
+          $this->captura('observaciones','text');
           //Ejecuta la instruccion
           $this->armarConsulta();
           $this->ejecutarConsulta();
 
+          //Devuelve la respuesta
+          return $this->respuesta;
+    }
+
+    function evaluarFormulario()
+    {
+          $this->procedimiento = 'orga.ft_teletrabajo_ime';
+          $this->transaccion = 'ORGA_EVAL_TELE_IME';
+          $this->tipo_procedimiento = 'IME';//tipo de transaccion
+
+          $this->setParametro('id_teletrabajo', 'id_teletrabajo', 'integer');
+          $this->setParametro('estado_solicitud', 'estado_solicitud', 'varchar');
+          $this->setParametro('observaciones', 'observaciones', 'text');
+
+          //Ejecuta la instruccion
+          $this->armarConsulta();
+          $this->ejecutarConsulta();
+          //var_dump("aqui entra",$this->respuesta);
           //Devuelve la respuesta
           return $this->respuesta;
     }

@@ -112,6 +112,34 @@ BEGIN
 
 		end;
 
+    /*********************************
+ 	#TRANSACCION:  'ORGA_EVAL_TELE_IME'
+ 	#DESCRIPCION:	Registro de la evaluacion
+    #AUTOR: 		Ismael Valdivia
+    #FECHA:	        26/05/2020
+	***********************************/
+
+	elsif(p_transaccion='ORGA_EVAL_TELE_IME')then
+
+		begin
+
+        	update orga.tformulario_teletrabajo set
+            estado_solicitud = v_parametros.estado_solicitud,
+            observaciones = v_parametros.observaciones
+            where id_teletrabajo = v_parametros.id_teletrabajo;
+
+
+			--Definicion de la respuesta
+            v_resp = pxp.f_agrega_clave(v_resp,'Mensaje','Exito');
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje',v_mensaje::varchar);
+            v_resp = pxp.f_agrega_clave(v_resp,'id_teletrabajo',v_id_teletrabajo::varchar);
+
+
+            --Devuelve la respuesta
+            return v_resp;
+
+		end;
+
 	else
 
     	raise exception 'Transaccion inexistente: %',p_transaccion;

@@ -62,7 +62,7 @@ BEGIN
             where car.ci = v_parametros.ci and (car.fecha_finalizacion is null or car.fecha_finalizacion >= now()::date);
 
             IF (v_existe_fun = 0) then
-            	raise exception 'El Funcionario se encuentra inactivo';
+            	raise exception 'El CI ingresado no corresponde a un funcionario de BoA o el mismo esta inactivo.';
             end if;
 
 
@@ -102,17 +102,32 @@ BEGIN
     	begin
 
 
-        v_consulta = 'select tele.id_teletrabajo,
-        					 tele.id_funcionario,
-                             tele.ci,
-                             tele.equipo_computacion,
-                             tele.tipo_de_uso,
-                             tele.cuenta_con_internet,
-                             tele.zona_domicilio,
-                             tele.transporte_particular,
-                             tele.tipo_transporte,
-                             tele.placa
+        v_consulta = 'select tele.id_teletrabajo::integer,
+        					 tele.id_funcionario::integer,
+                             per.apellido_paterno::varchar,
+                             per.apellido_materno::varchar,
+                             per.nombre::varchar,
+                             tele.ci::varchar,
+                             per.expedicion::varchar,
+                             car.nombre_cargo::varchar,
+                             tele.cambio_modalidad::varchar,
+                             tele.dias_asistencia_fisica::varchar,
+                             tele.motivo_solicitud::varchar,
+                             tele.desc_motivo_solicitud,
+                             tele.equipo_computacion::varchar,
+                             tele.tipo_de_uso::varchar,
+                             tele.cuenta_con_internet::varchar,
+                             COALESCE (
+                             (select uo.nombre_unidad::varchar
+                              from orga.tuo uo
+                              where uo.id_uo = orga.f_get_uo_gerencia(car.id_uo,car.id_funcionario,now()::date)),''SIN GERENCIA'')::varchar as gerencia,
+                             tele.fecha_reg::varchar,
+                             tele.estado_solicitud,
+                             tele.observaciones
         			  from orga.tformulario_teletrabajo tele
+                      inner join orga.vfuncionario_ultimo_cargo car on car.id_funcionario = tele.id_funcionario
+                      inner join orga.vfuncionario_persona perf on perf.id_funcionario = tele.id_funcionario
+                      inner join segu.tpersona per on per.id_persona = perf.id_persona
                       where ';
 
         	v_consulta:=v_consulta||v_parametros.filtro;
@@ -136,6 +151,9 @@ BEGIN
 			--Sentencia de la consulta de conteo de registros
 			v_consulta:='select count(tele.id_teletrabajo)
         			  from orga.tformulario_teletrabajo tele
+                      inner join orga.vfuncionario_ultimo_cargo car on car.id_funcionario = tele.id_funcionario
+                      inner join orga.vfuncionario_persona perf on perf.id_funcionario = tele.id_funcionario
+                      inner join segu.tpersona per on per.id_persona = perf.id_persona
                       where ';
 
 			--Devuelve la respuesta

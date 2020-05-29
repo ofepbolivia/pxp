@@ -38,10 +38,44 @@ class ACTTeletrabajo extends ACTbase{
 	}
 
 	function listarTeletrabajo(){
-		$this->objFunc=$this->create('MODTeletrabajo');
+
+		$this->objParam->defecto('ordenacion','id_teletrabajo');
+        $this->objParam->defecto('dir_ordenacion','asc');
+
+				if ($this->objParam->getParametro('pes_estado') == 'borrador') {
+						$this->objParam->addFiltro("tele.estado_solicitud is NULL");
+				}
+
+				if ($this->objParam->getParametro('pes_estado') == 'aprobados') {
+						$this->objParam->addFiltro("tele.estado_solicitud = ''si''");
+				}
+
+				if ($this->objParam->getParametro('pes_estado') == 'rechazados') {
+						$this->objParam->addFiltro("tele.estado_solicitud = ''no''");
+				}
+
+
+		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+			$this->objReporte = new Reporte($this->objParam,$this);
+			$this->res = $this->objReporte->generarReporteListado('MODTeletrabajo','listarTeletrabajo');
+		} else{
+			$this->objFunc=$this->create('MODTeletrabajo');
+
 			$this->res=$this->objFunc->listarTeletrabajo($this->objParam);
-		  $this->res->imprimirRespuesta($this->res->generarJson());
+		}
+		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
+
+
+	function evaluarFormulario(){
+
+		  $this->objFunc=$this->create('MODTeletrabajo');
+		  $this->res=$this->objFunc->evaluarFormulario($this->objParam);
+		  $this->res->imprimirRespuesta($this->res->generarJson());
+
+
+	}
+
 
 
 }
