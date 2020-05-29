@@ -32,6 +32,14 @@ DECLARE
 
     v_existencia			integer;
 	v_mensaje				varchar;
+    v_datos					record;
+    v_mensaje_correo		varchar;
+    v_mensaje_semi			varchar;
+    v_mensaje_motivo		varchar;
+    v_mensaje_equipo		varchar;
+    v_correos				varchar;
+    v_responsable			integer;
+    v_datos_responsable		record;
 
 BEGIN
 
@@ -94,13 +102,106 @@ BEGIN
 
 
 
-          end if;
 
 
+          	select
+                             car.nombre_cargo::varchar,
+                             car.desc_funcionario1,
+                             car.email_empresa,
+                             car.id_uo,
+                             COALESCE (
+                             (select uo.nombre_unidad::varchar
+                              from orga.tuo uo
+                              where uo.id_uo = orga.f_get_uo_gerencia(car.id_uo,car.id_funcionario,now()::date)),'SIN GERENCIA')::varchar as gerencia
+                             into
+                             v_datos
+        			  from  orga.vfuncionario_ultimo_cargo car
+                      where car.id_funcionario = v_parametros.id_funcionario;
 
 
+              select est.id_uo_padre into v_responsable
+              from orga.testructura_uo est
+              where est.id_uo_hijo = v_datos.id_uo::integer;
 
 
+              select
+                             car.nombre_cargo::varchar,
+                             car.email_empresa
+                             into
+                             v_datos_responsable
+        			  from  orga.vfuncionario_ultimo_cargo car
+                      where car.id_uo = v_responsable;
+
+
+               v_correos = v_datos_responsable.email_empresa||';'||v_datos.email_empresa||';';
+
+               if (v_parametros.cambio_modalidad = 'Semi-Presencial') then
+               		v_mensaje_semi = '<p><b>DÍAS DE ASISTENCIA FÍSICA:</b> '||v_parametros.dias_asistencia_fisica||'</p><br>';
+               else
+               		v_mensaje_semi = '';
+               end if;
+
+               if (v_parametros.motivo_solicitud = 'Enfermedad de base crónica' or v_parametros.motivo_solicitud = 'Otro') then
+               		v_mensaje_motivo = '<p><b>DESCRIPCIÓN DE LA SOLICITUD:</b> '||v_parametros.desc_motivo_solicitud||'</p><br>';
+               else
+               		v_mensaje_motivo = '';
+               end if;
+
+                if (v_parametros.equipo_computacion = 'Si') then
+               		v_mensaje_equipo = '<p><b>USO DEL EQUIPO DE COMPUTACIÓN:</b> '||v_parametros.tipo_de_uso||'</p><br>';
+               else
+               		v_mensaje_equipo = '';
+               end if;
+
+
+          		v_mensaje_correo = '         <p>EL funcionario <b>'||v_datos.desc_funcionario1||'</b> registró la solicitud de cambio de modalidad de trabajo con la siguiente información:</p><br><br>
+                                             <p><b>CARGO:</b> '||v_datos.nombre_cargo||'</p><br>
+                                             <p><b>MODALIDAD:</b> '||v_parametros.cambio_modalidad||'</p><br>
+                                             '||v_mensaje_semi||'
+                                             <p><b>MOTIVO DE LA SOLICITUD:</b> '||v_parametros.motivo_solicitud||'</p><br>
+                                             '||v_mensaje_motivo||'
+                                             <p><b>CUENTA CON EQUIPO DE COMPUTADORA:</b> '||v_parametros.equipo_computacion||'</p><br>
+                                             '||v_mensaje_equipo||'
+                                             <p><b>CUENTA CON INTERNET:</b> '||v_parametros.cuenta_con_internet||'</p><br>
+                                             <p><b>GERENCIA:</b> '||v_datos.gerencia||'</p><br>';
+
+
+			/*Aqui insertamos en la alarma para que nos salga la notificacion*/
+				 INSERT INTO param.talarma (descripcion,
+                 							acceso_directo,
+                                            fecha,
+                                            id_funcionario,
+                                            tipo,
+                                            titulo,
+                                            id_usuario,
+                                            titulo_correo,
+                                            correos,
+                                            documentos,
+                                            estado_envio,
+                                            estado_comunicado,
+                                            pendiente,
+                                            estado_notificacion,
+                                            id_usuario_reg
+                                            )
+                							values
+                						   (v_mensaje_correo,
+                                           NULL,
+                                           now()::date,
+                                           v_parametros.id_funcionario,
+                                           'notificacion',
+                                           'Solicitud para cambio de modalidad de trabajo',
+                                           p_id_usuario,
+                                           'Solicitud para cambio de modalidad de trabajo',
+                                           v_correos,
+                                           NULL,
+                                           'exito',
+                                           'borrador',
+                                           'no',
+                                           NULL,
+                                           p_id_usuario
+                                           );
+
+			 end if;
 			--Definicion de la respuesta
             v_resp = pxp.f_agrega_clave(v_resp,'Mensaje','Exito');
             v_resp = pxp.f_agrega_clave(v_resp,'mensaje',v_mensaje::varchar);

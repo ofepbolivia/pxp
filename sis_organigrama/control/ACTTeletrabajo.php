@@ -24,7 +24,7 @@ class ACTTeletrabajo extends ACTbase{
 	  $res_captcha = $this->objParam->getParametro('g-recaptcha-response');
 	  $response = file_get_contents($url . "?secret=" . $privateKey . "&response=" . $res_captcha);
 	  $data = json_decode($response);
-	  if (isset($data->success) and $data->success == true) {
+	  if (isset($data->success) and $data->success == true) {*/
 
 		  $this->objFunc=$this->create('MODTeletrabajo');
 		  $this->res=$this->objFunc->InsertarFuncionarioTeleTrabajo($this->objParam);
