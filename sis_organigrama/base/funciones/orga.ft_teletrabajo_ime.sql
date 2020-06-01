@@ -130,40 +130,57 @@ BEGIN
                              into
                              v_datos_responsable
         			  from  orga.vfuncionario_ultimo_cargo car
-                      where car.id_uo = v_responsable;
+                      where car.id_uo = v_responsable and car.estado_reg_fun = 'activo' and (car.fecha_finalizacion is null or car.fecha_finalizacion >= now());
+
+               IF (v_datos_responsable.email_empresa is null) then
+                     select est.id_uo_padre into v_responsable
+                    from orga.testructura_uo est
+                    where est.id_uo_hijo = v_responsable::integer;
+
+                    select
+                             car.nombre_cargo::varchar,
+                             car.email_empresa
+                             into
+                             v_datos_responsable
+        			  from  orga.vfuncionario_ultimo_cargo car
+                      where car.id_uo = v_responsable and car.estado_reg_fun = 'activo' and (car.fecha_finalizacion is null or car.fecha_finalizacion >= now());
+               end if;
+
+
 
 
                v_correos = v_datos_responsable.email_empresa||';'||v_datos.email_empresa||';';
+               --v_correos = v_datos.email_empresa||';';
 
                if (v_parametros.cambio_modalidad = 'Semi-Presencial') then
-               		v_mensaje_semi = '<p><b>DÍAS DE ASISTENCIA FÍSICA:</b> '||v_parametros.dias_asistencia_fisica||'</p><br>';
+               		v_mensaje_semi = '<p><b>DÍAS DE ASISTENCIA FÍSICA:</b> '||v_parametros.dias_asistencia_fisica||'.</p>';
                else
                		v_mensaje_semi = '';
                end if;
 
                if (v_parametros.motivo_solicitud = 'Enfermedad de base crónica' or v_parametros.motivo_solicitud = 'Otro') then
-               		v_mensaje_motivo = '<p><b>DESCRIPCIÓN DE LA SOLICITUD:</b> '||v_parametros.desc_motivo_solicitud||'</p><br>';
+               		v_mensaje_motivo = '<p><b>DESCRIPCIÓN DE LA SOLICITUD:</b> '||v_parametros.desc_motivo_solicitud||'.</p>';
                else
                		v_mensaje_motivo = '';
                end if;
 
                 if (v_parametros.equipo_computacion = 'Si') then
-               		v_mensaje_equipo = '<p><b>USO DEL EQUIPO DE COMPUTACIÓN:</b> '||v_parametros.tipo_de_uso||'</p><br>';
+               		v_mensaje_equipo = '<p><b>USO DEL EQUIPO DE COMPUTACIÓN:</b> '||v_parametros.tipo_de_uso||'</p>';
                else
                		v_mensaje_equipo = '';
                end if;
 
 
           		v_mensaje_correo = '         <p>EL funcionario <b>'||v_datos.desc_funcionario1||'</b> registró la solicitud de cambio de modalidad de trabajo con la siguiente información:</p><br><br>
-                                             <p><b>CARGO:</b> '||v_datos.nombre_cargo||'</p><br>
-                                             <p><b>MODALIDAD:</b> '||v_parametros.cambio_modalidad||'</p><br>
+                                             <p><b>CARGO:</b> '||v_datos.nombre_cargo||'.</p>
+                                             <p><b>MODALIDAD:</b> '||v_parametros.cambio_modalidad||'.</p>
                                              '||v_mensaje_semi||'
-                                             <p><b>MOTIVO DE LA SOLICITUD:</b> '||v_parametros.motivo_solicitud||'</p><br>
+                                             <p><b>MOTIVO DE LA SOLICITUD:</b> '||v_parametros.motivo_solicitud||'.</p>
                                              '||v_mensaje_motivo||'
-                                             <p><b>CUENTA CON EQUIPO DE COMPUTADORA:</b> '||v_parametros.equipo_computacion||'</p><br>
+                                             <p><b>CUENTA CON EQUIPO DE COMPUTADORA:</b> '||v_parametros.equipo_computacion||'.</p>
                                              '||v_mensaje_equipo||'
-                                             <p><b>CUENTA CON INTERNET:</b> '||v_parametros.cuenta_con_internet||'</p><br>
-                                             <p><b>GERENCIA:</b> '||v_datos.gerencia||'</p><br>';
+                                             <p><b>CUENTA CON INTERNET:</b> '||v_parametros.cuenta_con_internet||'.</p>
+                                             <p><b>GERENCIA:</b> '||v_datos.gerencia||'.</p>';
 
 
 			/*Aqui insertamos en la alarma para que nos salga la notificacion*/
@@ -240,6 +257,32 @@ BEGIN
             return v_resp;
 
 		end;
+
+        /*********************************
+        #TRANSACCION:  'ORGA_ELI_TELE_IME'
+        #DESCRIPCION:	Elinminacion del registro
+        #AUTOR: 		Ismael Valdivia
+        #FECHA:	        01/06/2020
+        ***********************************/
+
+        elsif(p_transaccion='ORGA_ELI_TELE_IME')then
+
+            begin
+
+                delete from orga.tformulario_teletrabajo
+                where id_teletrabajo = v_parametros.id_teletrabajo;
+
+
+                --Definicion de la respuesta
+                v_resp = pxp.f_agrega_clave(v_resp,'Mensaje','Exito');
+                v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Formulario Eliminado'::varchar);
+                v_resp = pxp.f_agrega_clave(v_resp,'id_teletrabajo',v_parametros.id_teletrabajo::varchar);
+
+
+                --Devuelve la respuesta
+                return v_resp;
+
+            end;
 
 	else
 

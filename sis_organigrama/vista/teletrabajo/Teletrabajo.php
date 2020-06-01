@@ -528,6 +528,7 @@ Phx.vista.Teletrabajo=Ext.extend(Phx.gridInterfaz,{
 	tam_pag:50,
 	title:'Registros',
 	ActList:'../../sis_organigrama/control/Teletrabajo/listarTeletrabajo',
+	ActDel:'../../sis_organigrama/control/Teletrabajo/eliminarTeletrabajo',
 	id_store:'id_teletrabajo',
 	fields: [
 		{name:'id_teletrabajo', type: 'numeric'},
@@ -554,7 +555,7 @@ Phx.vista.Teletrabajo=Ext.extend(Phx.gridInterfaz,{
 		field: 'apellido_paterno',
 		direction: 'ASC'
 	},
-	bdel:false,
+	bdel:true,
 	bsave:false,
 	bedit:false,
 	bnew:false,

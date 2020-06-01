@@ -117,6 +117,24 @@ class MODTeletrabajo extends MODbase
           return $this->respuesta;
     }
 
+    function eliminarTeletrabajo()
+    {
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento = 'orga.ft_teletrabajo_ime';
+        $this->transaccion = 'ORGA_ELI_TELE_IME';
+        $this->tipo_procedimiento = 'IME';
+
+        //Define los parametros para la funcion
+        $this->setParametro('id_teletrabajo', 'id_teletrabajo', 'int4');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
+
 
 }
 
