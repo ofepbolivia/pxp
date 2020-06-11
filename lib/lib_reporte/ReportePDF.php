@@ -1,5 +1,11 @@
 <?php
 //incluimos la libreria
+/*	CONTROL CAMBIOS 
+ * #ISSUE				FECHA				AUTOR				DESCRIPCION
+ 	#22	EndeEtr		 06-06-2019 			MZM KPLIAN		Adicion de funcion grillaDatos para manejo de reporte multilinea
+ *  #24 ETR         25/06/2019              RAC KPLIAN      Se considera agrupadores al exportar a PDF
+ * #69	ETR			25.09.2019				MZM				Ajuste de espacio al cambio de hoja 	
+*/
 if (version_compare(phpversion(), '5.4.0', '<')) {
      if(session_id() == '') {
         session_start();
@@ -75,6 +81,9 @@ class ReportePDF extends MYPDF
 	protected $maestroX;
 	protected $maestroY;
 	
+	protected $columnaAgrupadora;//#24 considera agrupadores
+	protected $agrupador;//#24 considera agrupadores
+	
 	/**
 	 * Nombre funcion:	ReportePDF
 	 * Proposito:		Constructor de la Función genérica de ReportePDF (Define el nombre del archivo, titulo, cabecera derecha y logo y pie)
@@ -95,6 +104,9 @@ class ReportePDF extends MYPDF
 		$this->fecha_pie=1;
 		$this->setBarcode(date('d-m-Y H:i:s').",usuario:".$_SESSION['_LOGIN']);
 		$this->tipoReporte=$this->objParam->getParametro('tipoReporte');
+		
+		$this -> columnaAgrupadora = $this->objParam->getParametro('groupBy'); //#24 
+		$this -> agrupador = '';//#24 
 
 		//Ejecución del constructor del padre
 		parent::__construct($this->orientacion, 'mm', $this->objParam->getParametro('tamano'), true, 'UTF-8', false);
@@ -455,10 +467,26 @@ class ReportePDF extends MYPDF
 		$fb=FirePHP::getInstance(true);
 		$fb->log('sssss',"count(pArrayDatos)");*/
 		
+		
+		
+		
 		$html = '<table border="'.$border.'" cellspacing="0" cellpadding="1"  style="font-size:6px">';
 		$cont=1;
 
 		foreach($datas AS $data) {
+			
+			//#24 evaluea si tenemso agrupador, y si es necesario aplicarlo
+			if($this -> columnaAgrupadora !== '' && $titulos == 0){
+				if($this->agrupador !=  $data[$this->columnaAgrupadora]){
+					
+					
+					//añade agrupador
+					$html.='<tr><td BGCOLOR="888080" colspan="'.count($this->tablecolumns).'" > <font color="#FFFFFF"> <b>'.$this->tablecolumns[$this->columnaAgrupadora].':  '.$data[$this->columnaAgrupadora].'</b></font></td></tr>';
+				   
+				    $this->agrupador = $data[ $this->columnaAgrupadora ];
+				}
+			}
+			
 			$html.='
 				<tr>';
 			foreach ($this->tablecolumns as $col=>$single){
@@ -1119,6 +1147,336 @@ class ReportePDF extends MYPDF
 		}
 
 		return json_decode($string,true);
+	}
+	
+	/*	#ISSUE				FECHA				AUTOR				DESCRIPCION
+ 		#22	EndeEtr		 06-06-2019 			MZM				Adicion de funcion para manejo de reporte multilinea	
+ 	*/
+ function grillaDatos($datas,$alto_grupo, $border=1, $cant_col=10, $alto_col=2.5, $align='R',$tam_letra=7) {
+		
+		$ancho_uti=0;
+		$id_break=$datas[0];
+		$cont=0;
+		$relleno;
+		$num_grupo=1;
+		
+		$ancho_col= round((($this->ancho_hoja-1)/$cant_col),2);
+		
+		$dimensions = $this->getPageDimensions();
+		
+		for ($i=0; $i< sizeof($datas); $i++ ){
+			
+			
+			if($i%6==0){ 
+				$cont=0;
+				
+				if($datas[$i+3]=='B'){
+					$this->SetFont('','B',$tam_letra);
+				}else{
+					$this->SetFont('','',$tam_letra);
+				}
+				
+				
+				if($id_break!=$datas[$i]){
+					$num_grupo++;
+					
+					$ancho_uti=0;
+				//echo '***'.$this->GetY()+$alto_grupo+$dimensions['bm'].'***'.$dimensions['hk']; exit;
+					if ($this->GetY()+$alto_grupo+$dimensions['bm']> $dimensions['hk']){
+						
+						$this->AddPage();
+						$this->SetY($this->GetY()-5);//#69
+					}
+					$cont=0;
+					if($datas[$i+1]>0){
+						while ($cont <= $datas[$i+1]){
+							if($cont==$datas[$i+1]){
+								$relleno=$datas[$i+2];
+									
+								
+								
+							}else{
+								$relleno='';
+							}	
+								
+							if($ancho_uti+$ancho_col>$this->ancho_hoja){
+								$this->Cell(0.1, $alto_col, '', $border, 1, $datas[$i+5]);//,
+								$ancho_uti=0;
+								$this->Cell($ancho_col, $alto_col, $relleno, $border, 0, $datas[$i+5]);
+								$ancho_uti+=$ancho_col;
+							}else{
+								$this->Cell($ancho_col, $alto_col, $relleno, $border, 0, $datas[$i+5]);//, 0, '', 0, false, 'C', 'C');
+								$ancho_uti+=$ancho_col;
+								
+							}
+							$cont++;
+						}
+					
+						
+				}else{
+					if($ancho_uti+$ancho_col>$this->ancho_hoja){
+							$this->Cell(0, $alto_col, '', 0, 1, $datas[$i+5]);//,
+							$ancho_uti=0;
+							$this->Cell($ancho_col, $alto_col, $datas[$i+2], $border, 0, $datas[$i+5]);//, 0, '', 0, false, 'C', 'C');
+							$ancho_uti+=$ancho_col;
+						}else{
+							$this->Cell($ancho_col, $alto_col, $datas[$i+2], $border, 0, $datas[$i+5]);//, 0, '', 0, false, 'C', 'C');
+							$ancho_uti+=$ancho_col;
+						}
+									
+					}
+					if($datas[$i+4]==1){
+						$this->ln(1);
+						$this->SetLineWidth(0.1);
+	 	 				$this->SetDrawColor(0,0,0);
+						$this->Cell(0,0,'','B',1);
+					    //$this->SetY($this->GetY()-2.5);	
+					}
+					
+				}else{ 
+					
+					
+					if($datas[$i+1]>0){
+						while ($cont <= $datas[$i+1]){
+							if($cont==$datas[$i+1]){
+								$relleno=$datas[$i+2];
+							}else{
+								$relleno='';
+							}	
+								
+							if($ancho_uti+$ancho_col>$this->ancho_hoja){
+								$this->Cell(0.1, $alto_col, '', $border, 1, $datas[$i+5]);//,
+								$ancho_uti=0;
+								$this->Cell($ancho_col, $alto_col, $relleno, $border, 0, $datas[$i+5]);
+								$ancho_uti+=$ancho_col;
+							}else{
+								$this->Cell($ancho_col, $alto_col, $relleno, $border, 0, $datas[$i+5]);//, 0, '', 0, false, 'C', 'C');
+								$ancho_uti+=$ancho_col;
+								
+							}
+							$cont++;
+						}
+					if($datas[$i+4]==1){ 
+						$this->ln(1);
+						$this->SetLineWidth(0.1);
+	 	 				$this->SetDrawColor(0,0,0);
+						$this->Cell(0,0,'','B',1);
+						//$this->SetY($this->GetY()-2.5);
+						
+					}
+						
+						
+				}else{
+					
+					    if($ancho_uti+$ancho_col>$this->ancho_hoja){
+							$this->Cell(0, $alto_col, '', 0, 1, $datas[$i+5]);//,
+							$ancho_uti=0;
+							$this->Cell($ancho_col, $alto_col, $datas[$i+2], $border, 0, $datas[$i+5]);//, 0, '', 0, false, 'C', 'C');
+							$ancho_uti+=$ancho_col;
+						}else{
+							$this->Cell($ancho_col, $alto_col, $datas[$i+2], $border, 0, $datas[$i+5]);//, 0, '', 0, false, 'C', 'C');
+							$ancho_uti+=$ancho_col;
+						}
+						
+						if($datas[$i+4]==1){ 
+							$this->ln(1);
+							$this->SetLineWidth(0.1);
+		 	 				$this->SetDrawColor(0,0,0);
+							$this->Cell(0,0,'','B',1);
+						//	$this->SetY($this->GetY()-2.5);
+							
+					    }
+										
+					}
+				}
+
+					
+					$id_break=$datas[$i];
+					
+				}
+			}
+		
+	}
+	
+	
+	
+	function grillaDatosBoleta($datas,$alto_grupo, $border=1, $cant_col=10, $alto_col=2.5, $align='R', $tam_letra=5 ) {
+		
+		$ancho_uti=0;
+		$id_break=$datas[0];
+		$cont=0;
+		$relleno;
+		$num_grupo=1;
+		
+		$control_espacios_extra=($this->datos_titulo['num_columna_multilinea']/2)-1;
+		$dimensions = $this->getPageDimensions();
+		
+		for ($i=0; $i< sizeof($datas); $i++ ){
+			
+			$ancho_col=$datas[$i+6];
+			if($ancho_col==0){
+				$ancho_col= round((($this->ancho_hoja-1)/$cant_col),2);
+			}
+			
+			if($i%9==0){ 
+				$cont=0;
+			
+				if($datas[$i+3]=='B'){
+					$this->SetFont('','B',$tam_letra);
+				}else{
+					$this->SetFont('','',$tam_letra);
+				}
+				
+				
+				if($id_break!=$datas[$i]){
+					$num_grupo++;
+					
+					$ancho_uti=0;
+				//echo '***'.$this->GetY()+$alto_grupo+$dimensions['bm'].'***'.$dimensions['hk']; exit;
+					if ($this->GetY()+$alto_grupo+$dimensions['bm']> $dimensions['hk']){
+						
+						$this->AddPage();
+						$this->SetY($this->GetY()-5);//#69
+					}
+					$cont=0;
+					if($datas[$i+1]>0){ 
+						while ($cont <= $datas[$i+1]){
+								
+							if($cont==$datas[$i+1]){
+								$ancho_col=$datas[$i+6];
+								$relleno=$datas[$i+2]+'';
+							}else{
+								$ancho_col=$datas[$i+7];
+								$relleno='';
+							}	
+							
+							if($ancho_uti+$ancho_col>$this->ancho_hoja){
+								$this->Cell(0.1, $alto_col, '', $border, 1, $datas[$i+5]);//,
+								$ancho_uti=0;
+								$this->Cell($ancho_col, $alto_col, $relleno, $border, 0, $datas[$i+5]);
+								$ancho_uti+=$ancho_col;
+								
+								if($cont%2!=0 && ($ancho_uti+5 < $this->ancho_hoja)){
+									//if($control_espacios_extra>$datas[$i+8]){
+										$this->Cell(5, $alto_col, '', $border, 0, $datas[$i+5]);
+										$ancho_uti+=5;
+									//}
+								}
+								
+							}else{
+								$this->Cell($ancho_col, $alto_col, $relleno, $border, 0, $datas[$i+5]);//, 0, '', 0, false, 'C', 'C');
+								$ancho_uti+=$ancho_col;
+								if($cont%2!=0 && ($ancho_uti+5 < $this->ancho_hoja)){
+									//if($control_espacios_extra>$datas[$i+8]){
+										$this->Cell(5, $alto_col, '', $border, 0, $datas[$i+5]);
+										$ancho_uti+=5;
+									//}
+								}
+								
+							}
+							$cont++;
+						}
+					
+						
+				}else{ //sin espacio_prei
+					if($ancho_uti+$ancho_col>$this->ancho_hoja){
+							$this->Cell(0, $alto_col, '', 0, 1, $datas[$i+5]);//,
+							$ancho_uti=0;
+							$this->Cell($ancho_col, $alto_col, $datas[$i+2], $border, 0, $datas[$i+5]);//, 0, '', 0, false, 'C', 'C');
+							$ancho_uti+=$ancho_col;
+						}else{
+							$this->Cell($ancho_col, $alto_col, $datas[$i+2], $border, 0, $datas[$i+5]);//, 0, '', 0, false, 'C', 'C');
+							$ancho_uti+=$ancho_col;
+						}
+									
+					}
+					if($datas[$i+4]==1){
+						$this->ln(1);
+						$this->SetLineWidth(0.1);
+	 	 				$this->SetDrawColor(0,0,0);
+						$this->Cell(0,0,'','B',1);
+					    //$this->SetY($this->GetY()-2.5);	
+					}
+					
+				}else{ 
+					
+					
+					if($datas[$i+1]>0){ 
+						while ($cont <= $datas[$i+1]){
+							
+							if($cont==$datas[$i+1]){
+								$ancho_col=$datas[$i+6]; 
+								$relleno=$datas[$i+2];
+							}else{
+								$ancho_col=$datas[$i+7]; 
+								$relleno='';
+							}	
+							
+							if($ancho_uti+$ancho_col>$this->ancho_hoja){ //echo '----'.$ancho_col.'---'.$ancho_uti.'---'.$this->ancho_hoja; exit;
+								$this->Cell(0.1, $alto_col, '', $border, 1, $datas[$i+5]);//,
+								$ancho_uti=0;
+								$this->Cell($ancho_col, $alto_col, $relleno.'', $border, 0, $datas[$i+5]);
+								$ancho_uti+=$ancho_col;
+								if($cont%2!=0 && ($ancho_uti+5 < $this->ancho_hoja)){
+									//if($control_espacios_extra>$datas[$i+8]){
+										$this->Cell(5, $alto_col, '', $border, 0, $datas[$i+5]);
+										$ancho_uti+=5;
+									//}
+								}	
+								
+							}else{
+								$this->Cell($ancho_col, $alto_col, $relleno, $border, 0, $datas[$i+5]);//, 0, '', 0, false, 'C', 'C');
+								$ancho_uti+=$ancho_col;
+								
+								if($cont%2!=0 && ($ancho_uti+5 < $this->ancho_hoja)){
+									//if($control_espacios_extra>$datas[$i+8]){
+										$this->Cell(5, $alto_col, '', $border, 0, $datas[$i+5]);
+										$ancho_uti+=5;
+									//}
+								}								
+							}
+							$cont++;
+						}
+					if($datas[$i+4]==1){ 
+						$this->ln(1);
+						$this->SetLineWidth(0.1);
+	 	 				$this->SetDrawColor(0,0,0);
+						$this->Cell(0,0,'','B',1);
+						//$this->SetY($this->GetY()-2.5);
+						
+					}
+						
+						
+				}else{ //echo '-----***------'.$ancho_col; exit;
+					
+					    if($ancho_uti+$ancho_col>$this->ancho_hoja){
+							$this->Cell(0, $alto_col, '', 0, 1, $datas[$i+5]);//,
+							$ancho_uti=0;
+							$this->Cell($ancho_col, $alto_col, $datas[$i+2], $border, 0, $datas[$i+5]);//, 0, '', 0, false, 'C', 'C');
+							$ancho_uti+=$ancho_col;
+						}else{
+							$this->Cell($ancho_col, $alto_col, $datas[$i+2], $border, 0, $datas[$i+5]);//, 0, '', 0, false, 'C', 'C');
+							$ancho_uti+=$ancho_col;
+						}
+						
+						if($datas[$i+4]==1){ 
+							$this->ln(1);
+							$this->SetLineWidth(0.1);
+		 	 				$this->SetDrawColor(0,0,0);
+							$this->Cell(0,0,'','B',1);
+						//	$this->SetY($this->GetY()-2.5);
+							
+					    }
+										
+					}
+				}
+
+					
+					$id_break=$datas[$i];
+					
+				}
+			}
+		
 	}
 
 }

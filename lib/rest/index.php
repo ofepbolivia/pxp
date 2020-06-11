@@ -57,6 +57,7 @@ header('Access-Control-Max-Age: 1728000');
  * argument for `Slim::get`, `Slim::post`, `Slim::put`, `Slim::patch`, and `Slim::delete`
  * is an anonymous function.
  */
+
 // GET route
 $app->get(
     '/',
@@ -64,6 +65,8 @@ $app->get(
          echo 'Hola';
        }
 );
+
+
 function get_func_argNames($funcName) {
     $f = new ReflectionFunction($funcName);
     $result = array();
@@ -72,11 +75,13 @@ function get_func_argNames($funcName) {
     }
     return $result;
 }
+
 function authPxp($headersArray) {
 
     $_SESSION["_SESION"]= new CTSesion();
     $_SESSION["_tipo_aute"] = 'REST';
     $mensaje = '';
+    
 
     //listar usuario con Pxp-User del header
     $objParam = new CTParametro('',null,null,'../../sis_seguridad/control/Usuario/listarUsuario');
@@ -110,10 +115,11 @@ function authPxp($headersArray) {
         $headers = false;
     } else {
     //desencriptar usuario y contrasena
+    
         if (!isset($headersArray['auth-version'])) {
             $auxArray = explode('$$', fnDecrypt($headersArray['Php-Auth-User'], $md5Pass));
         } else {
-            $auxArray = explode('$$', opensslDecrypt($headersArray['Php-Auth-User'], $md5Pass));
+            $auxArray = explode('$$', opensslDecrypt($headersArray['Php-Auth-User'], $md5Pass)); 
         }
         $headers = true;
     }
@@ -169,13 +175,32 @@ function fnDecrypt($sValue, $sSecretKey)
         ), "\0"
     );
 }
-function opensslDecrypt1($ivCiphertext, $password) {
-    $method = "AES-256-CBC";
-    $iv = substr($ivCiphertext, 0, 16);
-    $ciphertext = substr($ivCiphertext, 16);
-    return openssl_decrypt($ciphertext, $method, $password, OPENSSL_RAW_DATA, $iv);
+function opensslDecrypt($encrypted, $password) {
+    $json = json_decode(base64_decode($encrypted), true);
+
+    try {
+        $salt = hex2bin($json["salt"]);
+        $iv = hex2bin($json["iv"]);
+    } catch (Exception $e) {
+        return null;
+    }
+
+    $cipherText = base64_decode($json['ciphertext']);
+
+    $iterations = intval(abs($json['iterations']));
+    if ($iterations <= 0) {
+        $iterations = 999;
+    }
+    $hashKey = hash_pbkdf2('sha512', $password, $salt, $iterations, (256 / 4));
+    unset($iterations, $json, $salt);
+
+    $decrypted= openssl_decrypt($cipherText , 'AES-256-CBC', hex2bin($hashKey), OPENSSL_RAW_DATA, $iv);
+    unset($cipherText, $hashKey, $iv);    
+    return $decrypted;
 }
+
 $app->get('/seguridad/Persona2/:start/:limit','persona2');
+
 function persona2($r,$t){
           $ref = new ReflectionFunction('persona2');
          //print_r($ref->getParameters());
@@ -206,6 +231,7 @@ function persona2($r,$t){
 
 
 }
+
 $app->get(
     '/seguridad/Persona/:start/:limit',
     function () use ($app) {
@@ -312,7 +338,7 @@ $app->get(
 
         //TODO validar cadenas vaias y retorna error en forma JSON
         $ruta_include = 'sis_'.$sistema.'/control/ACT'.$clase_control.'.php';
-        $ruta_url = 'sis_'+$sistema.'/control/'.$clase_control.'/'.$metodo;
+        $ruta_url = 'sis_'.$sistema.'/control/'.$clase_control.'/'.$metodo;
 
         //TODO verificar sesion
         //throw new Exception('La sesion ha sido duplicada',2);
@@ -366,7 +392,7 @@ $app->get(
 $app->post(
 
     '/seguridad/Auten/verificarCredenciales',
-    function () use ($app) {
+    function () use ($app) {    
         register_shutdown_function('fatalErrorShutdownHandler');
         set_exception_handler('exception_handler');
         set_error_handler('error_handler');
@@ -397,25 +423,24 @@ $app->post(
 
             $auxHeaders = array('Pxp-User'=>$app->request->post('usuario'),'Php-Auth-User'=>$app->request->post('usuario'),'Php-Auth-Pw'=>$app->request->post('contrasena'));
             authPxp($auxHeaders);
-        }
-        echo "{success:true,
-                cont_alertas:".$_SESSION["_CONT_ALERTAS"].",
-                nombre_usuario:'".$_SESSION["_NOM_USUARIO"]."',
-                nombre_basedatos:'".$_SESSION["_BASE_DATOS"]."',
-                id_usuario:'".$_SESSION["_ID_USUARIO_OFUS"]."',
-                id_funcionario:'".$_SESSION["_ID_FUNCIOANRIO_OFUS"]."',
-                autentificacion:'".$_SESSION["_AUTENTIFICACION"]."',
-                estilo_vista:'".$_SESSION["_ESTILO_VISTA"]."',
-                mensaje_tec:'".$_SESSION["mensaje_tec"]."',
-                timeout:".$_SESSION["_TIMEOUT"]."}";
+        }        
+        echo '{"success":true,
+                "cont_alertas":'.$_SESSION["_CONT_ALERTAS"].',
+                "nombre_usuario":"'.$_SESSION["_NOM_USUARIO"].'",
+                "nombre_basedatos":"'.$_SESSION["_BASE_DATOS"].'",
+                "id_usuario":"'.$_SESSION["_ID_USUARIO_OFUS"].'",
+                "id_funcionario":"'.$_SESSION["_ID_FUNCIOANRIO_OFUS"].'",
+                "autentificacion":"'.$_SESSION["_AUTENTIFICACION"].'",
+                "estilo_vista":"'.$_SESSION["_ESTILO_VISTA"].'",
+                "mensaje_tec":"'.$_SESSION["mensaje_tec"].'",
+                "timeout":'.$_SESSION["_TIMEOUT"].'}';
                 exit;
     }
 );
 $app->post(
 
     '/:sistema/:clase_control/:metodo',
-    function ($sistema,$clase_control,$metodo) use ($app) {
-
+    function ($sistema,$clase_control,$metodo) use ($app) {        
         $headers = $app->request->headers;
         $cookies = $app->request->cookies;
         $psudourl = '/'.$sistema.'/'.$clase_control.'/'.$metodo;
@@ -522,55 +547,13 @@ $app->options('/:sistema/:clase_control/:metodo', function ($sistema,$clase_cont
 
     header('Access-Control-Allow-Origin: ' . $headers['Origin']);
     header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-    header('Access-Control-Allow-Headers: pxp-user, content-type, Php-Auth-User, Php-Auth-Pw, auth-version');
+    header('Access-Control-Allow-Headers: Pxp-user, content-type, Php-Auth-User, Php-Auth-Pw, auth-version');
     header('Access-Control-Allow-Credentials: true');
     header('Access-Control-Max-Age: 1728000');
 
 
 
 });
-
-
-function opensslDecrypt($ivCiphertext, $password) {
-    $encrypt_method = "AES-256-CBC";
-    $secret_key = 'Mund0libre';
-    $secret_iv = 'Mund0L1bre';
-    $prefix = '$$';
-
-    // hash
-    $key = md5($secret_key);//hash('sha256', $secret_key);
-    $iv = substr(md5($secret_key), 0, 16);
-
-    $output = $prefix.openssl_decrypt(base64_decode($ivCiphertext), $encrypt_method, $key, 0, $iv);
-
-    return $output;
-}
-
-// GET route
-$app->get(
-    '/get_hash/:pwd',
-    function ($pwd) {
-
-        $encrypt_method = "AES-256-CBC";
-        $secret_key = 'Mund0libre';
-        $secret_iv = 'Mund0L1bre';
-
-        // hash
-        $key = md5($secret_key);//hash('sha256', $secret_key);
-        $iv = substr(md5($secret_key), 0, 16);
-
-
-        $output = openssl_encrypt(md5($pwd), $encrypt_method, $key, 0, $iv);
-        $output = base64_encode($output);
-
-        echo 'pass: '. $pwd;
-        echo '; encrypt: '. $output;
-
-    }
-);
-
-
-
 
 /**
  * Step 4: Run the Slim application

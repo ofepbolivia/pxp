@@ -283,11 +283,11 @@ class MODbase extends driver
 		
 		if (!file_exists($upload_folder)) {
 			//echo $upload_folder;
-            //exit;
+			//exit;
 			if (!mkdir($upload_folder,0744,true)) {
 				throw new Exception("No se puede crear el directorio uploaded_files/" . $this->objParam->getSistema() . "/" . 
 									$this->objParam->getClase() . " para escribir el archivo " . $filename);
-			}
+			}	
 		} else {
 			if (!is_writable($upload_folder)) {
 				throw new Exception("No tiene permisos o no existe el directorio uploaded_files/" . $this->objParam->getSistema() . "/" . 

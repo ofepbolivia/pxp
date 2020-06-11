@@ -285,7 +285,7 @@ class PHPExcel_Shared_OLE
                     $pps = new PHPExcel_Shared_OLE_PPS_File($name);
                     break;
                 default:
-                    break;//continue; RCM
+                    break;//continue;
             }
             fseek($fh, 1, SEEK_CUR);
             $pps->Type    = $type;

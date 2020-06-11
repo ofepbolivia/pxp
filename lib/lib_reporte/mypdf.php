@@ -1,5 +1,10 @@
 <?php
 // Extend the TCPDF class to create custom MultiRow
+//#64	ETR		10.10.2019		MZM		Modificar el number_format miles con punto, decimales con coma
+//#69	ETR		29.10.2019		MZM		Modificacion para que cuando el valor 0 se omita y vaya el campo en vacio
+//#77	ETR		15.11.2019		MZM		Interlineado
+//#84	ETR		15.11.2019		MZM		Interlineado
+//#87	ETR		20.11.2019		MZM							Cambio en paginacion de comboRec PERIODO
 class MYPDF extends TCPDF {
     //Page header
     var $tablewidths=array();
@@ -322,8 +327,8 @@ class MYPDF extends TCPDF {
 		$this->ln();
     }
 
-
-	public function UniRow($row, $fill = false, $border = 1, $textcolor = array(0,0,0)) {    	
+ 	//#77 //#84
+	public function UniRow($row, $fill = false, $border = 1, $alto=5,$textcolor = array(0,0,0)) {    	//#77
         //$index = 0;
 		//$height_base = 3;
 		//$height_aux = 0;
@@ -337,7 +342,13 @@ class MYPDF extends TCPDF {
 		}	
 		foreach ($row as $data) {
 		    if ($numbers && $this->tablenumbers[$index] > 0) {
-            	$data = number_format ( $data , $this->tablenumbers[$index] , '.' , ',' );
+		    	if($data == 0){//#69
+            		$data='';
+            	}else{
+            		$data = number_format ( $data , $this->tablenumbers[$index] , '.' , ',' );//#64	//#87
+            	}
+				
+            	
             }
 			
 			//definicion de border
@@ -347,8 +358,8 @@ class MYPDF extends TCPDF {
 			$textcolor_final = (isset($this->tabletextcolor[$index])?$this->tabletextcolor[$index]:$textcolor);			
 			
 			$this->setTextColorArray($textcolor_final);
-			
-			$this->Cell($this->tablewidths[$index], 4, $data, $border_final,0,$this->tablealigns[$index], $fill);
+			//#77
+			$this->Cell($this->tablewidths[$index], $alto, $data, $border_final,0,$this->tablealigns[$index], $fill);
 			$index++;
 			
         }		
