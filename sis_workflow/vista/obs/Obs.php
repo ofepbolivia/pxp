@@ -18,27 +18,27 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
         } else {
             this.paginaMaestro = undefined;
         }
-         
+
 		this.tbarItems = ['-',{
             text: 'Ver todas las observaciones',
             enableToggle: true,
             pressed: false,
             toggleHandler: function(btn, pressed) {
-               
+
                 if(pressed){
                     this.store.baseParams.todos = 1;
-                     
+
                 }
                 else{
                    this.store.baseParams.todos = 0;
                 }
-                
+
                 this.onButtonAct();
              },
             scope: this
            }];
-           
-           
+
+
     	//llama al constructor de la clase padre
 		Phx.vista.Obs.superclass.constructor.call(this, config);
 		this.init();
@@ -49,15 +49,15 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
                 handler : this.cerrarObs,
                 tooltip : '<b>Cerrar</b><br>Si la obligación ha sido resuelta es necesario cerrarla para continuar con el trámite'
         });
-        
-        
+
+
 		this.on('closepanel',function () {
 		    this.paginaMaestro.reload();
 		}, this);
-		this.store.baseParams = {  todos: 0, id_proceso_wf: config.id_proceso_wf, id_estado_wf: config.id_estado_wf, num_tramite: config.num_tramite}; 
+		this.store.baseParams = {  todos: 0, id_proceso_wf: config.id_proceso_wf, id_estado_wf: config.id_estado_wf, num_tramite: config.num_tramite};
         this.load({params: { start:0, limit: this.tam_pag } })
 	},
-			
+
 	Atributos:[
 		{
 			//configuracion del componente
@@ -67,7 +67,7 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 					name: 'id_obs'
 			},
 			type:'Field',
-			form:true 
+			form:true
 		},
 		{
 			//configuracion del componente
@@ -77,7 +77,7 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 					name: 'id_estado_wf'
 			},
 			type:'Field',
-			form:true 
+			form:true
 		},
 		{
 			config:{
@@ -85,7 +85,7 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 				fieldLabel:'Tipo Observacion',
 				qtip: 'Al seleccionar esta opción, el registro nuevo se cerrara automaticamente.',
 				typeAhead: true,
-				allowBlank:true,
+				allowBlank:false,
 				triggerAction: 'all',
 				emptyText:'Tipo...',
 				selectOnFocus:true,
@@ -93,21 +93,29 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 				store:new Ext.data.ArrayStore({
 					fields: ['ID', 'valor'],
 					data :	[
-						['respuesta_observacion','Respuesta a observación realizada al tramite']						
+            ['observacion', 'Observación'],
+						['respuesta_observacion','Respuesta a observación realizada al tramite']
 					]
 				}),
 				valueField:'ID',
 				displayField:'valor',
 				gwidth:150,
 				anchor:'80%',
-				width:100
+				width:100,
+        renderer: function(data){
+          if (data == 'respuesta_observacion') {
+            return 'Respuesta a observación';
+          }else{
+            return 'Observación';
+          }
+        }
 
 			},
 			type:'ComboBox',
 			id_grupo:1,
-			grid:false,
+			grid:true,
 			form:true
-        },		
+        },
 		{
 			config:{
 				name: 'estado',
@@ -142,11 +150,11 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
              },
             type:'ComboRec',
             id_grupo:0,
-            filters:{   
+            filters:{
                 pfiltro:'FUN.desc_funcionario1::varchar',
                 type:'string'
             },
-           
+
             grid:true,
             form:true
         },
@@ -155,7 +163,7 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 				name: 'id_funcionario_cc',
 				fieldLabel: 'Con Copia a',
 				allowBlank: true,
-				emptyText: 'Elija una opción...',                        
+				emptyText: 'Elija una opción...',
 				store: new Ext.data.JsonStore({
 					url: '../../sis_organigrama/control/Funcionario/listarFuncionarioCargo',
 					id: 'id_funcionario',
@@ -180,23 +188,23 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 				lazyRender:true,
 				mode:'remote',
 				pageSize:10,
-				queryDelay:1000,                        
+				queryDelay:1000,
 				gwidth:260,
 				width:425,
 				minChars:2,
 				anchor:'80%',
-				listWidth:'350',				
+				listWidth:'350',
 				enableMultiSelect:true,
-				renderer:function(value, p, record){						
+				renderer:function(value, p, record){
 					return '<div><p><b>'+record.data['email_cc'].replace(/,/g,", ")+'</b></p>'+
                                 '<p><p></div>';
-				}                              
+				}
 			},
-			type: 'AwesomeCombo',                    
+			type: 'AwesomeCombo',
 			id_grupo:0,
 			grid: true,
 			form: true
-        },                       
+        },
 		{
 			config:{
 				name: 'titulo',
@@ -264,7 +272,7 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
-							format: 'd/m/Y', 
+							format: 'd/m/Y',
 							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 				type:'DateField',
@@ -280,7 +288,7 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
-							format: 'd/m/Y', 
+							format: 'd/m/Y',
 							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 				type:'DateField',
@@ -289,7 +297,7 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 				grid:true,
 				form:false
 		},
-		
+
 		{
 			config:{
 				name: 'desc_fin',
@@ -315,7 +323,7 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 				maxLength: 10
 			},
 				type:'TextField',
-				filters: { pfiltro: 'obs.estado_reg', type:'string' }, 
+				filters: { pfiltro: 'obs.estado_reg', type:'string' },
 				id_grupo:1,
 				grid:true,
 				form:false
@@ -357,7 +365,7 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
-							format: 'd/m/Y', 
+							format: 'd/m/Y',
 							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 				type:'DateField',
@@ -397,7 +405,7 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 				form:false
 		}
 	],
-	tam_pag:50,	
+	tam_pag:50,
 	title:'Observaciones',
 	ActSave:'../../sis_workflow/control/Obs/insertarObs',
 	ActDel:'../../sis_workflow/control/Obs/eliminarObs',
@@ -421,54 +429,54 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 		{name:'usr_reg', type: 'string'},
 		{name:'usr_mod', type: 'string'},
 		{name:'id_funcionario_cc', type:'string'},
-		{name:'email_cc', type:'string'},		
-		{name:'tipo', type:'string'},		
+		{name:'email_cc', type:'string'},
+		{name:'tipo', type:'string'},
 		'desc_funcionario','codigo_tipo_estado','nombre_tipo_estado','nombre_tipo_proceso'
-		
+
 	],
-	
-	 onButtonNew:function(){  
-	 	
-	 	      
+
+	 onButtonNew:function(){
+
+
             Phx.vista.Obs.superclass.onButtonNew.call(this);
             //agrega un filtro para que se liste el funcionario del usuario y sea el primero que se cargue
-            
-            /*this.Cmp.id_funcionario_resp.store.load({params:{start:0,limit:this.tam_pag, tipo_filtro: 'usuario' }, 
+
+            /*this.Cmp.id_funcionario_resp.store.load({params:{start:0,limit:this.tam_pag, tipo_filtro: 'usuario' },
 		       callback : function (r) {
-		       		if (r.length == 1 ) {	       				
+		       		if (r.length == 1 ) {
 		    			this.Cmp.id_funcionario_resp.setValue(r[0].data.id_funcionario);
-		    		}    
-		    			    		
+		    		}
+
 		    	}, scope : this
 		    });*/
-	            
-            
+
+
             this.Cmp.id_estado_wf.setValue( this.id_estado_wf );
 			this.Cmp.id_funcionario_resp.enable();
 			this.Cmp.id_funcionario_cc.show();
 			this.Cmp.tipo.enable();
 
-        
+
     },
-    
-    onButtonEdit:function(){ 
-    	
-    	     //todo validar ...solo de pueden editar observaciones del mismo proceso y estado seleccionado   
+
+    onButtonEdit:function(){
+
+    	     //todo validar ...solo de pueden editar observaciones del mismo proceso y estado seleccionado
             Phx.vista.Obs.superclass.onButtonEdit.call(this);
             this.Cmp.id_funcionario_resp.disable();
             this.Cmp.id_funcionario_cc.hide();
 			this.Cmp.tipo.disable();
-            
-     
+
+
     },
      preparaMenu:function(n){
       var data = this.getSelectedData();
       var tb =this.tbar;
-       
+
         Phx.vista.Obs.superclass.preparaMenu.call(this,n);
-        
+
         if(this.store.baseParams.todos == 1){
-        	
+
         	this.getBoton('new').disable();
         	this.getBoton('edit').disable();
         	this.getBoton('del').disable();
@@ -476,21 +484,21 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
         }
         else{
         	if(data.estado == 'abierto'){
-        	   this.getBoton('btnCerrar').enable();	
+        	   this.getBoton('btnCerrar').enable();
         	}
         	else{
-        	   this.getBoton('btnCerrar').disable();	
+        	   this.getBoton('btnCerrar').disable();
         	}
         }
-        return tb 
-     }, 
+        return tb
+     },
      liberaMenu:function(){
         var tb = Phx.vista.Obs.superclass.liberaMenu.call(this);
         this.getBoton('btnCerrar').disable();
         return tb
     },
-    
-    
+
+
     cerrarObs: function(){
 	    Phx.CP.loadingShow();
 	    var d = this.sm.getSelected().data;
@@ -501,8 +509,8 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
             failure: this.conexionFailure,
             timeout: this.timeout,
             scope: this
-        }); 
-	    
+        });
+
 	},
 	successObs: function(resp){
        Phx.CP.loadingHide();
@@ -511,8 +519,8 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
          this.reload();
        }
     },
-	
-	
+
+
 	sortInfo:{
 		field: 'id_obs',
 		direction: 'ASC'
@@ -522,5 +530,3 @@ Phx.vista.Obs=Ext.extend(Phx.gridInterfaz,{
 	}
 )
 </script>
-		
-		
