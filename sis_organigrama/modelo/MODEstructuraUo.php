@@ -21,7 +21,8 @@ class MODEstructuraUo extends MODbase {
 		
 		$this->setCount(false);
 		
-			$this->setParametro('id_padre','id_padre','varchar');
+		$this->setParametro('id_padre','id_padre','varchar');
+        $this->setParametro('tipo_arbol','tipo_arbol','varchar');
 					
 			//defino varialbes que se captran como retornod e la funcion
 			$this->captura('id_uo','integer');
@@ -47,6 +48,9 @@ class MODEstructuraUo extends MODbase {
 			$this->captura('id_nivel_organizacional','integer');
 			$this->captura('nombre_nivel','varchar');
 			$this->captura('prioridad','varchar');
+
+            $this->captura('id_uo_padre_operativo','integer');
+
 			$this->armarConsulta();
 			/*echo $this->consulta;
 			exit;*/
@@ -150,7 +154,21 @@ class MODEstructuraUo extends MODbase {
         $this->ejecutarConsulta();
         return $this->respuesta;
     }
-	
+    //{developer:franklin.espinoza date:24/03/2020}
+    function procesarDragDropOperativo() {
+        $this->procedimiento = 'orga.ft_estructura_uo_ime';
+        $this->transaccion = 'RH_EUO_DRAG_DROP_O';
+        $this->tipo_procedimiento = 'IME';
 
+        $this->setParametro('punto', 'point', 'varchar');
+        $this->setParametro('id_nodo', 'id_nodo', 'integer');
+        $this->setParametro('id_old_parent', 'id_old_parent', 'integer');
+        $this->setParametro('id_target', 'id_target', 'integer');
+        $this->setParametro('tipo_nodo', 'tipo_nodo', 'varchar');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
 }
 ?>

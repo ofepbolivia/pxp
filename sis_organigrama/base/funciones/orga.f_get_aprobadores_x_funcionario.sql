@@ -108,12 +108,9 @@ BEGIN
                   UNION
                       SELECT uofun.id_funcionario,euo.id_uo_padre,uo.presupuesta,uo.gerencia,no.numero_nivel
                       from orga.testructura_uo euo
-                      inner join orga.tuo uo
-                          on uo.id_uo = euo.id_uo_padre
-                      inner join orga.tnivel_organizacional no 
-                                          on no.id_nivel_organizacional = uo.id_nivel_organizacional
-                      inner join path hijo
-                          on hijo.id_uo = euo.id_uo_hijo
+                      inner join orga.tuo uo on uo.id_uo = euo.id_uo_padre_operativo
+                      inner join orga.tnivel_organizacional no on no.id_nivel_organizacional = uo.id_nivel_organizacional
+                      inner join path hijo on hijo.id_uo = euo.id_uo_hijo
                       left join orga.tuo_funcionario uofun
                           on uo.id_uo = uofun.id_uo and uofun.estado_reg = ''activo'' and
                               uofun.fecha_asignacion <= ''' || par_fecha || ''' and (uofun.fecha_finalizacion is null or uofun.fecha_finalizacion >= ''' || par_fecha || ''')
@@ -147,12 +144,9 @@ BEGIN
                   UNION
                       SELECT uofun.id_funcionario,euo.id_uo_padre,uo.presupuesta,uo.gerencia,no.numero_nivel
                       from orga.testructura_uo euo
-                      inner join orga.tuo uo
-                          on uo.id_uo = euo.id_uo_padre
-                      inner join orga.tnivel_organizacional no 
-                                          on no.id_nivel_organizacional = uo.id_nivel_organizacional
-                      inner join path hijo
-                          on hijo.id_uo = euo.id_uo_hijo
+                      inner join orga.tuo uo on uo.id_uo = euo.id_uo_padre_operativo
+                      inner join orga.tnivel_organizacional no on no.id_nivel_organizacional = uo.id_nivel_organizacional
+                      inner join path hijo on hijo.id_uo = euo.id_uo_hijo
                       left join orga.tuo_funcionario uofun
                           on uo.id_uo = uofun.id_uo and uofun.estado_reg = ''activo'' and
                               uofun.fecha_asignacion <= ''' || par_fecha || ''' and (uofun.fecha_finalizacion is null or uofun.fecha_finalizacion >= ''' || par_fecha || ''')

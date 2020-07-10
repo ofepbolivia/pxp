@@ -37,6 +37,7 @@ v_respuesta_sinc            varchar;
 --variables para drag and drop
 v_consulta					varchar = '';
 v_unidad					record;
+v_estructura_uo 			record;
 BEGIN
 
   
@@ -310,6 +311,78 @@ BEGIN
               'DRAG',
               pxp.f_get_variable_global('cadena_db_sql_2')
             );
+          ELSE
+        --	2) regresar error point no soportados
+            raise exception 'POINT no soportado %',v_parametros.punto;
+          END IF;
+
+          v_resp = pxp.f_agrega_clave(v_resp,'mensaje','DRANG AND DROP exitoso id_nodo='||v_parametros.id_nodo||' id_target= '|| v_parametros.id_target||'  id_old_gui='|| v_parametros.id_old_parent);
+          return v_resp;
+      END;
+
+    /*******************************
+    #TRANSACCION:	RH_EUO_DRAG_DROP_O
+    #DESCRIPCION:	Cambiar el padre operativo de un nodo en el arbol de UO
+    #AUTOR:			franklin.espinoza
+    #FECHA:			24/03/2020
+    #RESUMEN:
+    ***********************************/
+    ELSEIF (par_transaccion='RH_EUO_DRAG_DROP_O') THEN
+      BEGIN
+        -- 1) si point es igual append
+          IF (v_parametros.punto='append') then
+            update orga.testructura_uo  set
+            id_uo_padre_operativo = v_parametros.id_target
+            where id_uo_hijo = v_parametros.id_nodo;
+			--raise 'v_parametros.id_target: %, v_parametros.id_nodo: %, v_parametros.id_old_parent: %',v_parametros.id_target, v_parametros.id_nodo, v_parametros.id_old_parent;
+
+            select teo.id_uo_padre, teo.id_uo_hijo
+            into v_estructura_uo
+            from orga.testructura_uo teo
+            where id_uo_hijo = v_parametros.id_nodo;
+
+            insert into orga.tmod_estructura_uo(
+              id_uo_padre,
+              id_uo_hijo,
+                id_uo_padre_operativo_old,
+              estado_reg,
+              id_usuario_reg,
+              fecha_reg
+            )values(
+              v_parametros.id_target,
+                v_parametros.id_nodo,
+                v_parametros.id_old_parent,
+              'activo',
+               par_id_usuario,
+               now()
+            );
+          	select tu.nombre_unidad, tu.descripcion, tu.codigo, tu.correspondencia, tu.id_nivel_organizacional, tu.estado_reg
+            into v_unidad
+            from orga.tuo tu
+            where tu.id_uo = v_parametros.id_nodo;
+
+            /*v_consulta =  'exec Ende_Organigrama "DRAG", '||v_estructura_uo.id_uo_hijo||', '||
+          	v_estructura_uo.id_uo_padre||', "'||coalesce(v_unidad.nombre_unidad,'')||'", "'||coalesce(v_unidad.descripcion,'')||'", "'||
+          	coalesce(v_unidad.codigo,'')||'", "'||coalesce(v_unidad.correspondencia,'')||'", null, '||extract(year from current_date)||',  '||
+            v_unidad.id_nivel_organizacional||', "'||v_unidad.estado_reg||'", '||v_parametros.id_target||';';
+
+            INSERT INTO sqlserver.tmigracion
+            (
+              id_usuario_reg,
+              consulta,
+              estado,
+              respuesta,
+              operacion,
+              cadena_db
+            )
+            VALUES (
+              par_id_usuario,
+              v_consulta,
+              'pendiente',
+              null,
+              'DRAG',
+              pxp.f_get_variable_global('cadena_db_sql_2')
+            );*/
           ELSE
         --	2) regresar error point no soportados
             raise exception 'POINT no soportado %',v_parametros.punto;

@@ -54,7 +54,7 @@ header("content-type: text/javascript; charset=UTF-8");
             this.addButton('btnCuenta',
                 {
                     text: 'Cuenta Bancaria',
-                    grupo: [0,2],
+                    grupo: [0,1,2],
                     iconCls: 'blist',
                     disabled: true,
                     handler: this.onBtnCuenta,
