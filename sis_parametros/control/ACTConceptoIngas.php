@@ -32,7 +32,9 @@ class ACTConceptoIngas extends ACTbase{
               $this->objParam->addFiltro("conig.id_entidad =".$this->objParam->getParametro('id_entidad'));    
          }
          
-		
+        if($this->objParam->getParametro('codigo')=='MCO'){
+            $this->objParam->addFiltro("conig.codigo in (''MCOSAL'', ''MCOINI'', ''MCOCOM'')");
+        }       
 		
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
 			$this->objReporte = new Reporte($this->objParam,$this);
