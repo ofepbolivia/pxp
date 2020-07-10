@@ -13,6 +13,11 @@ class ACTTipoContrato extends ACTbase{
 		$this->objParam->defecto('ordenacion','id_tipo_contrato');
 
 		$this->objParam->defecto('dir_ordenacion','asc');
+
+        if($this->objParam->getParametro('permanente') == 'permanente'){
+            $this->objParam->addFiltro("tipcon.codigo in (''PLA'', ''EVE'') ");
+        }
+        
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
 			$this->objReporte = new Reporte($this->objParam,$this);
 			$this->res = $this->objReporte->generarReporteListado('MODTipoContrato','listarTipoContrato');

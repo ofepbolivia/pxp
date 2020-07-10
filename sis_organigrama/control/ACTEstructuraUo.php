@@ -200,6 +200,62 @@ class ACTEstructuraUo extends ACTbase {
 		}
 
 	}
+	//{developer:franklin.espinoza date:24/03/2020}
+    function listarEstructuraUoOperativo() {
+        //crea el objetoFunSeguridad que contiene todos los metodos del sistema de seguridad
+        //$this->objFunSeguridad=$this->create('MODEstructuraUo');
+
+        //obtiene el parametro nodo enviado por la vista
+        $node = $this -> objParam -> getParametro('node');
+        $id_uo = $this -> objParam -> getParametro('id_uo');
+
+        if ($node == 'id' || !is_numeric($node)) {
+            $this -> objParam -> addParametro('id_padre', '%');
+        } else {
+            $this -> objParam -> addParametro('id_padre', $id_uo);
+        }
+
+        $this->objParam->addParametro('tipo_arbol', 'operativo');
+
+
+        $this->objFunSeguridad=$this->create('MODEstructuraUo');
+        $this -> res = $this -> objFunSeguridad -> listarEstructuraUo($this -> objParam);
+
+        $this -> res -> setTipoRespuestaArbol();
+
+        $arreglo = array();
+        //array_push($arreglo,array('nombre'=>'id','valor'=>'id_gui'));
+        array_push($arreglo, array('nombre' => 'id', 'valor' => 'id_uo'));
+        array_push($arreglo, array('nombre' => 'codigo', 'valor' => 'codigo'));
+        array_push($arreglo,array('nombre'=>'text','valores'=>'<b>(#codigo#)</b> - #nombre_unidad#'));
+        array_push($arreglo, array('nombre' => 'desc', 'valor' => 'descripcion'));
+        array_push($arreglo, array('nombre' => 'cargo', 'valor' => 'nombre_cargo'));
+
+        array_push($arreglo, array('nombre' => 'presupuesta', 'valor' => 'presupuesta'));
+        array_push($arreglo, array('nombre' => 'nodo_base', 'valor' => 'nodo_base'));
+        array_push($arreglo, array('nombre' => 'estado_reg', 'valor' => 'estado_reg'));
+        array_push($arreglo, array('nombre' => 'id_p', 'valor' => 'id_uo_padre_operativo'));
+
+        /*se ande un nivel al arbol incluyendo con tido de nivel carpeta con su arreglo de equivalencias
+         es importante que entre los resultados devueltos por la base exista la variable\
+         tipo_dato que tenga el valor en texto = 'carpeta' */
+
+        $this -> res -> addNivelArbol('nodo_base', 'si', array('leaf' => false, 'allowDelete' => true, 'allowEdit' => true, 'cls' => 'folder', 'tipo' => 'si'), $arreglo);
+
+        array_push($arreglo, array('nombre' => 'cls', 'valor' => 'descripcion'));
+
+        /*se ande un nivel al arbol incluyendo con tido de nivel carpeta con su arreglo de equivalencias
+         es importante que entre los resultados devueltos por la base exista la variable\
+         tipo_dato que tenga el valor en texto = 'hoja' */
+
+        $this -> res -> addNivelArbol('nodo_base', 'no', array('leaf' => false, 'allowDelete' => true, 'allowEdit' => true, 'tipo' => 'no', 'icon' => '../../../lib/imagenes/a_form.png'), $arreglo);
+
+        array_push($arreglo, array('nombre' => 'id_estructura_uo', 'valor' => 'id_estructura_uo'));
+
+        //Se imprime el arbol en formato JSON
+        $this -> res -> imprimirRespuesta($this -> res -> generarJson());
+
+    }
 
 	/*
 	 * ELIMINAR GUI
@@ -525,6 +581,11 @@ class ACTEstructuraUo extends ACTbase {
             $this->res->imprimirRespuesta($this->res->generarJson());
         }
     }
-
+    //{developer:franklin.espinoza date:24/03/2020}
+    function procesarDragDropOperativo() {
+        $this->objFunSeguridad = $this->create('MODEstructuraUo');
+        $this->res = $this->objFunSeguridad->procesarDragDropOperativo($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 }
 ?>
