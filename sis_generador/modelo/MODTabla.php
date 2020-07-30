@@ -129,6 +129,26 @@ class MODTabla extends MODbase{
 
 		return $this->respuesta;
 	}
+    //{develop:franklin.espinoza date:27/7/2020} upload data a tablas
+    function uploadCsvDataTable(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='gen.ft_tabla_ime';
+        $this->transaccion='GEN_DATA_TABLE_INS';
+        $this->tipo_procedimiento='IME';//tipo de transaccion
+
+
+        $this->setParametro('action','action','varchar');
+        $this->setParametro('tabla','tabla','varchar');
+        $this->setParametro('columns','columns','varchar');
+        $this->setParametro('headers','headers','varchar');
+        $this->setParametro('registros','registros','jsonb');
+        //Ejecuta la instruccion
+        $this->armarConsulta();//var_dump($this->consulta);exit;
+        $this->ejecutarConsulta();
+
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
 	
 }
 ?>
