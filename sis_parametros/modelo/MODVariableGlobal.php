@@ -1,5 +1,3 @@
-[Ayer 3:20 p.m.] Ismael Ramiro Valdivia Aranibar
-
 <?php
 /**
  * @package pXP
