@@ -39,7 +39,7 @@ Phx.vista.PlantillaArchivoExcel=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: false,
 				anchor: '80%',
 				gwidth: 100,
-				maxLength:20
+				maxLength:100
 			},
 				type:'TextField',
 				filters:{pfiltro:'arxls.nombre',type:'string'},
