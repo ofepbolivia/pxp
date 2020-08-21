@@ -236,9 +236,6 @@ class MODProveedor extends MODbase{
 	}
 
 
-
-
-
 	function insertarProveedor(){
 		//Definicion de variables para ejecucion del procedimiento
 		$this->procedimiento='param.f_tproveedor_ime';
@@ -280,7 +277,7 @@ class MODProveedor extends MODbase{
 
 		$this->setParametro('apellido_paterno','apellido_paterno','varchar');
 		$this->setParametro('apellido_materno','apellido_materno','varchar');
-		$this->setParametro('ci','ci','int4');
+		$this->setParametro('ci','ci','varchar');
 		$this->setParametro('correo','correo','varchar');
 		$this->setParametro('celular1','celular1','varchar');
 		$this->setParametro('celular2','celular2','varchar');
@@ -365,7 +362,7 @@ class MODProveedor extends MODbase{
 		/*$this->setParametro('nombre','nombre','varchar');
 		$this->setParametro('apellido_paterno','apellido_paterno','varchar');
 		$this->setParametro('apellido_materno','apellido_materno','varchar');*/
-		$this->setParametro('ci','ci','int4');
+		$this->setParametro('ci','ci','varchar');
 		$this->setParametro('correo','correo','varchar');
 		$this->setParametro('celular1','celular1','varchar');
 		$this->setParametro('celular2','celular2','varchar');

@@ -438,7 +438,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     qtip: 'Tipo de proveedor',
                     fieldLabel: 'Tipo',
                     resizable: true,
-                    allowBlank: true,
+                    allowBlank: false,
                     emptyText: 'Seleccione un catálogo...',
                     store: new Ext.data.JsonStore({
                         url: '../../sis_parametros/control/Catalogo/listarCatalogoCombo',

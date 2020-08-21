@@ -87,7 +87,7 @@ Phx.vista.Catalogo=Ext.extend(Phx.gridInterfaz,{
             type:'ComboBox',
             id_grupo:0,
             filters:{
-                   pfiltro:'nombre',
+                   pfiltro:'sis.nombre',
                    type:'string'
             },
             grid:true,
@@ -134,7 +134,7 @@ Phx.vista.Catalogo=Ext.extend(Phx.gridInterfaz,{
 			type: 'ComboBox',
 			id_grupo: 1,
 			filters: {
-				pfiltro: 'nombre',
+				pfiltro: 'cattip.nombre',
 				type: 'string'
 			},
 			grid: true,
