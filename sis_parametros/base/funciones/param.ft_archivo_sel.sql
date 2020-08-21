@@ -390,15 +390,130 @@ where ';
 			v_consulta:=v_consulta||v_parametros.filtro;
 
 			--Devuelve la respuesta
-			return v_consulta;
+            RETURN v_consulta;
 
-		end;
+        END;
 
-	else
+        /*********************************
+        #TRANSACCION:  'PM_TYPEFILE_SEL'
+        #DESCRIPCION: query for get type file and files
+        #AUTOR:		favio.figueroa
+        #FECHA:		25-05-2020 15:04:48
+        ***********************************/
+
+    ELSIF (p_transaccion = 'PM_TYPEFILE_SEL') THEN
+
+        BEGIN
+
+            v_consulta := 'SELECT * FROM (SELECT
+                            tipar.id_tipo_archivo,
+                            tipar.tabla,
+                            tipar.nombre,
+                            tipar.codigo,
+                            tipar.extensiones_permitidas,
+                            tipar.multiple,
+                            tipar.obligatorio,
+                            tipar.tipo_archivo,
+                            tipar.orden,
+                            arch.nombre_descriptivo,
+                            arch.id_archivo,
+                            arch.estado_reg,
+                            arch.folder,
+                            arch.extension,
+                            arch.id_tabla,
+                            arch.nombre_archivo
+                        FROM param.ttipo_archivo tipar
+                                 LEFT JOIN param.tarchivo arch ON arch.id_tipo_archivo = tipar.id_tipo_archivo
+                                                                      AND arch.id_tabla = ' || v_parametros.id_tabla || '
+                        WHERE tipar.tabla = ''' || v_parametros.tabla || '''
+                        AND arch.id_archivo_fk IS NULL
+                        AND (arch.id_tabla =  ' || v_parametros.id_tabla || ' OR arch.id_tabla IS NULL)
+                        AND tipar.multiple = ''no''
+                        UNION ALL
+                        SELECT
+                            tipar.id_tipo_archivo,
+                            tipar.tabla,
+                            tipar.nombre,
+                            tipar.codigo,
+                            tipar.extensiones_permitidas,
+                            tipar.multiple,
+                            tipar.obligatorio,
+                            tipar.tipo_archivo,
+                            tipar.orden,
+                            NULL as id_archivo,
+                            NULL as estado_reg,
+                            NULL as folder,
+                            NULL as extension,
+                            NULL as id_tabla,
+                            NULL as nombre_archivo,
+                            NULL
+                        FROM param.ttipo_archivo tipar
+                        WHERE tipar.tabla = ''' || v_parametros.tabla || '''
+                          AND tipar.multiple = ''si'') t
+                          ORDER BY t.orden ASC
+                        ' ;
+
+            v_consulta := v_consulta || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
+            --Devuelve la respuesta
+            RETURN v_consulta;
+
+        END;
+
+
+    /*********************************
+    #TRANSACCION:  'PM_FILES_SEL'
+    #DESCRIPCION:	get file
+    #AUTOR:		favio.figueroa
+    #FECHA:		25-05-2020 15:04:48
+    ***********************************/
+
+    ELSIF (p_transaccion = 'PM_FILES_SEL') THEN
+
+        BEGIN
+            v_consulta := 'SELECT a.id_archivo,
+                                   a.folder,
+                                   a.extension,
+                                   a.nombre_archivo
+                            FROM param.tarchivo a
+                            INNER JOIN param.ttipo_archivo ta on ta.id_tipo_archivo = a.id_tipo_archivo
+                            WHERE a.estado_reg != ''inactivo'' and ta.id_tipo_archivo = '||v_parametros.id_tipo_archivo||' AND a.id_tabla = '||v_parametros.id_tabla||' AND ';
+
+            --Definicion de la respuesta
+            v_consulta := v_consulta || v_parametros.filtro;
+            v_consulta := v_consulta || ' order by ' || v_parametros.ordenacion || ' ' || v_parametros.dir_ordenacion ||
+                          ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
+            --Devuelve la respuesta
+            RETURN v_consulta;
+        END;
+    /*********************************
+     #TRANSACCION:  'PM_FILES_CONT'
+     #DESCRIPCION:	conteo de registros
+     #AUTOR:		favio.figueroa
+     #FECHA:		05-12-2016 15:04:48
+    ***********************************/
+
+    ELSIF (p_transaccion = 'PM_FILES_CONT') THEN
+
+        BEGIN
+            --Sentencia de la consulta de conteo de registros
+            v_consulta := 'SELECT COUNT(*)
+                            FROM param.tarchivo a
+                            INNER JOIN param.ttipo_archivo ta on ta.id_tipo_archivo = a.id_tipo_archivo
+                            WHERE ta.id_tipo_archivo = '||v_parametros.id_tipo_archivo||' AND a.id_tabla = '||v_parametros.id_tabla||' AND ';
+
+            --Definicion de la respuesta
+            v_consulta := v_consulta || v_parametros.filtro;
+
+            --Devuelve la respuesta
+            RETURN v_consulta;
+
+        END;
 					     
-		raise exception 'Transaccion inexistente';
+    ELSE
 					         
-	end if;
+        RAISE EXCEPTION 'Transaccion inexistente';
+
+    END IF;
 					
 EXCEPTION
 					
@@ -407,7 +522,7 @@ EXCEPTION
 			v_resp = pxp.f_agrega_clave(v_resp,'mensaje',SQLERRM);
 			v_resp = pxp.f_agrega_clave(v_resp,'codigo_error',SQLSTATE);
 			v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
-			raise exception '%',v_resp;
+        RAISE EXCEPTION '%',v_resp;
 END;
 $BODY$
 LANGUAGE 'plpgsql' VOLATILE

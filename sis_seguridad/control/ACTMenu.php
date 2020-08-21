@@ -101,6 +101,13 @@ class ACTMenu extends ACTbase {
 		
 		
 	}
+
+
+    function getMenuJSON() {
+        echo '{"ROOT":{"error":false,"detalle":{"mensaje":"La transacci\u00f3n se ha ejecutado con \u00e9xito"},"datos":[{"icon":"person_search","text":"Descubrir","type":"hoja","id_gui":388,"childrens":[],"component":"CTA__Discover"},{"icon":"perm_contact_calendar","text":"Citas","type":"hoja","id_gui":390,"childrens":[],"component":"CTA__Citas"},{"icon":"notifications_none","text":"Notificaciones","type":"hoja","id_gui":389,"childrens":[],"component":"CTA__Notify"}]}}';
+        exit;
+    }
+
 	
 	
 
