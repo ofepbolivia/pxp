@@ -51,6 +51,7 @@ class MODConceptoIngas extends MODbase{
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
+		//echo($this->consulta);exit;
 		$this->ejecutarConsulta();
 
 		//Devuelve la respuesta
@@ -230,7 +231,7 @@ class MODConceptoIngas extends MODbase{
 		$this->setParametro('nandina','nandina','varchar');
 
 		$this->setParametro('id_cat_concepto','id_cat_concepto','int4');
-
+	  $this->setParametro('codigo', 'codigo', 'varchar');
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
@@ -258,6 +259,7 @@ class MODConceptoIngas extends MODbase{
 		$this->setParametro('id_unidad_medida','id_unidad_medida','int4');
 		$this->setParametro('nandina','nandina','varchar');
 		$this->setParametro('id_cat_concepto','id_cat_concepto','int4');
+		$this->setParametro('codigo', 'codigo', 'varchar');
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();

@@ -9,7 +9,13 @@
  */
 
 include_once(dirname(__FILE__)."/../../../lib/lib_control/CTSesion.php");
+ini_set('session.cookie_samesite', 'None');
+session_set_cookie_params(['samesite' => 'None', 'secure' => true]);
+//session_set_cookie_params(['samesite' => 'None']);
+
 session_start();
+//header('Set-Cookie: ' . session_name() . '=' . session_id() . '; SameSite=None;');
+
 include_once(dirname(__FILE__).'/../../../lib/DatosGenerales.php');
 include_once(dirname(__FILE__).'/../../../lib/lib_general/Errores.php');
 include_once(dirname(__FILE__).'/../../../lib/lib_control/CTincludes.php');
@@ -56,7 +62,7 @@ $headers = $app->request->headers;
 
 header('Access-Control-Allow-Origin: ' . $headers['Origin']);
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-header('Access-Control-Allow-Headers: pxp-user, content-type, Php-Auth-User, Php-Auth-Pw');
+header('Access-Control-Allow-Headers: pxp-user, content-type, Php-Auth-User, Php-Auth-Pw, auth-version');
 header('Access-Control-Allow-Credentials: true');	
 header('Access-Control-Max-Age: 1728000');
 
@@ -418,18 +424,19 @@ $app->post(
 	    	
 	    	$auxHeaders = array('Pxp-User'=>$app->request->post('usuario'),'Php-Auth-User'=>$app->request->post('usuario'),'Php-Auth-Pw'=>$app->request->post('contrasena'));    	
 	    	authPxp($auxHeaders); 
-	    }		
-		echo "{success:true,
-				cont_alertas:".$_SESSION["_CONT_ALERTAS"].",
-				nombre_usuario:'".$_SESSION["_NOM_USUARIO"]."',
-				nombre_basedatos:'".$_SESSION["_BASE_DATOS"]."',
-				id_usuario:'".$_SESSION["_ID_USUARIO_OFUS"]."',
-				id_funcionario:'".$_SESSION["_ID_FUNCIOANRIO_OFUS"]."',
-				autentificacion:'".$_SESSION["_AUTENTIFICACION"]."',
-				estilo_vista:'".$_SESSION["_ESTILO_VISTA"]."',
-				mensaje_tec:'".$_SESSION["mensaje_tec"]."',
-				timeout:".$_SESSION["_TIMEOUT"]."}";	
-				exit;		
+	    }
+        echo '{"success":true,
+                "cont_alertas":'.$_SESSION["_CONT_ALERTAS"].',
+                "nombre_usuario":"'.$_SESSION["_NOM_USUARIO"].'",
+                "nombre_basedatos":"'.$_SESSION["_BASE_DATOS"].'",
+                "id_usuario":"'.$_SESSION["_ID_USUARIO_OFUS"].'",
+                "id_funcionario":"'.$_SESSION["_ID_FUNCIOANRIO_OFUS"].'",
+                "autentificacion":"'.$_SESSION["_AUTENTIFICACION"].'",
+                "estilo_vista":"'.$_SESSION["_ESTILO_VISTA"].'",
+                "mensaje_tec":"'.$_SESSION["mensaje_tec"].'",
+                "alias":"'.$_SESSION["_ALIAS"].'",
+                "timeout":'.$_SESSION["_TIMEOUT"].'}';
+        exit;
     }
 ); 
 
@@ -560,7 +567,7 @@ $app->options('/:sistema/:clase_control/:metodo', function ($sistema,$clase_cont
 	
     header('Access-Control-Allow-Origin: ' . $headers['Origin']);
 	header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-	header('Access-Control-Allow-Headers: pxp-user, content-type, Php-Auth-User, Php-Auth-Pw');
+	header('Access-Control-Allow-Headers: pxp-user, content-type, Php-Auth-User, Php-Auth-Pw, auth-version');
 	header('Access-Control-Allow-Credentials: true');	
 	header('Access-Control-Max-Age: 1728000');
 	

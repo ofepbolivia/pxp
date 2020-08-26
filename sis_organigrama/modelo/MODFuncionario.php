@@ -60,6 +60,7 @@ class MODFuncionario extends MODbase{
         $this->captura('id_biometrico','int4');
         $this->captura('nombre_archivo','varchar');
         $this->captura('extension','varchar');
+        $this->captura('folder','varchar');
         $this->captura('telefono2','varchar');
         $this->captura('celular2','varchar');
         $this->captura('nombre','varchar');

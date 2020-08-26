@@ -56,16 +56,18 @@ BEGIN
              --  v_condicion:='uo.nodo_base=''si'' and uo.tipo='||v_parametros.tipo;
                 v_condicion:='uo.nodo_base=''si'' ';
                 v_join = 'LEFT';
-                
-                
            else
-               v_condicion:='euo.id_uo_padre='||v_parametros.id_padre||' and uo.nodo_base=''no'' ';
-                v_join = 'INNER';
+              if pxp.f_existe_parametro(par_tabla, 'tipo_arbol') then
+                v_condicion:='euo.id_uo_padre_operativo='||v_parametros.id_padre||' and uo.nodo_base=''no'' ';
+              else
+                v_condicion:='euo.id_uo_padre='||v_parametros.id_padre||' and uo.nodo_base=''no'' ';
+              end if;
+              v_join = 'INNER';
            end if;
-               v_condicion:=v_condicion ||'  and uo.estado_reg=''activo'' ';
-               
-               
-               v_consulta:='SELECT
+
+            v_condicion:=v_condicion ||'  and uo.estado_reg=''activo'' ';
+
+            v_consulta:='SELECT
                                 UO.id_uo,
                                 UO.codigo,
                                 UO.descripcion,
@@ -88,7 +90,8 @@ BEGIN
                                 ''false''::varchar as checked,
                                 UO.id_nivel_organizacional,
                                 nivorg.nombre_nivel,
-                            UO.prioridad
+                                UO.prioridad,
+                                euo.id_uo_padre_operativo
                              FROM orga.tuo UO '
                             ||v_join|| ' join orga.testructura_uo euo
                                   on UO.id_uo=euo.id_uo_hijo  and euo.estado_reg=''activo''

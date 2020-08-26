@@ -900,3 +900,12 @@ ALTER TABLE orga.tformulario_teletrabajo
 ALTER TABLE orga.tformulario_teletrabajo
   ADD COLUMN observaciones TEXT;
 /*****************************F-SCP-IRVA-ORGA-0-29/05/2020*************/
+
+
+/*****************************I-SCP-FEA-ORGA-0-10/07/2020*************/
+ALTER TABLE orga.testructura_uo
+  ADD COLUMN id_uo_padre_operativo INTEGER;
+
+  ALTER TABLE orga.tmod_estructura_uo
+  ADD COLUMN id_uo_padre_operativo_old INTEGER;
+/*****************************F-SCP-FEA-ORGA-0-10/07/2020*************/

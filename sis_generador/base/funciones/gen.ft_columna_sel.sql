@@ -101,6 +101,40 @@ WHERE '; --col.table_schema::text = 'rhum'::text AND
             v_consulta:=v_consulta||v_parametros.filtro;
             return v_consulta;
         end;
+     /*********************************
+ 	#TRANSACCION:  'GEN_COLS_TABLE_SEL'
+ 	#DESCRIPCION:	Consulta de datos
+ 	#AUTOR:		franklin.espinoza
+ 	#FECHA:		27-07-2020 18:32:59
+	***********************************/
+	elsif p_transaccion = 'GEN_COLS_TABLE_SEL' then
+
+        begin
+        	v_consulta:='SELECT dtd_identifier::INTEGER, column_name::VARCHAR, udt_name::VARCHAR, (column_name||'':''||udt_name)::VARCHAR as name_type
+            			 FROM information_schema.columns
+						 WHERE table_schema = '''||v_parametros.esquema||''' AND table_name   = '''||v_parametros.tabla||''' AND ';
+
+            v_consulta:=v_consulta||v_parametros.filtro;
+            v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
+
+            return v_consulta;
+        end;
+
+    /*********************************
+ 	#TRANSACCION:  'GEN_COLS_TABLE_CONT'
+ 	#DESCRIPCION:	Conteo de registros
+ 	#AUTOR:		franklin.espinoza
+ 	#FECHA:		27-07-2020 18:32:59
+	***********************************/
+    elsif p_transaccion = 'GEN_COLS_TABLE_CONT' then
+
+        begin
+        	v_consulta:='SELECT count(dtd_identifier)
+            			 FROM information_schema.columns
+						 WHERE table_schema = '''||v_parametros.esquema||''' AND table_name   = '''||v_parametros.tabla||''' AND ';
+            v_consulta:=v_consulta||v_parametros.filtro;
+            return v_consulta;
+        end;
 
      else
      

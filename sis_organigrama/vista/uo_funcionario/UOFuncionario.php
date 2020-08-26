@@ -557,7 +557,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
         this.getComponente('fecha_finalizacion').on('beforerender',function (combo) {
             var fecha_actual = new Date();
             fecha_actual.setMonth(fecha_actual.getMonth());
-            this.getComponente('fecha_finalizacion').setMinValue(new Date(fecha_actual.getFullYear(),fecha_actual.getMonth()-1,1));
+            //this.getComponente('fecha_finalizacion').setMinValue(new Date(fecha_actual.getFullYear(),fecha_actual.getMonth()-1,1));
         }, this);
 		
 		this.Cmp.fecha_finalizacion.on('blur', function () {

@@ -40,6 +40,17 @@ class ACTColumna extends ACTbase{
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
 
+	//{develop:franklin.espinoza date:27/7/2020}
+    function listarNameColumnsTable(){
+
+        $this->objParam->defecto('ordenacion','dtd_identifier');
+        $this->objParam->defecto('dir_ordenacion','asc');
+
+        $this->objFunc=$this->create('MODColumna');
+        $this->res=$this->objFunc->listarNameColumnsTable();
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
 }
 
 ?>

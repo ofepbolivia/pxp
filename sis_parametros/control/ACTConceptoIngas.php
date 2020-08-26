@@ -32,7 +32,7 @@ class ACTConceptoIngas extends ACTbase{
               $this->objParam->addFiltro("conig.id_entidad =".$this->objParam->getParametro('id_entidad'));
          }
 
-		if($this->objParam->getParametro('codigo')=='MCO'){
+        if($this->objParam->getParametro('codigo')=='MCO'){
             $this->objParam->addFiltro("conig.codigo in (''MCOSAL'', ''MCOINI'', ''MCOCOM'')");
         }
 
@@ -103,12 +103,11 @@ class ACTConceptoIngas extends ACTbase{
             $this->objParam->addFiltro("par.id_partida =''".$this->objParam->getParametro('id_partida')."''");
         }
 
-				/*Aumentando para filtrar solo los conceptos que seran para gestion de materiales (Ismael Valdivia 18/02/2020)*/
+         /*Aumentando para filtrar solo los conceptos que seran para gestion de materiales (Ismael Valdivia 18/02/2020)*/
 				if($this->objParam->getParametro('gestion_materiales')=='si'){
             $this->objParam->addFiltro("''gestion_materiales'' =ANY (conig.sw_autorizacion)");
         }
 				/**************************************************************************************************************/
-
 
 
         if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
