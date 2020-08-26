@@ -1,5 +1,3 @@
-[Ayer 3:20 p.m.] Ismael Ramiro Valdivia Aranibar
-
 <?php
 /**
  * @package pXP
@@ -27,7 +25,6 @@ class MODVariableGlobal extends MODbase
         //Ejecuta la instruccion
         $this->armarConsulta();
         $this->ejecutarConsulta();
-
 
         //Devuelve la respuesta
         return $this->respuesta;
