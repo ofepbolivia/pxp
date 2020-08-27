@@ -132,6 +132,7 @@ class MODPermisosGerencia extends MODbase{
 		$this->captura('codigo','varchar');
 		$this->captura('id_funcionario','integer');
 		$this->captura('defecto','varchar');
+		$this->captura('nombre_unidad','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();

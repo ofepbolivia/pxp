@@ -189,7 +189,8 @@ BEGIN
                                      uo.descripcion,
                                      uo.codigo,
                                      '||v_id_funcionario||'::integer as id_funcionario,
-                                     ''si''::varchar as defecto
+                                     ''si''::varchar as defecto,
+                                     uo.nombre_unidad
                           from orga.tuo uo
                           where uo.id_uo = '||v_id_uo_gerencia||' and';
             else
@@ -199,7 +200,7 @@ BEGIN
                                      uo.codigo,
                                      (case when (uo.id_uo =ANY (SELECT unnest (gere.id_gerencia)
                                                                 from orga.tpermiso_gerencias gere
-                                                                where gere.id_funcionario = 2591)) then
+                                                                where gere.id_funcionario = '||v_id_funcionario||')) then
                                       null
                                       else
                                       '||v_id_funcionario||'
@@ -208,7 +209,8 @@ BEGIN
                                               ''si''
                                              else
                                               ''no''
-                                      end::varchar) as defecto
+                                      end::varchar) as defecto,
+                                      uo.nombre_unidad
                           from orga.tuo uo
                           where (uo.id_uo = '||v_id_uo_gerencia||' or(uo.id_uo =ANY (SELECT unnest (gere.id_gerencia)
                                                                            from orga.tpermiso_gerencias gere
@@ -279,6 +281,7 @@ LANGUAGE 'plpgsql'
 VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
+PARALLEL UNSAFE
 COST 100;
 
 ALTER FUNCTION orga.ft_permiso_gerencias_sel (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
