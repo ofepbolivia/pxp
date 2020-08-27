@@ -23,6 +23,12 @@ class MODFuncionario extends MODbase{
         $this->setParametro('fecha','fecha','date');
         $this->setParametro('id_uo','id_uo','integer');
         $this->setParametro('estado_func','estado_func','varchar');
+
+        $this->setParametro('id_funcionario','id_funcionario','integer');
+        /*Bandera para interfaz externa*/
+        $this->setParametro('boa_file','boa_file','varchar');
+
+
         //Definicion de la lista del resultado del query
 
         //defino varialbes que se captran como retornod e la funcion
@@ -662,4 +668,3 @@ class MODFuncionario extends MODbase{
 
 }
 ?>
-
