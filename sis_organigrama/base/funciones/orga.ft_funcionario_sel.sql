@@ -66,13 +66,33 @@ $body$
       	/*Aqui aumentamos para el filtro de funcionario y gerencia*/
         IF (pxp.f_existe_parametro(par_tabla,'id_uo')) THEN
 
-      	if (v_parametros.id_uo is not null and v_id_funcionario_filtro is not null) then
-        	v_filtro = 'ger.id_uo = '||v_parametros.id_uo::integer||' and FUNCIO.id_funcionario = '||v_parametros.id_funcionario||' and';
-            v_inner = 'inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(tuo.id_uo,null::integer,null::date)';
+         select per.id_funcionario,fun.id_uo into v_id_funcionario, v_id_uo
+            from segu.tusuario usu
+            inner join orga.vfuncionario_persona per on per.id_persona = usu.id_persona
+            inner join orga.vfuncionario_ultimo_cargo fun on fun.id_funcionario = per.id_funcionario
+            where usu.id_usuario = par_id_usuario;
+
+        v_id_uo_gerencia = orga.f_get_uo_gerencia(v_id_uo,null::integer,null::date);
+
+        IF (v_parametros.id_uo = v_id_uo_gerencia) then
+
+        select count(1) into v_existencia_permiso
+        where v_id_uo_gerencia =ANY (SELECT unnest (gere.id_gerencia)
+                                    from orga.tpermiso_gerencias gere
+                                    where gere.id_funcionario = v_id_funcionario);
+
+            if (v_existencia_permiso > 0) then
+                v_filtro = 'ger.id_uo = '||v_parametros.id_uo::integer||' and';
+                v_inner = 'inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(tuo.id_uo,null::integer,null::date)';
+            else
+                v_filtro = 'ger.id_uo = '||v_parametros.id_uo::integer||' and FUNCIO.id_funcionario = '||v_id_funcionario||' and';
+                v_inner = 'inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(tuo.id_uo,null::integer,null::date)';
+            end if;
         else
-        	v_filtro = 'ger.id_uo = '||v_parametros.id_uo::integer||' and';
-            v_inner = 'inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(tuo.id_uo,null::integer,null::date)';
-        end if;
+              v_filtro = 'ger.id_uo = '||v_parametros.id_uo::integer||' and';
+              v_inner = 'inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(tuo.id_uo,null::integer,null::date)';
+
+      	end if;
       END IF;
 
 
@@ -87,9 +107,8 @@ $body$
 
             v_id_uo_gerencia = orga.f_get_uo_gerencia(v_id_uo,null::integer,null::date);
 
-            select count(uo.id_uo) into v_existencia_permiso
-            from orga.tuo uo
-            where uo.id_uo =ANY (SELECT unnest (gere.id_gerencia)
+            select count(1) into v_existencia_permiso
+        	where v_id_uo_gerencia =ANY (SELECT unnest (gere.id_gerencia)
                                     from orga.tpermiso_gerencias gere
                                     where gere.id_funcionario = v_id_funcionario);
 
@@ -301,19 +320,40 @@ $body$
       BEGIN
 	  --Creamos una tabla donde obtenemos la ultima asignacion de un funcionario
       /*Aqui aumentamos para el filtro de funcionario y gerencia*/
+        /*Aqui aumentamos para el filtro de funcionario y gerencia*/
         IF (pxp.f_existe_parametro(par_tabla,'id_uo')) THEN
 
-      	if (v_parametros.id_uo is not null and v_id_funcionario_filtro is not null) then
-        	v_filtro = 'ger.id_uo = '||v_parametros.id_uo::integer||'and FUNCIO.id_funcionario = '||v_parametros.id_funcionario||'and';
-            v_inner = 'inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(tuo.id_uo,null::integer,null::date)';
+         select per.id_funcionario,fun.id_uo into v_id_funcionario, v_id_uo
+            from segu.tusuario usu
+            inner join orga.vfuncionario_persona per on per.id_persona = usu.id_persona
+            inner join orga.vfuncionario_ultimo_cargo fun on fun.id_funcionario = per.id_funcionario
+            where usu.id_usuario = par_id_usuario;
+
+        v_id_uo_gerencia = orga.f_get_uo_gerencia(v_id_uo,null::integer,null::date);
+
+        IF (v_parametros.id_uo = v_id_uo_gerencia) then
+
+        select count(1) into v_existencia_permiso
+        where v_id_uo_gerencia =ANY (SELECT unnest (gere.id_gerencia)
+                                    from orga.tpermiso_gerencias gere
+                                    where gere.id_funcionario = v_id_funcionario);
+
+            if (v_existencia_permiso > 0) then
+                v_filtro = 'ger.id_uo = '||v_parametros.id_uo::integer||' and';
+                v_inner = 'inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(tuo.id_uo,null::integer,null::date)';
+            else
+                v_filtro = 'ger.id_uo = '||v_parametros.id_uo::integer||' and FUNCIO.id_funcionario = '||v_id_funcionario||' and';
+                v_inner = 'inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(tuo.id_uo,null::integer,null::date)';
+            end if;
         else
-        	v_filtro = 'ger.id_uo = '||v_parametros.id_uo::integer||'and';
-            v_inner = 'inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(tuo.id_uo,null::integer,null::date)';
-        end if;
+              v_filtro = 'ger.id_uo = '||v_parametros.id_uo::integer||' and';
+              v_inner = 'inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(tuo.id_uo,null::integer,null::date)';
+
+      	end if;
       END IF;
 
 
-       IF (pxp.f_existe_parametro(par_tabla,'boa_file') and pxp.f_existe_parametro(par_tabla,'id_uo')=false) THEN
+      IF (pxp.f_existe_parametro(par_tabla,'boa_file') and pxp.f_existe_parametro(par_tabla,'id_uo')=false) THEN
       	if (v_parametros.boa_file is not null) then
 
         	select per.id_funcionario,fun.id_uo into v_id_funcionario, v_id_uo
@@ -324,9 +364,8 @@ $body$
 
             v_id_uo_gerencia = orga.f_get_uo_gerencia(v_id_uo,null::integer,null::date);
 
-            select count(uo.id_uo) into v_existencia_permiso
-            from orga.tuo uo
-            where uo.id_uo =ANY (SELECT unnest (gere.id_gerencia)
+            select count(1) into v_existencia_permiso
+        	where v_id_uo_gerencia =ANY (SELECT unnest (gere.id_gerencia)
                                     from orga.tpermiso_gerencias gere
                                     where gere.id_funcionario = v_id_funcionario);
 
