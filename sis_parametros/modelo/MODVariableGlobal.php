@@ -26,7 +26,6 @@ class MODVariableGlobal extends MODbase
         $this->armarConsulta();
         $this->ejecutarConsulta();
 
-
         //Devuelve la respuesta
         return $this->respuesta;
     }

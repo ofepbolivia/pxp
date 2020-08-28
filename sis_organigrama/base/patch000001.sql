@@ -909,3 +909,20 @@ ALTER TABLE orga.testructura_uo
   ALTER TABLE orga.tmod_estructura_uo
   ADD COLUMN id_uo_padre_operativo_old INTEGER;
 /*****************************F-SCP-FEA-ORGA-0-10/07/2020*************/
+
+/*****************************I-SCP-IRVA-ORGA-0-27/08/2020*************/
+CREATE TABLE orga.tpermiso_gerencias (
+  id_autorizacion SERIAL,
+  id_funcionario INTEGER,
+  id_gerencia INTEGER [] NOT NULL,
+  CONSTRAINT tpermiso_gerencias_id_funcionario_key UNIQUE(id_funcionario),
+  CONSTRAINT tpermiso_gerencias_pkey PRIMARY KEY(id_autorizacion)
+) INHERITS (pxp.tbase)
+WITH (oids = false);
+
+COMMENT ON COLUMN orga.tpermiso_gerencias.id_gerencia
+IS 'Id de las gerencias relacionadas con la tabla orga.tuo el campo id_uo';
+
+ALTER TABLE orga.tpermiso_gerencias
+  OWNER TO postgres;
+/*****************************F-SCP-IRVA-ORGA-0-27/08/2020*************/

@@ -426,7 +426,8 @@ class MODArchivo extends MODbase{
 			$link->beginTransaction();
 
 
-			$tipo_archivo  = $this->verTipoArchivo($this->aParam->getParametro('tabla'));
+			$tipo_archivo  = $this->verTipoArchivo($this->aParam->getParametro('id_tipo_archivo'));
+
 			if (count($tipo_archivo) == 0) {
 				throw new Exception("no exite una configuracion para subir archivos en la tabla que enviaste", 1);
 			}
@@ -458,15 +459,22 @@ class MODArchivo extends MODbase{
 			$url_mediano = $ruta_destino.'mediano/';
 			$url_pequeno = $ruta_destino.'pequeno/';
 
-			$aux = count($this->arregloFiles['archivo']['name']);
-			for ($i = 0; $i < $aux; $i++){
-				$img = pathinfo($this->arregloFiles['archivo']['name'][$i]);
-				$tmp_name = $this->arregloFiles['archivo']['tmp_name'][$i];
-				$tamano= ($this->arregloFiles['archivo']['size'][$i] / 1000)."Kb"; //Obtenemos el tama�o en KB
 
-				$nombre_archivo = $img['filename'];
-				$extension = $img['extension'];
-				$basename = $img['basename'];
+
+            $file_names = $this->arregloFiles['archivo']['name'];
+			for ($i = 0; $i < count($file_names); $i++){
+
+                $file_name= $file_names[$i];
+
+
+                $arrayExplode = explode(".", $file_name);
+                $extension = end($arrayExplode);
+
+
+
+				$tmp_name = $this->arregloFiles['archivo']['tmp_name'][$i];
+				$tamano= ($this->arregloFiles['archivo']['size'][$i] / 1000)."Kb"; //Obtenemos el tamano en KB
+
 
 				$unico_id = uniqid();
 
@@ -530,7 +538,7 @@ class MODArchivo extends MODbase{
 			$link->commit();
 			$this->respuesta=new Mensaje();
 			$this->respuesta->setMensaje($resp_procedimiento['tipo_respuesta'],$this->nombre_archivo,$resp_procedimiento['mensaje'],$resp_procedimiento['mensaje_tec'],'base',$this->procedimiento,$this->transaccion,$this->tipo_procedimiento,$this->consulta);
-			$this->respuesta->setDatos($respuesta);
+			$this->respuesta->setDatos($resp_procedimiento['datos']);
 
 
 
@@ -710,6 +718,75 @@ class MODArchivo extends MODbase{
         return $this->respuesta;
     }
 
+    function getTypeFile(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='param.ft_archivo_sel';
+        $this->transaccion='PM_TYPEFILE_SEL';
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+        $this->setCount(false);
+
+
+        //Definicion de la lista del resultado del query
+
+        $this->captura('id_tipo_archivo','int4');
+        $this->captura('tabla','varchar');
+        $this->captura('nombre','varchar');
+        $this->captura('codigo','varchar');
+        $this->captura('extensiones_permitidas','varchar');
+        $this->captura('multiple','varchar');
+        $this->captura('obligatorio','varchar');
+        $this->captura('tipo_archivo','varchar');
+        $this->captura('orden','int4');
+        $this->captura('nombre_descriptivo','varchar');
+        $this->captura('id_archivo','int4');
+        $this->captura('estado_reg','varchar');
+        $this->captura('folder','varchar');
+        $this->captura('extension','varchar');
+        $this->captura('id_tabla','int4');
+        $this->captura('nombre_archivo','varchar');
+
+
+        $this->setParametro('id_tabla','id_tabla','int4');
+        $this->setParametro('tabla','tabla','varchar');
+
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+
+        $this->ejecutarConsulta();
+
+
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
+
+    function getFiles(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='param.ft_archivo_sel';
+        $this->transaccion='PM_FILES_SEL';
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+
+        //Definicion de la lista del resultado del query
+
+        $this->captura('id_archivo','int4');
+        $this->captura('folder','varchar');
+        $this->captura('extension','varchar');
+        $this->captura('nombre_archivo','varchar');
+
+
+        $this->setParametro('id_tipo_archivo','id_tipo_archivo','int4');
+        $this->setParametro('id_tabla','id_tabla','int4');
+
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+
+        $this->ejecutarConsulta();
+
+
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
 
 }
 ?>

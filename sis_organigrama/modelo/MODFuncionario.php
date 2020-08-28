@@ -23,6 +23,12 @@ class MODFuncionario extends MODbase{
         $this->setParametro('fecha','fecha','date');
         $this->setParametro('id_uo','id_uo','integer');
         $this->setParametro('estado_func','estado_func','varchar');
+
+        $this->setParametro('id_funcionario','id_funcionario','integer');
+        /*Bandera para interfaz externa*/
+        $this->setParametro('boa_file','boa_file','varchar');
+
+
         //Definicion de la lista del resultado del query
 
         //defino varialbes que se captran como retornod e la funcion
@@ -60,6 +66,7 @@ class MODFuncionario extends MODbase{
         $this->captura('id_biometrico','int4');
         $this->captura('nombre_archivo','varchar');
         $this->captura('extension','varchar');
+        $this->captura('folder','varchar');
         $this->captura('telefono2','varchar');
         $this->captura('celular2','varchar');
         $this->captura('nombre','varchar');
@@ -661,4 +668,3 @@ class MODFuncionario extends MODbase{
 
 }
 ?>
-
