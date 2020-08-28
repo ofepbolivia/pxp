@@ -13,7 +13,7 @@ header("content-type: text/javascript; charset=UTF-8");
 
         register: '',
         tipo: '',
-        fheight: 780,
+        fheight: 680,
         fwidth: 840,
         Grupos: [
             {
