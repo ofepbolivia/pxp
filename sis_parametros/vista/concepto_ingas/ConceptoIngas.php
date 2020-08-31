@@ -578,7 +578,8 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
                                  ['pago_unico', 'Pago Único'],
                                  ['especial', 'Especial'],
                                  ['viatico', 'Viáticos'],
-                                 ['boarep', 'Boa Rep']
+                                 ['boarep', 'Boa Rep'],
+                                 ['RO', 'Recibos Oficiales']
                                ]
                         }),
        				valueField: 'variable',

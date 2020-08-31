@@ -414,7 +414,27 @@ BEGIN
                                                     id_lugar,
                                                     rotulo_comercial,
                                                     contacto,
-                                                    num_proveedor
+                                                    num_proveedor,
+
+                                                     condicion,
+                                                     actividad,
+                                                     id_lugar_departamento,
+                                                     id_lugar_ciudad,
+
+                                                     id_moneda,
+                                                     dnrp,
+                                                     ingreso_bruto,
+                                                     tipo_habilitacion,
+                                                     motivo_habilitacion,
+                                                     codigo_alkym,
+                                                     ccorreo,
+
+                                                     codigo_externo,
+                                                     codigo_fabricante,
+
+                                                     /*Aumentando para el id alkym*/
+                                                     id_proveedor_alkym
+
                                                   )values (
                                                     p_id_usuario,
                                                     now(),
@@ -432,7 +452,26 @@ BEGIN
                                                     v_parametros.id_lugar,
                                                     UPPER(v_parametros.rotulo_comercial),
                                                     v_parametros.contacto,
-                                                    v_parametros.num_proveedor
+                                                    v_parametros.num_proveedor,
+
+                                                    v_parametros.condicion,
+                                                    v_parametros.actividad,
+                                                    v_parametros.id_lugar_fk,
+                                                    v_parametros.id_lugar_fk2,
+
+                                                    v_parametros.id_moneda,
+                                                    v_parametros.dnrp,
+                                                    v_parametros.ingreso_bruto,
+                                                    v_parametros.tipo_habilitacion,
+                                                    v_parametros.motivo_habilitacion,
+                                                    v_parametros.codigo_alkym,
+                                                    v_parametros.ccorreo,
+
+                                                    v_parametros.codigo_externo,
+                                                    v_parametros.codigo_fabricante,
+
+                                                    /*Aumentando para el id alkym*/
+                                                    v_parametros.id_alkym_proveedor
                                                    )RETURNING id_proveedor into v_id_proveedor;
                 end if;
 
