@@ -744,6 +744,7 @@ class MODArchivo extends MODbase{
         $this->captura('extension','varchar');
         $this->captura('id_tabla','int4');
         $this->captura('nombre_archivo','varchar');
+        $this->captura('field_tipo_valor','text');
 
 
         $this->setParametro('id_tabla','id_tabla','int4');

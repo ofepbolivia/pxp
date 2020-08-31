@@ -421,7 +421,25 @@ where ';
                             arch.folder,
                             arch.extension,
                             arch.id_tabla,
-                            arch.nombre_archivo
+                            arch.nombre_archivo,
+                          (
+                             SELECT ARRAY_TO_JSON(ARRAY_AGG(ROW_TO_JSON(json_rol)))
+                             FROM (
+                                      select fta.id_field_tipo_archivo,
+                                             fva.id_field_valor_archivo,
+                                             fta.nombre,
+                                             fta.tipo,
+                                             fva.valor,
+                                             fta.descripcion
+                                      from param.tfield_tipo_archivo fta
+                                               left join param.tfield_valor_archivo fva
+                                                         on fva.id_field_tipo_archivo = fta.id_field_tipo_archivo and
+                                                            fva.id_archivo = ''' || v_parametros.tabla || '''
+                                               left join param.tarchivo a on a.id_archivo = fva.id_archivo
+                                      where fta.id_tipo_archivo = ''' || v_parametros.tabla || '''
+                                        and (a.estado_reg != ''inactivo'' or a.estado_reg is NULL)
+                                  ) json_rol
+                         ) AS field_tipo_valor
                         FROM param.ttipo_archivo tipar
                                  LEFT JOIN param.tarchivo arch ON arch.id_tipo_archivo = tipar.id_tipo_archivo
                                                                       AND arch.id_tabla = ' || v_parametros.id_tabla || '
@@ -440,6 +458,7 @@ where ';
                             tipar.obligatorio,
                             tipar.tipo_archivo,
                             tipar.orden,
+                            NULL as nombre_descriptivo,
                             NULL as id_archivo,
                             NULL as estado_reg,
                             NULL as folder,
