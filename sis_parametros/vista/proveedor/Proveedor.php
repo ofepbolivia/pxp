@@ -13,8 +13,8 @@ header("content-type: text/javascript; charset=UTF-8");
 
         register: '',
         tipo: '',
-        fheight: 680,
-        fwidth: 840,
+        fheight: '80%', //680,
+        fwidth: '63%',  //840,
         Grupos: [
             {
                 layout: 'column',
