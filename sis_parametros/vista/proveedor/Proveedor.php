@@ -1280,7 +1280,8 @@ header("content-type: text/javascript; charset=UTF-8");
                     allowBlank: true,
                     anchor: '100%',
                     gwidth: 100,
-                    maxLength: 50
+                    maxLength: 20,
+                    readOnly: true
                 },
                 type: 'NumberField',
                 id_grupo: 2,
