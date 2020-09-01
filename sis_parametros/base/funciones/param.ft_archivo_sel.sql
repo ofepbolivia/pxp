@@ -439,7 +439,7 @@ where ';
                                       where fta.id_tipo_archivo = ''' || v_parametros.tabla || '''
                                         and (a.estado_reg != ''inactivo'' or a.estado_reg is NULL)
                                   ) json_rol
-                         ) AS field_tipo_valor
+                         ) AS field_type_value
                         FROM param.ttipo_archivo tipar
                                  LEFT JOIN param.tarchivo arch ON arch.id_tipo_archivo = tipar.id_tipo_archivo
                                                                       AND arch.id_tabla = ' || v_parametros.id_tabla || '
@@ -465,7 +465,7 @@ where ';
                             NULL as extension,
                             NULL as id_tabla,
                             NULL as nombre_archivo,
-                            NULL
+                            NULL as field_type_value
                         FROM param.ttipo_archivo tipar
                         WHERE tipar.tabla = ''' || v_parametros.tabla || '''
                           AND tipar.multiple = ''si'') t
