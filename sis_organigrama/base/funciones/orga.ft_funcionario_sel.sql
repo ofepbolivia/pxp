@@ -61,10 +61,10 @@ $body$
 
       --consulta:=';
       BEGIN
-	  --Creamos una tabla donde obtenemos la ultima asignacion de un funcionario
 
+	  --Creamos una tabla donde obtenemos la ultima asignacion de un funcionario
       		/*Aqui aumentamos para el filtro de funcionario y gerencia*/
-        IF (pxp.f_existe_parametro(par_tabla,'id_uo') and pxp.f_existe_parametro(par_tabla,'boa_file')) THEN
+       	  IF (pxp.f_existe_parametro(par_tabla,'id_uo') and pxp.f_existe_parametro(par_tabla,'boa_file')) THEN
           if (v_parametros.id_uo is not null) then
            select per.id_funcionario,fun.id_uo into v_id_funcionario, v_id_uo
               from segu.tusuario usu
@@ -110,7 +110,7 @@ $body$
                                       where gere.id_funcionario = v_id_funcionario);
 
               if (v_existencia_permiso > 0) then
-                  v_filtro = 'ger.id_uo = '||v_parametros.id_uo::integer||' and';
+                  v_filtro = 'ger.id_uo = '||v_id_uo_gerencia::integer||' and ';
                   v_inner = 'inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(tuo.id_uo,null::integer,null::date)';
               else
                   v_filtro = 'ger.id_uo = '||v_id_uo_gerencia::integer||' and FUNCIO.id_funcionario = '||v_id_funcionario||' and';
@@ -121,6 +121,7 @@ $body$
         /**********************************************************/
 
     IF (pxp.f_existe_parametro(par_tabla,'boa_file') and pxp.f_existe_parametro(par_tabla,'id_uo')=false) THEN
+
       	if (v_parametros.boa_file is not null) then
         	select per.id_funcionario,fun.id_uo into v_id_funcionario, v_id_uo
             from segu.tusuario usu
@@ -342,7 +343,8 @@ $body$
 	  --Creamos una tabla donde obtenemos la ultima asignacion de un funcionario
       /*Aqui aumentamos para el filtro de funcionario y gerencia*/
        	/*Aqui aumentamos para el filtro de funcionario y gerencia*/
-        IF (pxp.f_existe_parametro(par_tabla,'id_uo') and pxp.f_existe_parametro(par_tabla,'boa_file')) THEN
+        /*Aqui aumentamos para el filtro de funcionario y gerencia*/
+       	  IF (pxp.f_existe_parametro(par_tabla,'id_uo') and pxp.f_existe_parametro(par_tabla,'boa_file')) THEN
           if (v_parametros.id_uo is not null) then
            select per.id_funcionario,fun.id_uo into v_id_funcionario, v_id_uo
               from segu.tusuario usu
@@ -388,7 +390,7 @@ $body$
                                       where gere.id_funcionario = v_id_funcionario);
 
               if (v_existencia_permiso > 0) then
-                  v_filtro = 'ger.id_uo = '||v_parametros.id_uo::integer||' and';
+                  v_filtro = 'ger.id_uo = '||v_id_uo_gerencia::integer||' and ';
                   v_inner = 'inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(tuo.id_uo,null::integer,null::date)';
               else
                   v_filtro = 'ger.id_uo = '||v_id_uo_gerencia::integer||' and FUNCIO.id_funcionario = '||v_id_funcionario||' and';
@@ -399,6 +401,7 @@ $body$
         /**********************************************************/
 
     IF (pxp.f_existe_parametro(par_tabla,'boa_file') and pxp.f_existe_parametro(par_tabla,'id_uo')=false) THEN
+
       	if (v_parametros.boa_file is not null) then
         	select per.id_funcionario,fun.id_uo into v_id_funcionario, v_id_uo
             from segu.tusuario usu
