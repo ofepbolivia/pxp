@@ -87,7 +87,12 @@ header("content-type: text/javascript; charset=UTF-8");
 			title : 'Config. Variables',
 			height : '50%',
 			cls : 'DeptoVar'
-		}],
+		}, {
+            url : '../../../sis_parametros/vista/depto_moneda/DeptoMoneda.php',
+            title : 'Moneda',
+            height : '50%',
+            cls : 'DeptoMoneda'
+        }],
 		Atributos : [{
 			//configuracion del componente
 			config : {

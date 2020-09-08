@@ -2239,8 +2239,8 @@ IS 'letra de un tipo de documento';
 
 /***********************************I-SCP-MAY-PARAM-0-27/03/2020*****************************************/
 
-ALTER TABLE param.tproveedor
-  ALTER COLUMN num_proveedor TYPE VARCHAR(50);
+/*ALTER TABLE param.tproveedor
+  ALTER COLUMN num_proveedor TYPE VARCHAR(50);*/
 
 
 ALTER TABLE param.tproveedor
@@ -2316,3 +2316,23 @@ ALTER TABLE param.tproveedor
 
 
 /***********************************F-SCP-MAY-PARAM-0-27/03/2020*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-05/05/2020*****************************************/
+
+ALTER TABLE param.tproveedor
+  ALTER COLUMN num_proveedor TYPE VARCHAR(50);
+
+/***********************************F-SCP-MAY-PARAM-0-05/05/2020*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-08/09/2020*****************************************/
+CREATE TABLE param.tdepto_moneda (
+  id_depto_moneda SERIAL,
+  id_depto INTEGER,
+  id_moneda INTEGER,
+  CONSTRAINT tdepto_moneda_pkey PRIMARY KEY(id_depto_moneda)
+) INHERITS (pxp.tbase)
+WITH (oids = false);
+
+ALTER TABLE param.tdepto_moneda
+  OWNER TO postgres;
+/***********************************F-SCP-MAY-PARAM-0-08/09/2020*****************************************/
