@@ -72,9 +72,16 @@ class ACTUoFuncionario extends ACTbase{
         $this->objParam->defecto('ordenacion','FUNCIO.desc_funcionario1');
         $this->objParam->defecto('dir_ordenacion','asc');
 
+        if ($this->objParam->getParametro('tipo') != ''){
+            $this->objParam->addFiltro("UOFUNC.tipo = ''".$this->objParam->getParametro('tipo')."''");
+        }
+
         if ($this->objParam->getParametro('id_funcionario') != ''){
             $this->objParam->addFiltro("UOFUNC.id_funcionario = ".$this->objParam->getParametro('id_funcionario'));
         }
+
+
+
         //$this->objParam->addParametro('id_subsistema',$id_subsistema);
         $this->objFunSeguridad=$this->create('MODUoFuncionario');
         //ejecuta el metodo de lista funcionarios a travez de la intefaz objetoFunSeguridad

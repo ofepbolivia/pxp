@@ -484,6 +484,13 @@ class ACTFuncionario extends ACTbase{
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
 
+    //{"franklin.espinoza":"11/08/2020", "descripcion":"Verifica y Replica Fin Contrato de todos los funcionarios que finzalizaron su contrato en el dia"}
+    function verificaReplicaFinContrato(){
+        $this->objFunc=$this->create('MODFuncionario');
+        $this->res=$this->objFunc->verificaReplicaFinContrato($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
 }
 
 ?>

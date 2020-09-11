@@ -523,6 +523,22 @@ BEGIN
             v_resp = pxp.f_agrega_clave(v_resp,'envio',v_resultado::varchar);
 
         END;
+
+    /*******************************
+     #TRANSACCION:  RH_TRI_FIN_CONT_IME
+     #DESCRIPCION:	Verifica la fecha fin contrato y la replica a SQL
+     #AUTOR:	    franklin.espinoza
+     #FECHA:		11-08-2020
+    ***********************************/
+
+    elsif(par_transaccion='RH_TRI_FIN_CONT_IME')then
+        BEGIN
+        	v_resultado = orga.f_tr_update_estado_empleados();
+        	v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Replicacion Exitosa Fin Contrato de Funcionario');
+          v_resp = pxp.f_agrega_clave(v_resp,'replicacion',v_resultado::varchar);
+
+        END;
+
     else
 
          raise exception 'No existe la transaccion: %',par_transaccion;

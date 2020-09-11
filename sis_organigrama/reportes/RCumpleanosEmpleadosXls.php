@@ -61,6 +61,7 @@ class RCumpleanosEmpleadosXls
         $this->docexcel->getActiveSheet()->getColumnDimension('F')->setWidth(25);
         $this->docexcel->getActiveSheet()->getColumnDimension('G')->setWidth(25);
         $this->docexcel->getActiveSheet()->getColumnDimension('H')->setWidth(25);
+        $this->docexcel->getActiveSheet()->getColumnDimension('I')->setWidth(25);
 
         $this->docexcel->getActiveSheet()->setCellValue('A1','Nro');
         $this->docexcel->getActiveSheet()->setCellValue('B1','Gerencia');
@@ -70,6 +71,7 @@ class RCumpleanosEmpleadosXls
         $this->docexcel->getActiveSheet()->setCellValue('F1','Cargo');
         $this->docexcel->getActiveSheet()->setCellValue('G1','Oficina');
         $this->docexcel->getActiveSheet()->setCellValue('H1','Fecha Contrato');
+        $this->docexcel->getActiveSheet()->setCellValue('I1','Correo');
 
     }
 
@@ -180,8 +182,8 @@ class RCumpleanosEmpleadosXls
         $color_pestana = array('ff0000','1100ff','55ff00','3ba3ff','ff4747','697dff','78edff','ba8cff',
             'ff80bb','ff792b','ffff5e','52ff97','bae3ff','ffaf9c','bfffc6','b370ff','ffa8b4','7583ff','9aff17','ff30c8');
         $this->docexcel->getActiveSheet()->freezePaneByColumnAndRow(0,2);
-        $this->docexcel->getActiveSheet()->getStyle('A1:H1')->getAlignment()->setWrapText(true);
-        $this->docexcel->getActiveSheet()->getStyle('A1:H1')->applyFromArray($styleTitulos3);
+        $this->docexcel->getActiveSheet()->getStyle('A1:I1')->getAlignment()->setWrapText(true);
+        $this->docexcel->getActiveSheet()->getStyle('A1:I1')->applyFromArray($styleTitulos3);
         foreach ($datos as $value) {
 
                 $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(0, $fila, $numero);
@@ -192,7 +194,7 @@ class RCumpleanosEmpleadosXls
                 $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $fila, $value['nom_cargo']);
                 $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6, $fila, $value['nom_oficina']);
                 $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(7, $fila, date_format(date_create($value['fecha_contrato']), 'd/m/Y'));
-
+                $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(8, $fila, $value['email_empresa']);
                 $fila++;
                 $numero++;
         }

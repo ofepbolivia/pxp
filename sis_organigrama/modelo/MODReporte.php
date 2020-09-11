@@ -58,6 +58,7 @@ class MODReporte extends MODbase{
         $this->captura('nom_cargo','varchar');
         $this->captura('nom_oficina','varchar');
         $this->captura('fecha_contrato','date');
+        $this->captura('email_empresa','varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();

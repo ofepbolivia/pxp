@@ -125,7 +125,8 @@ BEGIN
                           per.fecha_nacimiento,
                           c.nombre as nom_cargo,
                           ofi.nombre as nom_oficina,
-                          plani.f_get_fecha_primer_contrato_empleado(uofun.id_uo_funcionario, uofun.id_funcionario, uofun.fecha_asignacion) as fecha_contrato
+                          plani.f_get_fecha_primer_contrato_empleado(uofun.id_uo_funcionario, uofun.id_funcionario, uofun.fecha_asignacion) as fecha_contrato,
+                          f.email_empresa
 
                         from orga.vfuncionario fun
                         inner join orga.tfuncionario f on f.id_funcionario = fun.id_funcionario

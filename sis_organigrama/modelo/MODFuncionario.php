@@ -666,5 +666,23 @@ class MODFuncionario extends MODbase{
         return $this->respuesta;
     }
 
+    //{"franklin.espinoza":"11/08/2020", "descripcion":"Verifica y Replica Fin Contrato de todos los funcionarios que finzalizaron su contrato en el dia"}
+    function verificaReplicaFinContrato(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='orga.ft_funcionario_ime';
+        $this->transaccion='RH_TRI_FIN_CONT_IME';
+        $this->tipo_procedimiento='IME';
+
+        //Define los parametros para la funcion
+        //$this->setParametro('id_funcionario','id_funcionario','integer');
+
+        $this->captura('replicacion','varchar');
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
+
 }
 ?>
