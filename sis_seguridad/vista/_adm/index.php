@@ -4,6 +4,7 @@
 include('../../../lib/lib_control/CTSesion.php');
 session_start();
 include(dirname(__FILE__).'/../../../lib/DatosGenerales.php');
+
 if($_SESSION["_FORSSL"]==="SI"){
     session_set_cookie_params (0,$_SESSION["_FOLDER"], '' ,true ,false);
 }
@@ -170,7 +171,13 @@ if (isset($_SESSION["_INCLUDE_GMAPS"]) && $_SESSION["_INCLUDE_GMAPS"] == 'si') {
 echo "<script type=\"text/javascript\" charset=\"UTF-8\" src=\"resources/Phx.CP.main.php?nueva_sesion=false&estado_sesion=".$estado_sesion."\"></script>";
 ?>
 
-
+<!-- Aumentando para crear un local storage para boaFile (Ismael Valdivia) -->
+<?php
+if ($estado_sesion == 'inactiva' ) {
+  echo "<script type=\"text/javascript\" charset=\"UTF-8\">delete localStorage.aut</script>";
+}
+?>
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 <!-- tipo de interfaces -->
 <script type='text/javascript' charset="UTF-8" src='../../../lib/lib_vista/baseInterfaz.js'></script>
 <script type='text/javascript' charset="UTF-8" src='../../../lib/lib_vista/gridInterfaz.js'></script>
