@@ -579,7 +579,8 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
                                  ['especial', 'Especial'],
                                  ['viatico', 'Viáticos'],
                                  ['boarep', 'Boa Rep'],
-                                 ['RO', 'Recibos Oficiales']
+                                 ['RO', 'Recibos Oficiales'],
+																 ['gestion_materiales', 'Gestión de Materiales']
                                ]
                         }),
        				valueField: 'variable',
