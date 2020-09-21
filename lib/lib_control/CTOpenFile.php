@@ -92,7 +92,7 @@ if (file_exists($ruta_archivo)){
 	else {
 		header('Content-Description: File Transfer');
 		header('Content-Type: application/octet-stream');
-		header('Content-Disposition: attachment; filename="'$fileName.'.' . $_GET['extension']);
+		header('Content-Disposition: attachment; filename="'.$fileName.'.' . $_GET['extension']);
 		header('Content-Transfer-Encoding: binary');
 		header('Connection: Keep-Alive');
 		header('Expires: 0');
