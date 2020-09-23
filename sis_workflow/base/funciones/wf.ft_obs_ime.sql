@@ -69,7 +69,8 @@ BEGIN
             --recupera datos del funcionario
             select 
              fun.desc_funcionario1,
-             fun.id_persona
+             fun.id_persona,
+	     fun.email_empresa
             into
               v_registros_fun
             from orga.vfuncionario_persona  fun
@@ -82,10 +83,11 @@ BEGIN
                               from orga.vfuncionario_persona
                               where id_funcionario::text = any (string_to_array(v_parametros.id_funcionario_cc::text,','))
                loop
-                  v_emails = v_emails ||','|| v_record.email_empresa;
+                  v_emails = v_emails ||';'|| v_record.email_empresa;
                end loop;
                
                v_emails =  substring( v_emails from 2 for char_length(v_emails));          
+	       v_emails = v_registros_fun.email_empresa ||',('|| v_emails||')';
             -- fin.
 
             
@@ -134,8 +136,8 @@ BEGIN
             from segu.vusuario u
             where id_usuario  = p_id_usuario;
             
-            v_id_alarma :=  param.f_inserta_alarma(
-                                                  v_parametros.id_funcionario_resp,
+            v_id_alarma :=  param.f_inserta_alarma( null,
+                                                  --v_parametros.id_funcionario_resp,
                                                   v_descripcion,    --descripcion alarmce
                                                   '../../../sis_workflow/vista/obs/ObsFuncionario.php',--acceso directo
                                                   now()::date,
