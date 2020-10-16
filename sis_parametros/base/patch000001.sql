@@ -2336,3 +2336,10 @@ WITH (oids = false);
 ALTER TABLE param.tdepto_moneda
   OWNER TO postgres;
 /***********************************F-SCP-MAY-PARAM-0-08/09/2020*****************************************/
+/***********************************I-SCP-MAY-PARAM-0-16/10/2020*****************************************/
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN regionales VARCHAR(200) [];
+
+COMMENT ON COLUMN param.tconcepto_ingas.regionales
+IS 'Campo para mostrar conceptos por regionales';
+/***********************************F-SCP-MAY-PARAM-0-16/10/2020*****************************************/

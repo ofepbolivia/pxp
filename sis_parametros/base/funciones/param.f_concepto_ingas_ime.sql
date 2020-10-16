@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION param.f_concepto_ingas_ime (
   p_administrador integer,
   p_id_usuario integer,
@@ -268,8 +266,13 @@ BEGIN
 
 
              update param.tconcepto_ingas set
-			  sw_autorizacion = string_to_array(v_parametros.sw_autorizacion,',')::varchar[]
+			  sw_autorizacion = string_to_array(v_parametros.sw_autorizacion,',')::varchar[],
+              /*Aumentando para incluir regionales en los conceptos de gasto (Ismael Valdivia 16/10/2020)*/
+              regionales = string_to_array(v_parametros.regionales,',')::varchar[]
+              /********************************************************************************************/
              where id_concepto_ingas=v_parametros.id_concepto_ingas;
+
+
 
              --si se integra con endesis actualizamos la tabla conceptoingas
              if (pxp.f_get_variable_global('sincronizar') = 'true') then
@@ -358,3 +361,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION param.f_concepto_ingas_ime (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;

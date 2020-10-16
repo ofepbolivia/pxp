@@ -278,6 +278,22 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 			grid:true,
 			form:false
 		 },
+		 {
+		 config:{
+			 name: 'regionales',
+			 fieldLabel: 'Regionales',
+			 allowBlank: true,
+			 anchor: '80%',
+			 gwidth: 200,
+			 maxLength:500
+		 },
+		 type:'TextArea',
+		 filters: {pfiltro:'conig.regionales', type:'string'},
+
+		 id_grupo:1,
+		 grid:true,
+		 form:false
+		},
 
 		{
 			config: {
@@ -562,39 +578,114 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 
 
             items: [
-                 {
-       				name:'sw_autorizacion',
-       				xtype:"awesomecombo",
-       				fieldLabel:'Autorizaciones',
-       				allowBlank: true,
-       				emptyText:'Autorizaciones...',
-       				store: new Ext.data.ArrayStore({
-                        fields: ['variable', 'valor'],
-                        data : [ ['adquisiciones', 'Adquisiciones'],
-                                 ['pago_directo', 'Pago Recurrente'],
-                                 ['caja_chica', 'Caja Chica'],
-                                 ['fondo_avance', 'Fondo en Avance'],
-                                 ['contrato', 'Contratos'],
-                                 ['pago_unico', 'Pago Único'],
-                                 ['especial', 'Especial'],
-                                 ['viatico', 'Viáticos'],
-                                 ['boarep', 'Boa Rep'],
-                                 ['RO', 'Recibos Oficiales'],
-																 ['gestion_materiales', 'Gestión de Materiales']
-                               ]
-                        }),
-       				valueField: 'variable',
-				    displayField: 'valor',
-				    mode: 'local',
-	       		    forceSelection:true,
-       				typeAhead: true,
-           			triggerAction: 'all',
-           			lazyRender: true,
-       				queryDelay: 1000,
-       				width: 250,
-       				minChars: 2 ,
-	       			enableMultiSelect: true
-       			}]
+							{
+								 name:'sw_autorizacion',
+								 xtype:"awesomecombo",
+								 fieldLabel:'Autorizaciones',
+								 allowBlank: true,
+								 emptyText:'Autorizaciones...',
+								 store : new Ext.data.JsonStore({
+									 url : '../../sis_parametros/control/Catalogo/listarCatalogoCombo',
+									 id : 'id_catalogo',
+									 root : 'datos',
+									 sortInfo : {
+										 field : 'codigo',
+										 direction : 'ASC'
+									 },
+									 totalProperty : 'total',
+									 fields: ['codigo','descripcion'],
+									 remoteSort : true,
+									 baseParams:{
+										cod_subsistema:'PARAM',
+										catalogo_tipo:'autorizaciones_concepto'
+									},
+								 }),
+								 valueField: 'codigo',
+								 displayField: 'descripcion',
+								 mode: 'remote',
+								 forceSelection:true,
+								 typeAhead: true,
+								 triggerAction: 'all',
+								 lazyRender: true,
+								 queryDelay: 1000,
+								 width: 250,
+								 minChars: 2 ,
+							   enableMultiSelect: true,
+								 pageSize: 200,
+	 							 queryDelay: 100
+							},
+
+							{
+								 name:'regionales',
+								 xtype:"awesomecombo",
+								 fieldLabel:'Regionales',
+								 allowBlank: true,
+								 emptyText:'Regionales...',
+								 store : new Ext.data.JsonStore({
+									 url : '../../sis_parametros/control/Catalogo/listarCatalogoCombo',
+									 id : 'id_catalogo',
+									 root : 'datos',
+									 sortInfo : {
+										 field : 'codigo',
+										 direction : 'ASC'
+									 },
+									 totalProperty : 'total',
+									 fields: ['codigo','descripcion'],
+									 remoteSort : true,
+									 baseParams:{
+										cod_subsistema:'PARAM',
+										catalogo_tipo:'regionales_conceptos'
+									},
+								 }),
+								 valueField: 'codigo',
+								 displayField: 'descripcion',
+								 mode: 'remote',
+								 forceSelection:true,
+								 typeAhead: true,
+								 triggerAction: 'all',
+								 lazyRender: true,
+								 queryDelay: 1000,
+								 width: 250,
+								 minChars: 2 ,
+							   enableMultiSelect: true,
+								 pageSize: 200,
+	 							 queryDelay: 100
+							},
+
+						// 	{
+       			// 	name:'sw_autorizacion',
+       			// 	xtype:"awesomecombo",
+       			// 	fieldLabel:'Autorizaciones',
+       			// 	allowBlank: true,
+       			// 	emptyText:'Autorizaciones...',
+       			// 	store: new Ext.data.ArrayStore({
+            //             fields: ['variable', 'valor'],
+            //             data : [ ['adquisiciones', 'Adquisiciones'],
+            //                      ['pago_directo', 'Pago Recurrente'],
+            //                      ['caja_chica', 'Caja Chica'],
+            //                      ['fondo_avance', 'Fondo en Avance'],
+            //                      ['contrato', 'Contratos'],
+            //                      ['pago_unico', 'Pago Único'],
+            //                      ['especial', 'Especial'],
+            //                      ['viatico', 'Viáticos'],
+            //                      ['boarep', 'Boa Rep'],
+            //                      ['RO', 'Recibos Oficiales'],
+						// 										 ['gestion_materiales', 'Gestión de Materiales']
+            //                    ]
+            //             }),
+       			// 	valueField: 'variable',
+				    // displayField: 'valor',
+				    // mode: 'local',
+	       		//     forceSelection:true,
+       			// 	typeAhead: true,
+           	// 		triggerAction: 'all',
+           	// 		lazyRender: true,
+       			// 	queryDelay: 1000,
+       			// 	width: 250,
+       			// 	minChars: 2 ,
+	       		// 	enableMultiSelect: true
+       			// }
+					]
         });
 
 
@@ -626,7 +717,8 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
             }]
         });
 
-         this.cmpAuto = this.formAuto.getForm().findField('sw_autorizacion');
+					this.cmpAuto = this.formAuto.getForm().findField('sw_autorizacion');
+				 this.cmpRegionales = this.formAuto.getForm().findField('regionales');
 
 
 	},
@@ -635,6 +727,7 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 		var data = this.getSelectedData();
 		if(data){
 			this.cmpAuto.setValue(data.sw_autorizacion);
+			this.cmpRegionales.setValue(data.regionales);
 			this.wAuto.show();
 		}
 
@@ -645,7 +738,8 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
             Ext.Ajax.request({
                 url: '../../sis_parametros/control/ConceptoIngas/editAuto',
                 params: {
-                	      sw_autorizacion: this.cmpAuto.getValue(),
+												sw_autorizacion: this.cmpAuto.getValue(),
+                	      regionales: this.cmpRegionales.getValue(),
                 	      id_concepto_ingas: d.id_concepto_ingas
                 	    },
                 success: this.successSinc,
@@ -694,7 +788,8 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 		{name:'almacenable', type: 'string'},
 		'id_grupo_ots','filtro_ot','requiere_ot',
 		'sw_autorizacion','desc_unidad_medida','id_unidad_medida',
-		'nandina','ruta_foto','id_cat_concepto','desc_cat_concepto','codigo'
+		'nandina','ruta_foto','id_cat_concepto','desc_cat_concepto','codigo',
+		'regionales'
 
 	],
 	sortInfo:{
