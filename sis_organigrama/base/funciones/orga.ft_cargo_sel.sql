@@ -69,9 +69,9 @@ $body$
 						cargo.id_usuario_mod,
 						usu1.cuenta as usr_reg,
 						usu2.cuenta as usr_mod,
-						tipcon.nombre,
-						escsal.nombre,
-						ofi.nombre,
+						tipcon.nombre as nombre_tipo_contrato,
+						escsal.nombre as nombre_escala,
+						ofi.nombre as nombre_oficina,
 						(case when (orga.f_get_empleado_x_item(cargo.id_cargo)  is null and cargo.fecha_fin is null) then
 						  ''ACEFALO''
 						else
