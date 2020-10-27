@@ -151,7 +151,7 @@ BEGIN
                 and uof.id_funcionario = par_id_funcionario;
 
               --niveles 6=AREA 7=FUNCIONARIO BASE 8=FUNCIONARIO BASE II 9=FUNCIONARIO BASE III
-              IF (v_numero_nivel in (5,6) ) THEN
+              IF (v_numero_nivel in (8,9) ) THEN
 
                 WITH RECURSIVE path(id_funcionario,id_uo,presupuesta,gerencia,numero_nivel) AS (
                                   SELECT uofun.id_funcionario,uo.id_uo,uo.presupuesta,uo.gerencia, no.numero_nivel
@@ -179,38 +179,9 @@ BEGIN
                    into v_funcionario
                    FROM path
                    WHERE     id_funcionario is not null
-                         and id_funcionario !=  par_id_funcionario and numero_nivel  in (2.2)  ;
+                         and id_funcionario !=  par_id_funcionario and numero_nivel  in (5)  ;
 
-                    IF (v_numero_nivel in (6) and v_funcionario is null)THEN
-                   WITH RECURSIVE path(id_funcionario,id_uo,presupuesta,gerencia,numero_nivel) AS (
-                                  SELECT uofun.id_funcionario,uo.id_uo,uo.presupuesta,uo.gerencia, no.numero_nivel
-                                  FROM orga.tuo_funcionario uofun
-                                  inner join orga.tuo uo on uo.id_uo = uofun.id_uo
-                                  inner join orga.tnivel_organizacional no on no.id_nivel_organizacional = uo.id_nivel_organizacional
-                                  WHERE uofun.fecha_asignacion <=  par_fecha
-                                  and (uofun.fecha_finalizacion is null or uofun.fecha_finalizacion >=  par_fecha)
-                                  and uofun.estado_reg = 'activo'
-                                  and uofun.id_funcionario =  par_id_funcionario
-                              UNION
-                                  SELECT uofun.id_funcionario,euo.id_uo_padre,uo.presupuesta,uo.gerencia,no.numero_nivel
-                                  FROM orga.testructura_uo euo
-                                  inner join orga.tuo uo on uo.id_uo = euo.id_uo_padre_operativo
-                                  inner join orga.tnivel_organizacional no on no.id_nivel_organizacional = uo.id_nivel_organizacional
-                                  inner join path hijo on hijo.id_uo = euo.id_uo_hijo
-                                  left join orga.tuo_funcionario uofun on uo.id_uo = uofun.id_uo
-                                  and uofun.estado_reg = 'activo'
-                                  and uofun.fecha_asignacion <= par_fecha  and (uofun.fecha_finalizacion is null or uofun.fecha_finalizacion >= par_fecha)
-
-                              )
-
-                   		 SELECT  id_funcionario
-                         into v_funcionario
-                         FROM path
-                         WHERE     id_funcionario is not null
-                         	and id_funcionario !=  par_id_funcionario and numero_nivel  in (2)  ;
-
-                   END IF;
-                   IF (v_numero_nivel in (5) )THEN
+                    IF (v_numero_nivel in (9) and v_funcionario is null)THEN
                    WITH RECURSIVE path(id_funcionario,id_uo,presupuesta,gerencia,numero_nivel) AS (
                                   SELECT uofun.id_funcionario,uo.id_uo,uo.presupuesta,uo.gerencia, no.numero_nivel
                                   FROM orga.tuo_funcionario uofun
@@ -239,7 +210,36 @@ BEGIN
                          	and id_funcionario !=  par_id_funcionario and numero_nivel  in (4)  ;
 
                    END IF;
-        ELSIF (v_numero_nivel in (7,8,9) ) THEN
+                   IF (v_numero_nivel in (8) )THEN
+                   WITH RECURSIVE path(id_funcionario,id_uo,presupuesta,gerencia,numero_nivel) AS (
+                                  SELECT uofun.id_funcionario,uo.id_uo,uo.presupuesta,uo.gerencia, no.numero_nivel
+                                  FROM orga.tuo_funcionario uofun
+                                  inner join orga.tuo uo on uo.id_uo = uofun.id_uo
+                                  inner join orga.tnivel_organizacional no on no.id_nivel_organizacional = uo.id_nivel_organizacional
+                                  WHERE uofun.fecha_asignacion <=  par_fecha
+                                  and (uofun.fecha_finalizacion is null or uofun.fecha_finalizacion >=  par_fecha)
+                                  and uofun.estado_reg = 'activo'
+                                  and uofun.id_funcionario =  par_id_funcionario
+                              UNION
+                                  SELECT uofun.id_funcionario,euo.id_uo_padre,uo.presupuesta,uo.gerencia,no.numero_nivel
+                                  FROM orga.testructura_uo euo
+                                  inner join orga.tuo uo on uo.id_uo = euo.id_uo_padre_operativo
+                                  inner join orga.tnivel_organizacional no on no.id_nivel_organizacional = uo.id_nivel_organizacional
+                                  inner join path hijo on hijo.id_uo = euo.id_uo_hijo
+                                  left join orga.tuo_funcionario uofun on uo.id_uo = uofun.id_uo
+                                  and uofun.estado_reg = 'activo'
+                                  and uofun.fecha_asignacion <= par_fecha  and (uofun.fecha_finalizacion is null or uofun.fecha_finalizacion >= par_fecha)
+
+                              )
+
+                   		 SELECT  id_funcionario
+                         into v_funcionario
+                         FROM path
+                         WHERE     id_funcionario is not null
+                         	and id_funcionario !=  par_id_funcionario and numero_nivel  in (7)  ;
+
+                   END IF;
+        ELSIF (v_numero_nivel in (10,11,12) ) THEN
 
                 WITH RECURSIVE path(id_funcionario,id_uo,presupuesta,gerencia,numero_nivel) AS (
                                   SELECT uofun.id_funcionario,uo.id_uo,uo.presupuesta,uo.gerencia, no.numero_nivel
@@ -270,7 +270,7 @@ BEGIN
                    into v_funcionario
                    FROM path
                    WHERE     id_funcionario is not null
-                         and id_funcionario !=  par_id_funcionario and numero_nivel  in (4,6,7)  ;
+                         and id_funcionario !=  par_id_funcionario and numero_nivel  in (7,9,10)  ;
 
 
                    IF (v_numero_nivel in (7,8) and v_funcionario is null)THEN
@@ -299,11 +299,11 @@ BEGIN
                          into v_funcionario
                          FROM path
                          WHERE     id_funcionario is not null
-                         	and id_funcionario !=  par_id_funcionario and numero_nivel  in (2)  ;
+                         	and id_funcionario !=  par_id_funcionario and numero_nivel  in (4)  ;
 
                    END IF;
 
-                   IF (v_numero_nivel in (9) and v_funcionario is null)THEN
+                   IF (v_numero_nivel in (12) and v_funcionario is null)THEN
                    WITH RECURSIVE path(id_funcionario,id_uo,presupuesta,gerencia,numero_nivel) AS (
                                   SELECT uofun.id_funcionario,uo.id_uo,uo.presupuesta,uo.gerencia, no.numero_nivel
                                   FROM orga.tuo_funcionario uofun
@@ -329,11 +329,11 @@ BEGIN
                          into v_funcionario
                          FROM path
                          WHERE     id_funcionario is not null
-                         	and id_funcionario !=  par_id_funcionario and numero_nivel  in (2)  ;
+                         	and id_funcionario !=  par_id_funcionario and numero_nivel  in (4)  ;
 
                    END IF;
 
-        ELSIF (v_numero_nivel in (2.2,4)) THEN
+        ELSIF (v_numero_nivel in (5,7)) THEN
          --raise exception 'llega2';
                    WITH RECURSIVE path(id_funcionario,id_uo,presupuesta,gerencia,numero_nivel) AS (
                                   SELECT uofun.id_funcionario,uo.id_uo,uo.presupuesta,uo.gerencia, no.numero_nivel
@@ -359,7 +359,7 @@ BEGIN
                    into v_funcionario
                    FROM path
                    WHERE     id_funcionario is not null
-                         and id_funcionario !=  par_id_funcionario and numero_nivel  in (2)  ;
+                         and id_funcionario !=  par_id_funcionario and numero_nivel  in (4)  ;
 
                    IF (v_funcionario is null)THEN
                    WITH RECURSIVE path(id_funcionario,id_uo,presupuesta,gerencia,numero_nivel) AS (
@@ -387,11 +387,11 @@ BEGIN
                          into v_funcionario
                          FROM path
                          WHERE     id_funcionario is not null
-                         	and id_funcionario !=  par_id_funcionario and numero_nivel  in (1)  ;
+                         	and id_funcionario !=  par_id_funcionario and numero_nivel  in (2)  ;
 
                    END IF;
 
-        ELSIF (v_numero_nivel in (2,3)) THEN
+        ELSIF (v_numero_nivel in (4,3)) THEN
            			WITH RECURSIVE path(id_funcionario,id_uo,presupuesta,gerencia,numero_nivel) AS (
                                     SELECT uofun.id_funcionario,uo.id_uo,uo.presupuesta,uo.gerencia, no.numero_nivel
                                     FROM orga.tuo_funcionario uofun
@@ -416,7 +416,7 @@ BEGIN
                      into v_funcionario
                      FROM path
                      WHERE     id_funcionario is not null
-                           and id_funcionario !=  par_id_funcionario and numero_nivel in (1)  ;
+                           and id_funcionario !=  par_id_funcionario and numero_nivel in (2)  ;
 
 
 
