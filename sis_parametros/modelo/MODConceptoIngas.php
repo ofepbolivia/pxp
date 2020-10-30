@@ -49,6 +49,7 @@ class MODConceptoIngas extends MODbase{
 		$this->captura('desc_cat_concepto','varchar');
 		$this->captura('codigo','varchar');
 		$this->captura('regionales','varchar');
+		$this->captura('nivel_permiso','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -317,6 +318,7 @@ class MODConceptoIngas extends MODbase{
 		$this->setParametro('id_concepto_ingas','id_concepto_ingas','int4');
 		$this->setParametro('sw_autorizacion','sw_autorizacion','varchar');
 		$this->setParametro('regionales','regionales','varchar');
+		$this->setParametro('nivel_permiso','nivel_permiso','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();

@@ -294,6 +294,22 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 		 grid:true,
 		 form:false
 		},
+		{
+		config:{
+			name: 'nivel_permiso',
+			fieldLabel: 'Nivel Permiso',
+			allowBlank: true,
+			anchor: '80%',
+			gwidth: 200,
+			maxLength:500
+		},
+		type:'TextArea',
+		filters: {pfiltro:'conig.nivel_permiso', type:'string'},
+
+		id_grupo:1,
+		grid:true,
+		form:false
+	 },
 
 		{
 			config: {
@@ -652,6 +668,45 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 	 							 queryDelay: 100
 							},
 
+							/*Aumentando el nivel del Permiso*/
+							{
+								 name:'nivel_permiso',
+								 xtype:"awesomecombo",
+								 fieldLabel:'Nivel Permiso',
+								 allowBlank: true,
+								 emptyText:'Nivel Permiso...',
+								 store : new Ext.data.JsonStore({
+									 url : '../../sis_parametros/control/Catalogo/listarCatalogoCombo',
+									 id : 'id_catalogo',
+									 root : 'datos',
+									 sortInfo : {
+										 field : 'codigo',
+										 direction : 'ASC'
+									 },
+									 totalProperty : 'total',
+									 fields: ['codigo','descripcion'],
+									 remoteSort : true,
+									 baseParams:{
+										cod_subsistema:'PARAM',
+										catalogo_tipo:'nivel_permiso'
+									},
+								 }),
+								 valueField: 'codigo',
+								 displayField: 'descripcion',
+								 mode: 'remote',
+								 forceSelection:true,
+								 typeAhead: true,
+								 triggerAction: 'all',
+								 lazyRender: true,
+								 queryDelay: 1000,
+								 width: 250,
+								 minChars: 2 ,
+							   enableMultiSelect: true,
+								 pageSize: 200,
+	 							 queryDelay: 100
+							},
+							/*********************************/
+
 						// 	{
        			// 	name:'sw_autorizacion',
        			// 	xtype:"awesomecombo",
@@ -718,7 +773,8 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
         });
 
 					this.cmpAuto = this.formAuto.getForm().findField('sw_autorizacion');
-				 this.cmpRegionales = this.formAuto.getForm().findField('regionales');
+					this.cmpRegionales = this.formAuto.getForm().findField('regionales');
+				 	this.cmpNivelPermiso = this.formAuto.getForm().findField('nivel_permiso');
 
 
 	},
@@ -728,6 +784,7 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 		if(data){
 			this.cmpAuto.setValue(data.sw_autorizacion);
 			this.cmpRegionales.setValue(data.regionales);
+			this.cmpNivelPermiso.setValue(data.nivel_permiso);
 			this.wAuto.show();
 		}
 
@@ -739,7 +796,8 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
                 url: '../../sis_parametros/control/ConceptoIngas/editAuto',
                 params: {
 												sw_autorizacion: this.cmpAuto.getValue(),
-                	      regionales: this.cmpRegionales.getValue(),
+												regionales: this.cmpRegionales.getValue(),
+                	      nivel_permiso: this.cmpNivelPermiso.getValue(),
                 	      id_concepto_ingas: d.id_concepto_ingas
                 	    },
                 success: this.successSinc,
@@ -789,7 +847,7 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 		'id_grupo_ots','filtro_ot','requiere_ot',
 		'sw_autorizacion','desc_unidad_medida','id_unidad_medida',
 		'nandina','ruta_foto','id_cat_concepto','desc_cat_concepto','codigo',
-		'regionales'
+		'regionales','nivel_permiso'
 
 	],
 	sortInfo:{

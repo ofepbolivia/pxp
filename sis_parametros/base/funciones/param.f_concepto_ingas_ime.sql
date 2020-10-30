@@ -268,7 +268,8 @@ BEGIN
              update param.tconcepto_ingas set
 			  sw_autorizacion = string_to_array(v_parametros.sw_autorizacion,',')::varchar[],
               /*Aumentando para incluir regionales en los conceptos de gasto (Ismael Valdivia 16/10/2020)*/
-              regionales = string_to_array(v_parametros.regionales,',')::varchar[]
+              regionales = string_to_array(v_parametros.regionales,',')::varchar[],
+              nivel_permiso = string_to_array(v_parametros.nivel_permiso,',')::varchar[]
               /********************************************************************************************/
              where id_concepto_ingas=v_parametros.id_concepto_ingas;
 

@@ -76,7 +76,8 @@ BEGIN
                         (cc.codigo ||'' - ''||cc.nombre)::varchar as desc_cat_concepto,
                         conig.codigo,
                         /*Aumentando para Mostrar las regionales seleccionadas (Ismael Valdivia 17/10/2020)*/
-                        array_to_string( conig.regionales, '','',''null'')::varchar
+                        array_to_string( conig.regionales, '','',''null'')::varchar,
+                        array_to_string( conig.nivel_permiso, '','',''null'')::varchar
                         /***********************************************************************************/
                         from param.tconcepto_ingas conig
 						inner join segu.tusuario usu1 on usu1.id_usuario = conig.id_usuario_reg

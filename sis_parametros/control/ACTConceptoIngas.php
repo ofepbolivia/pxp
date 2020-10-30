@@ -109,7 +109,7 @@ class ACTConceptoIngas extends ACTbase{
         }
 				/**************************************************************************************************************/
 
-				/*Aumentando para filtrar solo los conceptos de acuero al grupo de la ot (Ismael Valdivia 24/09/2020)*/				
+				/*Aumentando para filtrar solo los conceptos de acuero al grupo de la ot (Ismael Valdivia 24/09/2020)*/
 			 if($this->objParam->getParametro('id_grupo_ots')!=''){
 					 $this->objParam->addFiltro("''{".$this->objParam->getParametro('id_grupo_ots')."}''::integer[] && conig.id_grupo_ots");
 			 }

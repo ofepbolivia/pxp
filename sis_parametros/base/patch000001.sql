@@ -2343,3 +2343,10 @@ ALTER TABLE param.tconcepto_ingas
 COMMENT ON COLUMN param.tconcepto_ingas.regionales
 IS 'Campo para mostrar conceptos por regionales';
 /***********************************F-SCP-MAY-PARAM-0-16/10/2020*****************************************/
+/***********************************I-SCP-IRVA-PARAM-0-30/10/2020*****************************************/
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN nivel_permiso VARCHAR(200) [];
+
+COMMENT ON COLUMN param.tconcepto_ingas.nivel_permiso
+IS 'Campo para poner el nivel del permiso ejemplo ATO, CTO, CARGA';
+/***********************************F-SCP-IRVA-PARAM-0-30/10/2020*****************************************/
