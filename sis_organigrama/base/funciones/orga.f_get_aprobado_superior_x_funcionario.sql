@@ -273,7 +273,7 @@ BEGIN
                          and id_funcionario !=  par_id_funcionario and numero_nivel  in (7,9,10)  ;
 
 
-                   IF (v_numero_nivel in (7,8) and v_funcionario is null)THEN
+                   IF (v_numero_nivel in (7,8,10) and v_funcionario is null)THEN
                    WITH RECURSIVE path(id_funcionario,id_uo,presupuesta,gerencia,numero_nivel) AS (
                                   SELECT uofun.id_funcionario,uo.id_uo,uo.presupuesta,uo.gerencia, no.numero_nivel
                                   FROM orga.tuo_funcionario uofun
