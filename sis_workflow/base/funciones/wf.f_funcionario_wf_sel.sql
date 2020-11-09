@@ -531,6 +531,61 @@ BEGIN
 
                  END IF;
 
+
+       /* (may) 09-11-2020
+         Recuperamos el funcionario de la solicitud desde la cotizacion
+
+       */
+       ELSEIF v_nombre_func_list ='ADQ_COT_FUN'  THEN
+
+       				SELECT cot.id_proceso_wf
+                    INTO v_id_proceso_wf
+                    FROM adq.tcotizacion cot
+                    WHERE cot.id_estado_wf = p_id_estado_wf;
+
+                 IF p_count=FALSE then
+
+
+                      v_consulta='select
+                            fun.id_funcionario,
+                            fun.desc_funcionario1 as desc_funcionario,
+                            ''RPC''::text  as desc_funcionario_cargo,
+                            1 as prioridad
+                          from wf.ttipo_estado tie
+                           inner join wf.testado_wf tes on tes.id_tipo_estado = tie.id_tipo_estado
+                           inner join  orga.vfuncionario fun on fun.id_funcionario = tes.id_funcionario
+
+                          where tie.codigo = ''borrador''
+                          and tes.id_proceso_wf ='||v_id_proceso_wf||'
+
+                          and '||p_filtro||'
+                            order by fun.desc_funcionario1
+                            limit 1 ';
+
+                         FOR g_registros in execute (v_consulta)LOOP
+                  		   RETURN NEXT g_registros;
+                		 END LOOP;
+
+                 ELSE
+
+                        v_consulta='select
+                            COUNT(fun.id_funcionario)
+                            from wf.ttipo_estado tie
+                           inner join wf.testado_wf tes on tes.id_tipo_estado = tie.id_tipo_estado
+                           inner join  orga.vfuncionario fun on fun.id_funcionario = tes.id_funcionario
+
+                          where tie.codigo = ''borrador''
+                          and tes.id_proceso_wf ='||v_id_proceso_wf||'
+                          and '||p_filtro;
+
+                         FOR g_registros in execute (v_consulta)LOOP
+                  		   RETURN NEXT g_registros;
+                		 END LOOP;
+
+
+                 END IF;
+
+
        --Adquisiciones aprobacion del funcionario aprobador
        ELSEIF v_nombre_func_list ='ADQ_APR_SOL_COMPRA'  THEN
 
