@@ -324,3 +324,19 @@ width: 2px;
 	background-image:url(awe_left_arrow_all.png) !important;
 
 }
+
+.bnew-sigep {
+	background-image:url(../sigep/nuevo.png) !important;
+}
+.bdel-sigep {
+	background-image:url(../sigep/eliminar.png) !important;
+
+}
+.bver-sigep {
+	 background-image:url(../sigep/verificar.png) !important;
+
+ }
+.bdes-sigep {
+	background-image:url(../sigep/desverificar.png) !important;
+
+}

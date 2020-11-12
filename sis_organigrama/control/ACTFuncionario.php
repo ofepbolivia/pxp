@@ -330,6 +330,42 @@ class ACTFuncionario extends ACTbase{
             $this->res=$this->objFunSeguridad->insertarFuncionario($this->objParam);
         }
         else{
+
+            /*$host = 'http://172.17.45.127/GeneradorUsuario/Home/Generar';
+
+            $data = array('idEmpleadoENDE' => $this->objParam->getParametro('id_funcionario'));
+            $json_data = json_encode($data);
+            $headers = array(
+                "Content-Type: application/json",
+                "Cache-Control: no-cache",
+                'Content-Length: ' . strlen($json_data)
+            );
+
+            $curl = curl_init();
+            $curl_array = array(
+                CURLOPT_URL =>  $host,//. "?" . http_build_query($data),
+                CURLOPT_POSTFIELDS => $json_data,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_HTTPHEADER => $headers
+
+            );
+
+            curl_setopt_array($curl,$curl_array);
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            //$http_code = curl_getinfo( $curl, CURLINFO_HTTP_CODE );
+            curl_close($curl);
+            //var_dump(curl_getinfo($curl));
+            $res = json_decode($response, true);
+
+            var_dump('respuesta', $response, $res, $err);exit;*/
+
             //ejecuta el metodo de modificar funcionario de la clase MODFuncionario a travez
             //de la intefaz objetoFunSeguridad
             $this->res=$this->objFunSeguridad->modificarFuncionario($this->objParam);

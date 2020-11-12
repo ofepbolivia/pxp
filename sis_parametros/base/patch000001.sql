@@ -2350,3 +2350,12 @@ ALTER TABLE param.tconcepto_ingas
 COMMENT ON COLUMN param.tconcepto_ingas.nivel_permiso
 IS 'Campo para poner el nivel del permiso ejemplo ATO, CTO, CARGA';
 /***********************************F-SCP-IRVA-PARAM-0-30/10/2020*****************************************/
+
+/***********************************I-SCP-FEA-PARAM-0-30/10/2020*****************************************/
+ALTER TABLE param.tproveedor
+  ADD COLUMN razon_social_sigep VARCHAR(150);
+
+COMMENT ON COLUMN param.tproveedor.razon_social_sigep
+IS 'Rotulo que se recupera del sigep por servicio.';
+
+/***********************************F-SCP-FEA-PARAM-0-30/10/2020*****************************************/
