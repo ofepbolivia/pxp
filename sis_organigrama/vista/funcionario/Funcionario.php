@@ -98,9 +98,10 @@ header("content-type: text/javascript; charset=UTF-8");
         bactGroups:[0,1,2],
         bexcelGroups:[0,1,2],
         gruposBarraTareas: [
-            {name:  'activo', title: '<h1 style="text-align: center; color: green;">ACTIVOS</h1>',grupo: 0, height: 0} ,
-            {name: 'inactivo', title: '<h1 style="text-align: center; color: red;">INACTIVOS</h1>', grupo: 1, height: 1},
-            {name: 'sin_asignacion', title: '<h1 style="text-align: center; color: blue;">SIN ASIGNACIÓN</h1>', grupo: 2, height: 1}
+            {name:  'activo', title: '<h1 style="text-align: center; color: #00B167;">ACTIVOS</h1>',grupo: 0, height: 0} ,
+            {name: 'inactivo', title: '<h1 style="text-align: center; color: #FF8F85;">INACTIVOS</h1>', grupo: 1, height: 1},
+            {name: 'sin_asignacion', title: '<h1 style="text-align: center; color: #4682B4;">SIN ASIGNACIÓN</h1>', grupo: 2, height: 1}
+            //{name: 'subsidio', title: '<h1 style="text-align: center; color: #B066BB;">BENEF. SUBSIDIO</h1>', grupo: 2, height: 1}
         ],
         actualizarSegunTab: function(name, indice){
             /*if(name == 'activo')

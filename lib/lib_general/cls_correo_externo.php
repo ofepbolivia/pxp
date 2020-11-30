@@ -44,7 +44,8 @@ class CorreoExterno
          $this->mail->FromName = $this->nombre_remitente;
          $this->mail->Subject = $this->asunto;
 		 $this->mail->SMTPDebug = false;
-          
+		 //$this->mail->SMTPAuth  = true;
+
        
    }
 
