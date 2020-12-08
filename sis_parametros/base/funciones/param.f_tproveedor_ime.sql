@@ -191,7 +191,11 @@ BEGIN
                      codigo_fabricante,
 
                      /*Aumentando para el id alkym*/
-                     id_proveedor_alkym
+                     id_proveedor_alkym,
+
+                     --08-12-2020(may)
+                     id_beneficiario,
+                     razon_social_sigep
 
                      )values
 
@@ -226,7 +230,11 @@ BEGIN
                     v_parametros.codigo_fabricante,
 
                     /*Aumentando para el id alkym*/
-                    v_parametros.id_alkym_proveedor
+                    v_parametros.id_alkym_proveedor,
+
+                    --08-12-2020(may)
+                    v_parametros.id_beneficiario,
+                    v_parametros.razon_social_sigep
 
                     ) RETURNING id_proveedor into v_id_proveedor;
 
@@ -676,8 +684,11 @@ BEGIN
                 ccorreo= v_parametros.ccorreo,
 
                 codigo_externo = v_parametros.codigo_externo,
-                codigo_fabricante = v_parametros.codigo_fabricante
+                codigo_fabricante = v_parametros.codigo_fabricante,
 
+                --08-12-2020(may)
+				id_beneficiario = v_parametros.id_beneficiario,
+                razon_social_sigep = v_parametros.razon_social_sigep
 
             where id_proveedor=v_parametros.id_proveedor;
 

@@ -52,6 +52,16 @@ header("content-type: text/javascript; charset=UTF-8");
                             items: [],
                             id_grupo: 4
                         }]
+                    },
+                    {
+                        bodyStyle: 'padding-right:5px;',
+                        items: [{
+                            xtype: 'fieldset',
+                            title: 'Datos SIGEP',
+                            autoHeight: true,
+                            items: [],
+                            id_grupo: 5
+                        }]
                     }
                     ]
 
@@ -130,11 +140,16 @@ header("content-type: text/javascript; charset=UTF-8");
                     //this.ocultarComponente(datos.dnrp);
                     console.log('llegamnew6',r.data.codigo);
                     this.ocultarGrupo(4);
+                    this.ocultarGrupo(5);
 
+                }else if(r.data.codigo == 'entidad_publica'){
+                    this.mostrarGrupo(5);
+                    this.ocultarGrupo(4);
                 }else{
                     this.mostrarGrupo(4);
-
+                    this.ocultarGrupo(5);
                 }
+
 
                 this.ocultarComponente(this.getComponente('contacto'));
 
@@ -642,16 +657,16 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type:'TextField',
                 filters:{pfiltro:'provee.id_beneficiario',type:'string'},
-                id_grupo:0,
+                id_grupo:5,
                 grid:true,
-                form:false,
+                form:true,
                 bottom_filter : true
             },
 
             {
                 config: {
                     name: 'razon_social_sigep',
-                    fieldLabel: 'Rótulo SIGEP',
+                    fieldLabel: 'Razón Social SIGEP',
                     allowBlank: false,
                     anchor: '100%',
                     gwidth: 100,
@@ -664,7 +679,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type: 'TextField',
                 filters: {pfiltro: 'provee.rotulo_comercial', type: 'string'},
-                id_grupo: 0,
+                id_grupo: 5,
                 grid: true,
                 form: true,
                 bottom_filter: true
@@ -1741,7 +1756,7 @@ header("content-type: text/javascript; charset=UTF-8");
             'lugar_depto',
             'lugar_ciudad',
             {name:'id_beneficiario', type: 'string'},
-            'razon_social_sigep'
+            {name:'razon_social_sigep', type: 'string'}
         ],
 
         arrayDefaultColumHidden: ['estado'],
@@ -1800,7 +1815,7 @@ header("content-type: text/javascript; charset=UTF-8");
             this.ocultarGrupo(2);
             this.ocultarGrupo(3);
             this.ocultarGrupo(4);
-
+            this.ocultarGrupo(5);
 
 
 
@@ -2043,9 +2058,15 @@ header("content-type: text/javascript; charset=UTF-8");
             //(may) modificacion grupo de campos segun el tipo
             if (datos.tipo == 'General' || datos.tipo == 'general' || datos.tipo == '') {
                 this.ocultarGrupo(4);
+                this.ocultarGrupo(5);
+
+            }else if(datos.tipo == 'entidad_publica'){
+                this.mostrarGrupo(5);
+                this.ocultarGrupo(4);
 
             }else{
                 this.mostrarGrupo(4);
+                this.ocultarGrupo(5);
             }
 
             this.ocultarComponente(this.getComponente('contacto'));

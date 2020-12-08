@@ -208,7 +208,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     type:'TextField',
                     filters:{pfiltro:'pctaban.usuario_ai',type:'string'},
                     id_grupo:1,
-                    grid:true,
+                    grid:false,
                     form:false
                 },
                 {
@@ -224,7 +224,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     type:'DateField',
                     filters:{pfiltro:'pctaban.fecha_reg',type:'date'},
                     id_grupo:1,
-                    grid:false,
+                    grid:true,
                     form:false
                 },
                 {

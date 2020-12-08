@@ -315,6 +315,9 @@ class MODProveedor extends MODbase{
 
         $this->setParametro('id_alkym_proveedor','id_alkym_proveedor','int4');
 
+        $this->setParametro('id_beneficiario','id_beneficiario','int4');
+        $this->setParametro('razon_social_sigep','razon_social_sigep','varchar');
+
 
         //Ejecuta la instruccion
 		$this->armarConsulta();
@@ -398,7 +401,8 @@ class MODProveedor extends MODbase{
         $this->setParametro('pag_web_persona','pag_web_persona','varchar');
         $this->setParametro('observaciones_persona','observaciones_persona','varchar');
 
-
+        $this->setParametro('id_beneficiario','id_beneficiario','int4');
+        $this->setParametro('razon_social_sigep','razon_social_sigep','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
