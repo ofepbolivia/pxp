@@ -112,7 +112,9 @@ class ACTDepto extends ACTbase
             //18-07-2019 se realiza distinto listado de depto para los de FONDO EN AVANCE
             //$this->objParam->addFiltro('(' . $this->objParam->getParametro('id_lugar') . "::integer =ANY(DEPPTO.id_lugares))");
             //19-09-2019 vuelve el mismo filtro porque hay otro function para Fondos en Avance y se necesita filtrar por los dos departamentos su dep donde esta y de cochabamba-a peticion de Roberto Villa
-            $this->objParam->addFiltro( '('.$this->objParam->getParametro('id_lugar')."::integer =ANY(DEPPTO.id_lugares) or  prioridad = 1)");
+            //$this->objParam->addFiltro( '('.$this->objParam->getParametro('id_lugar')."::integer =ANY(DEPPTO.id_lugares) or  prioridad = 1)");
+            //27-11-2020 (may) modificacion porque en adq se mostrara solo el depto correspondiente del funcionario
+            $this->objParam->addFiltro('(' . $this->objParam->getParametro('id_lugar') . "::integer =ANY(DEPPTO.id_lugares))");
 
         }
 
