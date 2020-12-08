@@ -650,6 +650,28 @@ header("content-type: text/javascript; charset=UTF-8");
 
             {
                 config: {
+                    name: 'razon_social_sigep',
+                    fieldLabel: 'Rótulo SIGEP',
+                    allowBlank: false,
+                    anchor: '100%',
+                    gwidth: 100,
+                    style: 'text-transform:uppercase;',
+                    qtip: 'Rótulo SIGEP / Razón Social',
+                    maxLength: 150,
+                    renderer : function(value, p, record) {
+                        return String.format('<b style="color: green">{0}</b>', record.data['razon_social_sigep']);
+                    }
+                },
+                type: 'TextField',
+                filters: {pfiltro: 'provee.rotulo_comercial', type: 'string'},
+                id_grupo: 0,
+                grid: true,
+                form: true,
+                bottom_filter: true
+            },
+
+            {
+                config: {
                     name: 'ci',
                     fieldLabel: 'CI',
                     allowBlank: true,
@@ -1718,7 +1740,8 @@ header("content-type: text/javascript; charset=UTF-8");
 
             'lugar_depto',
             'lugar_ciudad',
-            {name:'id_beneficiario', type: 'string'}
+            {name:'id_beneficiario', type: 'string'},
+            'razon_social_sigep'
         ],
 
         arrayDefaultColumHidden: ['estado'],
@@ -2411,6 +2434,8 @@ header("content-type: text/javascript; charset=UTF-8");
             });
         },
 
+        /************************************************************* BENEFICIARIO*************************************************************/
+
         onSigepRequest:function(){
             Phx.CP.loadingShow();
             var resp = this.sm.getSelected().data;
@@ -2454,11 +2479,11 @@ header("content-type: text/javascript; charset=UTF-8");
         successProc:function(resp){
             Phx.CP.loadingHide();
             var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
-            console.log('successProc;',reg);
-            var rest = reg.ROOT.datos;
+
+            var rest = reg.ROOT.datos;console.log('successProc SIGEP:',rest);
             //var proveedor = reg.ROOT.datos.id_proveedor;
             Ext.Ajax.request({
-                url: '../../sis_sigep/control/SigepAdq/statusC31',
+                url: '../../sis_sigep/control/SigepAdq/StatusC31',
                 params: {
                     id_service_request: rest.id_service_request,
                     id_proveedor: rest.id_proveedor
@@ -2476,14 +2501,15 @@ header("content-type: text/javascript; charset=UTF-8");
         successSta:function(resp){
             Phx.CP.loadingHide();
             var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
-            console.log('successSta;',reg);
-            var rest = reg.ROOT.datos;
-            //var proveedor = reg.ROOT.datos.id_proveedor;
+
+            var rest = reg.ROOT.datos;console.log('success Registro',rest);
+
             Ext.Ajax.request({
                 url: '../../sis_sigep/control/SigepAdq/registrarBeneficiario',
                 params: {
                     id_proveedor: rest.id_proveedor,
-                    id_beneficiario: rest.id_beneficiario
+                    id_beneficiario: rest.id_beneficiario,
+                    razon_social_sigep: rest.razon_social
                 },
                 success: this.successAll,
                 failure: this.failureCheck, //chequea si esta en verificacion presupeusto para enviar correo de transferencia
@@ -2504,7 +2530,9 @@ header("content-type: text/javascript; charset=UTF-8");
                 });
                 this.reload();
             }
-        },
+        }
+
+        /************************************************************* BENEFICIARIO*************************************************************/
 
 
     })

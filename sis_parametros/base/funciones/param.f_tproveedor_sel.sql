@@ -218,7 +218,8 @@ BEGIN
                         instit.observaciones::varchar,
                         lugdepto.nombre as lugar_depto,
                         lugciudad.nombre as lugar_ciudad,
-                        provee.id_beneficiario
+                        provee.id_beneficiario,
+						            provee.razon_social_sigep
 
 
                         from param.tproveedor provee

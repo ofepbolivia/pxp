@@ -175,7 +175,7 @@ class MODProveedor extends MODbase{
 		$this->captura('lugar_ciudad','varchar');
 		
        $this->captura('id_beneficiario','varchar');
-
+       $this->captura('razon_social_sigep','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
