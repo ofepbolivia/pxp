@@ -430,7 +430,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type: 'TextField',
                 filters: {pfiltro: 'provee.nro_tramite', type: 'string'},
-                grid: true,
+                grid: false,
                 form: false
             },
             {
