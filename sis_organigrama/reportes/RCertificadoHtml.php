@@ -109,8 +109,13 @@ class RCertificadoHtml{
 <table style="width: 100%;" border="0">
 <tr style="height: 80px;">
 <td align="center"> <img src = "../../../reportes_generados/'.$this->codigoQr ($cadena,$datos['nro_tramite']).'" align= "right " width="100" height="90" title="impreso"/></td>
-<td><FONT FACE="Century Gothic" SIZE=1 >'.$siglas.'/'.$datos['iniciales'].'<br/>Cc/Arch</FONT><td>
-<td align="center"  ><img src = "'.$firma_gerente.'" align= "right " width="'.$w.'" height="'.$h.'" title="impreso"/></td>
+<td><FONT FACE="Century Gothic" SIZE=1 >'.$siglas.'/'.$datos['iniciales'].'<br/>Cc/Arch</FONT><td>';
+if ($fecha > '2020-12-04'){
+  $this->html.='<td></td>';
+}else{
+  $this->html.='<td align="center"  ><img src = "'.$firma_gerente.'" align= "right " width="'.$w.'" height="'.$h.'" title="impreso"/></td>';
+}
+$this->html.='
 </tr>
 </table>
 </td>
