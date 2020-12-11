@@ -13,17 +13,26 @@ class RCertificadoPDF extends  ReportePDF{
             $tipo = 'de la interesada';
         }
 
-        $fecha = $this->datos[0]['fecha_solicitud'];        
-        
-        if ($fecha >= '2019-12-18'){
-            $firma_gerente = '/../media/firma_eduardo_degadillo_poepsel.png';
-            $w = 200;
-            $h = 120;
-            $cargo = 'Gerente Administrativo Financiero';  
-            $jefe = $this->datos[0]['nuevo_jefe']; 
-            $gen_gerente = 'El suscrito';                     
-            $siglas = 'JDP';
-            $firma_responsable = $this->datos[0]['nuevo_jefe'];
+        $fecha = $this->datos[0]['fecha_solicitud'];
+
+        if ($fecha > '2020-12-04'){
+          $firma_gerente = '/../media/firma.png';
+          $cargo = 'Jefe de Recursos Humanos';
+          $w = 160;
+          $h = 120;
+          $jefe = $this->datos[0]['jefa_recursos'];
+          $gen_gerente = 'La suscrita';
+          $siglas = 'GAG';
+          $firma_responsable = $this->datos[0]['jefa_recursos'];
+        }else if ($fecha >= '2019-12-18' and $fecha <= '2020-12-04') {
+          $firma_gerente = '../../../sis_organigrama/media/firma_eduardo_degadillo_poepsel.png';
+          $w = 300;
+          $h = 140;
+          $cargo = 'Gerente Administrativo Financiero';
+          $jefe = $datos['nuevo_jefe'];
+          $gen_gerente = 'El suscrito';
+          $siglas = 'JDP';
+          $firma_responsable = $datos['nuevo_jefe'];
         }else{
             $firma_gerente = '/../media/firma.png';
             $cargo = 'Jefe de Recursos Humanos';
@@ -45,16 +54,20 @@ class RCertificadoPDF extends  ReportePDF{
     }
     public function Footer()
     {
-        $fecha_f= $this->datos[0]['fecha_solicitud'];        
-        if ($fecha_f >= '2019-12-18'){
+        $fecha_f= $this->datos[0]['fecha_solicitud'];
+        if ($fecha_f > '2020-12-04'){
+          $firma_gerente_f = '/../media/firma.png';
+          $siglas = 'GAG';
+          $firma_responsable_f = $this->datos[0]['nuevo_jefe'];          
+        }else if ($fecha_f >= '2019-12-18' and $fecha_f <= '2020-12-04') {
             $firma_gerente_f = '/../media/firma_eduardo_degadillo_poepsel.png';
             $siglas = 'JDP';
             $firma_responsable_f = $this->datos[0]['nuevo_jefe'];
         }else{
             $firma_gerente_f = '/../media/firma.png';
-            $siglas = 'GAG';        
+            $siglas = 'GAG';
             $firma_responsable_f = $this->datos[0]['nuevo_jefe'];
-        }                
+        }
         $this->SetY(-15);
         $this->SetFont('helvetica', 'I', 6);
         $this->Cell(0, 0, $siglas.'/'.$this->datos[0]['iniciales'], 0, 1, 'L');
@@ -76,7 +89,7 @@ class RCertificadoPDF extends  ReportePDF{
 
     }
     function setDatos($datos) {
-        $this->datos = $datos;        
+        $this->datos = $datos;
     }
     function reporteGeneral(){
         if ($this->datos[0]['genero'] == 'Sr'){
