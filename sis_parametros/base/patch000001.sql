@@ -2359,3 +2359,19 @@ COMMENT ON COLUMN param.tproveedor.razon_social_sigep
 IS 'Rotulo que se recupera del sigep por servicio.';
 
 /***********************************F-SCP-FEA-PARAM-0-30/10/2020*****************************************/
+
+/***********************************I-SCP-IRVA-PARAM-0-18/12/2020****************************************/
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN contabilizable VARCHAR(5);
+
+COMMENT ON COLUMN param.tconcepto_ingas.contabilizable
+IS 'Diferenciar los conceptos contabilizables';
+
+
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN boleto_asociado VARCHAR(5);
+
+COMMENT ON COLUMN param.tconcepto_ingas.boleto_asociado
+IS 'Campo para saber si el concepto debe estar asociado al boleto';
+
+/***********************************F-SCP-IRVA-PARAM-0-18/12/2020****************************************/
