@@ -292,7 +292,20 @@ BEGIN
 
 
            else
-                    if (v_parametros.tipo = 'persona')then
+
+         			--IF( v_parametros.id_persona is Not NULL
+                    --if (v_parametros.tipo = 'persona')then
+                    --15-12-2020 (may) modificacion si es persona o institucion
+					IF (v_parametros.nombre_persona is not NULL and v_parametros.nombre_persona!='') THEN
+
+                        --control si exite el Nombre completo
+                        if exists(select 1 from segu.tpersona
+                                    where upper(nombre) = upper(v_parametros.nombre_persona)
+                                    and upper(apellido_paterno) = upper(v_parametros.apellido_paterno)
+                                    and upper(apellido_materno) = upper(v_parametros.apellido_materno)) then
+                            raise exception 'Persona ya registrada';
+                        end if;
+
 
 
                         insert into segu.tpersona (
@@ -319,9 +332,9 @@ BEGIN
                                    )
                          values(
                                 --v_parametros.nombre,
-                                v_parametros.nombre_persona,
-                                v_parametros.apellido_paterno,
-                                v_parametros.apellido_materno,
+                                upper(v_parametros.nombre_persona),
+                                upper(v_parametros.apellido_paterno),
+                                upper(v_parametros.apellido_materno),
                                 v_parametros.ci,
                                 v_parametros.correo,
                                 v_parametros.celular1,
@@ -333,7 +346,7 @@ BEGIN
                                 v_parametros.genero,
                                 v_parametros.fecha_nacimiento,
                                 v_parametros.direccion,
-                                v_parametros.codigo_telf,
+                                COALESCE(v_parametros.codigo_telf, '0'),
 
                                 v_parametros.fax_persona,
                                 v_parametros.pag_web_persona,
@@ -341,6 +354,12 @@ BEGIN
                                 )
 
                         RETURNING id_persona INTO v_id_persona;
+
+                         --16-12-2020 (may) se añade el codigo porque se necesita el codigo para el registro de proveedores
+                         --generar codigo de proveedores
+                         v_num_seq =  nextval('param.seq_codigo_proveedor');
+                         v_codigo_gen = 'PR'||pxp.f_llenar_ceros(v_num_seq, 6);
+
                     else
 
                          --verificar que el codigo no se duplique
