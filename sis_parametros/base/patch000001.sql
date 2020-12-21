@@ -2375,3 +2375,10 @@ COMMENT ON COLUMN param.tconcepto_ingas.boleto_asociado
 IS 'Campo para saber si el concepto debe estar asociado al boleto';
 
 /***********************************F-SCP-IRVA-PARAM-0-18/12/2020****************************************/
+/***********************************I-SCP-IRVA-PARAM-0-21/12/2020****************************************/
+ALTER TABLE param.tconcepto_ingas
+ADD COLUMN agrupador VARCHAR(200);
+
+COMMENT ON COLUMN param.tconcepto_ingas.agrupador
+IS 'Campo para identificar la agrupacion de los conceptos';
+/***********************************F-SCP-IRVA-PARAM-0-21/12/2020****************************************/
