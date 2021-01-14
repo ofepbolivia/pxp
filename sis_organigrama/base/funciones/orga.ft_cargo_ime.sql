@@ -4,21 +4,21 @@ CREATE OR REPLACE FUNCTION orga.ft_cargo_ime (
   p_tabla varchar,
   p_transaccion varchar
 )
-  RETURNS varchar AS
-  $body$
+RETURNS varchar AS
+$body$
 /**************************************************************************
  SISTEMA:		Organigrama
  FUNCION: 		orga.ft_cargo_ime
  DESCRIPCION:   Funcion que gestiona las operaciones basicas (inserciones, modificaciones, eliminaciones de la tabla 'orga.tcargo'
  AUTOR: 		 (admin)
  FECHA:	        14-01-2014 19:16:06
- COMENTARIOS:	
+ COMENTARIOS:
 ***************************************************************************
  HISTORIAL DE MODIFICACIONES:
 
- DESCRIPCION:	
- AUTOR:			
- FECHA:		
+ DESCRIPCION:
+ AUTOR:
+ FECHA:
 ***************************************************************************/
 
 DECLARE
@@ -46,31 +46,31 @@ BEGIN
     v_nombre_funcion = 'orga.ft_cargo_ime';
     v_parametros = pxp.f_get_record(p_tabla);
 
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'OR_CARGO_INS'
  	#DESCRIPCION:	Insercion de registros
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		14-01-2014 19:16:06
 	***********************************/
 
 	if(p_transaccion='OR_CARGO_INS')then
-					
+
         begin
         	select id_lugar into v_id_lugar
         	from orga.toficina
         	where id_oficina = v_parametros.id_oficina;
-        	
+
           --(franklin.espinoza) se obtiene el nombre para el item
         	select tc.nombre into v_nombre_cargo
             from orga.ttemporal_cargo tc
             where tc.id_temporal_cargo = v_parametros.id_temporal_cargo;
-        	
-        	
+
+
         	--Sentencia de la insercion
         	insert into orga.tcargo(
 			id_tipo_contrato,
 			id_lugar,
-			id_uo,			
+			id_uo,
 			id_escala_salarial,
 			codigo,
 			nombre,
@@ -86,7 +86,7 @@ BEGIN
           	) values(
 			v_parametros.id_tipo_contrato,
 			v_id_lugar,
-			v_parametros.id_uo,			
+			v_parametros.id_uo,
 			v_parametros.id_escala_salarial,
 			v_parametros.codigo,
 			v_nombre_cargo,
@@ -100,9 +100,9 @@ BEGIN
 			v_parametros.id_oficina,
 			v_parametros.id_temporal_cargo
 			)RETURNING id_cargo into v_id_cargo;
-			
+
 			--Definicion de la respuesta
-			v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Cargo almacenado(a) con exito (id_cargo'||v_id_cargo||')'); 
+			v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Cargo almacenado(a) con exito (id_cargo'||v_id_cargo||')');
             v_resp = pxp.f_agrega_clave(v_resp,'id_cargo',v_id_cargo::varchar);
 
             --Devuelve la respuesta
@@ -110,18 +110,18 @@ BEGIN
 
 		end;
 
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'OR_CARGO_MOD'
  	#DESCRIPCION:	Modificacion de registros
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		14-01-2014 19:16:06
 	***********************************/
 
 	elsif(p_transaccion='OR_CARGO_MOD')then
 
 		begin
-		
-        	
+
+
         	select id_lugar into v_id_lugar
         	from orga.toficina
         	where id_oficina = v_parametros.id_oficina;
@@ -244,8 +244,16 @@ BEGIN
                 );
 
             end if;*/
+
+            --(franklin.espinoza) se obtiene el nombre para el item
+        	select tc.nombre into v_nombre_cargo
+            from orga.ttemporal_cargo tc
+            where tc.id_temporal_cargo = v_parametros.id_temporal_cargo;
+
 			--Sentencia de la modificacion
 			update orga.tcargo set
+			id_temporal_cargo = v_parametros.id_temporal_cargo,
+            nombre = v_nombre_cargo,
 			id_lugar = v_id_lugar,
 			codigo = v_parametros.codigo,
 			fecha_ini = v_parametros.fecha_ini,
@@ -256,29 +264,29 @@ BEGIN
       id_escala_salarial = v_parametros.id_escala_salarial/*,
       estado_reg = 'inactivo'*/
 			where id_cargo=v_parametros.id_cargo;
-               
+
 			--Definicion de la respuesta
-            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Cargo modificado(a)'); 
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Cargo modificado(a)');
             v_resp = pxp.f_agrega_clave(v_resp,'id_cargo',v_parametros.id_cargo::varchar);
-               
+
             --Devuelve la respuesta
             return v_resp;
-            
+
 		end;
 
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'OR_CARGO_ELI'
  	#DESCRIPCION:	Eliminacion de registros
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		14-01-2014 19:16:06
 	***********************************/
 
 	elsif(p_transaccion='OR_CARGO_ELI')then
 
 		begin
-		
+
 			if (exists (select 1 from orga.tuo_funcionario
-						where estado_reg = 'activo' and (fecha_finalizacion > now()::date or fecha_finalizacion is null) 
+						where estado_reg = 'activo' and (fecha_finalizacion > now()::date or fecha_finalizacion is null)
 							and id_cargo = v_parametros.id_cargo))then
 				raise exception 'No es posible eliminar un cargo asignado a un empleado';
 			end if;
@@ -286,11 +294,11 @@ BEGIN
 			update orga.tcargo
 			set estado_reg = 'inactivo'
             where id_cargo=v_parametros.id_cargo;
-               
+
             --Definicion de la respuesta
-            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Cargo eliminado(a)'); 
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Cargo eliminado(a)');
             v_resp = pxp.f_agrega_clave(v_resp,'id_cargo',v_parametros.id_cargo::varchar);
-              
+
             --Devuelve la respuesta
             return v_resp;
 
@@ -451,20 +459,20 @@ BEGIN
 
 		end;
 	else
-     
+
     	raise exception 'Transaccion inexistente: %',p_transaccion;
 
 	end if;
 
 EXCEPTION
-				
+
 	WHEN OTHERS THEN
 		v_resp='';
 		v_resp = pxp.f_agrega_clave(v_resp,'mensaje',SQLERRM);
 		v_resp = pxp.f_agrega_clave(v_resp,'codigo_error',SQLSTATE);
 		v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
 		raise exception '%',v_resp;
-				        
+
 END;
 $body$
 LANGUAGE 'plpgsql'

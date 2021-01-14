@@ -26,17 +26,17 @@ BEGIN
         inner join orga.tnivel_organizacional ni
         	on ni.id_nivel_organizacional = uo.id_nivel_organizacional
         where euo.id_uo_hijo = par_id_uo;
-        
-        if (v_nivel in (1,2,3,4,6) or v_es_gerencia = 'si') then --1,2,2.2
+
+        if (v_nivel in (2,4,5,6) or v_es_gerencia = 'si') then --1,2,2.2
         	return par_id_uo;
         else
         	if (v_id_uo = v_id_uo_hijo) then
-        		return NULL; 
+        		return NULL;
             else
             	return orga.f_get_uo_gerencia(v_id_uo, NULL, NULL);
             end if;
         end if;
-    
+
     else
     	select funuo.id_uo into v_id_uo
         from orga.tuo_funcionario funuo
@@ -45,23 +45,23 @@ BEGIN
         if (v_id_uo is null)then
         	return -1;
         end if;
-        
-            
+
+
         return orga.f_get_uo_gerencia(v_id_uo, NULL, NULL);
     end if;
-    
-           
-                     
-               
+
+
+
+
 EXCEPTION
-				
+
 	WHEN OTHERS THEN
 		v_resp='';
 		v_resp = pxp.f_agrega_clave(v_resp,'mensaje',SQLERRM);
 		v_resp = pxp.f_agrega_clave(v_resp,'codigo_error',SQLSTATE);
 		v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
 		raise exception '%',v_resp;
-				        
+
 END;
 $body$
 LANGUAGE 'plpgsql'

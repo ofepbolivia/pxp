@@ -23,7 +23,7 @@ BEGIN
 
     if (par_id_uo is not null) then
 
-    	--(may) 12-11-2020 modificacion de id_uo_padre a id_uo_padre_operativo
+    	--(may) 12-11-2020 modificacion de id_uo a id_uo_padre_operativo
         select euo.id_uo_padre_operativo, uo.gerencia, euo.id_uo_hijo,ni.numero_nivel, uo.gerencia
         into v_id_uo, v_gerencia, v_id_uo_hijo, v_nivel, v_es_gerencia
         from orga.tuo uo
