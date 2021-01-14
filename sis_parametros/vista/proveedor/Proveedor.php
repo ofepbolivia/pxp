@@ -1133,7 +1133,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 type: 'TextField',
                 filters: {pfiltro: 'provee.codigo', type: 'string'},
                 id_grupo: 1,
-                grid: false,
+                grid: true,
                 form: true
             },
 
@@ -1164,7 +1164,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 type: 'TextField',
                 filters: {pfiltro: 'per.celular1', type: 'string'},
                 id_grupo: 1,
-                grid: false,
+                grid: true,
                 form: true
             },
             {
@@ -1179,7 +1179,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 type: 'TextField',
                 filters: {pfiltro: 'per.celular2', type: 'string'},
                 id_grupo: 1,
-                grid: false,
+                grid: true,
                 form: true
             },
             {
@@ -1212,7 +1212,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 type: 'TextField',
                 filters: {pfiltro: 'per.telefono1', type: 'string'},
                 id_grupo: 1,
-                grid: false,
+                grid: true,
                 form: true
             },
             {
@@ -1227,7 +1227,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 type: 'TextField',
                 filters: {pfiltro: 'per.telefono2', type: 'string'},
                 id_grupo: 1,
-                grid: false,
+                grid: true,
                 form: true
             },
             {
@@ -1416,7 +1416,7 @@ header("content-type: text/javascript; charset=UTF-8");
             {
                 config: {
                     name: 'telefono1_institucion',
-                    fieldLabel: 'Telefono 1',
+                    fieldLabel: 'Telefono 1(Inst.)',
                     allowBlank: true,
                     anchor: '100%',
                     gwidth: 100,
@@ -1424,13 +1424,13 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type: 'TextField',
                 id_grupo: 2,
-                grid: false,
+                grid: true,
                 form: true
             },
             {
                 config: {
                     name: 'telefono2_institucion',
-                    fieldLabel: 'Telefono 2',
+                    fieldLabel: 'Telefono 2(Inst.)',
                     allowBlank: true,
                     anchor: '100%',
                     gwidth: 100,
@@ -1438,13 +1438,13 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type: 'TextField',
                 id_grupo: 2,
-                grid: false,
+                grid: true,
                 form: true
             },
             {
                 config: {
                     name: 'celular1_institucion',
-                    fieldLabel: 'Celular 1',
+                    fieldLabel: 'Celular 1(Inst.)',
                     allowBlank: true,
                     anchor: '100%',
                     gwidth: 100,
@@ -1452,13 +1452,13 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type: 'TextField',
                 id_grupo: 2,
-                grid: false,
+                grid: true,
                 form: true
             },
             {
                 config: {
                     name: 'celular2_institucion',
-                    fieldLabel: 'Celular 2',
+                    fieldLabel: 'Celular 2(Inst.)',
                     allowBlank: true,
                     anchor: '100%',
                     gwidth: 100,
@@ -1466,7 +1466,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type: 'TextField',
                 id_grupo: 2,
-                grid: false,
+                grid: true,
                 form: true
             },
             {
@@ -1486,7 +1486,7 @@ header("content-type: text/javascript; charset=UTF-8");
             {
                 config: {
                     name: 'email1_institucion',
-                    fieldLabel: 'Email 1',
+                    fieldLabel: 'Email 1(Inst.)',
                     allowBlank: true,
                     anchor: '100%',
                     vtype: 'email',
@@ -1495,13 +1495,13 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type: 'TextField',
                 id_grupo: 2,
-                grid: false,
+                grid: true,
                 form: true
             },
             {
                 config: {
                     name: 'email2_institucion',
-                    fieldLabel: 'Email 2',
+                    fieldLabel: 'Email 2(Inst.)',
                     allowBlank: true,
                     anchor: '100%',
                     vtype: 'email',
@@ -1510,7 +1510,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 type: 'TextField',
                 id_grupo: 2,
-                grid: false,
+                grid: true,
                 form: true
             },
             {
@@ -1759,7 +1759,8 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:'razon_social_sigep', type: 'string'}
         ],
 
-        arrayDefaultColumHidden: ['estado'],
+        arrayDefaultColumHidden: ['estado', 'correo','email1_institucion', 'email2_institucion','telefono1_institucion' , 'telefono2_institucion',
+        'celular2_institucion', 'celular1_institucion', 'telefono1', 'telefono2', 'celular1', 'celular2'],
 
 
         iniTramite: function () {
