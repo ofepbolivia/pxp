@@ -2375,3 +2375,21 @@ COMMENT ON COLUMN param.tconcepto_ingas.boleto_asociado
 IS 'Campo para saber si el concepto debe estar asociado al boleto';
 
 /***********************************F-SCP-IRVA-PARAM-0-18/12/2020****************************************/
+/***********************************I-SCP-IRVA-PARAM-0-21/12/2020****************************************/
+ALTER TABLE param.tconcepto_ingas
+ADD COLUMN agrupador VARCHAR(200);
+
+COMMENT ON COLUMN param.tconcepto_ingas.agrupador
+IS 'Campo para identificar la agrupacion de los conceptos';
+/***********************************F-SCP-IRVA-PARAM-0-21/12/2020****************************************/
+
+/***********************************I-SCP-BVP-PARAM-0-13/01/2021****************************************/
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN comision VARCHAR(2);
+
+ALTER TABLE param.tconcepto_ingas
+  ALTER COLUMN comision SET DEFAULT 'no';
+
+COMMENT ON COLUMN param.tconcepto_ingas.comision
+IS 'casilla comision caso ''si'' se descuenta al total factura formas de pago en el sistema de ventas facturacion';
+/***********************************F-SCP-BVP-PARAM-0-13/01/2021****************************************/
