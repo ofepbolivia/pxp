@@ -235,6 +235,41 @@ class ACTDepto extends ACTbase
 
     }
 
+    // 04-02-2021 (may) Listado Depto para obligaciones de Pago
+    function listarDeptoFiltradoXUsuarioOP()
+    {
+
+        // parametros de ordenacion por defecto
+        $this->objParam->defecto('ordenacion', 'depto');
+        $this->objParam->defecto('dir_ordenacion', 'asc');
+
+        if ($this->objParam->getParametro('id_lugar') != '') {
+
+            //solo se modifica esta condicion con la prioridad 1 , para que de opcion de que elijan el depto
+            $this->objParam->addFiltro( '('.$this->objParam->getParametro('id_lugar')."::integer =ANY(DEPPTO.id_lugares) or  prioridad = 1)");
+
+        }
+
+        if ($this->objParam->getParametro('modulo') != '') {
+            $this->objParam->addFiltro("DEPPTO.modulo = ''" . $this->objParam->getParametro('modulo') . "''");
+        }
+
+
+        if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {
+            $this->objReporte = new Reporte($this->objParam, $this);
+            $this->res = $this->objReporte->generarReporteListado('MODDepto', 'listarDeptoFiltradoXUsuario');
+        } else {
+            $this->objFunSeguridad = $this->create('MODDepto');
+            //ejecuta el metodo de lista personas a travez de la intefaz objetoFunSeguridad
+            $this->res = $this->objFunSeguridad->listarDeptoFiltradoXUsuario($this->objParam);
+
+        }
+
+        $this->res->imprimirRespuesta($this->res->generarJson());
+
+
+    }
+
 
 }
 
