@@ -2393,3 +2393,11 @@ ALTER TABLE param.tconcepto_ingas
 COMMENT ON COLUMN param.tconcepto_ingas.comision
 IS 'casilla comision caso ''si'' se descuenta al total factura formas de pago en el sistema de ventas facturacion';
 /***********************************F-SCP-BVP-PARAM-0-13/01/2021****************************************/
+
+/***********************************I-SCP-BVP-PARAM-0-09/02/2021****************************************/
+ALTER TABLE param.tentidad
+  ADD COLUMN cod_iata_linea_aerea VARCHAR(5);
+
+COMMENT ON COLUMN param.tentidad.cod_iata_linea_aerea
+IS 'Código asignado por IATA a la Aerolínea.';
+/***********************************F-SCP-BVP-PARAM-0-09/02/2021****************************************/

@@ -18,7 +18,7 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
 		this.init();
 		this.load({params:{start:0, limit:this.tam_pag}})
 	},
-			
+
 	Atributos:[
 		{
 			//configuracion del componente
@@ -28,7 +28,7 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
 					name: 'id_entidad'
 			},
 			type:'Field',
-			form:true 
+			form:true
 		},{
             config:{
                 name: 'nombre',
@@ -45,7 +45,7 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
                 egrid:true,
                 form:true
         },
-		
+
 		{
 			config:{
 				name: 'nit',
@@ -61,7 +61,22 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
 				grid:true,
 				form:true
 		},
-		
+		{
+			config:{
+				name: 'cod_iata_linea_aerea',
+				fieldLabel: 'Codigo IATA Linea Aerea',
+				allowBlank: true,
+				anchor: '50%',
+				gwidth: 120,
+				maxLength:20
+			},
+				type:'TextField',
+				filters:{pfiltro:'ent.nit',type:'string'},
+				id_grupo:1,
+				grid:true,
+				form:true
+		},
+
 		{
 			config:{
 				name: 'identificador_min_trabajo',
@@ -77,7 +92,7 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
 				grid:true,
 				form:true
 		},
-		
+
 		{
 			config:{
 				name: 'identificador_caja_salud',
@@ -111,7 +126,7 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
                 grid:true,
                 form:true
         },
-		
+
 		{
             config:{
                 name: 'estados_comprobante_venta',
@@ -123,12 +138,12 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
                 gwidth: 150,
                 maxLength:20
             },
-                type:'TextField',                
+                type:'TextField',
                 id_grupo:1,
                 grid:true,
                 form:true
         },
-        
+
         {
             config:{
                 name: 'estados_anulacion_venta',
@@ -139,7 +154,7 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
                 gwidth: 150,
                 maxLength:20
             },
-                type:'TextField',                
+                type:'TextField',
                 id_grupo:1,
                 grid:true,
                 form:true
@@ -173,11 +188,11 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
                 grid:true,
                 form:true
         },
-        
-        
-		
-		
-		
+
+
+
+
+
         {
             config:{
                 name: 'estado_reg',
@@ -230,7 +245,7 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
-							format: 'd/m/Y', 
+							format: 'd/m/Y',
 							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 				type:'DateField',
@@ -276,7 +291,7 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
-							format: 'd/m/Y', 
+							format: 'd/m/Y',
 							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 				type:'DateField',
@@ -286,7 +301,8 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
 				form:false
 		}
 	],
-	tam_pag:50,	
+	tam_pag:50,
+	fheight: '65%',
 	title:'Entidad',
 	ActSave:'../../sis_parametros/control/Entidad/insertarEntidad',
 	ActDel:'../../sis_parametros/control/Entidad/eliminarEntidad',
@@ -295,10 +311,10 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
 	fields: [
 		{name:'id_entidad', type: 'numeric'},
 		{name:'tipo_venta_producto', type: 'string'},
-		
+
 		{name:'identificador_min_trabajo', type: 'string'},
 		{name:'identificador_caja_salud', type: 'string'},
-		
+
 		{name:'estados_comprobante_venta', type: 'string'},
 		{name:'estados_anulacion_venta', type: 'string'},
 		{name:'tipo_venta_producto', type: 'string'},
@@ -313,8 +329,9 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
 		{name:'id_usuario_mod', type: 'numeric'},
 		{name:'fecha_mod', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
 		{name:'usr_reg', type: 'string'},
+		{name:'cod_iata_linea_aerea', type: 'string'},
 		{name:'usr_mod', type: 'string'},'direccion_matriz'
-		
+
 	],
 	sortInfo:{
 		field: 'id_entidad',
@@ -325,5 +342,3 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
 	}
 )
 </script>
-		
-		
