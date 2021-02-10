@@ -30,7 +30,7 @@ class ACTLugar extends ACTbase{
 			$this->objParam->addFiltro("lug.tipo  in (". $this->objParam->getParametro('tipos') . ")");
 		}
 
-		if ($this->objParam->getParametro('id_lugar_fk') != '') {
+		if ($this->objParam->getParametro('id_lugar_fk') != '' && $this->objParam->getParametro('id_lugar_fk')!=0 ) {
 			$this->objParam->addFiltro("lug.id_lugar_fk  in (". $this->objParam->getParametro('id_lugar_fk') . ")");
 		}
 
@@ -41,6 +41,18 @@ class ACTLugar extends ACTbase{
 
 		$this->objFunc=$this->create('MODLugar');
 		$this->res=$this->objFunc->listarLugar();
+		if($this->objParam->getParametro('_adicionar')!=''){
+
+			$respuesta = $this->res->getDatos();
+
+	    array_unshift ( $respuesta, array(  'id_lugar'=>'0',
+								                          'id_lugar_fk'=>'0',
+									                        'codigo'=>'Todos',
+																					'nombre'=>'Todos',
+																					'tipo'=>'Todos'
+                                          ));
+			$this->res->setDatos($respuesta);
+		}
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
 
