@@ -38,6 +38,11 @@ class ACTLugar extends ACTbase{
 			$this->objParam->addFiltro("lug.id_lugar_fk  in (". $this->objParam->getParametro('id_lugar_fk') . ")");
 		}
 
+		//21-02-2021 (may)
+		if ($this->objParam->getParametro('lugar_estacion') == 'Bol') {
+			$this->objParam->addFiltro("lug.id_lugar_fk in (1)");
+		}
+
 
 		$this->objFunc=$this->create('MODLugar');
 		$this->res=$this->objFunc->listarLugar();
