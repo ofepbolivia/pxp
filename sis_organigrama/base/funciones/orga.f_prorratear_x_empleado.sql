@@ -83,7 +83,9 @@ DECLARE
                         from gecom.truta rut
                         inner join param.tperiodo per on per.id_gestion = rut.id_gestion
                         where rut.id_numero_celular = v_registros.id_numero_celular
-                        and per.id_periodo = p_id_periodo) THEN
+                        and per.id_periodo = p_id_periodo
+                        and rut.id_numero_celular is not null
+                        group by rut.id_numero_celular  ) THEN
 
 
                   v_id_funcionario = gecom.f_get_ultimo_funcionario_asignado(v_registros.id_numero_celular,p_id_periodo);
@@ -135,21 +137,26 @@ DECLARE
                                                 group by pdet.id_centro_costo) LOOP
 
                            --raise exception 'llega % - %',v_telefonia_detalle.id_centro_costo, v_telefonia_detalle.monto;
-
+                           --raise notice 'llegabdww % - % - %', v_registros.id_numero_celular, v_telefonia_detalle.id_centro_costo, v_telefonia_detalle.monto;
                             if (v_telefonia_detalle.id_centro_costo is null) then
                               raise exception 'No tiene asignado un centro de costo';
                             end if;
 
 
-                            v_factor_porcentual_prorrateo = ( (v_telefonia_detalle.monto * 100) / v_total );
-
+                      		IF (v_total = 0)THEN
+                            	v_total = 1;
+                            ELSE
+                            	v_total = v_total;
+                            END IF;
+                            v_factor_porcentual_prorrateo = ( (v_telefonia_detalle.monto * 100) / coalesce(v_total, 1) );
+                      --raise notice 'llegabdww % - % - % - %', v_registros.id_numero_celular, v_telefonia_detalle.monto, v_total, round((v_factor_porcentual_prorrateo),2);
                             --para la OP
-                            v_importe_total_OD =  ( (v_importe_consumo * v_factor_porcentual_prorrateo) / 100 );
-
+                            v_importe_total_OD =  ( (coalesce(v_importe_consumo,0) * coalesce(v_factor_porcentual_prorrateo,0)) / 100 );
+                          --raise notice 'llegabd333 % - %',v_registros.id_numero_celular, v_importe_total_OD;
                            --raise exception 'llegaav_totalOD %',v_importe_total_OD;
 
-                           --raise exception 'llegabd333 % - % - % - %',v_registros.conteo,v_suma,p_monto, v_total ;
-
+                           --raise exception 'llegabd333 % - % - % - %',v_registros.total,v_registros.conteo,v_suma,p_monto ;
+                           --raise notice 'llegabd333 % - %',v_registros.total, v_registros.conteo;
                            if (v_registros.total = v_registros.conteo) then
 
 
@@ -165,7 +172,7 @@ DECLARE
                                                                         v_registros.id_numero_celular, --id_numero_celular,
                                                                         v_id_funcionario,
                                                                         v_telefonia_detalle.id_centro_costo,
-                                                                        v_importe_total_OD,
+                                                                        coalesce(v_importe_total_OD,0),
                                                                         NULL,--v_telefonia_detalle.id_orden_trabajo,
                                                                         'Prorrateo ' || p_codigo_prorrateo,
                                                                         p_id_periodo,
@@ -191,7 +198,7 @@ DECLARE
                                                                         v_registros.id_numero_celular, --id_numero_celular,
                                                                         v_id_funcionario,
                                                                         v_telefonia_detalle.id_centro_costo,
-                                                                        v_importe_total_OD,
+                                                                        coalesce(v_importe_total_OD,0),
                                                                         NULL,--v_telefonia_detalle.id_orden_trabajo,
                                                                         'Prorrateo ' || p_codigo_prorrateo,
                                                                         p_id_periodo,
@@ -506,6 +513,7 @@ DECLARE
     else
       raise exception 'No existe el tipo de prorrateo: %',p_codigo_prorrateo;
     end if;
+
 
       --raise exception 'llegabd333fin %',v_suma;
       v_resp ='exito';
