@@ -153,7 +153,7 @@ DECLARE
                            if (v_registros.total = v_registros.conteo) then
 
 
-                                 insert into tes_temp_prorrateo_ruta ( id_tabla,
+                                 insert into gecom.tes_temp_prorrateo_ruta ( id_tabla,
                                                                         id_funcionario,
                                                                         id_centro_costo,
                                                                         monto,
@@ -179,7 +179,7 @@ DECLARE
                               --raise exception 'llegabd333 % - %',v_suma,  p_monto;
                          else
 
-                         		insert into tes_temp_prorrateo_ruta ( id_tabla,
+                         		insert into gecom.tes_temp_prorrateo_ruta ( id_tabla,
                                                                         id_funcionario,
                                                                         id_centro_costo,
                                                                         monto,
@@ -216,7 +216,7 @@ DECLARE
 
                     else
 
-                      insert into tes_temp_prorrateo_ruta (id_tabla,
+                      insert into gecom.tes_temp_prorrateo_ruta (id_tabla,
                                                       id_funcionario,
                                                       id_centro_costo,
                                                       monto,
