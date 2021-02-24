@@ -28,15 +28,24 @@ DECLARE
     v_empleado				varchar;
     v_num_cuenta			varchar;
 
+    v_sum_monto_prorra_ruta     record;
+    v_total						numeric;
+    v_importe_total_OD			numeric;
+    v_factor_porcentual_prorrateo	numeric;
+    v_temp_prorrateo_ruta		record;
+
+    v_telefonia_detalle			record;
+    v_importe_consumo			numeric;
+
 
   BEGIN
 
     v_nombre_funcion = 'orga.f_prorratear_x_empleado';
     --Crear tabla temporal con detalle costos
     v_sql_tabla = 'CREATE TEMPORARY TABLE tes_temp_prorrateo
-    		(	id_tabla INTEGER, 
-            	id_funcionario INTEGER, 
-                id_centro_costo INTEGER, 
+    		(	id_tabla INTEGER,
+            	id_funcionario INTEGER,
+                id_centro_costo INTEGER,
                 monto NUMERIC(18,2),
                 descripcion TEXT,
                 id_orden_trabajo INTEGER
@@ -49,62 +58,352 @@ DECLARE
     EXECUTE(v_sql_tabla);
     if (p_codigo_prorrateo = 'PCELULAR' or p_codigo_prorrateo = 'P4G'  or p_codigo_prorrateo = 'PFIJO') then
       v_tipo = 'celular';
-      if (p_codigo_prorrateo = 'P4G') then
-        v_tipo = '4g';
-      elsif (p_codigo_prorrateo = 'PFIJO') then
-        v_tipo = 'fijo';
-      end if;
+    if (p_codigo_prorrateo = 'P4G') then
+      v_tipo = '4g';
+    elsif (p_codigo_prorrateo = 'PFIJO') then
+      v_tipo = 'fijo';
+    end if;
 
       v_suma = 0;
-      for v_registros in (
-        select * ,count(nc.id_numero_celular) OVER () as total,
-                  row_number() OVER () as conteo,sum(consumo) OVER() as suma_total
-        from gecom.tconsumo c
-          inner join gecom.tnumero_celular nc
-            on c.id_numero_celular = nc.id_numero_celular
-        where id_periodo = p_id_periodo  and nc.tipo = v_tipo) loop
+      for v_registros in ( select * ,
+      							count(nc.id_numero_celular) OVER () as total,
+                                row_number() OVER () as conteo,
+                                sum(consumo) OVER() as suma_total
+                          from gecom.tconsumo c
+                            inner join gecom.tnumero_celular nc on c.id_numero_celular = nc.id_numero_celular
+                          where id_periodo = p_id_periodo  and nc.tipo = v_tipo) loop
 
-        v_factor = (p_monto / v_registros.suma_total);
 
-        v_id_funcionario = gecom.f_get_ultimo_funcionario_asignado(v_registros.id_numero_celular,p_id_periodo);
-        if (v_id_funcionario is null) then
-          raise exception 'No existe un funcionario asignado para el nro % en el periodo %,%,%',v_registros.numero,v_periodo.periodo,v_registros.id_numero_celular,p_id_periodo;
-        end if;
-        v_id_centro_costo = null;
-        v_id_centro_costo = null;
+        --may 01-02-2021
+        --PARA TIPO PRORRATEO p_codigo_prorrateo = 'PFIJO'
+        IF (p_codigo_prorrateo = 'PFIJO') THEN
 
-        select po_id_cargo,po_id_centro_costo,po_id_ot into v_id_cargo,v_id_centro_costo,v_id_ot
-        from orga.f_get_ultimo_centro_costo_funcionario(v_id_funcionario,p_id_periodo);
+              --PARA LOS QUE EXISTAN EN LA TABLA RUTAS(con factor porcentual segun centro de costos)
+              IF exists(select 1
+                        from gecom.truta rut
+                        inner join param.tperiodo per on per.id_gestion = rut.id_gestion
+                        where rut.id_numero_celular = v_registros.id_numero_celular
+                        and per.id_periodo = p_id_periodo) THEN
 
-        select f.desc_funcionario1 into v_empleado
-        from orga.vfuncionario f
-        where f.id_funcionario = v_id_funcionario;
 
-        if (v_id_centro_costo is null) then
-          raise exception 'Existe un empleado que no tiene asignado centro de costo o ya no tiene un contrato activo en la empresa : %',v_empleado;
-        end if;
-        
-        if (v_id_ot is null) then
-          raise exception 'Existe un empleado que no tiene asignado ot o ya no tiene un contrato activo en la empresa : %',v_empleado;
-        end if;
+                  v_id_funcionario = gecom.f_get_ultimo_funcionario_asignado(v_registros.id_numero_celular,p_id_periodo);
 
-        if (v_registros.total = v_registros.conteo) then
-          insert into tes_temp_prorrateo (id_tabla,id_funcionario,id_centro_costo,monto,id_orden_trabajo,descripcion)
-          values ( v_registros.id_numero_celular,v_id_funcionario,v_id_centro_costo,p_monto - v_suma ,v_id_ot,'Prorrateo ' || p_codigo_prorrateo);
-          if (v_registros.suma_total != p_monto) then
-            v_resp ='El monto de la factura no iguala con la suma del consumo por numero. Monto Factura : ' || p_monto || ', Suma consumo por numero: ' || v_registros.suma_total || '. SE HA GENERADO EL PRORRATEO DE TODAS FORMAS!!!!';
 
-          else
-            v_resp ='exito';
-          end if;
-          v_suma = p_monto;
-        else
-          insert into tes_temp_prorrateo (id_tabla,id_funcionario,id_centro_costo,monto,id_orden_trabajo,descripcion)
-          values ( v_registros.id_numero_celular,v_id_funcionario,v_id_centro_costo,round((v_registros.consumo*v_factor),2),v_id_ot,'Prorrateo ' || p_codigo_prorrateo);
+                  select f.desc_funcionario1
+                  into v_empleado
+                  from orga.vfuncionario f
+                  where f.id_funcionario = v_id_funcionario;
 
-          v_suma = v_suma + round((v_registros.consumo*v_factor),2);
-        end if;
+                  v_id_centro_costo = null;
+
+                  --sum total de solo el prorrateo
+                  SELECT sum(pdet.costo_llamada)
+                  INTO v_total
+                  FROM gecom.tpago_telefonia_det pdet
+                  left join gecom.tpago_telefonia pt on pt.id_pago_telefonia = pdet.id_pago_telefonia
+                  left join gecom.truta rut on rut.nro_ruta = pdet.ruta and rut.cod_compania = pdet.cod_compania
+                  left join gecom.tnumero_celular numcel on numcel.id_numero_celular = rut.id_numero_celular
+                  WHERE  numcel.id_numero_celular = v_registros.id_numero_celular
+                  and pt.id_periodo = p_id_periodo;
+
+                  --sum total deconsumo segun el numero
+                  SELECT consu.consumo
+                  INTO v_importe_consumo
+                  FROM gecom.tconsumo consu
+                  WHERE  consu.id_numero_celular = v_registros.id_numero_celular
+                  and consu.id_periodo = p_id_periodo
+                  limit 1;
+
+                  --raise exception 'llegaav_totalOD %',v_total;
+
+                  FOR v_telefonia_detalle in (select  NULL,
+                                                      pdet.id_centro_costo,
+                                                      NULL,--ccot.id_orden_trabajo
+                                                      sum(pdet.costo_llamada) as monto
+
+                                                from gecom.tpago_telefonia_det pdet
+                                                left join gecom.tpago_telefonia pt on pt.id_pago_telefonia = pdet.id_pago_telefonia
+
+                                                left join gecom.truta rut on rut.nro_ruta = pdet.ruta and rut.cod_compania = pdet.cod_compania
+                                                left join gecom.tnumero_celular numcel on numcel.id_numero_celular = rut.id_numero_celular
+
+                                                left join param.tcentro_costo cc on cc.id_centro_costo = pdet.id_centro_costo
+
+                                                where numcel.id_numero_celular = v_registros.id_numero_celular
+                                                and pt.id_periodo = p_id_periodo
+
+                                                group by pdet.id_centro_costo) LOOP
+
+                           --raise exception 'llega % - %',v_telefonia_detalle.id_centro_costo, v_telefonia_detalle.monto;
+
+                            if (v_telefonia_detalle.id_centro_costo is null) then
+                              raise exception 'No tiene asignado un centro de costo';
+                            end if;
+
+
+                            v_factor_porcentual_prorrateo = ( (v_telefonia_detalle.monto * 100) / v_total );
+
+                            --para la OP
+                            v_importe_total_OD =  ( (v_importe_consumo * v_factor_porcentual_prorrateo) / 100 );
+
+                           --raise exception 'llegaav_totalOD %',v_importe_total_OD;
+
+                           --raise exception 'llegabd333 % - % - % - %',v_registros.conteo,v_suma,p_monto, v_total ;
+
+                           if (v_registros.total = v_registros.conteo) then
+
+
+                                 insert into tes_temp_prorrateo_ruta ( id_tabla,
+                                                                        id_funcionario,
+                                                                        id_centro_costo,
+                                                                        monto,
+                                                                        id_orden_trabajo,
+                                                                        descripcion,
+                                                                        id_periodo,
+                                                                        ruta
+                                                                        ) values (
+                                                                        v_registros.id_numero_celular, --id_numero_celular,
+                                                                        v_id_funcionario,
+                                                                        v_telefonia_detalle.id_centro_costo,
+                                                                        v_importe_total_OD,
+                                                                        NULL,--v_telefonia_detalle.id_orden_trabajo,
+                                                                        'Prorrateo ' || p_codigo_prorrateo,
+                                                                        p_id_periodo,
+                                                                        'si'
+                                                                        );
+
+                               --v_suma = p_monto;
+                              v_suma = v_suma + round((v_importe_total_OD),2);
+
+
+                              --raise exception 'llegabd333 % - %',v_suma,  p_monto;
+                         else
+
+                         		insert into tes_temp_prorrateo_ruta ( id_tabla,
+                                                                        id_funcionario,
+                                                                        id_centro_costo,
+                                                                        monto,
+                                                                        id_orden_trabajo,
+                                                                        descripcion,
+                                                                        id_periodo,
+                                                                        ruta
+                                                                        ) values (
+                                                                        v_registros.id_numero_celular, --id_numero_celular,
+                                                                        v_id_funcionario,
+                                                                        v_telefonia_detalle.id_centro_costo,
+                                                                        v_importe_total_OD,
+                                                                        NULL,--v_telefonia_detalle.id_orden_trabajo,
+                                                                        'Prorrateo ' || p_codigo_prorrateo,
+                                                                        p_id_periodo,
+                                                                        'si'
+                                                                        );
+
+                                v_suma = v_suma + round((v_importe_total_OD),2);
+
+                         end if;
+
+
+                  END LOOP;
+
+
+
+
+
+                  /*--raise exception 'llegabd333 % - %',v_registros.total,  v_registros.conteo;
+                  if (v_registros.total = v_registros.conteo) then
+
+
+
+                    else
+
+                      insert into tes_temp_prorrateo_ruta (id_tabla,
+                                                      id_funcionario,
+                                                      id_centro_costo,
+                                                      monto,
+                                                      id_orden_trabajo,
+                                                      descripcion,
+                                                      id_periodo
+
+                                                      ) values (
+                                                    v_registros.id_numero_celular,
+                                                    v_id_funcionario,
+                                                    v_id_centro_costo,
+                                                    v_registros.consumo, --round((v_registros.consumo*v_factor),2),
+                                                    v_id_ot,
+                                                    'Prorrateo ' || p_codigo_prorrateo,
+                                                    p_id_periodo
+
+                                                    );
+
+                      --v_suma = v_suma + round((v_registros.consumo*v_factor),2);
+                      v_suma = v_registros.consumo;
+
+                    end if;*/
+
+
+
+
+              ---
+              ELSE
+              --(MAY) PARA LOS QUE  < NO >  EXISTAN EN LA TABLA RUTAS (la funcion no se modifica)
+                  --raise exception 'llegabd22222 %',v_factor;
+
+                    v_factor = (p_monto / v_registros.suma_total);
+
+                    v_id_funcionario = gecom.f_get_ultimo_funcionario_asignado(v_registros.id_numero_celular,p_id_periodo);
+
+                    if (v_id_funcionario is null) then
+                      raise exception 'No existe un funcionario asignado para el nro % en el periodo %,%,%',v_registros.numero,v_periodo.periodo,v_registros.id_numero_celular,p_id_periodo;
+                    end if;
+                    v_id_centro_costo = null;
+                    v_id_centro_costo = null;
+
+                    select po_id_cargo,po_id_centro_costo,po_id_ot into v_id_cargo,v_id_centro_costo,v_id_ot
+                    from orga.f_get_ultimo_centro_costo_funcionario(v_id_funcionario,p_id_periodo);
+
+                    select f.desc_funcionario1 into v_empleado
+                    from orga.vfuncionario f
+                    where f.id_funcionario = v_id_funcionario;
+
+                    if (v_id_centro_costo is null) then
+                      raise exception 'Existe un empleado que no tiene asignado centro de costo o ya no tiene un contrato activo en la empresa : %',v_empleado;
+                    end if;
+
+                    if (v_id_ot is null) then
+                      raise exception 'Existe un empleado que no tiene asignado ot o ya no tiene un contrato activo en la empresa : %',v_empleado;
+                    end if;
+
+					--raise exception 'llega7 % - %',p_monto, v_suma;
+                    if (v_registros.total = v_registros.conteo) then
+                      insert into tes_temp_prorrateo (id_tabla,
+                                                      id_funcionario,
+                                                      id_centro_costo,
+                                                      monto,
+                                                      id_orden_trabajo,
+                                                      descripcion
+                                                      )
+                                                    values (
+                                                    v_registros.id_numero_celular,
+                                                    v_id_funcionario,
+                                                    v_id_centro_costo,
+                                                    p_monto - v_suma ,
+                                                    v_id_ot,
+                                                    'Prorrateo ' || p_codigo_prorrateo
+                                                    );
+                      if (v_registros.suma_total != p_monto) then
+                        v_resp ='El monto de la factura no iguala con la suma del consumo por numero. Monto Factura : ' || p_monto || ', Suma consumo por numero: ' || v_registros.suma_total || '. SE HA GENERADO EL PRORRATEO DE TODAS FORMAS!!!!';
+
+                      else
+                        v_resp ='exito';
+                      end if;
+
+                     -- v_suma = p_monto;
+                      v_suma = p_monto - v_suma;
+
+                    else
+
+                      insert into tes_temp_prorrateo (id_tabla,
+                                                      id_funcionario,
+                                                      id_centro_costo,
+                                                      monto,
+                                                      id_orden_trabajo,
+                                                      descripcion
+                                                      )
+                                                    values (
+                                                    v_registros.id_numero_celular,
+                                                    v_id_funcionario,
+                                                    v_id_centro_costo,
+                                                    round((v_registros.consumo*v_factor),2),
+                                                    v_id_ot,
+                                                    'Prorrateo ' || p_codigo_prorrateo
+                                                    );
+
+                      v_suma = v_suma + round((v_registros.consumo*v_factor),2);
+
+                    end if;
+
+              END IF;
+
+        ELSE
+        	--PARA TIPO PRORRATEO p_codigo_prorrateo = 'PCELULAR' or p_codigo_prorrateo = 'P4G'
+        	v_factor = (p_monto / v_registros.suma_total);
+
+            v_id_funcionario = gecom.f_get_ultimo_funcionario_asignado(v_registros.id_numero_celular,p_id_periodo);
+
+            if (v_id_funcionario is null) then
+              raise exception 'No existe un funcionario asignado para el nro % en el periodo %,%,%',v_registros.numero,v_periodo.periodo,v_registros.id_numero_celular,p_id_periodo;
+            end if;
+            v_id_centro_costo = null;
+            v_id_centro_costo = null;
+
+            select po_id_cargo,po_id_centro_costo,po_id_ot into v_id_cargo,v_id_centro_costo,v_id_ot
+            from orga.f_get_ultimo_centro_costo_funcionario(v_id_funcionario,p_id_periodo);
+
+            select f.desc_funcionario1 into v_empleado
+            from orga.vfuncionario f
+            where f.id_funcionario = v_id_funcionario;
+
+            if (v_id_centro_costo is null) then
+              raise exception 'Existe un empleado que no tiene asignado centro de costo o ya no tiene un contrato activo en la empresa : %',v_empleado;
+            end if;
+
+            if (v_id_ot is null) then
+              raise exception 'Existe un empleado que no tiene asignado ot o ya no tiene un contrato activo en la empresa : %',v_empleado;
+            end if;
+
+            if (v_registros.total = v_registros.conteo) then
+              insert into tes_temp_prorrateo (id_tabla,
+                                              id_funcionario,
+                                              id_centro_costo,
+                                              monto,
+                                              id_orden_trabajo,
+                                              descripcion
+                                              )
+                                            values (
+                                            v_registros.id_numero_celular,
+                                            v_id_funcionario,
+                                            v_id_centro_costo,
+                                            p_monto - v_suma ,
+                                            v_id_ot,
+                                            'Prorrateo ' || p_codigo_prorrateo
+                                            );
+              if (v_registros.suma_total != p_monto) then
+                v_resp ='El monto de la factura no iguala con la suma del consumo por numero. Monto Factura : ' || p_monto || ', Suma consumo por numero: ' || v_registros.suma_total || '. SE HA GENERADO EL PRORRATEO DE TODAS FORMAS!!!!';
+
+              else
+                v_resp ='exito';
+              end if;
+
+              v_suma = p_monto;
+
+            else
+              insert into tes_temp_prorrateo (id_tabla,
+                                              id_funcionario,
+                                              id_centro_costo,
+                                              monto,
+                                              id_orden_trabajo,
+                                              descripcion
+                                              )
+                                            values (
+                                            v_registros.id_numero_celular,
+                                            v_id_funcionario,
+                                            v_id_centro_costo,
+                                            round((v_registros.consumo*v_factor),2),
+                                            v_id_ot,
+                                            'Prorrateo ' || p_codigo_prorrateo
+                                            );
+
+              v_suma = v_suma + round((v_registros.consumo*v_factor),2);
+
+            end if;
+
+        END IF;
+
+
+
+
       end loop;
+
     elsif (p_codigo_prorrateo = 'POFI') then
 
       /*Obtener el id_oficina a partir de la cuenta*/
@@ -140,7 +439,7 @@ DECLARE
         if (v_id_ot is null) then
           raise exception 'Existe un empleado que no tiene asignado ot o ya no tiene un contrato activo en la empresa : %',v_empleado;
         end if;
-        
+
         if (v_funcionarios.total = v_funcionarios.numero) then
 
           insert into tes_temp_prorrateo (id_tabla,id_funcionario,id_centro_costo,monto,id_orden_trabajo,descripcion)
@@ -176,7 +475,7 @@ DECLARE
         v_id_centro_costo = null;
         select po_id_cargo,po_id_centro_costo,po_id_ot into v_id_cargo,v_id_centro_costo,v_id_ot
         from orga.f_get_ultimo_centro_costo_funcionario(v_funcionarios.id_funcionario,p_id_periodo);
-		        
+
         select f.desc_funcionario1 into v_empleado
         from orga.vfuncionario f
         where f.id_funcionario = v_funcionarios.id_funcionario;
@@ -184,7 +483,7 @@ DECLARE
         if (v_id_centro_costo is null) then
           raise exception 'Existe un empleado que no tiene asignado centro de costo o ya no tiene un contrato activo en la empresa : %',v_empleado;
         end if;
-        
+
         if (v_id_ot is null) then
           raise exception 'Existe un empleado que no tiene asignado ot o ya no tiene un contrato activo en la empresa : %',v_empleado;
         end if;
@@ -202,11 +501,14 @@ DECLARE
           v_suma = v_suma + round((p_monto/v_funcionarios.total),2);
         end if;
       END LOOP;
-      v_resp ='exito';
+
 
     else
       raise exception 'No existe el tipo de prorrateo: %',p_codigo_prorrateo;
     end if;
+
+      --raise exception 'llegabd333fin %',v_suma;
+      v_resp ='exito';
 
     return v_resp;
 
