@@ -3,7 +3,8 @@ CREATE OR REPLACE FUNCTION orga.f_prorratear_x_empleado (
   p_monto numeric,
   p_codigo_prorrateo varchar,
   p_id_lugar integer,
-  p_id_cuenta integer
+  p_id_cuenta integer,
+  p_id_proveedor integer
 )
 RETURNS varchar AS
 $body$
@@ -48,7 +49,8 @@ DECLARE
                 id_centro_costo INTEGER,
                 monto NUMERIC(18,2),
                 descripcion TEXT,
-                id_orden_trabajo INTEGER
+                id_orden_trabajo INTEGER,
+                id_proveedor INTEGER
   			) ON COMMIT DROP';
 
     select * into v_periodo
@@ -71,7 +73,8 @@ DECLARE
                                 sum(consumo) OVER() as suma_total
                           from gecom.tconsumo c
                             inner join gecom.tnumero_celular nc on c.id_numero_celular = nc.id_numero_celular
-                          where id_periodo = p_id_periodo  and nc.tipo = v_tipo) loop
+                          where id_periodo = p_id_periodo  and nc.tipo = v_tipo
+                          and nc.id_proveedor = p_id_proveedor ) loop
 
 
         --may 01-02-2021
@@ -85,6 +88,7 @@ DECLARE
                         where rut.id_numero_celular = v_registros.id_numero_celular
                         and per.id_periodo = p_id_periodo
                         and rut.id_numero_celular is not null
+                        and rut.id_proveedor = p_id_proveedor
                         group by rut.id_numero_celular  ) THEN
 
 
@@ -167,7 +171,8 @@ DECLARE
                                                                         id_orden_trabajo,
                                                                         descripcion,
                                                                         id_periodo,
-                                                                        ruta
+                                                                        ruta,
+                                                                        id_proveedor
                                                                         ) values (
                                                                         v_registros.id_numero_celular, --id_numero_celular,
                                                                         v_id_funcionario,
@@ -176,7 +181,8 @@ DECLARE
                                                                         NULL,--v_telefonia_detalle.id_orden_trabajo,
                                                                         'Prorrateo ' || p_codigo_prorrateo,
                                                                         p_id_periodo,
-                                                                        'si'
+                                                                        'si',
+                                                                        p_id_proveedor
                                                                         );
 
                                --v_suma = p_monto;
@@ -193,7 +199,8 @@ DECLARE
                                                                         id_orden_trabajo,
                                                                         descripcion,
                                                                         id_periodo,
-                                                                        ruta
+                                                                        ruta,
+                                                                        id_proveedor
                                                                         ) values (
                                                                         v_registros.id_numero_celular, --id_numero_celular,
                                                                         v_id_funcionario,
@@ -202,7 +209,8 @@ DECLARE
                                                                         NULL,--v_telefonia_detalle.id_orden_trabajo,
                                                                         'Prorrateo ' || p_codigo_prorrateo,
                                                                         p_id_periodo,
-                                                                        'si'
+                                                                        'si',
+                                                                        p_id_proveedor
                                                                         );
 
                                 v_suma = v_suma + round((v_importe_total_OD),2);
@@ -287,7 +295,8 @@ DECLARE
                                                       id_centro_costo,
                                                       monto,
                                                       id_orden_trabajo,
-                                                      descripcion
+                                                      descripcion,
+                                                      id_proveedor
                                                       )
                                                     values (
                                                     v_registros.id_numero_celular,
@@ -295,7 +304,8 @@ DECLARE
                                                     v_id_centro_costo,
                                                     p_monto - v_suma ,
                                                     v_id_ot,
-                                                    'Prorrateo ' || p_codigo_prorrateo
+                                                    'Prorrateo ' || p_codigo_prorrateo,
+                                                    p_id_proveedor
                                                     );
                       if (v_registros.suma_total != p_monto) then
                         v_resp ='El monto de la factura no iguala con la suma del consumo por numero. Monto Factura : ' || p_monto || ', Suma consumo por numero: ' || v_registros.suma_total || '. SE HA GENERADO EL PRORRATEO DE TODAS FORMAS!!!!';
@@ -314,7 +324,8 @@ DECLARE
                                                       id_centro_costo,
                                                       monto,
                                                       id_orden_trabajo,
-                                                      descripcion
+                                                      descripcion,
+                                                      id_proveedor
                                                       )
                                                     values (
                                                     v_registros.id_numero_celular,
@@ -322,7 +333,8 @@ DECLARE
                                                     v_id_centro_costo,
                                                     round((v_registros.consumo*v_factor),2),
                                                     v_id_ot,
-                                                    'Prorrateo ' || p_codigo_prorrateo
+                                                    'Prorrateo ' || p_codigo_prorrateo,
+                                                    p_id_proveedor
                                                     );
 
                       v_suma = v_suma + round((v_registros.consumo*v_factor),2);
@@ -364,7 +376,8 @@ DECLARE
                                               id_centro_costo,
                                               monto,
                                               id_orden_trabajo,
-                                              descripcion
+                                              descripcion,
+                                              id_proveedor
                                               )
                                             values (
                                             v_registros.id_numero_celular,
@@ -372,7 +385,8 @@ DECLARE
                                             v_id_centro_costo,
                                             p_monto - v_suma ,
                                             v_id_ot,
-                                            'Prorrateo ' || p_codigo_prorrateo
+                                            'Prorrateo ' || p_codigo_prorrateo,
+                                            p_id_proveedor
                                             );
               if (v_registros.suma_total != p_monto) then
                 v_resp ='El monto de la factura no iguala con la suma del consumo por numero. Monto Factura : ' || p_monto || ', Suma consumo por numero: ' || v_registros.suma_total || '. SE HA GENERADO EL PRORRATEO DE TODAS FORMAS!!!!';
@@ -389,7 +403,8 @@ DECLARE
                                               id_centro_costo,
                                               monto,
                                               id_orden_trabajo,
-                                              descripcion
+                                              descripcion,
+                                              id_proveedor
                                               )
                                             values (
                                             v_registros.id_numero_celular,
@@ -397,7 +412,8 @@ DECLARE
                                             v_id_centro_costo,
                                             round((v_registros.consumo*v_factor),2),
                                             v_id_ot,
-                                            'Prorrateo ' || p_codigo_prorrateo
+                                            'Prorrateo ' || p_codigo_prorrateo,
+                                            p_id_proveedor
                                             );
 
               v_suma = v_suma + round((v_registros.consumo*v_factor),2);
