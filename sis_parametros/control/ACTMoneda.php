@@ -31,7 +31,7 @@ class ACTMoneda extends ACTbase{
         }
 
 				if($this->objParam->getParametro('filtrar_solo_dolar') == 'si' ){
-		              $this->objParam->addFiltro("codigo_internacional = ''USD''");    
+		              $this->objParam->addFiltro("codigo_internacional = ''USD''");
 		        }
 
 
@@ -43,6 +43,19 @@ class ACTMoneda extends ACTbase{
 
 			$this->res=$this->objFunc->listarMoneda($this->objParam);
 		}
+
+    if($this->objParam->getParametro('_adicionar')!=''){
+
+      $respuesta = $this->res->getDatos();
+      array_unshift ( $respuesta, array(
+                                        'id_moneda' => 0,
+                                        'moneda'=>'Todos',
+																				'codigo'=>'Todos',
+																				'tipo_moneda'=>'Todos',
+																				'codigo_internacional'=>'Todos'
+																			));
+      $this->res->setDatos($respuesta);
+    }
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
 
