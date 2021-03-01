@@ -111,6 +111,11 @@ BEGIN
           end if;
   end if;
 
+  IF EXISTS (   select 1 from orga.tcertificado_planilla
+  		where id_funcionario = v_parametros.id_funcionario and tipo_certificado = v_parametros.tipo_certificado and fecha_solicitud = v_parametros.fecha_solicitud ) THEN
+	        raise exception 'Estimad@ %, su solicitud ya fue registrada para fecha % ',v_funcionario, to_char(v_parametros.fecha_solicitud, 'dd/mm/yyyy');
+  END IF;
+
         --Gestion para WF
     	   SELECT g.id_gestion
            INTO v_id_gestion
