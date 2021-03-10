@@ -2401,3 +2401,7 @@ ALTER TABLE param.tentidad
 COMMENT ON COLUMN param.tentidad.cod_iata_linea_aerea
 IS 'Código asignado por IATA a la Aerolínea.';
 /***********************************F-SCP-BVP-PARAM-0-09/02/2021****************************************/
+/***********************************I-SCP-BVP-PARAM-0-10/03/2021****************************************/
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN id_concepto_ingas_fk INTEGER;
+/***********************************F-SCP-BVP-PARAM-0-10/03/2021****************************************/
