@@ -143,7 +143,7 @@ DECLARE
                            --raise exception 'llega % - %',v_telefonia_detalle.id_centro_costo, v_telefonia_detalle.monto;
                            --raise notice 'llegabdww % - % - %', v_registros.id_numero_celular, v_telefonia_detalle.id_centro_costo, v_telefonia_detalle.monto;
                             if (v_telefonia_detalle.id_centro_costo is null) then
-                              raise exception 'No tiene asignado un centro de costo';
+                               raise exception 'El funcionario % no tiene asignado un Centro de Costo', v_empleado;
                             end if;
 
 
