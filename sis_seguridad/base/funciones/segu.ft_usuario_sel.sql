@@ -92,9 +92,16 @@ BEGIN
                                    PERSON.nombre_completo2 as desc_person,
                                    CLASIF.descripcion,
                                    pxp.text_concat(UR.id_rol::text) as id_roles,
-                                   USUARI.autentificacion
+                                   USUARI.autentificacion,
+                                   usu1.cuenta as usr_reg,
+                                   usu2.cuenta as usr_mod,
+                                   USUARI.fecha_mod,
+								                   USUARI.observaciones,
+                                   USUARI.fecha_reg_hora
 
                             FROM segu.tusuario USUARI
+                                 LEFT JOIN segu.tusuario usu1 on usu1.id_usuario = USUARI.id_usuario_reg
+                                 LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = USUARI.id_usuario_mod
                                  INNER JOIN segu.vpersona PERSON on PERSON.id_persona = USUARI.id_persona
                                  LEFT JOIN segu.tclasificador CLASIF on CLASIF.id_clasificador = USUARI.id_clasificador
                                  LEFT JOIN segu.tusuario_rol UR on ur.estado_reg= ''activo'' and ur.id_usuario = usuari.id_usuario
@@ -116,7 +123,12 @@ BEGIN
                                                PERSON.nombre_completo2,
                                                PERSON.nombre,
                                                CLASIF.descripcion,
-                                               USUARI.autentificacion';
+                                               USUARI.autentificacion,
+                                               usu1.cuenta,
+                                               usu2.cuenta,
+                                               USUARI.fecha_mod,
+                                               USUARI.observaciones,
+                                               USUARI.fecha_reg_hora';
 
                v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
 
@@ -139,6 +151,8 @@ BEGIN
 
                v_consulta:='SELECT count(USUARI.id_usuario)
                             FROM segu.tusuario USUARI
+                            LEFT JOIN segu.tusuario usu1 on usu1.id_usuario = USUARI.id_usuario_reg
+                            LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = USUARI.id_usuario_mod                            
                             INNER JOIN segu.vpersona PERSON  ON PERSON.id_persona=USUARI.id_persona
                             LEFT JOIN segu.tclasificador CLASIF ON CLASIF.id_clasificador=USUARI.id_clasificador
                             WHERE USUARI.estado_reg=''activo'' AND ';

@@ -51,8 +51,14 @@ BEGIN
                             roll.estado_reg,
                             roll.rol,
                             roll.id_subsistema,
-                            coalesce(subsis.nombre,'' '') as desc_subsis
+                            coalesce(subsis.nombre,'' '') as desc_subsis,
+                            usu1.cuenta as usr_reg,
+                            usu2.cuenta as usr_mod,
+                            roll.fecha_mod,
+                            roll.fecha_reg_hora
                         FROM segu.trol roll
+                        LEFT JOIN segu.tusuario usu1 on usu1.id_usuario = roll.id_usuario_reg
+                        LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = roll.id_usuario_mod
                         LEFT join segu.tsubsistema subsis
                         on subsis.id_subsistema=roll.id_subsistema where roll.estado_reg = ''activo'' AND ';
               v_consulta:=v_consulta||v_parametros.filtro;
@@ -71,6 +77,8 @@ BEGIN
 
                v_consulta:='SELECT count(roll.id_rol)
                             FROM segu.trol roll
+                            LEFT JOIN segu.tusuario usu1 on usu1.id_usuario = roll.id_usuario_reg
+                            LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = roll.id_usuario_mod
                         LEFT JOIN segu.tsubsistema subsis
                         on subsis.id_subsistema=roll.id_subsistema where roll.estado_reg = ''activo'' AND ';
                v_consulta:=v_consulta||v_parametros.filtro;
@@ -124,7 +132,13 @@ BEGIN
 
           v_consulta:='select  	ts.id_rol,
 								p.nombre_completo1 as nombre,
-                                COALESCE (car.nombre_cargo,''NO ES FUNCIONARIO'') AS cargo
+                                COALESCE (car.nombre_cargo,''NO ES FUNCIONARIO'') AS cargo,
+                                ro.fecha_reg,
+                                usu1.cuenta as usr_reg,
+                                usu2.cuenta as usr_mod,
+                                us.fecha_mod,
+                                ro.id_usuario_rol,
+                                ro.fecha_reg_hora
 								from segu.tusuario us
                                 inner join segu.tusuario_rol ro on ro.id_usuario = us.id_usuario and ro.estado_reg = ''activo''
                                 inner join segu.trol ts on ts.id_rol =ro.id_rol and ts.estado_reg = ''activo''
@@ -134,7 +148,9 @@ BEGIN
                                 left join orga.vfuncionario fun on fun.id_persona = p.id_persona
                                 left join orga.vfuncionario_ultimo_cargo car on car.id_funcionario = fun.id_funcionario
                                 /******************************/
-
+                                /*Aumentando estas condiciones (Breydi Vasquez 16/03/2021)*/
+                                LEFT JOIN segu.tusuario usu1 on usu1.id_usuario = ro.id_usuario_reg
+                                LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = ro.id_usuario_mod
                                 where us.fecha_caducidad >= now()::date and';
 
           v_consulta:=v_consulta||v_parametros.filtro;
@@ -159,7 +175,9 @@ BEGIN
                                 left join orga.vfuncionario fun on fun.id_persona = p.id_persona
                                 left join orga.vfuncionario_ultimo_cargo car on car.id_funcionario = fun.id_funcionario
                                 /******************************/
-
+                                /*Aumentando estas condiciones (Breydi Vasquez 16/03/2021)*/
+                                LEFT JOIN segu.tusuario usu1 on usu1.id_usuario = ro.id_usuario_reg
+                                LEFT JOIN segu.tusuario usu2 on usu2.id_usuario = ro.id_usuario_mod
                                 where us.fecha_caducidad >= now()::date and';
                v_consulta:=v_consulta||v_parametros.filtro;
                return v_consulta;
