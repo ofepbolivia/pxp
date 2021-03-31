@@ -684,5 +684,33 @@ class MODFuncionario extends MODbase{
         return $this->respuesta;
     }
 
+    function modificarFuncionarioREST(){
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento='orga.ft_funcionario_ime';// nombre procedimiento almacenado
+        $this->transaccion='RH_MOD_FUNC_REST';//nombre de la transaccion
+        $this->tipo_procedimiento='IME';//tipo de transaccion
+
+        //Define los parametros para la funcion
+
+        $this->setParametro('idFuncionario','idFuncionario','integer');
+        $this->setParametro('CI','CI','varchar');
+        $this->setParametro('Expedito','Expedito','varchar');
+        $this->setParametro('TelefonoFijo','TelefonoFijo','varchar');
+        $this->setParametro('TelefonoCelular','TelefonoCelular','varchar');
+        $this->setParametro('Email','Email','varchar');
+        $this->setParametro('FechaNacimiento','FechaNacimiento','date');
+        $this->setParametro('Genero','Genero','varchar');
+        $this->setParametro('Direccion','Direccion','varchar');
+        $this->setParametro('Zona','Zona','varchar');
+        $this->setParametro('Numero','Numero','varchar');
+        $this->setParametro('Ciudad','Ciudad','varchar');
+        $this->setParametro('EstadoCivil','EstadoCivil','varchar');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
+
 }
 ?>

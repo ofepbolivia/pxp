@@ -1213,3 +1213,24 @@ ALTER TABLE segu.trol
 ALTER TABLE segu.trol
   ADD COLUMN usuario_ai VARCHAR(300);
 /*****************************F-SCP-BVP-SEGU-0-22/03/2021*************/
+
+
+/*****************************I-SCP-FEA-SEGU-0-29/03/2021*************/
+ALTER TABLE segu.tpersona
+  ADD COLUMN ciudad_residencia VARCHAR(8);
+
+COMMENT ON COLUMN segu.tpersona.ciudad_residencia
+IS 'Ciudad de residencia de una persona.';
+
+ALTER TABLE segu.tpersona
+  ADD COLUMN zona_residencia VARCHAR(64);
+
+COMMENT ON COLUMN segu.tpersona.zona_residencia
+IS 'Describe la zona de residencia de una persona.';
+
+ALTER TABLE segu.tpersona
+  ADD COLUMN numero_domicilio VARCHAR(8);
+
+COMMENT ON COLUMN segu.tpersona.numero_domicilio
+IS 'Numero de domicilio donde reside una persona.';
+/*****************************F-SCP-FEA-SEGU-0-29/03/2021*************/

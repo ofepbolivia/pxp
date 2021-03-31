@@ -51,7 +51,8 @@ class ACTFuncionario extends ACTbase{
         }else if($this->objParam->getParametro('estado_func')=='sin_asignacion'){
             $this->objParam->addFiltro("tuo.id_funcionario is null");
         }else{
-            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''activo'' and current_date <= coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date))");
+            if($this->objParam->getParametro('correo_func')=='' || $this->objParam->getParametro('correo_func') == null)
+                $this->objParam->addFiltro("(FUNCIO.estado_reg = ''activo'' and current_date <= coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date))");
         }
 
 
@@ -60,6 +61,8 @@ class ACTFuncionario extends ACTbase{
             $this->objParam->addFiltro("(FUNCIO.email_empresa = '''' or FUNCIO.email_empresa is null)");
         }else if($this->objParam->getParametro('correo_func')=='con_correo'){
             $this->objParam->addFiltro("(FUNCIO.email_empresa != '''' or FUNCIO.email_empresa is not null)");
+        }else if($this->objParam->getParametro('correo_func')=='inactivo'){
+            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''inactivo'' or coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date) < current_date)");
         }
 
         //crea el objetoFunSeguridad que contiene todos los metodos del sistema de seguridad
@@ -525,6 +528,12 @@ class ACTFuncionario extends ACTbase{
         $this->objFunc=$this->create('MODFuncionario');
         $this->res=$this->objFunc->verificaReplicaFinContrato($this->objParam);
         $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
+    function modificarFuncionarioREST() {
+        $this->objFunc = $this->create('MODFuncionario');
+        $this->res = $this->objFunc->modificarFuncionarioREST();
+        $this->res->imprimirRespuesta(json_encode($this->res->getDatos()));
     }
 
 }
