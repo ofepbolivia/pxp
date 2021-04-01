@@ -268,11 +268,11 @@ BEGIN
                  usuario_ai=v_parametros._nombre_usuario_ai
              where
              id_usuario = v_parametros.id_usuario
-             and
+             and estado_reg='activo' and             
              (id_rol::varchar != ANY(v_id_roles) or v_tamano=0);
             --insertamos los que faltan
 
-
+          IF v_parametros.fecha_caducidad >= current_date THEN
             FOR v_i IN 1..v_tamano LOOP
 
               --preguntamos si el id_rol ya se encuentra asignado si no insertamos
@@ -293,7 +293,7 @@ BEGIN
                   par_id_usuario,v_parametros._id_usuario_ai,v_parametros._nombre_usuario_ai);
               END IF;
             END LOOP;
-
+          END IF;
 
           END;
 

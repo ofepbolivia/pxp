@@ -88,7 +88,7 @@ Phx.vista.UsuarioRol=Ext.extend(Phx.gridInterfaz,{
              type : 'ComboBox',
              id_grupo : 0,
              filters : {
-                 pfiltro : 'usu.cuenta',
+                 pfiltro : 'car.nombre_cargo#p.nombre_completo1',
                  type : 'string'
              },
              bottom_filter:true,
