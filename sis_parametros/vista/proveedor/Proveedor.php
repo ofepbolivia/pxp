@@ -1338,7 +1338,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 type: 'TextField',
                 id_grupo: 2,
                 grid: false,
-                form: true
+                form: false
             }
             ,
             {

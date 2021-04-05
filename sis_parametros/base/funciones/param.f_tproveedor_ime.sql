@@ -281,7 +281,7 @@ BEGIN
                                     pag_web = v_parametros.pag_web,
                                     id_usuario_mod = p_id_usuario,
                                     fecha_mod = now(),
-                                    codigo = v_parametros.codigo_institucion,
+                                    codigo = null, --v_parametros.codigo_institucion,
                                     codigo_telf_institucion = v_parametros.codigo_telf_institucion
 
                                WHERE id_institucion = v_parametros.id_institucion;
@@ -363,14 +363,14 @@ BEGIN
                     else
 
                          --verificar que el codigo no se duplique
-
-                         IF   exists(select
+                         --05-04-2021 se quita control porq ya se se registrara SIGLA
+                         /*IF   exists(select
                                        1
                                     from param.tinstitucion i
                                     where i.estado_reg = 'activo'
                                           and  i.codigo =  v_parametros.codigo_institucion ) THEN
                              raise exception 'Ya existe una institución con esta sigla %',  v_parametros.codigo_institucion;
-                         END IF;
+                         END IF;*/
 
                          --generar codigo de proveedores
                          v_num_seq =  nextval('param.seq_codigo_proveedor');
@@ -419,7 +419,7 @@ BEGIN
                             now(),
                             null,
                             null,
-                            COALESCE(v_parametros.codigo_institucion,v_codigo_gen),
+                            NULL,-- (v_parametros.codigo_institucion,v_codigo_gen),
                             v_parametros.codigo_telf_institucion
 
                         )RETURNING id_institucion into v_id_institucion;
@@ -767,7 +767,7 @@ BEGIN
                             pag_web = v_parametros.pag_web,
                             id_usuario_mod = p_id_usuario,
                             fecha_mod = now(),
-                            codigo = v_parametros.codigo_institucion,
+                            codigo = null, --v_parametros.codigo_institucion,
                             codigo_telf_institucion = v_parametros.codigo_telf_institucion
 
                        WHERE id_institucion = v_parametros.id_institucion;
