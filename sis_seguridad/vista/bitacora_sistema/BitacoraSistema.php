@@ -296,9 +296,9 @@ Phx.vista.bitacora_sistema=function(config){
            width:160,
            enableKeyEvents: true,
            qtip:'ID LOG. Solo permite numeros',
-           style:'margin-left: 20px;'
-  });
+           style:'margin-left: 5px;'
 
+         });
 	var combo_gestion = new Ext.form.ComboBox({
 	        store: new Ext.data.JsonStore({
 
@@ -326,7 +326,7 @@ Phx.vista.bitacora_sistema=function(config){
 	        emptyText:'Gestión...',
 	        selectOnFocus:true,
 	        width:135,
-          style:'margin-left: 10px;'
+          style:'margin-left: 5px;'
 	    });
 
 	    var combo_periodo = new Ext.form.ComboBox({
@@ -337,7 +337,7 @@ Phx.vista.bitacora_sistema=function(config){
 	        emptyText:'Periodo...',
 	        selectOnFocus:true,
 	        width:135,
-          style:'margin-left: 15px;'
+          style:'margin-left: 5px;'
 	    });
 
       this.grid.getTopToolbar().addField(id_log_consul);
