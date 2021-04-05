@@ -179,9 +179,14 @@ BEGIN
                     c.relname='tlog_'||v_parametros.gestion||'_'||v_parametros.periodo))then
                     raise exception 'No se tienen registros para la gestion y periodo seleccionados';
                 end if;
+
+                if (v_parametros.id_log_consul >= 0 or v_parametros.id_log_consul is not null) then
+                        v_id_log = ' logg.id_log = '||v_parametros.id_log_consul||' and ';
+                end if;
+
                v_consulta:='select count(logg.id_log)
                               from log.tlog_'||v_parametros.gestion||'_'||v_parametros.periodo||' logg
-                           where  si_log=1 and ';
+                           where  si_log=1 and '||v_id_log||' ';
                v_consulta:=v_consulta||v_parametros.filtro;
                return v_consulta;
          END;
