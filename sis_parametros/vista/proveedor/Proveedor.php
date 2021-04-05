@@ -1333,7 +1333,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     allowBlank: true,
                     anchor: '100%',
                     gwidth: 100,
-                    maxLength: 50
+                    maxLength: 25
                 },
                 type: 'TextField',
                 id_grupo: 2,
