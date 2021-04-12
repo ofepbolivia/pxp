@@ -18,6 +18,8 @@ class MODAsistente extends MODbase{
 		$this->procedimiento='param.ft_asistente_sel';
 		$this->transaccion='PM_ASIS_SEL';
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
+
+        $this->setParametro('chequeado','chequeado','varchar');
 				
 		//Definicion de la lista del resultado del query
 		$this->captura('id_asistente','int4');

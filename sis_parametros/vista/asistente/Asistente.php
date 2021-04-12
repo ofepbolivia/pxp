@@ -12,6 +12,21 @@ header("content-type: text/javascript; charset=UTF-8");
 <script>
 Phx.vista.Asistente=Ext.extend(Phx.gridInterfaz,{
 
+    //12-04-2021 (may)
+    gruposBarraTareas:[
+        {name:'activo',title:'<H1 align="center">ACTIVOS</h1>',grupo:0,height:0, width: 100},
+        {name:'inactivo',title:'<H1 align="center"</i>INACTIVOS</h1>',grupo:1,height:0, width: 100}
+
+
+    ],
+    bactGroups:  [0,1],
+    bexcelGroups: [0,1],
+
+    actualizarSegunTab: function(name, indice){
+        this.store.baseParams.chequeado = name;
+        this.load({params:{start:0, limit:this.tam_pag}});
+    },
+
 	constructor:function(config){
 		this.maestro=config.maestro;
     	//llama al constructor de la clase padre
@@ -49,11 +64,13 @@ Phx.vista.Asistente=Ext.extend(Phx.gridInterfaz,{
    				fieldLabel:'Funcionario',
    				allowBlank:false,
                 gwidth:200,
+                anchor: '100%',
    				valueField: 'id_funcionario',
    			    gdisplayField: 'desc_funcionario1',
    			    renderer:function(value, p, record){return String.format('{0}', record.data['desc_funcionario1']);}
        	     },
    			type:'ComboRec',//ComboRec
+            bottom_filter: true,
    			id_grupo:0,
    			filters:{pfiltro:'fun.desc_funcionario1',type:'string'},
    		    grid:true,
@@ -69,6 +86,7 @@ Phx.vista.Asistente=Ext.extend(Phx.gridInterfaz,{
 				origen: 'CATALOGO',
 				gdisplayField: 'recursivo',
 				gwidth: 100,
+                anchor: '100%',
 				tinit: false,
 				baseParams:{
 						cod_subsistema:'PARAM',
@@ -90,11 +108,13 @@ Phx.vista.Asistente=Ext.extend(Phx.gridInterfaz,{
    				fieldLabel:'Unidad Org.',
    				gdisplayField:'desc_uo',//mapea al store del grid
    			    gwidth:200,
+                anchor: '100%',
    			    //baseParams: { correspondencia : 'si' },
    			     renderer:function (value, p, record){return String.format('{0}', record.data['desc_uo']);}
        	     },
    			type:'ComboRec',
-   			id_grupo:1,
+            bottom_filter: true,
+   			id_grupo:0,
    			filters:{	
 		        pfiltro:'uo.codigo#uo.nombre_unidad',
 				type:'string'
@@ -141,7 +161,7 @@ Phx.vista.Asistente=Ext.extend(Phx.gridInterfaz,{
 			},
 			type:'TextField',
 			filters:{pfiltro:'asis.estado_reg',type:'string'},
-			id_grupo:1,
+			id_grupo:0,
 			grid:true,
 			form:false
 		},
@@ -157,7 +177,7 @@ Phx.vista.Asistente=Ext.extend(Phx.gridInterfaz,{
 			},
 			type:'DateField',
 			filters:{pfiltro:'asis.fecha_reg',type:'date'},
-			id_grupo:1,
+			id_grupo:0,
 			grid:true,
 			form:false
 		},
@@ -172,7 +192,7 @@ Phx.vista.Asistente=Ext.extend(Phx.gridInterfaz,{
 			},
 			type:'NumberField',
 			filters:{pfiltro:'usu1.cuenta',type:'string'},
-			id_grupo:1,
+			id_grupo:0,
 			grid:true,
 			form:false
 		},
@@ -187,7 +207,7 @@ Phx.vista.Asistente=Ext.extend(Phx.gridInterfaz,{
 			},
 			type:'NumberField',
 			filters:{pfiltro:'usu2.cuenta',type:'string'},
-			id_grupo:1,
+			id_grupo:0,
 			grid:true,
 			form:false
 		},
@@ -203,7 +223,7 @@ Phx.vista.Asistente=Ext.extend(Phx.gridInterfaz,{
 			},
 			type:'DateField',
 			filters:{pfiltro:'asis.fecha_mod',type:'date'},
-			id_grupo:1,
+			id_grupo:0,
 			grid:true,
 			form:false
 		}
@@ -230,7 +250,7 @@ Phx.vista.Asistente=Ext.extend(Phx.gridInterfaz,{
 		{name:'recursivo', type: 'string'}
 	],
 	sortInfo:{
-		field: 'id_asistente',
+		field: 'desc_funcionario1',
 		direction: 'ASC'
 	},
 	bdel:true,
