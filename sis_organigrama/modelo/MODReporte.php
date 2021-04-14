@@ -119,5 +119,36 @@ class MODReporte extends MODbase{
         //Devuelve la respuesta
         return $this->respuesta;
     }
+
+    function reporteInformacionRapida(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='orga.ft_reporte_sel';
+        $this->transaccion='ORGA_INF_RAPIDA_SEL';
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+
+        $this->setParametro('configuracion_reporte','configuracion_reporte','varchar');
+
+        $this->setCount(false);
+        //Definicion de la lista del resultado del query
+        $this->captura('id_funcionario','integer');
+        $this->captura('funcionario','varchar');
+        $this->captura('ci','varchar');
+        $this->captura('fecha_nacimiento','date');
+        $this->captura('cargo','varchar');
+        $this->captura('fecha_ingreso','date');
+        $this->captura('telefonos','varchar');
+        $this->captura('profesion','json');
+        $this->captura('contrato','json');
+        $this->captura('afp','varchar');
+        $this->captura('institucion','varchar');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        //echo($this->consulta);exit;
+        $this->ejecutarConsulta();
+
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
 }
 ?>

@@ -330,12 +330,12 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 	       		mode: 'local',
 				gwidth: 150,
                 anchor:'100%',
-				store:['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia', 'renuncia_tacita' ,'transferencia', 'desvinculación', 'cambio_item', 'cambio_escala_salarial']
+				store:['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia', 'renuncia_tacita' ,'transferencia', 'desvinculación', 'cambio_item', 'cambio_escala_salarial','fin_delegacion_interina', 'despido_indirecto']
 			},
 				type:'ComboBox',
 				filters:{	
 	       		         type: 'list',
-	       				 options: ['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia','renuncia_tacita','transferencia', 'desvinculación', 'cambio_item', 'cambio_escala_salarial'],
+	       				 options: ['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia','renuncia_tacita','transferencia', 'desvinculación', 'cambio_item', 'cambio_escala_salarial','fin_delegacion_interina', 'despido_indirecto'],
 	       		 	},
 				id_grupo:0,
 				grid:true,
@@ -475,7 +475,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 		this.ocultarComponente(this.Cmp.id_cargo);
 		this.ocultarComponente(this.Cmp.id_funcionario);
 		//this.ocultarComponente(this.Cmp.fecha_asignacion);
-		this.ocultarComponente(this.Cmp.tipo);
+		//this.ocultarComponente(this.Cmp.tipo);
 		this.mostrarComponente(this.Cmp.fecha_finalizacion);
 		//this.mostrarComponente(this.Cmp.estado_funcional);
 		this.getComponente('fecha_finalizacion').visible=true;
@@ -520,7 +520,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 	},
 	loadValoresIniciales:function()
     {	
-        this.Cmp.tipo.setValue('oficial');  
+        this.Cmp.tipo.setValue('oficial');
         this.Cmp.tipo.fireEvent('select',this.Cmp.tipo);     
         Phx.vista.uo_funcionario.superclass.loadValoresIniciales.call(this);
     },

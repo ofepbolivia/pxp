@@ -102,25 +102,39 @@ header("content-type: text/javascript; charset=UTF-8");
         },
 
         clonarPresupuesto: function(){
-            Phx.CP.loadingShow();
-            Ext.Ajax.request({
-                url: '../../sis_organigrama/control/Cargo/clonarPresupuesto',
-                params:{
-                    id_gestion: 0
-                },
-                success:function(resp){
-                    Phx.CP.loadingHide();
-                    var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
-                    if(!reg.ROOT.error){
-                        this.reload();
-                    }else{
-                        alert('Ocurrió un error durante el proceso')
+
+            Ext.Msg.show({
+                title: 'Información',
+                msg: '<b>Estimado Funcionario: <br> Esta seguro de Clonar Presupuestos.</b>',
+                buttons: Ext.Msg.OK,
+                width: 512,
+                icon: Ext.Msg.INFO,
+                fn: function (btn) {
+                    if (btn == 'ok') {
+                        Phx.CP.loadingShow();
+                        Ext.Ajax.request({
+                            url: '../../sis_organigrama/control/Cargo/clonarPresupuesto',
+                            params:{
+                                id_gestion: 0
+                            },
+                            success:function(resp){
+                                Phx.CP.loadingHide();
+                                var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+                                if(!reg.ROOT.error){
+                                    this.reload();
+                                }else{
+                                    alert('Ocurrió un error durante el proceso')
+                                }
+                            },
+                            failure: this.conexionFailure,
+                            timeout:this.timeout,
+                            scope:this
+                        });
                     }
-                },
-                failure: this.conexionFailure,
-                timeout:this.timeout,
-                scope:this
+                }
             });
+
+
         },
 
         cmbActivos: new Ext.form.ComboBox({

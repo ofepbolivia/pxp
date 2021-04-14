@@ -40,12 +40,15 @@ BEGIN
                                     tf.codigo,
                                     tf.fecha_ingreso,
                                     tuo.fecha_documento_asignacion,
-                                    tuo.nro_documento_asignacion
+                                    tuo.nro_documento_asignacion,
+                                    tc.id_oficina oficina_item,
+                                    tlug.codigo as oficina_codigo
                     from orga.tuo_funcionario tuo
                     inner join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
                     inner join orga.tfuncionario tf on tf.id_funcionario = tuo.id_funcionario
                     inner join orga.tcargo tc on tc.id_cargo = tuo.id_cargo
                     inner join orga.toficina tof on tof.id_oficina = tc.id_oficina
+                    inner join param.tlugar tlug on tlug.id_lugar = tc.id_lugar
                     inner join orga.ttipo_contrato tcon on tcon.id_tipo_contrato = tc.id_tipo_contrato
                     where (coalesce(tuo.fecha_finalizacion::date, '31/12/9999'::date) between current_date and current_date) and
                     tuo.tipo='oficial' and tuo.id_funcionario not in (
@@ -58,7 +61,7 @@ BEGIN
 
         v_consulta =  'exec Ende_HistorialCargo "UPD", '||v_record.id_uo_funcionario||', '||v_record.id_funcionario||', '||
                       v_record.id_cargo||', "'||coalesce(v_record.nro_documento_asignacion::varchar,'')||'", "'||v_record.fecha_asignacion||'", "'||
-                      coalesce(v_record.fecha_finalizacion::varchar,'')||'", 1957, "'||coalesce(v_record.fecha_documento_asignacion::varchar,'')||'", "inactivo", '||coalesce(v_record.id_oficina,0)||', "";';
+                      coalesce(v_record.fecha_finalizacion::varchar,'')||'", 1957, "'||coalesce(v_record.fecha_documento_asignacion::varchar,'')||'", "inactivo", '||coalesce(v_record.oficina_item,0)||', "'||v_record.oficina_codigo||'";';
 
 		if v_consulta is not null then
         	INSERT INTO sqlserver.tmigracion

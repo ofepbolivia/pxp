@@ -32,7 +32,7 @@ BEGIN
 
     for v_record_ids in select teo.id_uo_padre, teo.id_uo_hijo from orga.testructura_uo teo where teo.id_uo_hijo = p_id_uo loop
 
-        if p_id_uo = 9419 then
+        if p_id_uo = 10113 then
         	return p_id_uo;
         end if;
     	v_cadena_ids = v_cadena_ids||orga.f_get_arbol_padre_uo(v_record_ids.id_uo_padre)||','||v_record_ids.id_uo_hijo;

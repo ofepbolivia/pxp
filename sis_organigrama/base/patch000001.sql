@@ -926,3 +926,50 @@ IS 'Id de las gerencias relacionadas con la tabla orga.tuo el campo id_uo';
 ALTER TABLE orga.tpermiso_gerencias
   OWNER TO postgres;
 /*****************************F-SCP-IRVA-ORGA-0-27/08/2020*************/
+
+/*****************************I-SCP-FEA-ORGA-0-24/03/2021*************/
+CREATE TABLE orga.tfuncionario_oficina (
+  id_funcionario_oficina SERIAL NOT NULL,
+  id_funcionario INTEGER NOT NULL,
+  id_oficina INTEGER NOT NULL,
+  fecha_ini DATE,
+  fecha_fin DATE,
+  PRIMARY KEY(id_funcionario_oficina)
+) INHERITS (pxp.tbase)
+WITH (oids = false);
+
+ALTER TABLE orga.tfuncionario_oficina
+  ALTER COLUMN id_oficina SET STATISTICS 0;
+
+ALTER TABLE orga.tfuncionario_oficina
+  ALTER COLUMN fecha_ini SET STATISTICS 0;
+
+COMMENT ON COLUMN orga.tfuncionario_oficina.id_funcionario
+IS 'Identificador funcionario erp';
+
+COMMENT ON COLUMN orga.tfuncionario_oficina.id_oficina
+IS 'Identificador Oficina erp.';
+
+COMMENT ON COLUMN orga.tfuncionario_oficina.fecha_ini
+IS 'Fecha inicio del cambio de oficina.';
+
+COMMENT ON COLUMN orga.tfuncionario_oficina.fecha_fin
+IS 'Fecha fin del cambio de oficina.';
+
+/*****************************F-SCP-FEA-ORGA-0-24/03/2021*************/
+
+/*****************************I-SCP-FEA-ORGA-1-24/03/2021*************/
+ALTER TABLE orga.tfuncionario_oficina
+  ADD CONSTRAINT tfuncionario_funcionario_fk FOREIGN KEY (id_funcionario)
+    REFERENCES orga.tfuncionario(id_funcionario)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+
+ALTER TABLE orga.tfuncionario_oficina
+  ADD CONSTRAINT tfuncionario_oficina_fk FOREIGN KEY (id_oficina)
+    REFERENCES orga.toficina(id_oficina)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE;
+/*****************************F-SCP-FEA-ORGA-1-24/03/2021*************/

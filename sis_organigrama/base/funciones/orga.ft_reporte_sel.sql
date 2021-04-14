@@ -72,7 +72,8 @@ BEGIN
              tc.nombre as cargo,
              tl.nombre as lugar,
              tl.codigo,
-             tf.email_empresa
+             tf.email_empresa,
+             (case when (select coalesce(tot.fecha_finalizacion,''31/12/9999'') from orga.tuo_funcionario tot where tot.id_uo_funcionario = orga.f_get_ultima_asignacion(tf.id_funcionario))>current_date then ''activo'' else ''inactivo'' end)::varchar estado_fun
              from orga.vfuncionario_cargo tf
              inner JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario --and (current_date <= uof.fecha_finalizacion or  uof.fecha_finalizacion is null)
              inner JOIN orga.tuo tuo on tuo.id_uo = orga.f_get_uo_gerencia(uof.id_uo,uof.id_funcionario,current_date)
@@ -232,6 +233,49 @@ BEGIN
 			return v_consulta;
 
 		end;
+
+    /*********************************
+ 	#TRANSACCION:  'ORGA_INF_RAPIDA_SEL'
+ 	#DESCRIPCION:	reporte Información Rapida
+ 	#AUTOR:		franklin.espinoza
+ 	#FECHA:		29-01-2021 10:00:00
+	***********************************/
+
+	elsif(p_transaccion='ORGA_INF_RAPIDA_SEL')then
+
+    	begin
+    		--Sentencia de la consulta
+			v_consulta:='
+
+            select
+            	tf.id_funcionario,
+               	tf.desc_funcionario2::varchar AS funcionario,
+               	tf.ci,
+                tper.fecha_nacimiento,
+               	tc.nombre as cargo,
+               	tf.fecha_ingreso,
+                ((case when coalesce(tper.celular1,''no tiene'') != '''' then coalesce(tper.celular1,''no tiene'') else ''no tiene'' end)||'' / ''||(case when coalesce(tper.telefono1,''no tiene'') != '''' then coalesce(tper.telefono1,''no tiene'') else ''no tiene'' end))::varchar telefonos,
+               	orga.f_get_documentos_list_func(tf.id_funcionario, ''13''::varchar) as profesion,
+                orga.f_get_documentos_list_func(tf.id_funcionario, ''28''::varchar) as contrato,
+                afp.nro_afp afp,
+                taf.nombre::varchar institucion
+			   from orga.vfuncionario_biometrico tf
+               inner join segu.tpersona tper on tper.ci = tf.ci
+               inner join plani.tfuncionario_afp afp on afp.id_funcionario = tf.id_funcionario
+               inner join plani.tafp taf on taf.id_afp = afp.id_afp
+           	   inner JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario and current_date <= coalesce(uof.fecha_finalizacion,''31/12/9999''::date)
+     		   inner JOIN orga.tcargo tc ON tc.id_cargo = uof.id_cargo
+     		   inner join orga.ttipo_contrato ttc on ttc.id_tipo_contrato = tc.id_tipo_contrato
+           	   where tf.estado_reg = ''activo'' and tc.estado_reg = ''activo'' and uof.estado_reg = ''activo'' and uof.tipo = ''oficial''
+           	   and ttc.codigo in (''PLA'',''EVE'')
+           	   order by funcionario ';
+
+            RAISE NOTICE 'v_consulta: %', v_consulta;
+			--Devuelve la respuesta
+			return v_consulta;
+
+		end;
+
 	else
 
 		raise exception 'Transaccion inexistente';
