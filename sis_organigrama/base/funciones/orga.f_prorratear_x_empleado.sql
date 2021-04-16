@@ -38,6 +38,8 @@ DECLARE
     v_telefonia_detalle			record;
     v_importe_consumo			numeric;
 
+    v_numero_celular			varchar;
+
 
   BEGIN
 
@@ -280,12 +282,23 @@ DECLARE
                     from orga.vfuncionario f
                     where f.id_funcionario = v_id_funcionario;
 
+
+                    --numero telefonico
+                     SELECT num.numero
+                     into v_numero_celular
+                     FROM gecom.tnumero_celular num
+                     where num.id_numero_celular = v_registros.id_numero_celular;
+
+                    if (v_id_ot is null and v_id_centro_costo is null) then
+                      raise exception 'El funcionario % esta inactivo pero aun tiene asignado el Número de Teléfono % en el mes que se intenta pagar, reasigne el número a un funcionario activo.',v_empleado, v_numero_celular;
+                    end if;
+
                     if (v_id_centro_costo is null) then
-                      raise exception 'Existe un empleado que no tiene asignado centro de costo o ya no tiene un contrato activo en la empresa : %',v_empleado;
+                      raise exception 'El funcionario % no tiene asignado un Centro de Costo en la interfaz de Presupuestos por Cargo, contactece con la Unidad de Presupuestos para su asignación.',v_empleado;
                     end if;
 
                     if (v_id_ot is null) then
-                      raise exception 'Existe un empleado que no tiene asignado ot o ya no tiene un contrato activo en la empresa : %',v_empleado;
+                      raise exception 'El funcionario % no tiene asignada una OT en la interfaz de Presupuestos por Cargo, contactece con la Unidad de Presupuestos para su asignación.',v_empleado;
                     end if;
 
 					--raise exception 'llega7 % - %',p_monto, v_suma;
@@ -362,12 +375,22 @@ DECLARE
             from orga.vfuncionario f
             where f.id_funcionario = v_id_funcionario;
 
+            --numero telefonico
+             SELECT num.numero
+             into v_numero_celular
+             FROM gecom.tnumero_celular num
+             where num.id_numero_celular = v_registros.id_numero_celular;
+
+            if (v_id_ot is null and v_id_centro_costo is null) then
+              raise exception 'El funcionario % esta inactivo pero aun tiene asignado el Número de Teléfono % en el mes que se intenta pagar, reasigne el número a un funcionario activo.',v_empleado, v_numero_celular;
+            end if;
+
             if (v_id_centro_costo is null) then
-              raise exception 'Existe un empleado que no tiene asignado centro de costo o ya no tiene un contrato activo en la empresa : %',v_empleado;
+              raise exception 'El funcionario % no tiene asignado un Centro de Costo en la interfaz de Presupuestos por Cargo, contactece con la Unidad de Presupuestos para su asignación.',v_empleado;
             end if;
 
             if (v_id_ot is null) then
-              raise exception 'Existe un empleado que no tiene asignado ot o ya no tiene un contrato activo en la empresa : %',v_empleado;
+              raise exception 'El funcionario % no tiene asignada una OT en la interfaz de Presupuestos por Cargo, contactece con la Unidad de Presupuestos para su asignación.',v_empleado;
             end if;
 
             if (v_registros.total = v_registros.conteo) then
@@ -455,12 +478,16 @@ DECLARE
         from orga.vfuncionario f
         where f.id_funcionario = v_funcionarios.id_funcionario;
 
+        if (v_id_ot is null and v_id_centro_costo is null) then
+          raise exception 'El funcionario % esta inactivo en el mes que se intenta pagar.',v_empleado;
+        end if;
+
         if (v_id_centro_costo is null) then
-          raise exception 'Existe un empleado que no tiene asignado centro de costo o ya no tiene un contrato activo en la empresa : %',v_empleado;
+          raise exception 'El funcionario % no tiene asignado un Centro de Costo en la interfaz de Presupuestos por Cargo, contactece con la unidad de presupuestos para su asignacion.',v_empleado;
         end if;
 
         if (v_id_ot is null) then
-          raise exception 'Existe un empleado que no tiene asignado ot o ya no tiene un contrato activo en la empresa : %',v_empleado;
+          raise exception 'El funcionario % no tiene asignada una OT en la interfaz de Presupuestos por Cargo, contactece con la unidad de presupuestos para su asignacion.',v_empleado;
         end if;
 
         if (v_funcionarios.total = v_funcionarios.numero) then
@@ -503,12 +530,16 @@ DECLARE
         from orga.vfuncionario f
         where f.id_funcionario = v_funcionarios.id_funcionario;
 
+        if (v_id_ot is null and v_id_centro_costo is null) then
+          raise exception 'El funcionario % esta inactivo en el mes que se intenta pagar.',v_empleado;
+        end if;
+
         if (v_id_centro_costo is null) then
-          raise exception 'Existe un empleado que no tiene asignado centro de costo o ya no tiene un contrato activo en la empresa : %',v_empleado;
+          raise exception 'El funcionario % no tiene asignado un Centro de Costo en la interfaz de Presupuestos por Cargo, contactece con la unidad de presupuestos para su asignacion.',v_empleado;
         end if;
 
         if (v_id_ot is null) then
-          raise exception 'Existe un empleado que no tiene asignado ot o ya no tiene un contrato activo en la empresa : %',v_empleado;
+          raise exception 'El funcionario % no tiene asignada una OT en la interfaz de Presupuestos por Cargo, contactece con la unidad de presupuestos para su asignacion.',v_empleado;
         end if;
 
         if (v_funcionarios.total = v_funcionarios.numero) then
