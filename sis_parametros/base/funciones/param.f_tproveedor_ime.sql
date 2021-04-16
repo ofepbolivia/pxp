@@ -564,7 +564,7 @@ BEGIN
                             p_id_usuario,
                             null,
                             null,
-                            'si'
+                            'no'
 
                         )RETURNING id_auxiliar into v_id_auxiliar;
 
