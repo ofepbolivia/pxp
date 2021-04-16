@@ -121,7 +121,7 @@ DECLARE
                   limit 1;
 
                   --raise exception 'llegaav_totalOD %',v_total;
-
+--raise exception 'llegaav_totalOD %',p_id_periodo;
                   FOR v_telefonia_detalle in (select  NULL,
                                                       pdet.id_centro_costo,
                                                       NULL,--ccot.id_orden_trabajo
@@ -143,7 +143,7 @@ DECLARE
                            --raise exception 'llega % - %',v_telefonia_detalle.id_centro_costo, v_telefonia_detalle.monto;
                            --raise notice 'llegabdww % - % - %', v_registros.id_numero_celular, v_telefonia_detalle.id_centro_costo, v_telefonia_detalle.monto;
                             if (v_telefonia_detalle.id_centro_costo is null) then
-                               raise exception 'El funcionario % no tiene asignado un Centro de Costo', v_empleado;
+                              raise exception 'El funcionario % no tiene asignado un Centro de Costo', v_empleado;
                             end if;
 
 

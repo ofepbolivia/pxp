@@ -539,6 +539,41 @@ BEGIN
 
         END;
 
+    /*******************************
+     #TRANSACCION:  RH_MOD_FUNC_REST
+     #DESCRIPCION:	Actualiza datos de tpersona y tfuncionario
+     #AUTOR:	    franklin.espinoza
+     #FECHA:		29-03-2021
+    ***********************************/
+
+    elsif(par_transaccion='RH_MOD_FUNC_REST')then
+        BEGIN
+
+        	select tf.id_persona
+            into v_id_persona
+            from orga.tfuncionario tf
+            where tf.id_funcionario = v_parametros.idFuncionario;
+
+            update segu.tpersona set
+                ci                = v_parametros.CI,
+                expedicion        = v_parametros.Expedito,
+                telefono1         = v_parametros.TelefonoFijo,
+                celular1          = v_parametros.TelefonoCelular,
+                correo            = v_parametros.Email,
+                fecha_nacimiento  = v_parametros.FechaNacimiento::date,
+                genero            = case when v_parametros.Genero = 'M' then 'VARON' else 'MUJER' end ,
+                direccion         = v_parametros.Direccion,
+                estado_civil      = v_parametros.EstadoCivil,
+                zona_residencia   = v_parametros.Zona,
+                numero_domicilio  = v_parametros.Numero,
+                ciudad_residencia = v_parametros.Ciudad
+            where id_persona = v_id_persona;
+
+        	v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Campos de Persona modificados exitosamente');
+            v_resp = pxp.f_agrega_clave(v_resp,'estado','success');
+
+        END;
+
     else
 
          raise exception 'No existe la transaccion: %',par_transaccion;

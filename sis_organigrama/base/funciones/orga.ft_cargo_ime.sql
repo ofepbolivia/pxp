@@ -389,8 +389,8 @@ BEGIN
                                   left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = 19
                                   LEFT join orga.tuo_funcionario tuo on tuo.id_cargo = cargo.id_cargo and (tuo.fecha_finalizacion is null or current_date <= tuo.fecha_finalizacion)
                                   LEFT join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
-                                  where cargo.estado_reg = 'activo' and tipcon.codigo != 'PCP' and
-                                  (tcp.id_cargo_presupuesto is null and tcp.id_ot is null and tuo.id_uo_funcionario is null) loop
+                                  where cargo.estado_reg = 'activo' and tipcon.codigo != 'PCP'
+                                  /*and (tcp.id_cargo_presupuesto is null and tcp.id_ot is null and tuo.id_uo_funcionario is null)*/ loop
 
                 select
                   tcp.id_cargo,
@@ -402,7 +402,7 @@ BEGIN
                   tcp.id_ot
               	into v_presupuesto
                 from orga.tcargo_presupuesto tcp
-                where tcp.id_cargo = v_funcionarios.identificador and tcp.id_gestion = 17 and (tcp.fecha_fin is null or tcp.fecha_fin between '01/01/2019'::date and '31/12/2019'::date);
+                where tcp.id_cargo = v_funcionarios.identificador and tcp.id_gestion = 19 and (tcp.fecha_fin is null or tcp.fecha_fin between '01/01/2020'::date and '31/12/2020'::date);
 
 
 
@@ -421,7 +421,7 @@ BEGIN
                 IF v_id_presupuesto IS NULL THEN
       				    CONTINUE;
                 END IF;
-                /*insert into orga.tcargo_presupuesto(
+                insert into orga.tcargo_presupuesto(
                   id_cargo,
                   id_gestion,
                   id_centro_costo,
@@ -439,15 +439,15 @@ BEGIN
                   v_id_gestion,
                   v_id_presupuesto,
                   v_presupuesto.porcentaje,
-                  '01/01/2020'::date,
+                  '01/01/2021'::date,
                   'activo',
                   p_id_usuario,
                   now(),
                   null,
                   null,
                   v_presupuesto.id_ot,
-                  '31/12/2020'::date
-                );*/
+                  '31/12/2021'::date
+                );
             end loop;
 
             --Definicion de la respuesta

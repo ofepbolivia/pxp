@@ -1,4 +1,4 @@
-m<?php
+<?php
 /**
  *@package pXP
  *@file gen-Cargo.php
@@ -446,7 +446,9 @@ header("content-type: text/javascript; charset=UTF-8");
                 direction: 'ASC'
             },
             bdel:true,
-            bsave:true,
+            bsave:false,
+            bdel:false,
+            bedit:true,
             iniciarEventos : function() {
                 //inicio de eventos
                 this.Cmp.id_tipo_contrato.on('select',function(x,rec,z){
