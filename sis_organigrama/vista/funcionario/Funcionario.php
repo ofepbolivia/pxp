@@ -121,6 +121,7 @@ header("content-type: text/javascript; charset=UTF-8");
             this.getComponente('email_empresa').setVisible(false);
 
             this.getComponente('estado_reg').setVisible(false);
+            this.Cmp.tipo_reg.setValue('new');
 
         },
         onButtonEdit:function() {
@@ -133,6 +134,7 @@ header("content-type: text/javascript; charset=UTF-8");
             this.getComponente('email_empresa').setVisible(false);
             this.getComponente('estado_reg').setVisible(true);
             this.getComponente('id_persona').disable();
+            this.Cmp.tipo_reg.setValue('edit');
 
         },
 
@@ -399,7 +401,16 @@ header("content-type: text/javascript; charset=UTF-8");
                 form:true
 
             },
+            {
+                config:{
+                    labelSeparator:'',
+                    inputType:'hidden',
+                    name: 'tipo_reg'
+                },
+                type:'Field',
+                form:true
 
+            },
             {
                 config:{
                     name:'id_persona',

@@ -259,7 +259,7 @@ class ACTFuncionario extends ACTbase{
             $this->objParam->addFiltro("(FUNCAR.estado_reg_fun = ''inactivo'' or FUNCAR.fecha_finalizacion <= current_date)");
         }else if($this->objParam->getParametro('estado_func')=='act_desc'){
             $this->objParam->addFiltro("(
-            FUNCAR.estado_reg_fun in (''activo'', ''inactivo'') or (current_date <= coalesce (FUNCAR.fecha_finalizacion, ''31/12/9999''::date) or 
+            FUNCAR.estado_reg_fun in (''activo'', ''inactivo'') or (current_date <= coalesce (FUNCAR.fecha_finalizacion, ''31/12/9999''::date) or
             FUNCAR.fecha_finalizacion < current_date)
             )");
         }else{
@@ -326,7 +326,7 @@ class ACTFuncionario extends ACTbase{
         $this->objFunSeguridad=$this->create('MODFuncionario');
 
         //preguntamos si se debe insertar o modificar
-        if($this->objParam->insertar('id_funcionario')){
+        if($this->objParam->getParametro('tipo_reg')=='new'){
 
             //ejecuta el metodo de insertar de la clase MODFuncionario a travez
             //de la intefaz objetoFunSeguridad

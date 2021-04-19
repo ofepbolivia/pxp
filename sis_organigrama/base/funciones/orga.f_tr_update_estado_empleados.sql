@@ -80,6 +80,16 @@ BEGIN
                 'UPDATE',
                 '10.150.0.20,Personal,sispersonal,pl@nt@s'
             );
+						-- breydi.vasquez 19/04/2021 inactivacion de usuario
+						update segu.tusuario set
+              fecha_caducidad=v_record.fecha_finalizacion,
+              id_usuario_mod=1,
+              fecha_mod=now()
+            where id_usuario in (select u.id_usuario
+                                  from orga.tfuncionario f
+                                  inner join segu.tusuario u on u.id_persona = f.id_persona and u.estado_reg = 'activo'
+                                  where f.id_funcionario = v_record.id_funcionario
+                                  );
         else
         	raise notice 'Empleado Problema: %', v_record.nombre_emp;
         end if;

@@ -54,6 +54,8 @@ v_id_usuario 				integer;
 v_resultado					varchar;
 
 v_gerente					record;
+v_cuenta					varchar;
+v_existe_usuario			integer;
 
 BEGIN
 	--raise exception 'COMUNIQUESE CON EL DEPTO. INFORMATICO';
@@ -95,7 +97,7 @@ BEGIN
                                genero,
                                nacionalidad,
                                id_lugar,
-                               tipo_documento,
+                               --tipo_documento,
                                ci,
                                expedicion,
                                estado_civil,
@@ -117,7 +119,7 @@ BEGIN
                       v_parametros.genero,
                       v_parametros.nacionalidad,
                       v_parametros.id_lugar,
-                      v_parametros.tipo_documento,
+                      --v_parametros.tipo_documento,
                       v_parametros.ci,
                       v_parametros.expedicion,
                       v_parametros.estado_civil,
@@ -233,7 +235,7 @@ BEGIN
                        codigo_rc_iva,id_especialidad_nivel)
                values(
                       v_codigo_empleado,
-                        v_parametros.id_persona,
+                        coalesce(v_parametros.id_persona,v_id_persona),
                         'activo',
                         now(),
                         par_id_usuario,
@@ -247,9 +249,23 @@ BEGIN
                         v_parametros.codigo_rc_iva, v_parametros.id_especialidad_nivel)
                RETURNING id_funcionario into v_id_funcionario;
 
+               --breydi.vasquez 19/04/2021 verificacion de exisencia de usuario
+               select count (id_usuario)
+               into
+               v_existe_usuario
+               from segu.tusuario
+               where id_persona = coalesce(v_parametros.id_persona,v_id_persona);
 
+               if v_existe_usuario = 0 then
+               -- breydi.vasquez 19/04/2021 registro de usuario, al dar de alta un funcionario.
+                 v_cuenta =  segu.ft_registrar_usuarios_sin_cuenta(v_id_funcionario, 'Usuario registrado al dar de alta a funcionario.');
+                 if v_cuenta != 'Cuentas de Usuario Registradas Correctamente' then
+                      raise 'Aviso! %',v_cuenta;
+                 end if;
+               end if;
                v_resp = pxp.f_agrega_clave(v_resp,'mensaje','funcionario '||v_codigo_empleado ||' insertado con exito ');
-               v_resp = pxp.f_agrega_clave(v_resp,'id_funcionario',v_id_funcion::varchar);
+               v_resp = pxp.f_agrega_clave(v_resp,'id_funcionario',v_id_funcionario::varchar);
+               v_resp = pxp.f_agrega_clave(v_resp,'acciones',v_cuenta::varchar);
          END;
  /*******************************
  #TRANSACCION:      RH_FUNCIO_MOD
@@ -327,7 +343,7 @@ BEGIN
                 update orga.tfuncionario set
                 	codigo=v_parametros.codigo,
                     id_usuario_mod=par_id_usuario,
-                    id_persona=v_parametros.id_persona,
+                    --id_persona=v_parametros.id_persona,
                     estado_reg=v_parametros.estado_reg,
                     email_empresa=v_parametros.email_empresa,
                     --interno=v_parametros.interno,
@@ -339,6 +355,24 @@ BEGIN
                     id_especialidad_nivel = v_parametros.id_especialidad_nivel
                 where id_funcionario=v_parametros.id_funcionario;
 			end if;
+
+      -- breydi.vasquez 19/04/2021 inactivar usuarios de funcionario,  si se inacitva al funcionario
+      if v_parametros.estado_reg = 'inactivo' then
+
+         update segu.tusuario set
+            fecha_caducidad=now()::date,
+            id_usuario_mod=par_id_usuario,
+            fecha_mod=now(),
+            id_usuario_ai=v_parametros._id_usuario_ai,
+            usuario_ai=v_parametros._nombre_usuario_ai
+         where id_usuario in (select u.id_usuario
+                              from orga.tfuncionario f
+                              inner join segu.tusuario u on u.id_persona = f.id_persona and u.estado_reg = 'activo'
+                              where f.id_funcionario = v_parametros.id_funcionario
+                              );
+
+      end if;
+
                v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Funcionario modificado con exito '||v_parametros.id_funcionario);
                v_resp = pxp.f_agrega_clave(v_resp,'id_funcionario',v_parametros.id_funcionario::varchar);
         END;
