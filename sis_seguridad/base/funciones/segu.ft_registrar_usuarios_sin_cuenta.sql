@@ -1,4 +1,6 @@
 CREATE OR REPLACE FUNCTION segu.ft_registrar_usuarios_sin_cuenta (
+  p_id_funcionario integer = NULL::integer,
+  p_observacion text = NULL::text
 )
 RETURNS varchar AS
 $body$
@@ -12,12 +14,21 @@ DECLARE
   v_segundo_nombre	varchar;
   v_segundo_apellido varchar;
   v_desc_funcionario	varchar;
+  v_obervacion			text;
 BEGIN
 /****************************************************************************
 Funcion que registra cuenta de usuarios para todos los funcionarios activos
 (Ismael Valdivia 15/04/2021)
 *****************************************************************************/
-
+/****************************************************************************
+modificado para recivir dos parametros, para registrar de un funcionario epecifico su usuario.
+(beydi vasquez 19/04/2021)
+*****************************************************************************/
+  if p_observacion is null then
+    v_obervacion = 'Usuario Registrado Automaticamente';
+  else
+    v_obervacion = p_observacion;
+  end if;
           /*Aqui recuperamos a todos los funcionarios sin cuenta de usuario*/
    FOR v_usuario_new in(      select
                                      regexp_split_to_array(lower(per.nombre),' ') as nombres,
@@ -26,11 +37,16 @@ Funcion que registra cuenta de usuarios para todos los funcionarios activos
                                      uc.fecha_finalizacion,
                                      fun.id_persona
                               from orga.vfuncionario fun
-                              inner join orga.vfuncionario_ultimo_cargo uc on uc.id_funcionario = fun.id_funcionario
+                              LEFT join orga.vfuncionario_ultimo_cargo uc on uc.id_funcionario = fun.id_funcionario
                               LEFT join segu.vusuario usu on usu.id_persona = fun.id_persona and usu.estado_reg = 'activo'
                               INNER JOIN segu.tpersona per on per.id_persona = fun.id_persona
-                              where (uc.fecha_finalizacion is null or current_date <= uc.fecha_finalizacion)
-                              and usu.cuenta is NULL
+                              where
+                              case when p_id_funcionario is null then
+                                (uc.fecha_finalizacion is null or current_date <= uc.fecha_finalizacion)
+                                and usu.cuenta is NULL
+                              else
+                                fun.id_funcionario = p_id_funcionario
+                              end
                               ORDER BY fun.id_persona
    							  --limit 200
 
@@ -92,7 +108,7 @@ Funcion que registra cuenta de usuarios para todos los funcionarios activos
                                             null,
                                             null,
                                             null,
-                                            'Usuario Registrado Automaticamente'
+                                            v_obervacion
                            );
                   elsif(v_existe_cuenta >= 1) then
 
@@ -147,7 +163,7 @@ Funcion que registra cuenta de usuarios para todos los funcionarios activos
                                                     null,
                                                     null,
                                                     null,
-                                                    'Usuario Registrado Automaticamente'
+                                                    v_obervacion
                                    );
 
                     ELSIF(v_existe_cuenta >= 1)then
@@ -210,7 +226,7 @@ Funcion que registra cuenta de usuarios para todos los funcionarios activos
                                                           null,
                                                           null,
                                                           null,
-                                                          'Usuario Registrado Automaticamente'
+                                                          v_obervacion
                                          );
                               ELSE
 
@@ -291,5 +307,5 @@ CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
 
-ALTER FUNCTION segu.ft_registrar_usuarios_sin_cuenta ()
+ALTER FUNCTION segu.ft_registrar_usuarios_sin_cuenta (p_id_funcionario integer, p_observacion text)
   OWNER TO postgres;
