@@ -54,7 +54,10 @@ class RCertificadoHtml{
 
         $cadena = 'Numero Tramite: '.$datos['nro_tramite']."\n".'Fecha Solicitud: '.$datos['fecha_solicitud']."\n".'Funcionario: '.$datos['nombre_funcionario']."\n".'Firmado Por: '.$firma_responsable."\n".'Emitido Por: '.$datos['fun_imitido'];
         $barcodeobj = new TCPDF2DBarcode($cadena, 'QRCODE,M');
-
+        $item = '';
+        if (intval($datos['nro_item']) > 0){
+            $item = ', con Nº de item '.$datos['nro_item'];
+        }
 
 
             $this->html.='<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -97,7 +100,7 @@ class RCertificadoHtml{
 <tr>
 <td>&nbsp;</td>
 <td><p style="text-align: justify"><FONT FACE="Century Gothic" style="font-size: 12pt;" >Que, de la revisión de la carpeta que cursa en el Departamento de Recursos Humanos, se evidencia que '.$gen.' <b>'.$datos['genero'].'. '.$datos['nombre_funcionario'].'</b> con C.I. '.$datos['ci'].' '.$datos['expedicion'].', ingresó a la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA"
-         el '.$this->obtenerFechaEnLetra($datos['fecha_contrato']).', y actualmente ejerce el cargo de <b>'.$datos['nombre_cargo'].', con Nº de item '.$datos['nro_item'].'</b>, dependiente de la '.$datos['nombre_unidad'].', con una remuneración mensual de Bs. '.number_format($datos['haber_basico'],2,",",".") .'.- ('.$datos['haber_literal'].' Bolivianos).</FONT></p>
+         el '.$this->obtenerFechaEnLetra($datos['fecha_contrato']).', y actualmente ejerce el cargo de <b>'.$datos['nombre_cargo'].$item.'</b>, dependiente de la '.$datos['nombre_unidad'].', con una remuneración mensual de Bs. '.number_format($datos['haber_basico'],2,",",".") .'.- ('.$datos['haber_literal'].' Bolivianos).</FONT></p>
 </td>
 <td>&nbsp;</td>
 </tr>';

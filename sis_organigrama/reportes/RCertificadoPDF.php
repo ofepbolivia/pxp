@@ -58,7 +58,7 @@ class RCertificadoPDF extends  ReportePDF{
         if ($fecha_f > '2020-12-04'){
           $firma_gerente_f = '/../media/firma.png';
           $siglas = 'GAG';
-          $firma_responsable_f = $this->datos[0]['nuevo_jefe'];          
+          $firma_responsable_f = $this->datos[0]['nuevo_jefe'];
         }else if ($fecha_f >= '2019-12-18' and $fecha_f <= '2020-12-04') {
             $firma_gerente_f = '/../media/firma_eduardo_degadillo_poepsel.png';
             $siglas = 'JDP';
@@ -107,8 +107,13 @@ class RCertificadoPDF extends  ReportePDF{
         $this->writeHTML($html);
         $this->ln(8);
         $this->SetFont('', '', 13);
+        $item = '';
+
+        if (intval($this->datos[0]['nro_item']) > 0 ){
+          $item = ' con Nº de ítem '.$this->datos[0]['nro_item'];
+        }
         $cuerpo = '<p style="font-family:Century Gothic, serif; font-style:italic;text-align: justify">Que, de la revisión de la carpeta que cursa en el Departamento de Recursos Humanos, se evidencia que '.$gen.' <b>'.$this->datos[0]['genero'].'. '.$this->datos[0]['nombre_funcionario'].'</b> con C.I. '.$this->datos[0]['ci'].' '.$this->datos[0]['expedicion'].', ingresó a la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA"
-         el '.$this->fechaLiteral($this->datos[0]['fecha_contrato']).', y actualmente ejerce el cargo de <b>'.$this->datos[0]['nombre_cargo'].' con Nº de ítem '.$this->datos[0]['nro_item'].'</b>, dependiente de la '.$this->datos[0]['nombre_unidad'].', con una remuneración mensual de Bs. '.number_format($this->datos[0]['haber_basico'],2,",",".") .'.- ('.$this->datos[0]['haber_literal'].' Bolivianos). </p><br>';
+         el '.$this->fechaLiteral($this->datos[0]['fecha_contrato']).', y actualmente ejerce el cargo de <b>'.$this->datos[0]['nombre_cargo'].$item.'</b>, dependiente de la '.$this->datos[0]['nombre_unidad'].', con una remuneración mensual de Bs. '.number_format($this->datos[0]['haber_basico'],2,",",".") .'.- ('.$this->datos[0]['haber_literal'].' Bolivianos). </p><br>';
         $this->writeHTML($cuerpo);
         $viaticos='<p style="font-family:Century Gothic, serif; font-style:italic;text-align: justify">Asimismo a solicitud expresa se informa que '.$gen.' '.$tra.' ha percibido en los últimos tres meses por concepto de viáticos un promedio mensual de '.number_format($this->datos[0]['importe_viatico'],2,",",".").'.- ('.$this->datos[0]['literal_importe_viatico'].' Bolivianos) aclarándose que el <b>Viático</b> es la suma que reconoce la empresa a la persona comisionada, <b>para cubrir gastos del viaje.</b></p><br>';
         if (($this->datos[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses')||
