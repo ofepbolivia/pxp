@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION orga.f_get_aprobadores_x_funcionario (
   par_fecha date,
   par_id_funcionario integer,
@@ -48,6 +46,9 @@ BEGIN
     --raise exception 'ssss';
     
         --chequea si es necsario agregar un filtr de presupuestos
+        --IF par_filtro_presupuesto = 'todos' THEN
+        --23-04-2021 (may) modificaciono segun los filtros que se envia a la funcion
+        --IF par_filtro_presupuesto = 'si' THEN
         IF par_filtro_presupuesto = 'todos' THEN
          v_filtro_pre = '';
         ELSE
@@ -55,7 +56,9 @@ BEGIN
         END IF;
         
         --chequea si es necsario agregar un filtr de presupuestos
-        IF par_filtro_gerencia = 'todos' THEN
+        --23-04-2021 (may) modificaciono segun los filtros que se envia a la funcion
+        --IF par_filtro_gerencia = 'todos' THEN
+        IF par_filtro_gerencia != 'si' THEN
          v_filtro_gerencia = '';
         ELSE
           v_filtro_gerencia = 'and gerencia = '''||par_filtro_gerencia||'''';
