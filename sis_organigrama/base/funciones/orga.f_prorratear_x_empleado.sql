@@ -270,7 +270,8 @@ DECLARE
                     v_id_funcionario = gecom.f_get_ultimo_funcionario_asignado(v_registros.id_numero_celular,p_id_periodo);
 
                     if (v_id_funcionario is null) then
-                      raise exception 'No existe un funcionario asignado para el nro % en el periodo %,%,%',v_registros.numero,v_periodo.periodo,v_registros.id_numero_celular,p_id_periodo;
+                      --raise exception 'No existe un funcionario asignado para el nro % en el periodo %,%,%',v_registros.numero,v_periodo.periodo,v_registros.id_numero_celular,p_id_periodo;
+                      raise exception 'El Número % no tiene asignado un Funcionario en el periodo %.',v_registros.numero,v_periodo.periodo;
                     end if;
                     v_id_centro_costo = null;
                     v_id_centro_costo = null;
@@ -363,7 +364,8 @@ DECLARE
             v_id_funcionario = gecom.f_get_ultimo_funcionario_asignado(v_registros.id_numero_celular,p_id_periodo);
 
             if (v_id_funcionario is null) then
-              raise exception 'No existe un funcionario asignado para el nro % en el periodo %,%,%',v_registros.numero,v_periodo.periodo,v_registros.id_numero_celular,p_id_periodo;
+              --raise exception 'No existe un funcionario asignado para el nro % en el periodo %,%,%',v_registros.numero,v_periodo.periodo,v_registros.id_numero_celular,p_id_periodo;
+              raise exception 'El Número % no tiene asignado un Funcionario en el periodo %.',v_registros.numero,v_periodo.periodo;
             end if;
             v_id_centro_costo = null;
             v_id_centro_costo = null;
