@@ -2405,3 +2405,15 @@ IS 'Código asignado por IATA a la Aerolínea.';
 ALTER TABLE param.tconcepto_ingas
   ADD COLUMN id_concepto_ingas_fk INTEGER;
 /***********************************F-SCP-BVP-PARAM-0-10/03/2021****************************************/
+
+/***********************************I-SCP-BVP-PARAM-0-10/03/2021****************************************/
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN listado VARCHAR(100);
+
+COMMENT ON COLUMN param.tconcepto_ingas.listado
+IS 'Campo donde se filtrara que conceptos se mostraran en ciertos sistemas';
+
+
+ALTER TABLE param.tconcepto_ingas
+  ALTER COLUMN movimiento SET NOT NULL;
+/***********************************F-SCP-BVP-PARAM-0-10/03/2021****************************************/
