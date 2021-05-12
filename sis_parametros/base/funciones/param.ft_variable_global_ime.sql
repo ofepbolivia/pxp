@@ -1,8 +1,11 @@
 CREATE OR REPLACE FUNCTION param.ft_variable_global_ime (
-				p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
-RETURNS character varying AS
-$BODY$
-
+  p_administrador integer,
+  p_id_usuario integer,
+  p_tabla varchar,
+  p_transaccion varchar
+)
+RETURNS varchar AS
+$body$
 /**************************************************************************
  SISTEMA:		FRAMEWORK
  FUNCION: 		param.ft_variable_global_ime
@@ -79,9 +82,7 @@ BEGIN
 			update pxp.variable_global set
 			variable = v_parametros.variable,
 			valor = v_parametros.valor,
-			descripcion = v_parametros.descripcion,
-			id_usuario_ai = v_parametros._id_usuario_ai,
-			usuario_ai = v_parametros._nombre_usuario_ai
+			descripcion = v_parametros.descripcion
 			where id_variable_global=v_parametros.id_variable_global;
 
 			--Definicion de la respuesta
@@ -132,7 +133,12 @@ EXCEPTION
 		raise exception '%',v_resp;
 
 END;
-$BODY$
-LANGUAGE 'plpgsql' VOLATILE
+$body$
+LANGUAGE 'plpgsql'
+VOLATILE
+CALLED ON NULL INPUT
+SECURITY INVOKER
 COST 100;
-ALTER FUNCTION param.ft_variable_global_ime(integer, integer, character varying, character varying) OWNER TO postgres;
+
+ALTER FUNCTION param.ft_variable_global_ime (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;
