@@ -54,27 +54,39 @@ class RInformacionRapidaRRHHXls{
 
         $this->docexcel->getActiveSheet()->getColumnDimension('A')->setWidth(10);
         $this->docexcel->getActiveSheet()->getColumnDimension('B')->setWidth(40);
-        $this->docexcel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
-        $this->docexcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);
-        $this->docexcel->getActiveSheet()->getColumnDimension('E')->setWidth(30);
-        $this->docexcel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
-        $this->docexcel->getActiveSheet()->getColumnDimension('G')->setWidth(25);
-        $this->docexcel->getActiveSheet()->getColumnDimension('H')->setWidth(25);
-        $this->docexcel->getActiveSheet()->getColumnDimension('I')->setWidth(25);
-        $this->docexcel->getActiveSheet()->getColumnDimension('J')->setWidth(40);
-        $this->docexcel->getActiveSheet()->getColumnDimension('K')->setWidth(40);
+        $this->docexcel->getActiveSheet()->getColumnDimension('C')->setWidth(40);
+        $this->docexcel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+        $this->docexcel->getActiveSheet()->getColumnDimension('E')->setWidth(20);
+        $this->docexcel->getActiveSheet()->getColumnDimension('F')->setWidth(20);
+        $this->docexcel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+        $this->docexcel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
+        $this->docexcel->getActiveSheet()->getColumnDimension('I')->setWidth(30);
+        $this->docexcel->getActiveSheet()->getColumnDimension('J')->setWidth(15);
+        $this->docexcel->getActiveSheet()->getColumnDimension('K')->setWidth(25);
+
+        $this->docexcel->getActiveSheet()->getColumnDimension('L')->setWidth(25);
+        $this->docexcel->getActiveSheet()->getColumnDimension('M')->setWidth(25);
+        $this->docexcel->getActiveSheet()->getColumnDimension('N')->setWidth(40);
+        $this->docexcel->getActiveSheet()->getColumnDimension('O')->setWidth(40);
 
         $this->docexcel->getActiveSheet()->setCellValue('A1','Nro');
         $this->docexcel->getActiveSheet()->setCellValue('B1','NOMBRE');
         $this->docexcel->getActiveSheet()->setCellValue('C1','CI');
         $this->docexcel->getActiveSheet()->setCellValue('D1','FECHA DE NAC.');
-        $this->docexcel->getActiveSheet()->setCellValue('E1','CARGO');
-        $this->docexcel->getActiveSheet()->setCellValue('F1','FECHA DE ING.');
-        $this->docexcel->getActiveSheet()->setCellValue('G1','CELULAR/TELEFONO');
-        $this->docexcel->getActiveSheet()->setCellValue('H1','CUA/NUA');
-        $this->docexcel->getActiveSheet()->setCellValue('I1','AFP');
-        $this->docexcel->getActiveSheet()->setCellValue('J1','PROFESION');
-        $this->docexcel->getActiveSheet()->setCellValue('K1','CONTRATO');
+
+        $this->docexcel->getActiveSheet()->setCellValue('E1','GERENCIA');
+        $this->docexcel->getActiveSheet()->setCellValue('F1','OFICINA');
+        $this->docexcel->getActiveSheet()->setCellValue('G1','LUGAR');
+        $this->docexcel->getActiveSheet()->setCellValue('H1','SEXO');
+
+        $this->docexcel->getActiveSheet()->setCellValue('I1','CARGO');
+        $this->docexcel->getActiveSheet()->setCellValue('J1','FECHA DE ING.');
+        $this->docexcel->getActiveSheet()->setCellValue('K1','CELULAR/TELEFONO');
+
+        $this->docexcel->getActiveSheet()->setCellValue('L1','CUA/NUA');
+        $this->docexcel->getActiveSheet()->setCellValue('M1','AFP');
+        $this->docexcel->getActiveSheet()->setCellValue('N1','PROFESION');
+        $this->docexcel->getActiveSheet()->setCellValue('O1','CONTRATO');
 
     }
 
@@ -164,6 +176,9 @@ class RInformacionRapidaRRHHXls{
                 )
             ));
 
+        $index = 0;
+        $this->addHoja('Inf. General',$index);
+
         $numero = 1;
         $fila = 2;
         $datos = $this->objParam->getParametro('datos');//var_dump($datos);exit;
@@ -180,16 +195,15 @@ class RInformacionRapidaRRHHXls{
         $fila_total = 1;
 
 
-        $index = 0;
+
         $color_pestana = array('ff0000','1100ff','55ff00','3ba3ff','ff4747','697dff','78edff','ba8cff',
             'ff80bb','ff792b','ffff5e','52ff97','bae3ff','ffaf9c','bfffc6','b370ff','ffa8b4','7583ff','9aff17','ff30c8');
         $this->docexcel->getActiveSheet()->freezePaneByColumnAndRow(0,2);
-        $this->docexcel->getActiveSheet()->getStyle('A1:K1')->getAlignment()->setWrapText(true);
-        $this->docexcel->getActiveSheet()->getStyle('A1:K1')->applyFromArray($styleTitulos3);
+        $this->docexcel->getActiveSheet()->getStyle('A1:O1')->getAlignment()->setWrapText(true);
+        $this->docexcel->getActiveSheet()->getStyle('A1:O1')->applyFromArray($styleTitulos3);
         $profesion = null;
         $contrato = null;
         foreach ($datos as $value) {
-
 
             $profesion = json_decode($value['profesion'])->files;
             if( $profesion == null){
@@ -207,24 +221,76 @@ class RInformacionRapidaRRHHXls{
                 $contrato = json_decode(trim($contrato[0],'"'))->valor;
             }
 
-
             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(0, $fila, $numero);
             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(1, $fila, $value['funcionario']);
             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(2, $fila, $value['ci']);
             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3, $fila, date_format(date_create($value['fecha_nacimiento']), 'd/m/Y'));
-            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4, $fila, $value['cargo']);
-            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $fila, date_format(date_create($value['fecha_ingreso']), 'd/m/Y'));
-            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6, $fila, $value['telefonos']);
-            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(7, $fila, $value['afp']);
-            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(8, $fila, $value['institucion']);
-            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(9, $fila, $profesion);
-            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(10, $fila, $contrato);
 
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4, $fila, $value['gerencia']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $fila, $value['nombre_oficina']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6, $fila, $value['nombre_lugar']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(7, $fila, $value['genero']);
 
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(8, $fila, $value['cargo']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(9, $fila, date_format(date_create($value['fecha_ingreso']), 'd/m/Y'));
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(10, $fila, $value['telefonos']);
+
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(11, $fila, $value['afp']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(12, $fila, $value['institucion']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(13, $fila, $profesion);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(14, $fila, $contrato);
 
             $fila++;
             $numero++;
         }
+
+        $index++;
+        /*PAGOS QUE NO ESTAN EN ATC*/
+        $this->addHoja('Inf. Específica',$index);
+        $this->docexcel->getActiveSheet()->freezePaneByColumnAndRow(0,2);
+        $this->docexcel->getActiveSheet()->getStyle('A1:G1')->getAlignment()->setWrapText(true);
+        $this->docexcel->getActiveSheet()->getStyle('A1:G1')->applyFromArray($styleTitulos3);
+
+        $this->docexcel->getActiveSheet()->getColumnDimension('A')->setWidth(10);
+        $this->docexcel->getActiveSheet()->getColumnDimension('B')->setWidth(15);
+        $this->docexcel->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+        $this->docexcel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+
+        $this->docexcel->getActiveSheet()->getColumnDimension('E')->setWidth(15);
+        $this->docexcel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
+        $this->docexcel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+
+
+        $this->docexcel->getActiveSheet()->setCellValue('A1','Nro');
+        $this->docexcel->getActiveSheet()->setCellValue('B1','Apellido Paterno');
+        $this->docexcel->getActiveSheet()->setCellValue('C1','Apellido Materno');
+        $this->docexcel->getActiveSheet()->setCellValue('D1','Nombre');
+        $this->docexcel->getActiveSheet()->setCellValue('E1','Teléfono Oficina');
+        $this->docexcel->getActiveSheet()->setCellValue('F1','Correo Institucional');
+        $this->docexcel->getActiveSheet()->setCellValue('G1','Correo Personal');
+
+        $numero = 1;
+        $fila = 2;
+        foreach ($datos as $value) {
+
+            if( $value['correo_personal'] == null || $value['correo_personal'] == ''){
+                $correo_personal = 'No Tiene';
+            }else{
+                $correo_personal = $value['correo_personal'];
+            }
+
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(0, $fila, $numero);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(1, $fila, $value['apellido_paterno']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(2, $fila, $value['apellido_materno']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3, $fila, $value['nombre']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4, $fila, $value['telefono_oficina']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $fila, $value['correo_institucional']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6, $fila, $correo_personal);
+
+            $fila++;
+            $numero++;
+        }
+
     }
 
     function obtenerFechaEnLetra($fecha){
