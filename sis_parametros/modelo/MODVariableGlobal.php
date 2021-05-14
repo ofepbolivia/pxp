@@ -89,5 +89,25 @@ class MODVariableGlobal extends MODbase{
 		return $this->respuesta;
 	}
 
+	function conexionAlkym()
+	{
+		//Definicion de variables para ejecucion del procedimientp
+		$this->procedimiento = 'param.ft_get_variables_globales_sel';
+		$this->transaccion = 'PARAM_GET_VG_SEL';
+		$this->tipo_procedimiento = 'SEL';
+		$this->setCount(false);
+
+
+		$this->setParametro('variable_global', 'variable_global', 'varchar');
+		//Definicion de la lista del resultado del query
+		$this->captura('variable_obtenida', 'varchar');
+		//Ejecuta la instruccion
+		$this->armarConsulta();
+		$this->ejecutarConsulta();
+
+		//Devuelve la respuesta
+		return $this->respuesta;
+	}
+
 }
 ?>
