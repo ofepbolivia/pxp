@@ -489,6 +489,47 @@ BEGIN
 
 
                  END IF;
+        /*
+         (MAY)07-06-2021 modificacion ADQ_SOL_COMPRA Recuperamos  el funcionario solicitante de la solicitud partiendo del plan de pago (OP)
+
+       */
+
+       ELSEIF v_nombre_func_list ='ADQ_SOL_COMPRA_TES'  THEN
+
+               IF p_count=FALSE then
+                 -- sabemos que p_id_estado_wf  corresponde al estado del plan de pagos
+
+                    v_consulta='select
+                          fun.id_funcionario,
+                          fun.desc_funcionario1 as desc_funcionario,
+                          ''Solicitante''::text  as desc_funcionario_cargo,
+                          1 as prioridad
+                        from tes.tobligacion_pago op
+                        inner join tes.tplan_pago pp on pp.id_obligacion_pago = op.id_obligacion_pago
+                        inner join  orga.vfuncionario fun on fun.id_funcionario = op.id_funcionario
+                        where pp.id_estado_wf = '||p_id_estado_wf||'
+                        and '||p_filtro||'
+                            order by fun.desc_funcionario1
+                            limit '|| p_limit::varchar||' offset '||p_start::varchar;
+
+                          FOR g_registros in execute (v_consulta)LOOP
+                  		   RETURN NEXT g_registros;
+                		 END LOOP;
+                 ELSE
+                       v_consulta='select
+                          COUNT(fun.id_funcionario)
+                        from tes.tobligacion_pago op
+                        inner join tes.tplan_pago pp on pp.id_obligacion_pago = op.id_obligacion_pago
+                        inner join  orga.vfuncionario fun on fun.id_funcionario = op.id_funcionario
+                        where pp.id_estado_wf = '||p_id_estado_wf||'
+                        and '||p_filtro;
+
+                          FOR g_registros in execute (v_consulta)LOOP
+                  		   RETURN NEXT g_registros;
+                		  END LOOP;
+
+
+                 END IF;
 
        /*
         (MAY) Recuperamos  el funcionario solicitante de la solicitud desde GM partiendo del plan de pago
