@@ -181,6 +181,7 @@ $body$
                           FUNCIO.id_usuario_mod,
                           FUNCIO.email_empresa,
                           gecom.f_get_numeros_asignados(''interno'',FUNCIO.id_funcionario) as interno,
+                          --''01/03/2021''::date fecha_ingreso,
                           plani.f_get_fecha_primer_contrato_empleado (tuo.id_uo_funcionario, tuo.id_funcionario, tuo.fecha_asignacion) as fecha_ingreso,
                           PERSON.nombre_completo2 AS desc_person,
                           usu1.cuenta as usr_reg,
@@ -221,7 +222,10 @@ $body$
                           FUNCIO.codigo_rc_iva,
                           PERSON2.id_tipo_doc_identificacion,
                           ten.id_especialidad_nivel,
-                          ten.nombre as desc_titulo
+                          ten.nombre as desc_titulo,
+
+                          orga.f_get_funcionario_base_operativa(FUNCIO.id_funcionario) base_operativa
+
                           FROM orga.tfuncionario FUNCIO
                           inner join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario AND
                           tuo.fecha_asignacion  in (select fecha_asignacion
@@ -237,6 +241,7 @@ $body$
                           left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
                           left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10 and tar.id_archivo_fk is null
                           left join orga.tespecialidad_nivel ten on ten.id_especialidad_nivel = FUNCIO.id_especialidad_nivel
+
                           '||v_inner||'
                           WHERE tuo.estado_reg = ''activo'' and tuo.tipo = ''oficial'' and '||v_filtro||'';
 
@@ -252,6 +257,7 @@ $body$
                             FUNCIO.id_usuario_mod,
                             FUNCIO.email_empresa,
                             gecom.f_get_numeros_asignados(''interno'',FUNCIO.id_funcionario) as interno,
+                            --''01/03/2021''::date fecha_ingreso,
                             coalesce(plani.f_get_fecha_primer_contrato_empleado (tuo.id_uo_funcionario, tuo.id_funcionario, tuo.fecha_asignacion), FUNCIO.fecha_ingreso) as fecha_ingreso,
                             PERSON.nombre_completo2 AS desc_person,
                             usu1.cuenta as usr_reg,
@@ -292,7 +298,9 @@ $body$
                             FUNCIO.codigo_rc_iva,
                             PERSON2.id_tipo_doc_identificacion,
                             ten.id_especialidad_nivel,
-                          ten.nombre as desc_titulo
+                          ten.nombre as desc_titulo,
+
+                          orga.f_get_funcionario_base_operativa(FUNCIO.id_funcionario) base_operativa
 
                           FROM orga.tfuncionario FUNCIO
                           left join orga.tuo_funcionario tuo on tuo.id_funcionario = FUNCIO.id_funcionario
@@ -307,6 +315,7 @@ $body$
                           left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
                           left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10 and tar.id_archivo_fk is null
                           left join orga.tespecialidad_nivel ten on ten.id_especialidad_nivel = FUNCIO.id_especialidad_nivel
+
                           '||v_inner||'
                           WHERE FUNCIO.estado_reg = ''activo'' and (FUNCIO.fecha_ingreso between date_trunc(''year'', current_date)::date and (date_trunc(''year'',current_date) + interval ''1 year'' - interval ''1 day'')::date) and '||v_filtro||'';
       end if;
@@ -463,6 +472,7 @@ $body$
                     left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
                     left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10 and tar.id_archivo_fk is null
                     left join orga.tespecialidad_nivel ten on ten.id_especialidad_nivel = FUNCIO.id_especialidad_nivel
+
                     '||v_inner||'
                     WHERE tuo.estado_reg = ''activo'' and tuo.tipo = ''oficial'' and '||v_filtro||'';
         else
@@ -480,6 +490,8 @@ $body$
                     inner join segu.tusuario usu1 on usu1.id_usuario = FUNCIO.id_usuario_reg
                     left join segu.tusuario usu2 on usu2.id_usuario = FUNCIO.id_usuario_mod
                     left join param.tarchivo tar on tar.id_tabla = FUNCIO.id_funcionario and tar.id_tipo_archivo = 10 and tar.id_archivo_fk is null
+                    left join orga.tespecialidad_nivel ten on ten.id_especialidad_nivel = FUNCIO.id_especialidad_nivel
+
                     '||v_inner||'
                     WHERE FUNCIO.estado_reg = ''activo'' and (FUNCIO.fecha_ingreso between date_trunc(''year'', current_date)::date and (date_trunc(''year'',current_date) + interval ''1 year'' - interval ''1 day'')::date) and '||v_filtro||'';
         end if;
@@ -1283,6 +1295,3 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
-
-ALTER FUNCTION orga.ft_funcionario_sel (par_administrador integer, par_id_usuario integer, par_tabla varchar, par_transaccion varchar)
-  OWNER TO postgres;

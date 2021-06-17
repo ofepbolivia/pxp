@@ -85,6 +85,7 @@ class MODFuncionario extends MODbase{
         $this->captura('id_tipo_doc_identificacion','integer');
         $this->captura('id_especialidad_nivel','integer');
         $this->captura('desc_titulo','varchar');
+        $this->captura('base_operativa','varchar');
 
 
         //Ejecuta la funcion

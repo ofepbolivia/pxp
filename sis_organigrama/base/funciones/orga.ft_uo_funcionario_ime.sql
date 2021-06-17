@@ -210,7 +210,8 @@ $body$
           certificacion_presupuestaria = v_parametros.certificacion_presupuestaria,
           codigo_ruta = v_parametros.codigo_ruta,
           estado_funcional = v_parametros.estado_funcional,
-          fecha_asignacion = v_parametros.fecha_asignacion
+          fecha_asignacion = v_parametros.fecha_asignacion,
+          id_cargo = v_parametros.id_cargo
         where id_uo=v_parametros.id_uo
               and id_uo_funcionario=v_parametros.id_uo_funcionario;
 

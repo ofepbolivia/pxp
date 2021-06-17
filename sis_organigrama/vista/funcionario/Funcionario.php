@@ -541,7 +541,7 @@ header("content-type: text/javascript; charset=UTF-8");
 
             {
                 config:{
-                    fieldLabel: "Oficina",
+                    fieldLabel: "Oficina (Item)",
                     gwidth: 200,
                     name: 'nombre_oficina',
                     allowBlank:true,
@@ -561,10 +561,9 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid:true,
                 form:false
             },
-
             {
                 config:{
-                    fieldLabel: "Lugar Oficina",
+                    fieldLabel: "Lugar Oficina (Item)",
                     gwidth: 200,
                     name: 'nombre_lugar_ofi',
                     allowBlank:true,
@@ -584,7 +583,28 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid:true,
                 form:false
             },
-
+            {
+                config:{
+                    fieldLabel: "Base Operativa",
+                    gwidth: 200,
+                    name: 'base_operativa',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'lug.nombre',type:'string'},
+                bottom_filter : true,
+                id_grupo:1,
+                grid:true,
+                form:false
+            },
             {
                 config:{
                     fieldLabel: "Código",
@@ -1445,6 +1465,7 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:'id_tipo_doc_identificacion', type: 'numeric'},
             {name:'id_especialidad_nivel', type: 'numeric'},
             {name:'desc_titulo', type: 'string'},
+            {name:'base_operativa', type: 'string'}
 
         ],
         sortInfo:{

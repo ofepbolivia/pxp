@@ -973,3 +973,17 @@ ALTER TABLE orga.tfuncionario_oficina
     ON UPDATE NO ACTION
     NOT DEFERRABLE;
 /*****************************F-SCP-FEA-ORGA-1-24/03/2021*************/
+
+/*****************************I-SCP-FEA-ORGA-0-16/06/2021*************/
+ALTER TABLE orga.tuo
+  ADD COLUMN fecha_ini DATE;
+
+COMMENT ON COLUMN orga.tuo.fecha_ini
+IS 'campo que indica desde cuando esta disponible una uo.';
+
+ALTER TABLE orga.tuo
+  ADD COLUMN fecha_fin DATE;
+
+COMMENT ON COLUMN orga.tuo.fecha_fin
+IS 'Campo que indica hasta cuando esta disponible una uo.';
+/*****************************F-SCP-FEA-ORGA-0-16/06/2021*************/

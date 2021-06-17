@@ -75,14 +75,18 @@ header("content-type: text/javascript; charset=UTF-8");
                     config:{
                         name: 'acefalo',
                         fieldLabel: 'ACEFALO',
-                        gwidth: 90,
+                        anchor: '100%',
+                        gwidth: 200,
                         renderer: function(value, p, record) {
                             if (record.data['acefalo'] == 'ACEFALO') {
                                 return String.format('{0}', '<font color="green">ACEFALO</font>');
+                            }else{
+                                return String.format('{0}', '<font color="green">'+record.data['acefalo']+'</font>');
                             }
                         }
                     },
                     type:'TextField',
+                    id_grupo: 0,
                     grid:true,
                     form:false
                 },
@@ -251,7 +255,7 @@ header("content-type: text/javascript; charset=UTF-8");
                                 direction: 'ASC'
                             },
                             totalProperty: 'total',
-                            fields: ['id_escala_salarial', 'nombre', 'codigo','haber_basico'],
+                            fields: ['id_escala_salarial', 'nombre', 'codigo','haber_basico','tipo'],
                             remoteSort: true,
                             baseParams: {par_filtro: 'escsal.haber_basico#escsal.nombre#escsal.codigo'}
                         }),
@@ -269,7 +273,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         anchor: '100%',
                         gwidth: 200,
                         minChars: 2,
-                        tpl:'<tpl for="."><div class="x-combo-list-item"><p>{nombre}</p><p>{codigo}</p><p>Haber Basico {haber_basico}</p> </div></tpl>',
+                        tpl:'<tpl for="."><div class="x-combo-list-item"><p style="color: darkmagenta"><b>Nombre:</b> {nombre} <b>Codigo:</b> {codigo}</p><p style="color:darkgreen"><b>Tipo: </b>{tipo}</p><p style="color: red"><b>Haber Basico: </b> {haber_basico}</p> </div></tpl>',
                         renderer : function(value, p, record) {
                             return String.format('{0}', record.data['nombre_escala']);
                         }
@@ -279,6 +283,22 @@ header("content-type: text/javascript; charset=UTF-8");
                     filters: {pfiltro: 'escsal.nombre',type: 'string'},
                     grid: true,
                     form: true
+                },
+                {
+                    config:{
+                        name: 'haber_basico',
+                        fieldLabel: 'Haber Basico',
+                        allowBlank: false,
+                        anchor: '80%',
+                        gwidth: 100,
+                        maxLength:20
+                    },
+                    type:'TextField',
+                    filters:{pfiltro:'escsal.haber_basico',type:'string'},
+                    id_grupo:1,
+                    grid:true,
+                    form:false,
+                    bottom_filter : false
                 },
                 {
                     config:{
@@ -439,6 +459,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name:'usr_mod', type: 'string'},
                 {name:'acefalo', type: 'string'},
                 {name:'identificador', type: 'numeric'},
+                {name:'haber_basico', type: 'numeric'}
 
             ],
             sortInfo:{

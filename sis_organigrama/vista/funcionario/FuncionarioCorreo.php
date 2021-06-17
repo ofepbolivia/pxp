@@ -64,8 +64,8 @@ header("content-type: text/javascript; charset=UTF-8");
 
             Phx.vista.FuncionarioCorreo.superclass.onButtonEdit.call(this);
 
-            this.getComponente('estado_correo').setVisible(false);
-            this.getComponente('estado_correo').setValue('modificar_correo');
+            this.Cmp.estado_correo.setVisible(false);
+            this.Cmp.estado_correo.setValue('modificar_correo');
 
         },
 
@@ -129,7 +129,8 @@ header("content-type: text/javascript; charset=UTF-8");
                 config:{
                     labelSeparator:'',
                     inputType:'hidden',
-                    name: 'estado_correo'
+                    name: 'estado_correo',
+                    id_grupo:1
                 },
                 type:'Field',
                 form:true

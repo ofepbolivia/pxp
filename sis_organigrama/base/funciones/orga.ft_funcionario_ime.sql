@@ -274,7 +274,7 @@ BEGIN
  #FECHA:		25-01-2011
 ***********************************/
      elsif(par_transaccion='RH_FUNCIO_MOD')then
-     	BEGIN --RAISE EXCEPTION 'UPDATE:  %', v_parametros.id_persona;
+     	BEGIN --RAISE EXCEPTION 'UPDATE:  %, %', v_parametros, pxp.f_existe_parametro(par_tabla, 'estado_correo');
           	if pxp.f_existe_parametro(par_tabla, 'estado_correo') then
             	update orga.tfuncionario set
                 	email_empresa=v_parametros.email_empresa
@@ -357,20 +357,22 @@ BEGIN
 			end if;
 
       -- breydi.vasquez 19/04/2021 inactivar usuarios de funcionario,  si se inacitva al funcionario
-      if v_parametros.estado_reg = 'inactivo' then
+      if pxp.f_existe_parametro(par_tabla, 'estado_reg') then
+        if v_parametros.estado_reg = 'inactivo' then
 
-         update segu.tusuario set
-            fecha_caducidad=now()::date,
-            id_usuario_mod=par_id_usuario,
-            fecha_mod=now(),
-            id_usuario_ai=v_parametros._id_usuario_ai,
-            usuario_ai=v_parametros._nombre_usuario_ai
-         where id_usuario in (select u.id_usuario
-                              from orga.tfuncionario f
-                              inner join segu.tusuario u on u.id_persona = f.id_persona and u.estado_reg = 'activo'
-                              where f.id_funcionario = v_parametros.id_funcionario
-                              );
+           update segu.tusuario set
+              fecha_caducidad=now()::date,
+              id_usuario_mod=par_id_usuario,
+              fecha_mod=now(),
+              id_usuario_ai=v_parametros._id_usuario_ai,
+              usuario_ai=v_parametros._nombre_usuario_ai
+           where id_usuario in (select u.id_usuario
+                                from orga.tfuncionario f
+                                inner join segu.tusuario u on u.id_persona = f.id_persona and u.estado_reg = 'activo'
+                                where f.id_funcionario = v_parametros.id_funcionario
+                                );
 
+        end if;
       end if;
 
                v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Funcionario modificado con exito '||v_parametros.id_funcionario);

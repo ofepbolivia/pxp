@@ -258,16 +258,38 @@ BEGIN
                	orga.f_get_documentos_list_func(tf.id_funcionario, ''13''::varchar) as profesion,
                 orga.f_get_documentos_list_func(tf.id_funcionario, ''28''::varchar) as contrato,
                 afp.nro_afp afp,
-                taf.nombre::varchar institucion
+                taf.nombre::varchar institucion,
+                tper.apellido_paterno::varchar,
+			    tper.apellido_materno::varchar,
+			    tper.nombre::varchar,
+			    (coalesce(gecom.f_get_numero_asignado(''interno'', fun.id_funcionario),''Interno No Asignado'')||''/''||coalesce(gecom.f_get_numero_asignado(''celular'', fun.id_funcionario),''Celular No Asignado''))::varchar telefono_oficina,
+                fun.email_empresa::varchar correo_institucional,
+                tper.correo::varchar correo_personal,
+
+                uo.nombre_unidad::varchar gerencia,
+                ofi.nombre::varchar nombre_oficina,
+                lug.nombre::varchar nombre_lugar,
+                (CASE
+                      WHEN tper.genero::text = ANY (ARRAY[''varon''::character varying,''VARON''::character varying, ''Varon''::character varying]::text[]) THEN ''M''
+                      WHEN tper.genero::text = ANY (ARRAY[''mujer''::character varying,''MUJER''::character varying, ''Mujer''::character varying]::text[]) THEN ''F''
+                      ELSE '''' END)::varchar genero
+
 			   from orga.vfuncionario_biometrico tf
-               inner join segu.tpersona tper on tper.ci = tf.ci
-               inner join plani.tfuncionario_afp afp on afp.id_funcionario = tf.id_funcionario
+			   inner join orga.tfuncionario fun on fun.id_funcionario = tf.id_funcionario
+               inner join segu.tpersona tper on tper.id_persona = fun.id_persona
+               inner join plani.tfuncionario_afp afp on afp.id_funcionario = tf.id_funcionario and afp.estado_reg = ''activo'' and coalesce(afp.fecha_fin,''31/12/9999''::date) > current_date
                inner join plani.tafp taf on taf.id_afp = afp.id_afp
-           	   inner JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario and current_date <= coalesce(uof.fecha_finalizacion,''31/12/9999''::date)
-     		   inner JOIN orga.tcargo tc ON tc.id_cargo = uof.id_cargo
+           	   inner JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario and uof.estado_reg = ''activo'' and uof.tipo = ''oficial''
+               and (coalesce (uof.fecha_finalizacion,''31/12/9999''::date) >= current_date)
+     		   inner JOIN orga.tcargo tc ON tc.id_cargo = uof.id_cargo and tc.estado_reg = ''activo''
      		   inner join orga.ttipo_contrato ttc on ttc.id_tipo_contrato = tc.id_tipo_contrato
-           	   where tf.estado_reg = ''activo'' and tc.estado_reg = ''activo'' and uof.estado_reg = ''activo'' and uof.tipo = ''oficial''
-           	   and ttc.codigo in (''PLA'',''EVE'')
+
+               inner  join orga.toficina ofi on ofi.id_oficina = tc.id_oficina
+     		   inner  join param.tlugar lug on lug.id_lugar = ofi.id_lugar
+
+               inner join orga.tuo uo on uo.id_uo = orga.f_get_uo_gerencia(uof.id_uo,NULL,NULL)
+
+           	   where tf.estado_reg = ''activo'' and ttc.codigo in (''PLA'',''EVE'')
            	   order by funcionario ';
 
             RAISE NOTICE 'v_consulta: %', v_consulta;

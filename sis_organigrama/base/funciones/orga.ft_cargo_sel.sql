@@ -6,20 +6,20 @@ CREATE OR REPLACE FUNCTION orga.ft_cargo_sel (
 )
 RETURNS varchar AS
 $body$
-  /**************************************************************************
-   SISTEMA:		Organigrama
-   FUNCION: 		orga.ft_cargo_sel
-   DESCRIPCION:   Funcion que devuelve conjuntos de registros de las consultas relacionadas con la tabla 'orga.tcargo'
-   AUTOR: 		 (admin)
-   FECHA:	        14-01-2014 19:16:06
-   COMENTARIOS:
-  ***************************************************************************
-   HISTORIAL DE MODIFICACIONES:
+/**************************************************************************
+     SISTEMA:		Organigrama
+     FUNCION: 		orga.ft_cargo_sel
+     DESCRIPCION:   Funcion que devuelve conjuntos de registros de las consultas relacionadas con la tabla 'orga.tcargo'
+     AUTOR: 		 (admin)
+     FECHA:	        14-01-2014 19:16:06
+     COMENTARIOS:
+    ***************************************************************************
+     HISTORIAL DE MODIFICACIONES:
 
-   DESCRIPCION:
-   AUTOR:
-   FECHA:
-  ***************************************************************************/
+     DESCRIPCION:
+     AUTOR:
+     FECHA:
+    ***************************************************************************/
 
   DECLARE
 
@@ -72,10 +72,10 @@ $body$
 						tipcon.nombre as nombre_tipo_contrato,
 						escsal.nombre as nombre_escala,
 						ofi.nombre as nombre_oficina,
-						(case when (orga.f_get_empleado_x_item(cargo.id_cargo)  is null and cargo.fecha_fin is null) then
+						(case when (orga.f_get_empleado_nombre_x_item(cargo.id_cargo)  is null /*and cargo.fecha_fin >= ''31/12/9999''::date*/) then
 						  ''ACEFALO''
 						else
-						  ''ASIGNADO''
+						  orga.f_get_empleado_nombre_x_item(cargo.id_cargo)
 						end)::varchar as acefalo,
 						cargo.id_oficina,
 						cargo.id_cargo as identificador,
@@ -237,9 +237,9 @@ $body$
       	v_condicion = 'true';
       	if(pxp.f_existe_parametro(p_tabla,'presupuesto'))then
         	if (v_parametros.presupuesto = 'con_presupuesto') then
-            	v_condicion = 'and (tuo.tipo = ''oficial'' or tuo.tipo is null) and (tuo.estado_reg = ''activo'' or tuo.estado_reg is null) and (tcp.id_cargo_presupuesto is not null and tcp.id_ot is not null)';
+            	v_condicion = 'and (tuo.tipo = ''oficial'' /*or tuo.tipo is null*/) and (tuo.estado_reg = ''activo'' /*or tuo.estado_reg is null*/) and (tcp.id_cargo_presupuesto is not null /*and tcp.id_ot is not null*/)';
             elsif(v_parametros.presupuesto = 'sin_presupuesto')then
-            	v_condicion = 'and tuo.tipo = ''oficial'' and tuo.estado_reg = ''activo'' and (tcp.id_cargo_presupuesto is null or tcp.id_ot is null)';
+            	v_condicion = 'and tuo.tipo = ''oficial'' and tuo.estado_reg = ''activo'' and (tcp.id_cargo_presupuesto is null /*or tcp.id_ot is null*/)';
             elsif(v_parametros.presupuesto = 'acefalo')then
             	v_condicion = 'and (tcp.id_cargo_presupuesto is null and tcp.id_ot is null and tuo.id_uo_funcionario is null)';
             end if;
@@ -251,39 +251,15 @@ $body$
         where tg.gestion = EXTRACT('year' from current_date);
         --Sentencia de la consulta
         v_consulta:='select
-        				vf.id_funcionario,
-						cargo.id_cargo,
-						cargo.id_uo,
-						cargo.id_tipo_contrato,
-						cargo.id_lugar,
-						cargo.id_temporal_cargo,
-						cargo.id_escala_salarial,
-						cargo.codigo,
-						cargo.nombre as cargo,
-						cargo.fecha_ini,
-						cargo.estado_reg,
-						cargo.fecha_fin,
-						cargo.fecha_reg,
-						cargo.id_usuario_reg,
-						cargo.fecha_mod,
-						cargo.id_usuario_mod,
-						usu1.cuenta as usr_reg,
-						usu2.cuenta as usr_mod,
-
-						tipcon.nombre as nombre_tipo_contrato,
-						escsal.nombre as nombre_escala,
-						ofi.nombre as nombre_oficina,
-						(case when (orga.f_get_empleado_x_item(cargo.id_cargo)  is null and cargo.fecha_fin is null) then
+        				vf.id_funcionario, cargo.id_cargo, cargo.id_uo, cargo.id_tipo_contrato, cargo.id_lugar, cargo.id_temporal_cargo, cargo.id_escala_salarial, cargo.codigo,
+						cargo.nombre as cargo, cargo.fecha_ini, cargo.estado_reg, cargo.fecha_fin, cargo.fecha_reg, cargo.id_usuario_reg, cargo.fecha_mod, cargo.id_usuario_mod,
+						usu1.cuenta as usr_reg, usu2.cuenta as usr_mod, tipcon.nombre as nombre_tipo_contrato, escsal.nombre as nombre_escala,
+						ofi.nombre as nombre_oficina, (case when (orga.f_get_empleado_x_item(cargo.id_cargo)  is null and cargo.fecha_fin is null) then
 						  ''ACEFALO''
 						else
 						  ''ASIGNADO''
-						end)::varchar as acefalo,
-						cargo.id_oficina,
-						cargo.id_cargo::varchar as identificador,
-						tipcon.codigo as codigo_tipo_contrato,
-                        vf.desc_funcionario1::varchar as desc_func,
-                        tuo.fecha_asignacion,
-                        tuo.fecha_finalizacion
+						end)::varchar as acefalo, cargo.id_oficina, cargo.id_cargo::varchar as identificador, tipcon.codigo as codigo_tipo_contrato,
+                        vf.desc_funcionario1::varchar as desc_func, tuo.fecha_asignacion, tuo.fecha_finalizacion
 						from orga.tcargo cargo
 						inner join segu.tusuario usu1 on usu1.id_usuario = cargo.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = cargo.id_usuario_mod
@@ -293,7 +269,7 @@ $body$
                         left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = '||v_id_gestion||'
                         LEFT join orga.tuo_funcionario tuo on tuo.id_cargo = cargo.id_cargo and '||v_activo||'
                         LEFT join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
-				        where cargo.estado_reg = ''activo'' and tipcon.codigo != ''PCP'' '||v_condicion||' and ';
+				        where cargo.estado_reg = ''activo'' and tipcon.codigo IN (''CONS'',''PLA'',''EVE'') '||v_condicion||' and ';
 
         --Definicion de la respuesta
         v_consulta:=v_consulta||v_parametros.filtro;
@@ -324,9 +300,9 @@ $body$
       	v_condicion = 'true';
       	if(pxp.f_existe_parametro(p_tabla,'presupuesto'))then
         	if (v_parametros.presupuesto = 'con_presupuesto') then
-            	v_condicion = 'and (tuo.tipo = ''oficial'' or tuo.tipo is null) and (tuo.estado_reg = ''activo'' or tuo.estado_reg is null) and (tcp.id_cargo_presupuesto is not null and tcp.id_ot is not null)';
+            	v_condicion = 'and (tuo.tipo = ''oficial'' /*or tuo.tipo is null*/) and (tuo.estado_reg = ''activo'' /*or tuo.estado_reg is null*/) and (tcp.id_cargo_presupuesto is not null /*and tcp.id_ot is not null*/)';
             elsif(v_parametros.presupuesto = 'sin_presupuesto')then
-            	v_condicion = 'and tuo.tipo = ''oficial'' and tuo.estado_reg = ''activo'' and (tcp.id_cargo_presupuesto is null or tcp.id_ot is null)';
+            	v_condicion = 'and tuo.tipo = ''oficial'' and tuo.estado_reg = ''activo'' and (tcp.id_cargo_presupuesto is null /*or tcp.id_ot is null*/)';
             elsif(v_parametros.presupuesto = 'acefalo')then
             	v_condicion = 'and (tcp.id_cargo_presupuesto is null and tcp.id_ot is null and tuo.id_uo_funcionario is null)';
             end if;
@@ -347,7 +323,7 @@ $body$
                         left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = '||v_id_gestion||'
                         LEFT join orga.tuo_funcionario tuo on tuo.id_cargo = cargo.id_cargo and '||v_activo||'
                         LEFT join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
-				        where cargo.estado_reg = ''activo'' and tipcon.codigo != ''PCP'' '||v_condicion||' and ';
+				        where cargo.estado_reg = ''activo'' and tipcon.codigo IN (''CONS'',''PLA'',''EVE'') '||v_condicion||' and ';
 
         --Definicion de la respuesta
         v_consulta:=v_consulta||v_parametros.filtro;

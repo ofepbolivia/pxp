@@ -428,18 +428,36 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 		},
 
         onNodeDrop : function(o) {
-            this.ddParams = {
-                tipo_nodo : o.dropNode.attributes.tipo_nodo
-            };
-            this.idTargetDD = 'id_uo';
-            if (o.dropNode.attributes.tipo_nodo == 'raiz' || o.dropNode.attributes.tipo_nodo == 'hijo') {
-                this.idNodoDD = 'id_uo';
-                this.idOldParentDD = 'id_uo_padre';
-            } else if(o.dropNode.attributes.tipo_nodo == 'item') {
-                this.idNodoDD = 'id_item';
-                this.idOldParentDD = 'id_p';
-            }
-            Phx.vista.EstructuraUo.superclass.onNodeDrop.call(this, o);
+
+            Ext.Msg.show({
+                title: 'ORGANIGRAMA ERP',
+                msg: '<b style="color: red;">Esta segur@ de realizar el Cambio de Unidad Organizacional.</b>',
+                fn: function (btn){
+                    if(btn == 'ok'){
+                        this.ddParams = {
+                            tipo_nodo : o.dropNode.attributes.tipo_nodo
+                        };
+                        this.idTargetDD = 'id_uo';
+                        if (o.dropNode.attributes.tipo_nodo == 'raiz' || o.dropNode.attributes.tipo_nodo == 'hijo') {
+                            this.idNodoDD = 'id_uo';
+                            this.idOldParentDD = 'id_uo_padre';
+                        } else if(o.dropNode.attributes.tipo_nodo == 'item') {
+                            this.idNodoDD = 'id_item';
+                            this.idOldParentDD = 'id_p';
+                        }
+
+                        Phx.vista.EstructuraUo.superclass.onNodeDrop.call(this, o);
+                    }
+                },
+                buttons: Ext.Msg.OKCANCEL,
+                width: 350,
+                maxWidth:500,
+                icon: Ext.Msg.WARNING,
+                scope:this
+            });
+
+
+
         },
 		onButtonAct:function(){
 			

@@ -472,7 +472,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 		
 	},onButtonEdit:function(){
 		//llamamos primero a la funcion new de la clase padre por que reseta el valor los componentes
-		this.ocultarComponente(this.Cmp.id_cargo);
+		//this.ocultarComponente(this.Cmp.id_cargo);
 		this.ocultarComponente(this.Cmp.id_funcionario);
 		//this.ocultarComponente(this.Cmp.fecha_asignacion);
 		//this.ocultarComponente(this.Cmp.tipo);
@@ -492,6 +492,13 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 			this.Cmp.observaciones_finalizacion.allowBlank = false;
 			this.mostrarComponente(this.Cmp.observaciones_finalizacion);
 		}
+
+        if(this.Cmp.tipo.getValue() == 'funcional') {
+            this.Cmp.id_cargo.reset();
+            this.Cmp.id_cargo.allowBlank = true;
+        }else{
+            this.Cmp.id_cargo.allowBlank = false;
+        }
 	},
 	
 	/*funcion corre cuando el padre cambia el nodo maestero*/
@@ -551,7 +558,13 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 			this.Cmp.id_cargo.store.setBaseParam('tipo',this.Cmp.tipo.getValue());
 			this.Cmp.id_cargo.tdata.tipo = this.Cmp.tipo.getValue();
 			this.Cmp.id_funcionario.tdata.tipo = this.Cmp.tipo.getValue();
-			
+
+            if(this.Cmp.tipo.getValue() == 'funcional') {
+                this.Cmp.id_cargo.reset();
+                this.Cmp.id_cargo.allowBlank = true;
+            }else{
+                this.Cmp.id_cargo.allowBlank = false;
+            }
 		},this);
 
         this.getComponente('fecha_finalizacion').on('beforerender',function (combo) {

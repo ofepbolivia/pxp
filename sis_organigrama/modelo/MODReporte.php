@@ -141,6 +141,17 @@ class MODReporte extends MODbase{
         $this->captura('contrato','json');
         $this->captura('afp','varchar');
         $this->captura('institucion','varchar');
+        $this->captura('apellido_paterno','varchar');
+        $this->captura('apellido_materno','varchar');
+        $this->captura('nombre','varchar');
+        $this->captura('telefono_oficina','varchar');
+        $this->captura('correo_institucional','varchar');
+        $this->captura('correo_personal','varchar');
+
+        $this->captura('gerencia','varchar');
+        $this->captura('nombre_oficina','varchar');
+        $this->captura('nombre_lugar','varchar');
+        $this->captura('genero','varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();

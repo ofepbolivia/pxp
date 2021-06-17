@@ -30,6 +30,9 @@ DECLARE
 	v_mensaje_error         	text;
 	v_id_funcionario_oficina	integer;
     v_record_json				jsonb;
+    v_id_lugar					integer;
+
+    v_lugar						record;
 
 BEGIN
 
@@ -153,7 +156,18 @@ BEGIN
 
 		begin
         	for v_record_json in SELECT * FROM jsonb_array_elements(v_parametros.dataJson)  loop
-            --raise 'v_record_json: %', v_record_json->>'id_funcionario_oficina';
+
+            	/*select  tl.id_lugar
+                into v_id_lugar
+                from param.tlugar tl
+                where tl.codigo = (v_record_json->>'codigo')::varchar;*/
+
+                select  tl.id_lugar, tl.codigo
+                into v_lugar
+                from orga.toficina tof
+                inner join param.tlugar tl on tl.id_lugar = tof.id_lugar
+                where tof.id_oficina = (v_record_json->>'id_oficina')::integer;
+
                 --Sentencia de insercción
                 if v_record_json->>'operacion' = 'INSERT' then
 
@@ -170,7 +184,9 @@ BEGIN
                         fecha_reg,
                         id_usuario_mod,
                         fecha_mod,
-                        fuente
+                        fuente,
+                        id_lugar,
+                        codigo
                     ) values(
                         (v_record_json->>'id_funcionario_oficina')::integer,
                         'activo',
@@ -183,7 +199,9 @@ BEGIN
                         now(),
                         null,
                         null,
-                        (v_record_json->>'fuente')::varchar
+                        (v_record_json->>'fuente')::varchar,
+                        (v_lugar.id_lugar)::integer,--v_id_lugar,
+                        (v_lugar.codigo)::varchar--(v_record_json->>'codigo')::varchar
                     );
 
                 elsif v_record_json->>'operacion' = 'UPDATE' then
@@ -197,7 +215,9 @@ BEGIN
                     id_usuario_mod 	= p_id_usuario,
                     fecha_mod 		= now(),
                     usuario 		= (v_record_json->>'usuario')::varchar,
-                    estado_reg		= (v_record_json->>'estado_reg')::varchar
+                    estado_reg		= (v_record_json->>'estado_reg')::varchar,
+                    id_lugar		= (v_lugar.id_lugar)::integer,--v_id_lugar,
+                    codigo			= (v_lugar.codigo)::varchar--(v_record_json->>'codigo')::varchar
                     where id_funcionario_oficina = (v_record_json->>'id_funcionario_oficina')::integer;
                 end if;
             end loop;
