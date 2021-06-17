@@ -2417,3 +2417,10 @@ IS 'Campo donde se filtrara que conceptos se mostraran en ciertos sistemas';
 ALTER TABLE param.tconcepto_ingas
   ALTER COLUMN movimiento SET NOT NULL;
 /***********************************F-SCP-IRVA-PARAM-0-07/05/2021****************************************/
+
+/************I-SCP-FFP-PARAM-0-05/05/2021**************/
+
+alter table param.tconcepto_ingas
+add tipo_descuento varchar(255);
+
+/************F-SCP-FFP-PARAM-0-05/05/2021**************/
