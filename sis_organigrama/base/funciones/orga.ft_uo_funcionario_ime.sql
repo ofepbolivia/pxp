@@ -41,6 +41,7 @@ $body$
 
 	v_contador				integer = 0;
 	v_tipo            varchar;
+  v_usr_existente		record;
   BEGIN
 
     v_nombre_funcion:='orga.ft_uo_funcionario_ime';
@@ -139,6 +140,24 @@ $body$
                    v_parametros.tipo, v_parametros.certificacion_presupuestaria, v_parametros.codigo_ruta, v_parametros.estado_funcional)
         RETURNING id_uo_funcionario INTO v_id_uo_funcionario;
 
+        -- ini breydi.vasquez, fecha: 26/06/2021, desc: update de fecha caducidad en caso el funionario ya tenga un usuario antiguo, para volver a activarlo
+        select
+    	   uc.fecha_finalizacion,
+	       usu.id_usuario
+        into v_usr_existente
+        from orga.vfuncionario fun
+        inner join orga.vfuncionario_ultimo_cargo uc on uc.id_funcionario = fun.id_funcionario
+        inner join segu.vusuario usu on usu.id_persona = fun.id_persona
+        where fun.id_funcionario = v_parametros.id_funcionario;
+
+        if v_usr_existente.id_usuario is not null then
+           update segu.tusuario set
+            fecha_caducidad=coalesce(v_usr_existente.fecha_finalizacion, '31/12/9999'),
+            id_usuario_mod=1,
+            fecha_mod=now()
+            where id_usuario = v_usr_existente.id_usuario;
+      	end if;
+        -- fin breydi.vasquez
 
         --10-04-2012: sincronizacion de UO entre BD
         /* v_respuesta_sinc:=orga.f_sincroniza_uo_empleado_entre_bd(v_id_uo_funcionario,'10.172.0.13','5432','db_link','db_link','dbendesis' ,'INSERT');
