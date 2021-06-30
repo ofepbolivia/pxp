@@ -136,7 +136,7 @@ header("content-type: text/javascript; charset=UTF-8");
             //(may) modificacion grupo de campos segun el tipo
             this.getComponente('tipo').on('select', function (c, r, n) {
 
-                if (r.data.codigo == 'general' || r.data.codigo == 'General' || r.data.codigo == '') {
+                if (r.data.codigo == 'general' || r.data.codigo == 'General' || r.data.codigo == '' || r.data.codigo == 'funcionario') {
                     //this.ocultarComponente(datos.dnrp);
                     console.log('llegamnew6',r.data.codigo);
                     this.ocultarGrupo(4);
@@ -2057,7 +2057,7 @@ header("content-type: text/javascript; charset=UTF-8");
 
 
             //(may) modificacion grupo de campos segun el tipo
-            if (datos.tipo == 'General' || datos.tipo == 'general' || datos.tipo == '') {
+            if (datos.tipo == 'General' || datos.tipo == 'general' || datos.tipo == '' || datos.tipo == 'Funcionario') {
                 this.ocultarGrupo(4);
                 this.ocultarGrupo(5);
 
