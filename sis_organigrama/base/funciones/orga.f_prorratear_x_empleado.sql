@@ -126,7 +126,7 @@ DECLARE
 --raise exception 'llegaav_totalOD %',p_id_periodo;
                   FOR v_telefonia_detalle in (select  NULL,
                                                       pdet.id_centro_costo,
-                                                      NULL,--ccot.id_orden_trabajo
+                                                      pdet.id_orden_trabajo,--ccot.id_orden_trabajo
                                                       sum(pdet.costo_llamada) as monto
 
                                                 from gecom.tpago_telefonia_det pdet
@@ -180,7 +180,7 @@ DECLARE
                                                                         v_id_funcionario,
                                                                         v_telefonia_detalle.id_centro_costo,
                                                                         coalesce(v_importe_total_OD,0),
-                                                                        NULL,--v_telefonia_detalle.id_orden_trabajo,
+                                                                        v_telefonia_detalle.id_orden_trabajo, --v_telefonia_detalle.id_orden_trabajo,
                                                                         'Prorrateo ' || p_codigo_prorrateo,
                                                                         p_id_periodo,
                                                                         'si',
@@ -208,7 +208,7 @@ DECLARE
                                                                         v_id_funcionario,
                                                                         v_telefonia_detalle.id_centro_costo,
                                                                         coalesce(v_importe_total_OD,0),
-                                                                        NULL,--v_telefonia_detalle.id_orden_trabajo,
+                                                                        v_telefonia_detalle.id_orden_trabajo, --v_telefonia_detalle.id_orden_trabajo,
                                                                         'Prorrateo ' || p_codigo_prorrateo,
                                                                         p_id_periodo,
                                                                         'si',
