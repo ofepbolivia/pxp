@@ -140,7 +140,7 @@ DECLARE
                                                 where numcel.id_numero_celular = v_registros.id_numero_celular
                                                 and pt.id_periodo = p_id_periodo
 
-                                                group by pdet.id_centro_costo) LOOP
+                                                group by pdet.id_centro_costo, pdet.id_orden_trabajo) LOOP
 
                            --raise exception 'llega % - %',v_telefonia_detalle.id_centro_costo, v_telefonia_detalle.monto;
                            --raise notice 'llegabdww % - % - %', v_registros.id_numero_celular, v_telefonia_detalle.id_centro_costo, v_telefonia_detalle.monto;
