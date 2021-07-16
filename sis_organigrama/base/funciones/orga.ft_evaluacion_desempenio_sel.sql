@@ -32,6 +32,9 @@ DECLARE
 	v_from			varchar;
     v_record        record;
     v_bolea			boolean;
+    v_cod			varchar;
+    v_id_uo			integer;
+	  v_fil			varchar;
 
 BEGIN
 
@@ -48,6 +51,20 @@ BEGIN
 	if(p_transaccion='MEM_EVD_SEL')then
 
     	begin
+      -- {dev:breydi.vasquez, date: 16/07/2021, desc: filtro momentaneo por restructuracion de gerencias}
+      SELECT codigo into v_cod
+      FROM orga.tuo
+      where id_uo = v_parametros.id_gerencia;
+
+      SELECT ev.id_uo into v_id_uo
+      FROM orga.tevaluacion_desempenio ev
+      INNER JOIN orga.tuo uo on uo.id_uo = ev.id_uo and uo.codigo = v_cod
+      WHERE ev.gestion = v_parametros.id_gestion
+      AND ev.id_uo is not null
+      limit 1;
+
+      v_fil = 'ger.id_uo = '||v_id_uo;
+
     		--Sentencia de la consulta
 			v_consulta:='select	  ger.nombre_unidad,
                                   ger.id_uo,
@@ -78,7 +95,7 @@ BEGIN
                                   evd.cite,
                                   evd.revisado,
                                   evd.estado_modificado,
-                                  f.email_empresa                                  
+                                  f.email_empresa
                                   from orga.tevaluacion_desempenio evd
                                   inner join orga.tuo_funcionario fun on fun.id_uo_funcionario=evd.id_uo_funcionario
                                   inner join orga.tcargo ca on ca.id_temporal_cargo=evd.id_cargo_evaluado
@@ -86,7 +103,7 @@ BEGIN
                                   inner join segu.tusuario usu1 on usu1.id_usuario=evd.id_usuario_reg
                                   left join segu.tusuario usu2 on usu2.id_usuario=evd.id_usuario_mod
                                   inner join orga.vfuncionario_cargo f  on f.id_funcionario=fun.id_funcionario and ca.id_cargo=f.id_cargo
-                                  where  ';
+                                  where  '||v_fil||' and ';
 
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
@@ -120,7 +137,7 @@ BEGIN
 
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
-            
+
 
 			--Devuelve la respuesta
 			return v_consulta;
@@ -136,7 +153,7 @@ BEGIN
 	elsif(p_transaccion='MEM_EVD_REPO')then
 
 		begin
-		
+
         select orga.f_iniciales_funcionarios(p.desc_funcionario1)
         into
         v_iniciales
@@ -339,7 +356,7 @@ BEGIN
 	***********************************/
 
 	elsif(p_transaccion='MEM_EVD_FUN')then
-		
+
 		begin
 
 			--Sentencia de la consulta de conteo de registros
@@ -363,16 +380,16 @@ BEGIN
 			return v_consulta;
 
 		end;
-               
-    /*********************************    
+
+    /*********************************
  	#TRANSACCION:  'OR_CCO_SEL'
  	#DESCRIPCION:	Consulta de datos
- 	#AUTOR:		miguel.mamani	
+ 	#AUTOR:		miguel.mamani
  	#FECHA:		02-07-2018 05:18:31
 	***********************************/
 
 	elsif(p_transaccion='OR_CCO_SEL')then
-     				
+
     	begin
     		--Sentencia de la consulta
 			v_consulta:='select	    evd.id_evaluacion_desempenio,
@@ -380,7 +397,7 @@ BEGIN
                                     evd.estado,
                                     f.desc_funcionario1 as nombre_funcionario,
                                     upper (evd.cargo_evaluado) as nombre_cargo,
-                                    f.email_empresa,	
+                                    f.email_empresa,
                                     evd.gestion,
                                     ger.nombre_unidad,
                                     evd.nota,
@@ -388,22 +405,22 @@ BEGIN
                                     evd.nro_tramite
                                     from orga.tevaluacion_desempenio evd
                                     inner join orga.vfuncionario_cargo f on f.id_funcionario = evd.id_funcionario and (f.fecha_finalizacion is null or f.fecha_asignacion>=now()::date)
-                                    --inner join orga.tcargo ca on ca.id_temporal_cargo = evd.id_cargo_evaluado --agregado                                            
+                                    --inner join orga.tcargo ca on ca.id_temporal_cargo = evd.id_cargo_evaluado --agregado
                                     inner join orga.tuo ger ON ger.id_uo = orga.f_get_uo_gerencia(f.id_uo, NULL::integer, NULL::date)
                                     where';
-			
+
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
 			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
 			raise notice 'cosulta %',v_consulta;
 			--Devuelve la respuesta
 			return v_consulta;
-						
+
 		end;
-    /*********************************    
+    /*********************************
  	#TRANSACCION:  'OR_CCO_CONT'
  	#DESCRIPCION:	Conteo de registros
- 	#AUTOR:		miguel.mamani	
+ 	#AUTOR:		miguel.mamani
  	#FECHA:		02-07-2018 05:18:31
 	***********************************/
 
@@ -414,11 +431,11 @@ BEGIN
 			v_consulta:='select	  count( evd.id_evaluacion_desempenio)
                                   from orga.tevaluacion_desempenio evd
                                   inner join orga.vfuncionario_cargo f on f.id_funcionario = evd.id_funcionario and (f.fecha_finalizacion is null or f.fecha_asignacion>=now()::date)
-                                  --inner join orga.tcargo ca on ca.id_temporal_cargo = evd.id_cargo_evaluado --agregado                                          
+                                  --inner join orga.tcargo ca on ca.id_temporal_cargo = evd.id_cargo_evaluado --agregado
                                   inner join orga.tuo ger ON ger.id_uo = orga.f_get_uo_gerencia(f.id_uo, NULL::integer, NULL::date)
                                   where';
-			
-			--Definicion de la respuesta		    
+
+			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
 
 			--Devuelve la respuesta
