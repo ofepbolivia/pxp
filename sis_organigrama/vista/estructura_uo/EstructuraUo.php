@@ -360,7 +360,16 @@ Phx.vista.EstructuraUo=function(config){
 				handler: this.onBtnCargos,
 				tooltip: '<b>Cargos</b><br/>Listado de cargos por unidad organizacional'
 			}
-		);	
+		);
+
+        this.addButton('btnAnexo',	{
+                text: 'Contrato Anexo',
+                iconCls: 'bmoney',
+                disabled: false,
+                handler: this.onBtnContratoAnexo,
+                tooltip: '<b>Anexo</b><br/>Listado de Anexos por UO.'
+            }
+        );
 		
 		//coloca elementos en la barra de herramientas
 		this.tbar.add('->');
@@ -509,8 +518,22 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 				    'Cargo'
 			);
 		},
-	
-		
+
+        onBtnContratoAnexo: function(){
+            var node = this.sm.getSelectedNode();
+            var data = node.attributes; console.log('node', data);
+            Phx.CP.loadWindows('../../../sis_organigrama/vista/uo_contrato_anexo/UoContratoAnexo.php',
+                'UO Anexos',
+                {
+                    width:1000,
+                    height:600
+                },
+                data,
+                this.idContenedor,
+                'UoContratoAnexo'
+            );
+        },
+    
 		//sobrecarga prepara menu
 		preparaMenu:function(n) {
 		    this.getBoton('btnCargo').enable();

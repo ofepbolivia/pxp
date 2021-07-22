@@ -987,3 +987,202 @@ ALTER TABLE orga.tuo
 COMMENT ON COLUMN orga.tuo.fecha_fin
 IS 'Campo que indica hasta cuando esta disponible una uo.';
 /*****************************F-SCP-FEA-ORGA-0-16/06/2021*************/
+
+/*****************************I-SCP-FEA-ORGA-0-21/07/2021*************/
+CREATE TABLE orga.trepresentante_legal (
+  id_representante_legal SERIAL,
+  id_funcionario INTEGER,
+  nro_resolucion VARCHAR(32),
+  fecha_resolucion DATE,
+  fecha_ini DATE,
+  fecha_fin DATE,
+  abreviatura_profesion VARCHAR(8),
+  CONSTRAINT trepresentante_legal_pkey PRIMARY KEY(id_representante_legal)
+) INHERITS (pxp.tbase)
+WITH (oids = false);
+
+ALTER TABLE orga.trepresentante_legal
+  ALTER COLUMN id_representante_legal SET STATISTICS 0;
+
+ALTER TABLE orga.trepresentante_legal
+  ALTER COLUMN id_funcionario SET STATISTICS 0;
+
+ALTER TABLE orga.trepresentante_legal
+  ALTER COLUMN nro_resolucion SET STATISTICS 0;
+
+ALTER TABLE orga.trepresentante_legal
+  ALTER COLUMN fecha_resolucion SET STATISTICS 0;
+
+ALTER TABLE orga.trepresentante_legal
+  ALTER COLUMN fecha_ini SET STATISTICS 0;
+
+ALTER TABLE orga.trepresentante_legal
+  ALTER COLUMN fecha_fin SET STATISTICS 0;
+
+COMMENT ON COLUMN orga.trepresentante_legal.id_funcionario
+IS 'Identificador del funcionario Representate Legal';
+
+COMMENT ON COLUMN orga.trepresentante_legal.nro_resolucion
+IS 'Nro. de resolucion del Representante Legal.';
+
+COMMENT ON COLUMN orga.trepresentante_legal.fecha_resolucion
+IS 'Fecha de la resolucion del Representante Legal.';
+
+COMMENT ON COLUMN orga.trepresentante_legal.fecha_ini
+IS 'Fecha Inicio de la representacion legal.';
+
+COMMENT ON COLUMN orga.trepresentante_legal.fecha_fin
+IS 'Fecha Fin de la representacion legal.';
+
+COMMENT ON COLUMN orga.trepresentante_legal.abreviatura_profesion
+IS 'Abreviatura de la profesion del representante legal.';
+
+ALTER TABLE orga.trepresentante_legal OWNER TO postgres;
+/*****************************F-SCP-FEA-ORGA-0-21/07/2021*************/
+
+/*****************************I-SCP-FEA-ORGA-0-22/07/2021*************/
+CREATE TABLE orga.therederos (
+  id_herederos SERIAL,
+  parentesco VARCHAR(16) DEFAULT 'heredero'::character varying,
+  edad INTEGER,
+  id_funcionario INTEGER,
+  id_persona INTEGER,
+  CONSTRAINT therederos_pkey PRIMARY KEY(id_herederos)
+) INHERITS (pxp.tbase)
+WITH (oids = false);
+
+ALTER TABLE orga.therederos
+  ALTER COLUMN id_herederos SET STATISTICS 0;
+
+ALTER TABLE orga.therederos
+  ALTER COLUMN parentesco SET STATISTICS 0;
+
+ALTER TABLE orga.therederos
+  ALTER COLUMN edad SET STATISTICS 0;
+
+COMMENT ON COLUMN orga.therederos.parentesco
+IS 'indica el tipo de parentesco';
+
+COMMENT ON COLUMN orga.therederos.edad
+IS 'edad del beneficiario heredero.';
+
+COMMENT ON COLUMN orga.therederos.id_funcionario
+IS 'identificador del benefactor.';
+
+COMMENT ON COLUMN orga.therederos.id_persona
+IS 'identificador del heredero.';
+
+ALTER TABLE orga.therederos OWNER TO postgres;
+
+CREATE TABLE orga.tuo_contrato_anexo (
+  id_uo_contrato_anexo SERIAL,
+  id_uo INTEGER,
+  tipo_anexo VARCHAR(16),
+  id_tipo_contrato INTEGER,
+  id_tipo_documento_contrato INTEGER,
+  CONSTRAINT tuo_contrato_anexo_pkey PRIMARY KEY(id_uo_contrato_anexo)
+) INHERITS (pxp.tbase)
+WITH (oids = false);
+
+ALTER TABLE orga.tuo_contrato_anexo
+  ALTER COLUMN id_uo_contrato_anexo SET STATISTICS 0;
+
+ALTER TABLE orga.tuo_contrato_anexo
+  ALTER COLUMN id_uo SET STATISTICS 0;
+
+ALTER TABLE orga.tuo_contrato_anexo
+  ALTER COLUMN tipo_anexo SET STATISTICS 0;
+
+COMMENT ON COLUMN orga.tuo_contrato_anexo.id_uo
+IS 'Identificador a la UO que corresponde el anexo';
+
+COMMENT ON COLUMN orga.tuo_contrato_anexo.tipo_anexo
+IS 'tipo de anexo a,b,c';
+
+COMMENT ON COLUMN orga.tuo_contrato_anexo.id_tipo_contrato
+IS 'Identificador del tipo de contrato relacionado.';
+
+COMMENT ON COLUMN orga.tuo_contrato_anexo.id_tipo_documento_contrato
+IS 'indentificador del tipo documento contrato';
+
+ALTER TABLE orga.tuo_contrato_anexo OWNER TO postgres;
+
+CREATE TABLE orga.ttipo_documento_contrato (
+  id_tipo_documento_contrato SERIAL,
+  tipo VARCHAR(32),
+  contenido TEXT,
+  fecha_ini DATE,
+  fecha_fin DATE,
+  tabla VARCHAR(128),
+  columna_llave VARCHAR(128),
+  tipo_detalle VARCHAR(32),
+  CONSTRAINT ttipo_documento_pkey PRIMARY KEY(id_tipo_documento_contrato)
+) INHERITS (pxp.tbase)
+WITH (oids = false);
+
+ALTER TABLE orga.ttipo_documento_contrato
+  ALTER COLUMN id_tipo_documento_contrato SET STATISTICS 0;
+
+ALTER TABLE orga.ttipo_documento_contrato
+  ALTER COLUMN tipo SET STATISTICS 0;
+
+ALTER TABLE orga.ttipo_documento_contrato
+  ALTER COLUMN contenido SET STATISTICS 0;
+
+ALTER TABLE orga.ttipo_documento_contrato
+  ALTER COLUMN fecha_ini SET STATISTICS 0;
+
+ALTER TABLE orga.ttipo_documento_contrato
+  ALTER COLUMN fecha_fin SET STATISTICS 0;
+
+COMMENT ON COLUMN orga.ttipo_documento_contrato.tipo
+IS 'Tipo de documento contrato, anexo, etc.';
+
+COMMENT ON COLUMN orga.ttipo_documento_contrato.contenido
+IS 'contenido del documento.';
+
+COMMENT ON COLUMN orga.ttipo_documento_contrato.fecha_ini
+IS 'fecha inicio desde cuando esta disponible el documento.';
+
+COMMENT ON COLUMN orga.ttipo_documento_contrato.fecha_fin
+IS 'fecha fin hasta cuando esta disponible el documento.';
+
+COMMENT ON COLUMN orga.ttipo_documento_contrato.tabla
+IS 'tabla o vista de don se sacara la informacion para la plantilla';
+
+COMMENT ON COLUMN orga.ttipo_documento_contrato.columna_llave
+IS 'identifcador para definir una clave primaria';
+
+COMMENT ON COLUMN orga.ttipo_documento_contrato.tipo_detalle
+IS 'nombre del documento';
+
+ALTER TABLE orga.ttipo_documento_contrato OWNER TO postgres;
+/*****************************F-SCP-FEA-ORGA-0-22/07/2021*************/
+
+
+/*****************************I-SCP-FEA-ORGA-1-22/07/2021*************/
+CREATE TABLE orga.tcorrelativo_contrato (
+  id_correlativo_contrato SERIAL,
+  id_correlativo INTEGER,
+  numero_contrato VARCHAR,
+  CONSTRAINT tcorrelativo_contrato_pk PRIMARY KEY(id_correlativo_contrato)
+)INHERITS (pxp.tbase)
+WITH (oids = false);
+
+COMMENT ON COLUMN orga.tcorrelativo_contrato.id_correlativo
+IS 'identificador del correlativo de documentos';
+
+COMMENT ON COLUMN orga.tcorrelativo_contrato.numero_contrato
+IS 'numero del contrato generado.';
+
+CREATE UNIQUE INDEX tcorrelativo_contrato_id_correlativo_contrato_uindex ON orga.tcorrelativo_contrato
+  USING btree (id_correlativo_contrato);
+
+ALTER TABLE orga.tcorrelativo_contrato OWNER TO postgres;
+
+ALTER TABLE orga.ttipo_documento_contrato
+  ADD COLUMN id_tipo_contrato INTEGER;
+
+COMMENT ON COLUMN orga.ttipo_documento_contrato.id_tipo_contrato
+IS 'Identificador para el tipo de contrato al que corresponde.';
+/*****************************F-SCP-FEA-ORGA-1-22/07/2021*************/

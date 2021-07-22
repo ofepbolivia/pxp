@@ -272,8 +272,9 @@ BEGIN
                 (CASE
                       WHEN tper.genero::text = ANY (ARRAY[''varon''::character varying,''VARON''::character varying, ''Varon''::character varying]::text[]) THEN ''M''
                       WHEN tper.genero::text = ANY (ARRAY[''mujer''::character varying,''MUJER''::character varying, ''Mujer''::character varying]::text[]) THEN ''F''
-                      ELSE '''' END)::varchar genero
-
+                      ELSE '''' END)::varchar genero,
+                esc.haber_basico,
+			    (case when plani.f_get_licencia(fun.id_funcionario, current_date) then ''SI'' else ''NO'' end)::varchar licencia
 			   from orga.vfuncionario_biometrico tf
 			   inner join orga.tfuncionario fun on fun.id_funcionario = tf.id_funcionario
                inner join segu.tpersona tper on tper.id_persona = fun.id_persona
@@ -283,6 +284,9 @@ BEGIN
                and (coalesce (uof.fecha_finalizacion,''31/12/9999''::date) >= current_date)
      		   inner JOIN orga.tcargo tc ON tc.id_cargo = uof.id_cargo and tc.estado_reg = ''activo''
      		   inner join orga.ttipo_contrato ttc on ttc.id_tipo_contrato = tc.id_tipo_contrato
+
+               inner join orga.tescala_salarial esc on esc.id_escala_salarial = tc.id_escala_salarial
+			   left join plani.tlicencia lic on lic.id_funcionario =  fun.id_funcionario
 
                inner  join orga.toficina ofi on ofi.id_oficina = tc.id_oficina
      		   inner  join param.tlugar lug on lug.id_lugar = ofi.id_lugar

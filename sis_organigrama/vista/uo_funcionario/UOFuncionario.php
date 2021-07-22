@@ -465,6 +465,18 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 		//this.mostrarComponente(this.Cmp.estado_funcional);
 		//this.ocultarComponente(this.Cmp.fecha_finalizacion);
 
+        Ext.Ajax.request({
+            url: '../../sis_organigrama/control/UoFuncionario/recuperarNumeroContrato',
+            params: { momento:'new' },
+            success: function (resp) {
+                var reg =  Ext.decode(Ext.util.Format.trim(resp.responseText));
+                this.Cmp.nro_documento_asignacion.setValue(reg.ROOT.datos.v_numero_contrato);
+            },
+            failure: this.conexionFailure,
+            timeout: this.timeout,
+            scope: this
+        });
+
 		this.ocultarComponente(this.Cmp.observaciones_finalizacion);
 		Phx.vista.uo_funcionario.superclass.onButtonNew.call(this);
 		//seteamos un valor fijo que vienen de la vista maestro para id_gui 
@@ -479,6 +491,20 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 		this.mostrarComponente(this.Cmp.fecha_finalizacion);
 		//this.mostrarComponente(this.Cmp.estado_funcional);
 		this.getComponente('fecha_finalizacion').visible=true;
+
+        let rec = this.getSelectedData();
+        Ext.Ajax.request({
+            url: '../../sis_organigrama/control/UoFuncionario/recuperarNumeroContrato',
+            params: { id_uo_funcionario: rec.id_uo_funcionario, momento:'edit'},
+            success: function (resp) {
+                var reg =  Ext.decode(Ext.util.Format.trim(resp.responseText));
+                console.log('recuperar numero contrato',reg.ROOT.datos.v_numero_contrato);
+
+            },
+            failure: this.conexionFailure,
+            timeout: this.timeout,
+            scope: this
+        });
 
 		Phx.vista.uo_funcionario.superclass.onButtonEdit.call(this);
 
@@ -639,6 +665,16 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 		txt_fecha_fin=this.getComponente('fecha_finalizacion');
         //this.grid.topToolbar.el.dom.style.background="#89CBE0";
 
+
+        this.addButton('btnContrato', {
+            text : 'Generar Contrato',
+            grupo: [0,1],
+            iconCls : 'bpdf',
+            disabled : false,
+            hidden : false,
+            handler : this.onGenerarModeloContrato
+        });
+
 		this.init();
 		//this.tbar.el.dom.style.background='#5fe0f7';
 
@@ -655,7 +691,28 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 	preparaMenu:function(tb){
 		// llamada funcion clace padre
 		Phx.vista.uo_funcionario.superclass.preparaMenu.call(this,tb)
-	}
+        let rec = this.getSelectedData();
+        if (rec.tipo != 'funcional'){
+            this.getBoton('btnContrato').enable();
+        }
+	},
+    liberaMenu:function() {
+        Phx.vista.uo_funcionario.superclass.liberaMenu.call(this);
+        this.getBoton('btnContrato').disable();
+    },
+    onGenerarModeloContrato : function(){
+        let rec = this.getSelectedData();
+
+        Phx.CP.loadingShow();
+        Ext.Ajax.request({
+            url: '../../sis_organigrama/control/UoFuncionario/reporteModeloContrato',
+            params: {item : rec.codigo_cargo, tipo_anexo : rec.tipo_anexo, id_uo_funcionario: rec.id_uo_funcionario},
+            success: this.successExport,
+            failure: this.conexionFailure,
+            timeout: this.timeout,
+            scope: this
+        });
+    }
 	
 
   }

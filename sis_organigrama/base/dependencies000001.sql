@@ -895,3 +895,59 @@ ORDER BY uof.fecha_reg DESC;
 ALTER VIEW orga.vfuncionario_cargo_lugar_todos
   OWNER TO postgres;
 /************************************F-DEP-MAY-ORGA-0-19/05/2021*************************************************/
+
+/************************************I-DEP-FEA-ORGA-0-22/07/2021*************************************************/
+CREATE VIEW orga.vplantilla_contrato_rrhh (
+    id_uo_funcionario,
+    id_funcionario,
+    id_uo,
+    id_cargo,
+    numero_contrato,
+    empleado,
+    ci,
+    expedicion,
+    cargo,
+    fecha_inicio,
+    fecha_fin,
+    haber_basico,
+    haber_basico_literal,
+    ciudad,
+    item,
+    herederos,
+    periodo,
+    nombre_representante,
+    cargo_representante,
+    numero_resolucion,
+    fecha_resolucion)
+AS
+SELECT uofun.id_uo_funcionario,
+    uofun.id_funcionario,
+    uofun.id_uo,
+    uofun.id_cargo,
+    uofun.nro_documento_asignacion AS numero_contrato,
+    initcap(fun.desc_funcionario1)::character varying AS empleado,
+    fun.ci,
+    per.expedicion,
+    car.nombre AS cargo,
+    pxp.f_fecha_literal(uofun.fecha_asignacion) AS fecha_inicio,
+    pxp.f_fecha_literal(COALESCE(uofun.fecha_finalizacion, '9999-12-31'::date)) AS fecha_fin,
+    to_char(esc.haber_basico, '99,999.99'::text) AS haber_basico,
+    pxp.f_convertir_num_a_letra(esc.haber_basico) AS haber_basico_literal,
+    lug.nombre AS ciudad,
+    car.codigo AS item,
+    orga.f_get_herederos(uofun.id_funcionario) AS herederos,
+    pxp.f_obtener_literal_periodo(date_part('month'::text, uofun.fecha_asignacion)::integer, NULL::integer) AS periodo,
+    orga.f_get_representante_legal(uofun.fecha_asignacion, 'nombre_representante'::character varying) AS nombre_representante,
+    orga.f_get_representante_legal(uofun.fecha_asignacion, 'cargo_representante'::character varying) AS cargo_representante,
+    orga.f_get_representante_legal(uofun.fecha_asignacion, 'numero_resolucion'::character varying) AS numero_resolucion,
+    orga.f_get_representante_legal(uofun.fecha_asignacion, 'fecha_resolucion'::character varying) AS fecha_resolucion
+FROM orga.tuo_funcionario uofun
+     JOIN orga.tuo uo ON uo.id_uo = uofun.id_uo
+     JOIN orga.vfuncionario fun ON fun.id_funcionario = uofun.id_funcionario AND COALESCE(uofun.fecha_finalizacion, '9999-12-31'::date) >= CURRENT_DATE
+     JOIN segu.tpersona per ON per.id_persona = fun.id_persona
+     JOIN orga.tcargo car ON car.id_cargo = uofun.id_cargo
+     JOIN param.tlugar lug ON lug.id_lugar = car.id_lugar
+     JOIN orga.tescala_salarial esc ON esc.id_escala_salarial = car.id_escala_salarial;
+
+ALTER VIEW orga.vplantilla_contrato_rrhh OWNER TO postgres;
+/************************************F-DEP-FEA-ORGA-0-22/07/2021*************************************************/

@@ -6,6 +6,9 @@ de la Vista para envio y ejecucion de los metodos del Modelo referidas a la tabl
 Autor:	Kplian
 Fecha:	01/07/2010
  */
+
+require_once(dirname(__FILE__).'/../reportes/RModeloContratoRRHHPDF.php');
+
 class ACTUoFuncionario extends ACTbase{
 
     function listarUoFuncionario(){
@@ -90,6 +93,42 @@ class ACTUoFuncionario extends ACTbase{
         //imprime respuesta en formato JSON para enviar lo a la interface (vista)
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
+
+    /****************************************Reporte Modelo Contrato RRHH(franklin.espinoza) 14/07/2021**************************************/
+    function reporteModeloContrato (){
+        $this->objFunc=$this->create('MODUoFuncionario');
+        $dataSource=$this->objFunc->reporteModeloContrato();
+        $this->dataSource=$dataSource->getDatos();
+
+
+        $nombreArchivo = uniqid(md5(session_id()).'[Contrato - RRHH]').'.pdf';
+        $this->objParam->addParametro('orientacion','P');
+        $this->objParam->addParametro('tamano','Legal');
+        $this->objParam->addParametro('nombre_archivo',$nombreArchivo);
+
+        $this->objReporte = new RModeloContratoRRHHPDF($this->objParam);
+        $this->objReporte->setDatos($this->dataSource);
+        $this->objReporte->generarReporte();
+        $this->objReporte->output($this->objReporte->url_archivo,'F');
+
+
+        $this->mensajeExito=new Mensaje();
+        $this->mensajeExito->setMensaje('EXITO','Reporte.php','Reporte generado', 'Se generó con éxito el reporte: '.$nombreArchivo,'control');
+        $this->mensajeExito->setArchivoGenerado($nombreArchivo);
+        $this->mensajeExito->imprimirRespuesta($this->mensajeExito->generarJson());
+    }
+    /****************************************Reporte Modelo Contrato RRHH(franklin.espinoza) 14/07/2021**************************************/
+
+    /*****************************Recuperar el correlativo de contrato RRHH(franklin.espinoza) 14/07/2021*****************************/
+    function recuperarNumeroContrato(){
+
+        //crea el objetoFunSeguridad que contiene todos los metodos del sistema de seguridad
+        $this->objFunSeguridad=$this->create('MODUoFuncionario');
+        $this->res=$this->objFunSeguridad->recuperarNumeroContrato($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+
+    }
+    /*****************************Recuperar el correlativo de contrato RRHH(franklin.espinoza) 14/07/2021*****************************/
 }
 
 ?>

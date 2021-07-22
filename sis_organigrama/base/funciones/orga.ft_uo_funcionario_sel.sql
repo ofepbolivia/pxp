@@ -157,8 +157,8 @@ BEGIN
                                   UOFUNC.fecha_reg,
                                   UOFUNC.id_usuario_mod,
                                   UOFUNC.id_usuario_reg,
-                                  PERREG.nombre_completo2 AS USUREG,
-                                  PERMOD.nombre_completo2 AS USUMOD,
+                                  PERREG.nombre_completo2 AS usr_reg,
+                                  PERMOD.nombre_completo2 AS usr_mod,
                                   cargo.id_cargo,
                                   (coalesce(''Cod: '' || cargo.codigo || ''---Id: '' || cargo.id_cargo,  ''Id: '' || cargo.id_cargo)|| '' -- '' || cargo.nombre) ::text,
                                   UOFUNC.observaciones_finalizacion,
@@ -229,7 +229,22 @@ BEGIN
                --v_consulta:=v_consulta || ' and UOFUNC.id_uo='|| v_id_padre;
                return v_consulta;
          END;
+     /*******************************
+      #TRANSACCION:  RH_CONTRATO_RRHH_SEL
+      #DESCRIPCION:	Datos para la generación de Contrato Laboral
+      #AUTOR:		franklin.espinoza
+      #FECHA:		14/07/2021
+     ***********************************/
+     elsif(par_transaccion='RH_CONTRATO_RRHH_SEL')then
+          BEGIN
+               v_consulta:='select
+                            orga.f_procesar_plantilla_documento_contrato (uofun.id_uo_funcionario, uofun.id_funcionario, uofun.id_uo, uofun.id_cargo, ''contrato'') contrato,
+                            orga.f_procesar_plantilla_documento_contrato (uofun.id_uo_funcionario, uofun.id_funcionario, uofun.id_uo, uofun.id_cargo, ''anexo'') anexo
+                            from orga.tuo_funcionario uofun
+                            where uofun.id_uo_funcionario = '||v_parametros.id_uo_funcionario;
 
+               return v_consulta;
+         END;
      else
          raise exception 'No existe la opcion';
 

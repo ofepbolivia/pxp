@@ -6,19 +6,19 @@ CREATE OR REPLACE FUNCTION orga.ft_uo_funcionario_ime (
 )
 RETURNS varchar AS
 $body$
-  /**************************************************************************
-   FUNCION: 		orga.ft_uofunc_ime
-   DESCRIPCIÓN:   modificaciones de funciones
-   AUTOR: 	    KPLIAN (mzm)
-   FECHA:
-   COMENTARIOS:
-  ***************************************************************************
-   HISTORIA DE MODIFICACIONES:
+/**************************************************************************
+     FUNCION: 		orga.ft_uofunc_ime
+     DESCRIPCIÓN:   modificaciones de funciones
+     AUTOR: 	    KPLIAN (mzm)
+     FECHA:
+     COMENTARIOS:
+    ***************************************************************************
+     HISTORIA DE MODIFICACIONES:
 
-   DESCRIPCION:
-   AUTOR:
-   FECHA:		03-06-2011
-   ***************************************************************************/
+     DESCRIPCION:
+     AUTOR:
+     FECHA:		03-06-2011
+     ***************************************************************************/
   DECLARE
 
 
@@ -41,7 +41,9 @@ $body$
 
 	v_contador				integer = 0;
 	v_tipo            varchar;
-  v_usr_existente		record;
+
+	v_numero_contrato       varchar;
+    v_nro_documento_asignacion  varchar;
   BEGIN
 
     v_nombre_funcion:='orga.ft_uo_funcionario_ime';
@@ -140,24 +142,6 @@ $body$
                    v_parametros.tipo, v_parametros.certificacion_presupuestaria, v_parametros.codigo_ruta, v_parametros.estado_funcional)
         RETURNING id_uo_funcionario INTO v_id_uo_funcionario;
 
-        -- ini breydi.vasquez, fecha: 26/06/2021, desc: update de fecha caducidad en caso el funionario ya tenga un usuario antiguo, para volver a activarlo
-        select
-    	   uc.fecha_finalizacion,
-	       usu.id_usuario
-        into v_usr_existente
-        from orga.vfuncionario fun
-        inner join orga.vfuncionario_ultimo_cargo uc on uc.id_funcionario = fun.id_funcionario
-        inner join segu.vusuario usu on usu.id_persona = fun.id_persona
-        where fun.id_funcionario = v_parametros.id_funcionario;
-
-        if v_usr_existente.id_usuario is not null then
-           update segu.tusuario set
-            fecha_caducidad=coalesce(v_usr_existente.fecha_finalizacion, '31/12/9999'),
-            id_usuario_mod=1,
-            fecha_mod=now()
-            where id_usuario = v_usr_existente.id_usuario;
-      	end if;
-        -- fin breydi.vasquez
 
         --10-04-2012: sincronizacion de UO entre BD
         /* v_respuesta_sinc:=orga.f_sincroniza_uo_empleado_entre_bd(v_id_uo_funcionario,'10.172.0.13','5432','db_link','db_link','dbendesis' ,'INSERT');
@@ -230,7 +214,9 @@ $body$
           codigo_ruta = v_parametros.codigo_ruta,
           estado_funcional = v_parametros.estado_funcional,
           fecha_asignacion = v_parametros.fecha_asignacion,
-          id_cargo = v_parametros.id_cargo
+          id_cargo = v_parametros.id_cargo,
+          id_usuario_mod = par_id_usuario,
+          fecha_mod = now()
         where id_uo=v_parametros.id_uo
               and id_uo_funcionario=v_parametros.id_uo_funcionario;
 
@@ -277,7 +263,44 @@ $body$
         v_resp = pxp.f_agrega_clave(v_resp,'id_uo',v_id_uo::varchar);
 
       END;
+    /*******************************
+     #TRANSACCION:  RH_NUM_CONTRATO_GET
+     #DESCRIPCION:	Regupera el numero de contrato o genera uno nuevo
+     #AUTOR:	    (franklin.espinoza)
+     #FECHA:		14/07/2021
+    ***********************************/
+    elsif(par_transaccion='RH_NUM_CONTRATO_GET')then
+      BEGIN
 
+        select  cor.numero_contrato
+        into v_numero_contrato
+        from orga.tcorrelativo_contrato cor
+        order by id_correlativo_contrato desc
+        limit 1;
+
+        select tuo.nro_documento_asignacion
+        into v_nro_documento_asignacion
+        from orga.tuo_funcionario tuo
+        where tuo.nro_documento_asignacion = v_numero_contrato;
+
+        if v_parametros.momento = 'new'  and v_nro_documento_asignacion is not null then
+            v_numero_contrato = param.f_obtener_correlativo(
+                                    'CONTRATO',
+                                    null,
+                                    null,
+                                    null,
+                                    par_id_usuario,
+                                    'ORGA',
+                                    null,0,0,'orga.tuo_funcionario'
+                                );
+            INSERT INTO orga.tcorrelativo_contrato  (numero_contrato) values (v_numero_contrato);
+        end if;
+
+
+        v_resp = pxp.f_agrega_clave(v_resp,'mensaje','numero contrato recuperado con exito.');
+        v_resp = pxp.f_agrega_clave(v_resp,'v_numero_contrato',v_numero_contrato::varchar);
+
+      END;
 
     else
 

@@ -152,6 +152,8 @@ class MODReporte extends MODbase{
         $this->captura('nombre_oficina','varchar');
         $this->captura('nombre_lugar','varchar');
         $this->captura('genero','varchar');
+        $this->captura('haber_basico','numeric');
+        $this->captura('licencia','varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
