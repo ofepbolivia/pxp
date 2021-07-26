@@ -15,7 +15,7 @@ class RModeloContratoRRHHPDF extends  ReportePDF {
     }
 
     function Header() {
-        $this->Image(dirname(__FILE__).'/../../lib/imagenes/logos/logo.jpg',90,5,40,20);
+        $this->Image(dirname(__FILE__).'/../../lib/imagenes/logos/logo.jpg',84,7,40,20);
         $this->ln(5);
         $this->SetFont('times','B',12);
         /*$this->Cell(0,5,"CONTRATO INDIVIDUAL DE TRABAJO",0,1,'C');

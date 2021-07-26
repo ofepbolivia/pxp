@@ -76,7 +76,9 @@ BEGIN
                                   UOFUNC.estado_funcional,
                                   UOFUNC.certificacion_presupuestaria,
                                   tes.nombre as nombre_escala,
-                                  tes.haber_basico
+                                  tes.haber_basico,
+                                  UOFUNC.nro_contrato,
+                                  UOFUNC.fecha_contrato
                              FROM orga.tuo_funcionario UOFUNC
                             INNER JOIN orga.tuo UO ON UO.id_uo=UOFUNC.id_uo
                             INNER JOIN orga.vfuncionario FUNCIO ON FUNCIO.id_funcionario=UOFUNC.id_funcionario
@@ -238,8 +240,8 @@ BEGIN
      elsif(par_transaccion='RH_CONTRATO_RRHH_SEL')then
           BEGIN
                v_consulta:='select
-                            orga.f_procesar_plantilla_documento_contrato (uofun.id_uo_funcionario, uofun.id_funcionario, uofun.id_uo, uofun.id_cargo, ''contrato'') contrato,
-                            orga.f_procesar_plantilla_documento_contrato (uofun.id_uo_funcionario, uofun.id_funcionario, uofun.id_uo, uofun.id_cargo, ''anexo'') anexo
+                            coalesce( orga.f_procesar_plantilla_documento_contrato (uofun.id_uo_funcionario, uofun.id_funcionario, uofun.id_uo, uofun.id_cargo, ''contrato''),''error_contrato'') contrato,
+                            coalesce( orga.f_procesar_plantilla_documento_contrato (uofun.id_uo_funcionario, uofun.id_funcionario, uofun.id_uo, uofun.id_cargo, ''anexo''),''error_anexo'') anexo
                             from orga.tuo_funcionario uofun
                             where uofun.id_uo_funcionario = '||v_parametros.id_uo_funcionario;
 

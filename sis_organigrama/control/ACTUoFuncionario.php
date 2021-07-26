@@ -100,22 +100,28 @@ class ACTUoFuncionario extends ACTbase{
         $dataSource=$this->objFunc->reporteModeloContrato();
         $this->dataSource=$dataSource->getDatos();
 
+        if ( empty($this->dataSource) ) {
+            $funcionario = $this->objParam->getParametro('funcionario');
+            $this->mensajeExito = new Mensaje();
+            $this->mensajeExito->setMensaje('ERROR', 'Reporte.php', '<br> <p style="text-align:justify ; font-weight: bold;">El Funcionario <span style="color: red;">'.$funcionario.'</span> no tiene parametrizado herederos, o la fecha de contrato no ha sido definida, favor de validar la información.</p>', 'Error al generar el reporte: ', 'control');
+            $this->mensajeExito->imprimirRespuesta($this->mensajeExito->generarJson());
+        }else {
+            $nombreArchivo = uniqid(md5(session_id()) . '[Contrato - RRHH]') . '.pdf';
+            $this->objParam->addParametro('orientacion', 'P');
+            $this->objParam->addParametro('tamano', 'Legal');
+            $this->objParam->addParametro('nombre_archivo', $nombreArchivo);
 
-        $nombreArchivo = uniqid(md5(session_id()).'[Contrato - RRHH]').'.pdf';
-        $this->objParam->addParametro('orientacion','P');
-        $this->objParam->addParametro('tamano','Legal');
-        $this->objParam->addParametro('nombre_archivo',$nombreArchivo);
-
-        $this->objReporte = new RModeloContratoRRHHPDF($this->objParam);
-        $this->objReporte->setDatos($this->dataSource);
-        $this->objReporte->generarReporte();
-        $this->objReporte->output($this->objReporte->url_archivo,'F');
+            $this->objReporte = new RModeloContratoRRHHPDF($this->objParam);
+            $this->objReporte->setDatos($this->dataSource);
+            $this->objReporte->generarReporte();
+            $this->objReporte->output($this->objReporte->url_archivo, 'F');
 
 
-        $this->mensajeExito=new Mensaje();
-        $this->mensajeExito->setMensaje('EXITO','Reporte.php','Reporte generado', 'Se generó con éxito el reporte: '.$nombreArchivo,'control');
-        $this->mensajeExito->setArchivoGenerado($nombreArchivo);
-        $this->mensajeExito->imprimirRespuesta($this->mensajeExito->generarJson());
+            $this->mensajeExito = new Mensaje();
+            $this->mensajeExito->setMensaje('EXITO', 'Reporte.php', 'Reporte generado', 'Se generó con éxito el reporte: ' . $nombreArchivo, 'control');
+            $this->mensajeExito->setArchivoGenerado($nombreArchivo);
+            $this->mensajeExito->imprimirRespuesta($this->mensajeExito->generarJson());
+        }
     }
     /****************************************Reporte Modelo Contrato RRHH(franklin.espinoza) 14/07/2021**************************************/
 

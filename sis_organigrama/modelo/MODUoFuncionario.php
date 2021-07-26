@@ -47,6 +47,8 @@ class MODUoFuncionario extends MODbase{
         $this->captura('certificacion_presupuestaria','varchar');
         $this->captura('nombre_escala','varchar');
         $this->captura('haber_basico','numeric');
+        $this->captura('nro_contrato','varchar');
+        $this->captura('fecha_contrato','date');
 
         //Ejecuta la funcion
         $this->armarConsulta();
@@ -77,6 +79,8 @@ class MODUoFuncionario extends MODbase{
         $this->setParametro('certificacion_presupuestaria','certificacion_presupuestaria','varchar');
         $this->setParametro('codigo_ruta','codigo_ruta','varchar');
         $this->setParametro('estado_funcional','estado_funcional','varchar');
+        $this->setParametro('nro_contrato','nro_contrato','varchar');
+        $this->setParametro('fecha_contrato','fecha_contrato','date');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -104,6 +108,8 @@ class MODUoFuncionario extends MODbase{
         $this->setParametro('certificacion_presupuestaria','certificacion_presupuestaria','varchar');
         $this->setParametro('codigo_ruta','codigo_ruta','varchar');
         $this->setParametro('estado_funcional','estado_funcional','varchar');
+        $this->setParametro('nro_contrato','nro_contrato','varchar');
+        $this->setParametro('fecha_contrato','fecha_contrato','date');
 
 
 

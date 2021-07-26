@@ -27,7 +27,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     config:{
                         labelSeparator:'',
                         inputType:'hidden',
-                        name: 'id_tipo_documento'
+                        name: 'id_tipo_documento_contrato'
                     },
                     type:'Field',
                     form:true
@@ -293,9 +293,9 @@ header("content-type: text/javascript; charset=UTF-8");
             ActSave:'../../sis_organigrama/control/TipoDocumentoContrato/insertarTipoDocumentoContrato',
             ActDel:'../../sis_organigrama/control/TipoDocumentoContrato/eliminarTipoDocumentoContrato',
             ActList:'../../sis_organigrama/control/TipoDocumentoContrato/listarTipoDocumentoContrato',
-            id_store:'id_tipo_documento',
+            id_store:'id_tipo_documento_contrato',
             fields: [
-                {name:'id_tipo_documento', type: 'numeric'},
+                {name:'id_tipo_documento_contrato', type: 'numeric'},
                 {name:'estado_reg', type: 'string'},
                 {name:'tipo', type: 'string'},
                 {name:'tipo_detalle', type: 'string'},

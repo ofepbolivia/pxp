@@ -135,11 +135,11 @@ $body$
         (	id_uo, 						id_funcionario, 						fecha_asignacion,
            fecha_finalizacion,			id_cargo,								observaciones_finalizacion,
            nro_documento_asignacion,	fecha_documento_asignacion,				id_usuario_reg,
-           tipo, certificacion_presupuestaria, codigo_ruta, estado_funcional)
+           tipo, certificacion_presupuestaria, codigo_ruta, estado_funcional, nro_contrato, fecha_contrato)
         values(		v_parametros.id_uo, 		v_parametros.id_funcionario,			v_parametros.fecha_asignacion,
                    v_parametros.fecha_finalizacion,v_parametros.id_cargo,				v_parametros.observaciones_finalizacion,
                    v_parametros.nro_documento_asignacion,v_parametros.fecha_documento_asignacion,par_id_usuario,
-                   v_parametros.tipo, v_parametros.certificacion_presupuestaria, v_parametros.codigo_ruta, v_parametros.estado_funcional)
+                   v_parametros.tipo, v_parametros.certificacion_presupuestaria, v_parametros.codigo_ruta, v_parametros.estado_funcional,v_parametros.nro_contrato, v_parametros.fecha_contrato)
         RETURNING id_uo_funcionario INTO v_id_uo_funcionario;
 
 
@@ -216,7 +216,9 @@ $body$
           fecha_asignacion = v_parametros.fecha_asignacion,
           id_cargo = v_parametros.id_cargo,
           id_usuario_mod = par_id_usuario,
-          fecha_mod = now()
+          fecha_mod = now(),
+          nro_contrato = v_parametros.nro_contrato,
+          fecha_contrato = v_parametros.fecha_contrato
         where id_uo=v_parametros.id_uo
               and id_uo_funcionario=v_parametros.id_uo_funcionario;
 
@@ -278,12 +280,12 @@ $body$
         order by id_correlativo_contrato desc
         limit 1;
 
-        select tuo.nro_documento_asignacion
+        select tuo.nro_contrato
         into v_nro_documento_asignacion
         from orga.tuo_funcionario tuo
-        where tuo.nro_documento_asignacion = v_numero_contrato;
+        where tuo.nro_contrato = v_numero_contrato;
 
-        if v_parametros.momento = 'new'  and v_nro_documento_asignacion is not null then
+        if v_parametros.momento in ('new','edit')  and v_nro_documento_asignacion is not null then
             v_numero_contrato = param.f_obtener_correlativo(
                                     'CONTRATO',
                                     null,

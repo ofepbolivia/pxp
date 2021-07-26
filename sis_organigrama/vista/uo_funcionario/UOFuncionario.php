@@ -247,6 +247,42 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 				grid:true,
 				form:true
 		},
+
+        {
+            config:{
+                name: 'nro_contrato',
+                fieldLabel: 'N° Contrato',
+                allowBlank: true,
+                anchor: '100%',
+                gwidth: 200,
+                maxLength:50
+            },
+            type:'TextField',
+            filters:{pfiltro:'UOFUNC.nro_contrato',type:'string'},
+            id_grupo:2,
+            grid:true,
+            form:true
+        },
+
+        {
+            config:{
+                fieldLabel: "Fecha Contrato",
+                name: 'fecha_contrato',
+                allowBlank: true,
+                width:177,
+                gwidth: 150,
+                format: 'd/m/Y',
+                renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+            },
+            type:'DateField',
+            filters:{
+                pfiltro:'UOFUNC.fecha_contrato',
+                type:'date'
+            },
+            id_grupo:2,
+            grid:true,
+            form:true
+        },
 		
 		{
 		config:{
@@ -266,7 +302,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
         id_grupo:1,
 		grid:true,		
 		form:true
-	},
+	    },
 
         {
             config:{
@@ -416,6 +452,18 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
                             id_grupo: 1
                         }
                     ]
+                },
+                {
+                    bodyStyle: 'padding-right:10px;',
+                    items: [
+                        {
+                            xtype: 'fieldset',
+                            title: '<b style="color: green;">DATOS CONTRATO<b>',
+                            autoHeight: true,
+                            items: [],
+                            id_grupo: 2
+                        }
+                    ]
                 }
 
             ]
@@ -449,6 +497,8 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
              'fecha_reg',
              'fecha_mod',
              'USUREG',
+             'nro_contrato',
+             {name:'fecha_contrato', type: 'date',dateFormat:'Y-m-d'},
              'USUMOD','correspondencia','codigo_ruta','estado_funcional','certificacion_presupuestaria','nombre_escala','haber_basico'],
 	sortInfo:{
 		field: 'desc_funcionario1',
@@ -470,7 +520,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
             params: { momento:'new' },
             success: function (resp) {
                 var reg =  Ext.decode(Ext.util.Format.trim(resp.responseText));
-                this.Cmp.nro_documento_asignacion.setValue(reg.ROOT.datos.v_numero_contrato);
+                this.Cmp.nro_contrato.setValue(reg.ROOT.datos.v_numero_contrato);
             },
             failure: this.conexionFailure,
             timeout: this.timeout,
@@ -493,18 +543,21 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 		this.getComponente('fecha_finalizacion').visible=true;
 
         let rec = this.getSelectedData();
-        Ext.Ajax.request({
-            url: '../../sis_organigrama/control/UoFuncionario/recuperarNumeroContrato',
-            params: { id_uo_funcionario: rec.id_uo_funcionario, momento:'edit'},
-            success: function (resp) {
-                var reg =  Ext.decode(Ext.util.Format.trim(resp.responseText));
-                console.log('recuperar numero contrato',reg.ROOT.datos.v_numero_contrato);
+		if ( rec.nro_contrato == '' || rec.nro_contrato == null ) {
+            Ext.Ajax.request({
+                url: '../../sis_organigrama/control/UoFuncionario/recuperarNumeroContrato',
+                params: {id_uo_funcionario: rec.id_uo_funcionario, momento: 'edit'},
+                success: function (resp) {
+                    var reg = Ext.decode(Ext.util.Format.trim(resp.responseText));
+                    console.log('recuperar numero contrato', reg.ROOT.datos.v_numero_contrato);
+                    this.Cmp.nro_contrato.setValue(reg.ROOT.datos.v_numero_contrato);
 
-            },
-            failure: this.conexionFailure,
-            timeout: this.timeout,
-            scope: this
-        });
+                },
+                failure: this.conexionFailure,
+                timeout: this.timeout,
+                scope: this
+            });
+        }
 
 		Phx.vista.uo_funcionario.superclass.onButtonEdit.call(this);
 
@@ -706,7 +759,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
         Phx.CP.loadingShow();
         Ext.Ajax.request({
             url: '../../sis_organigrama/control/UoFuncionario/reporteModeloContrato',
-            params: {item : rec.codigo_cargo, tipo_anexo : rec.tipo_anexo, id_uo_funcionario: rec.id_uo_funcionario},
+            params: {item : rec.codigo_cargo, tipo_anexo : rec.tipo_anexo, id_uo_funcionario: rec.id_uo_funcionario, funcionario : rec.desc_funcionario1},
             success: this.successExport,
             failure: this.conexionFailure,
             timeout: this.timeout,

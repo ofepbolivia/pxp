@@ -30,7 +30,7 @@ class ACTTipoDocumentoContrato extends ACTbase{
 
     function insertarTipoDocumentoContrato(){
         $this->objFunc=$this->create('MODTipoDocumentoContrato');
-        if($this->objParam->insertar('id_tipo_documento')){
+        if($this->objParam->insertar('id_tipo_documento_contrato')){
             $this->res=$this->objFunc->insertarTipoDocumentoContrato($this->objParam);
         } else{
             $this->res=$this->objFunc->modificarTipoDocumentoContrato($this->objParam);
