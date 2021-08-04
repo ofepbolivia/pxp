@@ -305,6 +305,9 @@ class MODCargo extends MODbase{
         $this->captura('fecha_asignacion','date');
         $this->captura('fecha_finalizacion','date');
 
+        $this->captura('desc_tcc','varchar');
+        $this->captura('codigo_categoria','varchar');
+
         //Ejecuta la instruccion
         $this->armarConsulta();//echo($this->consulta);exit;
         $this->ejecutarConsulta();

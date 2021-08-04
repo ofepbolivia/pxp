@@ -266,6 +266,39 @@ header("content-type: text/javascript; charset=UTF-8");
                 form:false,
                 bottom_filter:true
             },
+            //04-08-2021 (may)
+            {
+                config: {
+                    name: 'desc_tcc',
+                    fieldLabel: 'Centro de Costo',
+                    allowBlank: true,
+                    anchor: '80%',
+                    gwidth: 290,
+                    maxLength: 50
+                },
+                type: 'TextField',
+                filters: {pfiltro: 'vcc.codigo_tcc#vcc.descripcion_tcc', type: 'string'},
+                id_grupo: 1,
+                grid: true,
+                form: false,
+                bottom_filter:true
+            },
+            {
+                config: {
+                    name: 'codigo_categoria',
+                    fieldLabel: 'Categoria Programática',
+                    allowBlank: true,
+                    anchor: '80%',
+                    gwidth: 200,
+                    maxLength: 50
+                },
+                type: 'TextField',
+                filters: {pfiltro: 'cp.codigo_categoria', type: 'string'},
+                id_grupo: 1,
+                grid: true,
+                form: false,
+                bottom_filter:true
+            },
 
             {
                 config:{
@@ -536,6 +569,8 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid:true,
                 form:true
             },
+
+
             {
                 config:{
                     name: 'estado_reg',
@@ -651,7 +686,14 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:'fecha_asignacion', type: 'date',dateFormat:'Y-m-d'},
             {name:'fecha_finalizacion',type: 'date',dateFormat:'Y-m-d'},
 
+            {name:'desc_tcc', type: 'string'},
+            {name:'codigo_categoria', type: 'string'},
+
         ],
+
+        arrayDefaultColumHidden: ['desc_tcc', 'codigo_categoria'],
+
+
         sortInfo:{
             field: 'desc_func',
             direction: 'ASC'
