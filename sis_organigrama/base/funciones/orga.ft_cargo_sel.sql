@@ -297,8 +297,8 @@ $body$
                         LEFT join orga.tuo_funcionario tuo on tuo.id_cargo = cargo.id_cargo and '||v_activo||'
                         LEFT join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
 
-                        inner join param.vcentro_costo vcc on vcc.id_centro_costo = tcp.id_centro_costo
-                        inner join pre.tpresupuesto pre on pre.id_centro_costo = tcp.id_centro_costo
+                        left join param.vcentro_costo vcc on vcc.id_centro_costo = tcp.id_centro_costo
+                        left join pre.tpresupuesto pre on pre.id_centro_costo = tcp.id_centro_costo
                         left join pre.vcategoria_programatica cp on cp.id_categoria_programatica = pre.id_categoria_prog
 
 				        where cargo.estado_reg = ''activo'' and tipcon.codigo IN (''CONS'',''PLA'',''EVE'') '||v_condicion||' and ';
@@ -356,8 +356,8 @@ $body$
                         LEFT join orga.tuo_funcionario tuo on tuo.id_cargo = cargo.id_cargo and '||v_activo||'
                         LEFT join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
 
-                        inner join param.vcentro_costo vcc on vcc.id_centro_costo = tcp.id_centro_costo
-                        inner join pre.tpresupuesto pre on pre.id_centro_costo = tcp.id_centro_costo
+                        left join param.vcentro_costo vcc on vcc.id_centro_costo = tcp.id_centro_costo
+                        left join pre.tpresupuesto pre on pre.id_centro_costo = tcp.id_centro_costo
                         left join pre.vcategoria_programatica cp on cp.id_categoria_programatica = pre.id_categoria_prog
 
 				        where cargo.estado_reg = ''activo'' and tipcon.codigo IN (''CONS'',''PLA'',''EVE'') '||v_condicion||' and ';

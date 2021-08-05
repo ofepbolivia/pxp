@@ -691,9 +691,6 @@ header("content-type: text/javascript; charset=UTF-8");
 
         ],
 
-        arrayDefaultColumHidden: ['desc_tcc', 'codigo_categoria'],
-
-
         sortInfo:{
             field: 'desc_func',
             direction: 'ASC'
