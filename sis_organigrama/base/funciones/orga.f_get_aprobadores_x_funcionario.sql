@@ -145,7 +145,7 @@ BEGIN
                        where uofun.fecha_asignacion <= ''' || par_fecha || ''' and (uofun.fecha_finalizacion is null or uofun.fecha_finalizacion >= ''' || par_fecha || ''')
                       and uofun.estado_reg = ''activo'' and uofun.id_funcionario = ' || par_id_funcionario || '
                   UNION
-                      SELECT uofun.id_funcionario,euo.id_uo_padre,uo.presupuesta,uo.gerencia,no.numero_nivel
+                      SELECT uofun.id_funcionario,euo.id_uo_padre_operativo,uo.presupuesta,uo.gerencia,no.numero_nivel
                       from orga.testructura_uo euo
                       inner join orga.tuo uo on uo.id_uo = euo.id_uo_padre_operativo
                       inner join orga.tnivel_organizacional no on no.id_nivel_organizacional = uo.id_nivel_organizacional
