@@ -401,6 +401,7 @@ Ext.extend(Phx.vista.bitacora_sistema,Phx.gridInterfaz,{
 	bsave:false,//boton para eliminar
 	bnew:false,//boton para eliminar
 	bedit:false,//boton para eliminar
+  btest:false,
 
     viewConfig: {
         stripeRows: false,
@@ -414,8 +415,21 @@ Ext.extend(Phx.vista.bitacora_sistema,Phx.gridInterfaz,{
 		//llamada funcion clace padre
 		Phx.vista.bitacora_sistema.superclass.preparaMenu.call(this,tb);
 
-	}
+	},
 
+  onButtonAct: function(){
+    idtenti = this.grid.getTopToolbar().items.items[2].getValue();
+    gestion = this.grid.getTopToolbar().items.items[3].getValue();
+    periodo = this.grid.getTopToolbar().items.items[4].getValue();
+    if(periodo!=undefined && periodo!='' &&
+      gestion!=undefined && gestion!=''){
+        this.store.setBaseParam('gestion',gestion);
+        this.store.setBaseParam('periodo',periodo);
+        this.store.setBaseParam('id_log_consul',idtenti);
+        this.load();
+      }
+    // console.log("thissss",this.grid.getTopToolbar().items);
+  }
 
 }
 )

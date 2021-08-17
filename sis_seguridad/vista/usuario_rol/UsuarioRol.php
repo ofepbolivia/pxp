@@ -10,7 +10,7 @@
 header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
-
+var t_estado = 'activo';
 Phx.vista.usuario_rol=function(config){
 
 var ds_rol =new Ext.data.JsonStore({
@@ -232,9 +232,9 @@ Ext.extend(Phx.vista.usuario_rol,Phx.gridInterfaz,{
 	    this.getComponente('id_usuario').setValue(this.maestro.id_usuario);
 	},
 
-	onReloadPage:function(m){
+	onReloadPage:function(m){		
 		this.maestro=m;
-		this.store.baseParams={id_usuario:this.maestro.id_usuario,tipo_estado:'activo'};
+		this.store.baseParams={id_usuario:this.maestro.id_usuario,tipo_estado:t_estado};
 		this.load({params:{start:0, limit:50}})
 
 	},
@@ -248,7 +248,8 @@ Ext.extend(Phx.vista.usuario_rol,Phx.gridInterfaz,{
 	actualizarSegunTab: function(name, indice){
 
 		if (this.maestro!=undefined){
-				this.store.baseParams={id_usuario:this.maestro.id_usuario,tipo_estado:name};
+				t_estado  = name;
+				this.store.baseParams={id_usuario:this.maestro.id_usuario,tipo_estado:t_estado};
 				this.load({params:{start:0, limit:this.tam_pag}});
 	    }
 		},
