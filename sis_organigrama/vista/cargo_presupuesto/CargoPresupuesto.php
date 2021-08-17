@@ -68,14 +68,34 @@ header("content-type: text/javascript; charset=UTF-8");
                         listWidth: '345',
                         gwidth:300,
                         baseParams:{filtrar:'grupo_ep'},
+                        displayField: 'codigo_cc',
+                        gdisplayField: 'desc_centro_costo',
+                        msgTarget:'side',
                         tpl: '<tpl for="."><div class="x-combo-list-item"><p><b style="color: green;">{codigo_cc}</b></p><p>Gestion: {gestion}</p><p>Reg: {nombre_regional}</p><p>Fin.: {nombre_financiador}</p><p>Proy.: {nombre_programa}</p><p>Act.: {nombre_actividad}</p><p>UO: {nombre_uo}</p></div></tpl>',
-                        renderer:function(value, p, record){return String.format('{0}', record.data['desc_centro_costo']);}
+                        renderer:function(value, p, record){return String.format('<div style="color: green; font-weight: bold;">{0}</div>', record.data['desc_centro_costo']);}
 
                     },
                     type:'ComboRec',
                     id_grupo:0,
                     form:true,
                     grid:true
+                },
+
+                {
+                    config:{
+                        name: 'nombre_actividad',
+                        fieldLabel: 'Programa',
+                        allowBlank: true,
+                        anchor: '80%',
+                        gwidth: 200,
+                        maxLength:10,
+                        renderer:function(value, p, record){return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);}
+                    },
+                    type:'TextField',
+                    filters:{pfiltro:'cc.nombre_actividad',type:'string'},
+                    id_grupo:1,
+                    grid:true,
+                    form:false
                 },
 
                 {
@@ -246,6 +266,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name:'id_usuario_mod', type: 'numeric'},
                 {name:'usr_reg', type: 'string'},
                 {name:'usr_mod', type: 'string'},
+                {name:'nombre_actividad', type: 'string'}
 
             ],
             sortInfo:{

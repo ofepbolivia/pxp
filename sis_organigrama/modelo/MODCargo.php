@@ -105,6 +105,15 @@ class MODCargo extends MODbase{
         $this->setParametro('estado_reg','estado_reg','varchar');
         $this->setParametro('fecha_fin','fecha_fin','date');
 
+        /*********************************presupuesto*********************************/
+        $this->setParametro('id_gestion','id_gestion','int4');
+        $this->setParametro('id_centro_costo','id_centro_costo','int4');
+        $this->setParametro('id_ot','id_ot','int4');
+        $this->setParametro('porcentaje','porcentaje','numeric');
+        $this->setParametro('fecha_ini_cc','fecha_ini_cc','date');
+        $this->setParametro('fecha_fin_cc','fecha_fin_cc','date');
+        /*********************************presupuesto*********************************/
+
         //Ejecuta la instruccion
         $this->armarConsulta();
         $this->ejecutarConsulta();
@@ -334,5 +343,24 @@ class MODCargo extends MODbase{
         return $this->respuesta;
     }
 
+    //(franklin.espinoza) 05/08/2021
+    /**************************************************PRESUPUESTO**************************************************/
+    function loadCargoPresupuesto(){
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento='orga.ft_cargo_ime';
+        $this->transaccion='OR_LOAD_CAR_PRE';
+        $this->tipo_procedimiento='IME';
+
+        //Define los parametros para la funcion
+        $this->setParametro('id_uo','id_uo','int4');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta(); //echo $this->consulta; exit;
+        $this->ejecutarConsulta();
+
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
+    /**************************************************PRESUPUESTO**************************************************/
 }
 ?>

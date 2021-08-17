@@ -108,8 +108,10 @@ class MODUoFuncionario extends MODbase{
         $this->setParametro('certificacion_presupuestaria','certificacion_presupuestaria','varchar');
         $this->setParametro('codigo_ruta','codigo_ruta','varchar');
         $this->setParametro('estado_funcional','estado_funcional','varchar');
+        $this->setParametro('tipo','tipo','varchar');
         $this->setParametro('nro_contrato','nro_contrato','varchar');
         $this->setParametro('fecha_contrato','fecha_contrato','date');
+
 
 
 

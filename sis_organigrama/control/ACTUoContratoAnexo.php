@@ -11,12 +11,12 @@ class ACTUoContratoAnexo extends ACTbase{
 
     function listarUoContratoAnexo(){
         $this->objParam->defecto('ordenacion','id_uo_contrato_anexo');
+        $this->objParam->defecto('dir_ordenacion','asc');
 
         if ($this->objParam->getParametro('id_uo') != '') {
             $this->objParam->addFiltro("uo_ca.id_uo = ". $this->objParam->getParametro('id_uo'));
         }
-
-        $this->objParam->defecto('dir_ordenacion','asc');
+        
         if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
             $this->objReporte = new Reporte($this->objParam,$this);
             $this->res = $this->objReporte->generarReporteListado('MODUoContratoAnexo','listarUoContratoAnexo');

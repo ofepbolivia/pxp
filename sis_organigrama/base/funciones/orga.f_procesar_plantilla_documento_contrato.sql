@@ -55,7 +55,7 @@ BEGIN
                 where tuca.id_uo = p_id_uo and tuca.id_tipo_contrato = v_cargo.id_tipo_contrato;
 
 
-
+				--raise 'a: %, b: %, c: %, d: %',v_cargo, v_funcionario,v_id_documento, p_id_uo;
                 if v_cargo.codigo != '0' and p_tipo = 'contrato' then
                   select doc.contenido, doc.tabla
                   into v_documento
@@ -161,7 +161,7 @@ BEGIN
                 END IF;
 
                 IF v_validar_nulo  THEN
-                   IF v_template_evaluado is NULL THEN
+                   IF v_template_evaluado is NULL THEN --RAISE 'p_tipo: %', p_tipo;
                        raise exception 'En la plantilla ,revise la información del funcionario: %',v_funcionario.nombre;
                    END IF;
                 END IF;

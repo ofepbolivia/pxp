@@ -131,16 +131,29 @@ $body$
           to_char(v_data_func.fecha_ini,'dd/mm/yyyy'), to_char(v_data_func.fecha_fin,'dd/mm/yyyy');
         end if;
 
-        INSERT INTO orga.tuo_funcionario
-        (	id_uo, 						id_funcionario, 						fecha_asignacion,
-           fecha_finalizacion,			id_cargo,								observaciones_finalizacion,
-           nro_documento_asignacion,	fecha_documento_asignacion,				id_usuario_reg,
-           tipo, certificacion_presupuestaria, codigo_ruta, estado_funcional, nro_contrato, fecha_contrato)
-        values(		v_parametros.id_uo, 		v_parametros.id_funcionario,			v_parametros.fecha_asignacion,
-                   v_parametros.fecha_finalizacion,v_parametros.id_cargo,				v_parametros.observaciones_finalizacion,
-                   v_parametros.nro_documento_asignacion,v_parametros.fecha_documento_asignacion,par_id_usuario,
-                   v_parametros.tipo, v_parametros.certificacion_presupuestaria, v_parametros.codigo_ruta, v_parametros.estado_funcional,v_parametros.nro_contrato, v_parametros.fecha_contrato)
-        RETURNING id_uo_funcionario INTO v_id_uo_funcionario;
+		if v_parametros.tipo = 'oficial' then
+          INSERT INTO orga.tuo_funcionario
+          (	id_uo, 						id_funcionario, 						fecha_asignacion,
+             fecha_finalizacion,			id_cargo,								observaciones_finalizacion,
+             nro_documento_asignacion,	fecha_documento_asignacion,				id_usuario_reg,
+             tipo, certificacion_presupuestaria, codigo_ruta, estado_funcional, nro_contrato, fecha_contrato)
+          values(		v_parametros.id_uo, 		v_parametros.id_funcionario,			v_parametros.fecha_asignacion,
+                     v_parametros.fecha_finalizacion,v_parametros.id_cargo,				v_parametros.observaciones_finalizacion,
+                     v_parametros.nro_documento_asignacion,v_parametros.fecha_documento_asignacion,par_id_usuario,
+                     v_parametros.tipo, v_parametros.certificacion_presupuestaria, v_parametros.codigo_ruta, v_parametros.estado_funcional,v_parametros.nro_contrato, v_parametros.fecha_contrato)
+          RETURNING id_uo_funcionario INTO v_id_uo_funcionario;
+        else
+        	INSERT INTO orga.tuo_funcionario
+          	(	id_uo, 						id_funcionario, 						fecha_asignacion,
+             fecha_finalizacion,			id_cargo,								observaciones_finalizacion,
+             nro_documento_asignacion,	fecha_documento_asignacion,				id_usuario_reg,
+             tipo, certificacion_presupuestaria, codigo_ruta, estado_funcional)
+          	values(		v_parametros.id_uo, 		v_parametros.id_funcionario,			v_parametros.fecha_asignacion,
+                     v_parametros.fecha_finalizacion,v_parametros.id_cargo,				v_parametros.observaciones_finalizacion,
+                     v_parametros.nro_documento_asignacion,v_parametros.fecha_documento_asignacion,par_id_usuario,
+                     v_parametros.tipo, v_parametros.certificacion_presupuestaria, v_parametros.codigo_ruta, v_parametros.estado_funcional)
+          	RETURNING id_uo_funcionario INTO v_id_uo_funcionario;
+        end if;
 
 
         --10-04-2012: sincronizacion de UO entre BD
@@ -203,24 +216,38 @@ $body$
         if (v_parametros.fecha_finalizacion is not null and v_parametros.fecha_finalizacion <= v_parametros.fecha_asignacion)then
           raise exception 'La fecha de finalización no puede ser menor o igual a la fecha de asignación';
         end if;
-
-        update orga.tuo_funcionario
-        set
-          observaciones_finalizacion = v_parametros.observaciones_finalizacion,
-          nro_documento_asignacion = v_parametros.nro_documento_asignacion,
-          fecha_documento_asignacion = v_parametros.fecha_documento_asignacion,
-          fecha_finalizacion = v_parametros.fecha_finalizacion,
-          certificacion_presupuestaria = v_parametros.certificacion_presupuestaria,
-          codigo_ruta = v_parametros.codigo_ruta,
-          estado_funcional = v_parametros.estado_funcional,
-          fecha_asignacion = v_parametros.fecha_asignacion,
-          id_cargo = v_parametros.id_cargo,
-          id_usuario_mod = par_id_usuario,
-          fecha_mod = now(),
-          nro_contrato = v_parametros.nro_contrato,
-          fecha_contrato = v_parametros.fecha_contrato
-        where id_uo=v_parametros.id_uo
-              and id_uo_funcionario=v_parametros.id_uo_funcionario;
+		if v_parametros.tipo = 'oficial' then
+          update orga.tuo_funcionario
+          set
+            observaciones_finalizacion = v_parametros.observaciones_finalizacion,
+            nro_documento_asignacion = v_parametros.nro_documento_asignacion,
+            fecha_documento_asignacion = v_parametros.fecha_documento_asignacion,
+            fecha_finalizacion = v_parametros.fecha_finalizacion,
+            certificacion_presupuestaria = v_parametros.certificacion_presupuestaria,
+            codigo_ruta = v_parametros.codigo_ruta,
+            estado_funcional = v_parametros.estado_funcional,
+            fecha_asignacion = v_parametros.fecha_asignacion,
+            id_cargo = v_parametros.id_cargo,
+            id_usuario_mod = par_id_usuario,
+            fecha_mod = now(),
+            nro_contrato = v_parametros.nro_contrato,
+            fecha_contrato = v_parametros.fecha_contrato
+          where id_uo=v_parametros.id_uo and id_uo_funcionario=v_parametros.id_uo_funcionario;
+        else
+        	update orga.tuo_funcionario set
+              observaciones_finalizacion = v_parametros.observaciones_finalizacion,
+              nro_documento_asignacion = v_parametros.nro_documento_asignacion,
+              fecha_documento_asignacion = v_parametros.fecha_documento_asignacion,
+              fecha_finalizacion = v_parametros.fecha_finalizacion,
+              certificacion_presupuestaria = v_parametros.certificacion_presupuestaria,
+              codigo_ruta = v_parametros.codigo_ruta,
+              estado_funcional = v_parametros.estado_funcional,
+              fecha_asignacion = v_parametros.fecha_asignacion,
+              id_cargo = v_parametros.id_cargo,
+              id_usuario_mod = par_id_usuario,
+              fecha_mod = now()
+          where id_uo=v_parametros.id_uo and id_uo_funcionario=v_parametros.id_uo_funcionario;
+        end if;
 
         --10-04-2012: sincronizacion de UO entre BD
         /*                v_respuesta_sinc:=orga.f_sincroniza_uo_empleado_entre_bd(v_parametros.id_uo_funcionario,'10.172.0.13','5432','db_link','db_link','dbendesis' ,'UPDATE');
@@ -295,7 +322,7 @@ $body$
                                     'ORGA',
                                     null,0,0,'orga.tuo_funcionario'
                                 );
-            INSERT INTO orga.tcorrelativo_contrato  (numero_contrato) values (v_numero_contrato);
+            INSERT INTO orga.tcorrelativo_contrato  (id_usuario_reg, numero_contrato) values (par_id_usuario, v_numero_contrato);
         end if;
 
 

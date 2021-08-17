@@ -108,7 +108,7 @@ class ACTUoFuncionario extends ACTbase{
         }else {
             $nombreArchivo = uniqid(md5(session_id()) . '[Contrato - RRHH]') . '.pdf';
             $this->objParam->addParametro('orientacion', 'P');
-            $this->objParam->addParametro('tamano', 'Legal');
+            $this->objParam->addParametro('tamano', 'LEGAL');
             $this->objParam->addParametro('nombre_archivo', $nombreArchivo);
 
             $this->objReporte = new RModeloContratoRRHHPDF($this->objParam);

@@ -402,7 +402,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         fieldLabel: "Fecha de Nacimiento",
                         gwidth: 120,
                         name: 'fecha_nacimiento',
-                        allowBlank:false,
+                        allowBlank:true,
                         maxLength:100,
                         minLength:1,
                         format:'d/m/Y',

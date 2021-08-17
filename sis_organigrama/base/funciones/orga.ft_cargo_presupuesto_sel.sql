@@ -61,7 +61,8 @@ BEGIN
 						usu2.cuenta as usr_mod,
 						cc.codigo_cc,
                         carpre.id_ot,
-                        ot.desc_orden
+                        ot.desc_orden,
+                        cc.nombre_actividad
 						from orga.tcargo_presupuesto carpre
                         inner join orga.tcargo tca on tca.id_cargo = carpre.id_cargo
                         INNER JOIN param.tgestion tg on tg.id_gestion = carpre.id_gestion
@@ -132,3 +133,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.ft_cargo_presupuesto_sel (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;

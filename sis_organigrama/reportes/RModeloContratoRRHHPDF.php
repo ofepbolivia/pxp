@@ -11,16 +11,12 @@ class RModeloContratoRRHHPDF extends  ReportePDF {
 
     function setDatos($datos) {
         $this->datos = $datos;
-        //var_dump($this->datos);exit;
     }
 
     function Header() {
         $this->Image(dirname(__FILE__).'/../../lib/imagenes/logos/logo.jpg',84,7,40,20);
         $this->ln(5);
         $this->SetFont('times','B',12);
-        /*$this->Cell(0,5,"CONTRATO INDIVIDUAL DE TRABAJO",0,1,'C');
-        $this->Cell(0,5,'OB.GL.CL.___.2021',0,1,'C');*/
-
     }
 
     function Footer() {

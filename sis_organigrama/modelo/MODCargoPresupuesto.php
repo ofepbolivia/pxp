@@ -37,6 +37,7 @@ class MODCargoPresupuesto extends MODbase{
         $this->captura('desc_centro_costo','text');
         $this->captura('id_ot','int4');
         $this->captura('desc_orden','varchar');
+        $this->captura('nombre_actividad','varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();//echo $this->consulta; exit;

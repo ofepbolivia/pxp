@@ -339,6 +339,34 @@ Phx.vista.EstructuraUo=function(config){
                id_grupo:0,
                form:true
            },
+           {
+               config:{
+                   fieldLabel: "Centro Costo",
+                   gwidth: 120,
+                   name: 'desc_tcc',
+                   allowBlank:true,
+                   anchor:'100%',
+                   disabled : true,
+                   style : {fontWeight : 'bolder', color : 'red'}
+               },
+               type:'TextField',
+               id_grupo:2,
+               form:true
+           },
+           {
+               config:{
+                   fieldLabel: "Categoria",
+                   gwidth: 120,
+                   name: 'codigo_categoria',
+                   allowBlank:true,
+                   anchor:'100%',
+                   disabled : true,
+                   style : {fontWeight : 'bolder', color : 'red'}
+               },
+               type:'TextField',
+               id_grupo:2,
+               form:true
+           }
 		];
 		
 		Phx.vista.EstructuraUo.superclass.constructor.call(this,config);
@@ -545,7 +573,22 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 		},
 		/*Sobre carga boton new */
 		onButtonNew:function(){
-			var nodo = this.sm.getSelectedNode();			
+			var nodo = this.sm.getSelectedNode();
+
+            Ext.Ajax.request({
+                url:'../../sis_organigrama/control/Cargo/loadCargoPresupuesto',
+                params:{
+                    id_uo : nodo.id
+                },
+                success:function(resp){
+                    var reg =  (Ext.decode(Ext.util.Format.trim(resp.responseText))).ROOT.datos;
+                    this.Cmp.desc_tcc.setValue(reg.desc_tcc);
+                    this.Cmp.codigo_categoria.setValue(reg.codigo_categoria);
+                },
+                failure: this.conexionFailure,
+                timeout:this.timeout,
+                scope:this
+            });
 			Phx.vista.EstructuraUo.superclass.onButtonNew.call(this);			
 			//this.getComponente('id_uo_padre').setValue('');
 			//this.getComponente('nivel').setValue((nodo.attributes.nivel*1)+1);
@@ -574,6 +617,21 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 				this.getComponente('icono').disable();
 				this.getComponente('clase_vista').disable();
 			}	*/
+
+            Ext.Ajax.request({
+                url:'../../sis_organigrama/control/Cargo/loadCargoPresupuesto',
+                params:{
+                    id_uo : nodo.id
+                },
+                success:function(resp){
+                    var reg =  (Ext.decode(Ext.util.Format.trim(resp.responseText))).ROOT.datos;
+                    this.Cmp.desc_tcc.setValue(reg.desc_tcc);
+                    this.Cmp.codigo_categoria.setValue(reg.codigo_categoria);
+                },
+                failure: this.conexionFailure,
+                timeout:this.timeout,
+                scope:this
+            });
 			Phx.vista.EstructuraUo.superclass.onButtonEdit.call(this);
 		},
 		
@@ -668,6 +726,19 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
                                 autoHeight: true,
                                 items: [],
                                 id_grupo: 1
+                            }
+                        ],
+                        columnWidth: .5
+                    },
+                    {
+                        bodyStyle: 'padding-right:10px;',
+                        items: [
+                            {
+                                xtype: 'fieldset',
+                                title: '<b style="color: green;">DATOS PRESUPUESTO<b>',
+                                autoHeight: true,
+                                items: [],
+                                id_grupo: 2
                             }
                         ],
                         columnWidth: .5

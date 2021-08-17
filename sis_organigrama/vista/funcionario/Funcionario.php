@@ -537,10 +537,10 @@ header("content-type: text/javascript; charset=UTF-8");
             {
                 config:{
                     name: 'fecha_asignacion',
-                    fieldLabel: 'Fecha Asignación',
+                    fieldLabel: 'Fecha Ultima Asignación',
                     allowBlank: true,
                     anchor: '80%',
-                    gwidth: 100,
+                    gwidth: 150,
                     renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
                 },
                 type:'DateField',
@@ -555,7 +555,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     fieldLabel: 'Fecha Finalización.',
                     allowBlank: true,
                     anchor: '80%',
-                    gwidth: 100,
+                    gwidth: 120,
                     renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
                 },
                 type:'DateField',

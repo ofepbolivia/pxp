@@ -291,8 +291,8 @@ header("content-type: text/javascript; charset=UTF-8");
                 Phx.vista.UoContratoAnexo.superclass.onButtonNew.call(this);
                 /*this.Cmp.id_uo.setValue(this.maestro.id_uo);
                 this.Cmp.id_uo.setRawValue(this.maestro.nombre_unidad);*/
-
-                if(this.nombreVista != 'listadoContratoAnexo' &&  this.nombreVista != undefined) {
+                console.log('this.nombreVista', this.nombreVista);
+                if(this.nombreVista != 'listadoContratoAnexo' /*&&  this.nombreVista != undefined*/) {
                     this.Cmp.id_uo.store.load({
                         params: {start: 0, limit: this.tam_pag}, scope: this, callback: function (param, op, suc) {
                             this.Cmp.id_uo.disable();
@@ -308,7 +308,9 @@ header("content-type: text/javascript; charset=UTF-8");
 
             onButtonEdit: function(){
                 Phx.vista.UoContratoAnexo.superclass.onButtonEdit.call(this);
-                //this.Cmp.id_uo.disable();
+                if(this.nombreVista != 'listadoContratoAnexo'){
+                    this.Cmp.id_uo.disable();
+                }
             },
 
             tam_pag:50,

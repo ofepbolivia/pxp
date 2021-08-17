@@ -559,6 +559,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
             });
         }
 
+
 		Phx.vista.uo_funcionario.superclass.onButtonEdit.call(this);
 
         this.getComponente('fecha_asignacion').setMinValue(new Date(2007,12,31));
@@ -572,12 +573,15 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 			this.mostrarComponente(this.Cmp.observaciones_finalizacion);
 		}
 
+        console.log('this.Cmp.tipo.getValue()', this.Cmp.tipo.getValue());
         if(this.Cmp.tipo.getValue() == 'funcional') {
-            this.Cmp.id_cargo.reset();
+            //this.Cmp.id_cargo.reset();
             this.Cmp.id_cargo.allowBlank = true;
         }else{
             this.Cmp.id_cargo.allowBlank = false;
         }
+
+
 	},
 	
 	/*funcion corre cuando el padre cambia el nodo maestero*/
@@ -639,7 +643,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 			this.Cmp.id_funcionario.tdata.tipo = this.Cmp.tipo.getValue();
 
             if(this.Cmp.tipo.getValue() == 'funcional') {
-                this.Cmp.id_cargo.reset();
+                //this.Cmp.id_cargo.reset();
                 this.Cmp.id_cargo.allowBlank = true;
             }else{
                 this.Cmp.id_cargo.allowBlank = false;
@@ -691,7 +695,12 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 			if(data.codigo_tipo_contrato == 'PLA') {
 				this.Cmp.fecha_finalizacion.reset();
 				this.Cmp.fecha_finalizacion.allowBlank = true;
-				this.ocultarComponente(this.Cmp.fecha_finalizacion);
+
+                if(this.Cmp.tipo.getValue() != 'funcional') {
+                    this.ocultarComponente(this.Cmp.fecha_finalizacion);
+                }
+
+
 			} else {
 				this.Cmp.fecha_finalizacion.allowBlank = false;
 				this.mostrarComponente(this.Cmp.fecha_finalizacion);

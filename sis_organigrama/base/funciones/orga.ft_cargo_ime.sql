@@ -41,6 +41,10 @@ DECLARE
 
   v_funcionarios			record;
   v_contador				integer = 1;
+
+  v_id_cargo_presupuesto	integer;
+  v_id_uo					integer;
+  v_gestion					integer;
 BEGIN
 
     v_nombre_funcion = 'orga.ft_cargo_ime';
@@ -100,6 +104,38 @@ BEGIN
 			v_parametros.id_oficina,
 			v_parametros.id_temporal_cargo
 			)RETURNING id_cargo into v_id_cargo;
+
+			--/**************************************************PRESUPUESTO**************************************************/
+        	insert into orga.tcargo_presupuesto(
+              id_cargo,
+              id_gestion,
+              id_centro_costo,
+              id_ot,
+              porcentaje,
+              fecha_ini,
+              fecha_fin,
+              estado_reg,
+              id_usuario_reg,
+              fecha_reg,
+              fecha_mod,
+              id_usuario_mod
+
+
+          	) values(
+              v_id_cargo,
+              v_parametros.id_gestion,
+              v_parametros.id_centro_costo,
+              v_parametros.id_ot,
+              v_parametros.porcentaje,
+              v_parametros.fecha_ini_cc,
+              v_parametros.fecha_fin_cc,
+              'activo',
+              p_id_usuario,
+              now(),
+              null,
+              null
+			)RETURNING id_cargo_presupuesto into v_id_cargo_presupuesto;
+			--/**************************************************PRESUPUESTO**************************************************/
 
 			--Definicion de la respuesta
 			v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Cargo almacenado(a) con exito (id_cargo'||v_id_cargo||')');
@@ -458,6 +494,47 @@ BEGIN
             return v_resp;
 
 		end;
+	/*********************************
+ 	#TRANSACCION:  'OR_LOAD_CAR_PRE'
+ 	#DESCRIPCION:	Cargar el presupuesto  para una UO
+ 	#AUTOR:		franklin.espinoza
+ 	#FECHA:		05-08-2021 19:16:06
+	***********************************/
+	elsif(p_transaccion='OR_LOAD_CAR_PRE')then
+		begin
+
+			v_id_uo = orga.f_get_presupuesto_uo(v_parametros.id_uo);
+            v_gestion = date_part('year', current_date);
+
+            select tg.id_gestion
+            into v_id_gestion
+            from param.tgestion tg
+            where tg.gestion = v_gestion;
+
+			select  vcc.id_centro_costo,
+            		(vcc.codigo_tcc || ' - ' ||vcc.descripcion_tcc ||' '|| vcc.gestion)::varchar AS desc_tcc,
+            		cp.codigo_categoria
+            into v_presupuesto
+            from param.vcentro_costo vcc
+            inner join pre.tpresupuesto pre on pre.id_centro_costo = vcc.id_centro_costo
+            inner join pre.vcategoria_programatica cp on cp.id_categoria_programatica = pre.id_categoria_prog
+			where vcc.gestion = v_gestion and vcc.id_uo = v_id_uo;
+
+            --raise 'desc_tcc: %, codigo_categoria: %',v_presupuesto.desc_tcc ,v_presupuesto.codigo_categoria;
+
+            --Definicion de la respuesta
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','load parametros exitosamente');
+            v_resp = pxp.f_agrega_clave(v_resp,'id_centro_costo',v_presupuesto.id_centro_costo::varchar);
+            v_resp = pxp.f_agrega_clave(v_resp,'desc_tcc',v_presupuesto.desc_tcc::varchar);
+            v_resp = pxp.f_agrega_clave(v_resp,'codigo_categoria',v_presupuesto.codigo_categoria::varchar);
+            v_resp = pxp.f_agrega_clave(v_resp,'id_gestion',v_id_gestion::varchar);
+            v_resp = pxp.f_agrega_clave(v_resp,'gestion',v_gestion::varchar);
+
+
+            --Devuelve la respuesta
+            return v_resp;
+		end;
+
 	else
 
     	raise exception 'Transaccion inexistente: %',p_transaccion;
