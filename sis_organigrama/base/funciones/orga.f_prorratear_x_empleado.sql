@@ -39,6 +39,7 @@ DECLARE
     v_importe_consumo			numeric;
 
     v_numero_celular			varchar;
+    v_id_funcionario_uo			integer;
 
 
   BEGIN
@@ -481,22 +482,40 @@ DECLARE
               and uofun.estado_reg = 'activo' and car.id_oficina = v_id_oficina )loop
         v_id_centro_costo = null;
 
-        select po_id_cargo,po_id_centro_costo,po_id_ot into v_id_cargo,v_id_centro_costo,v_id_ot
+        select po_id_cargo,
+        		po_id_centro_costo,
+                po_id_ot
+        into v_id_cargo,
+        	 v_id_centro_costo,
+             v_id_ot
         from orga.f_get_ultimo_centro_costo_funcionario(v_funcionarios.id_funcionario,p_id_periodo);
 
         select f.desc_funcionario1 into v_empleado
         from orga.vfuncionario f
         where f.id_funcionario = v_funcionarios.id_funcionario;
 
+
+        select uofun.id_funcionario
+        into v_id_funcionario_uo
+        from orga.tuo_funcionario uofun
+        where uofun.fecha_asignacion <= v_periodo.fecha_fin   AND
+        (uofun.fecha_finalizacion >= v_periodo.fecha_fin  or uofun.fecha_finalizacion is NULL)
+        and uofun.estado_reg = 'activo'
+        and uofun.id_funcionario = v_funcionarios.id_funcionario;
+
         /*if (v_id_ot is null and v_id_centro_costo is null) then
           raise exception 'El funcionario % esta inactivo en el mes que se intenta pagar.',v_empleado;
         end if;*/
 
-        if (v_id_ot is null and v_id_centro_costo is null and v_id_cargo is null) then
+        if (v_id_ot is null and v_id_centro_costo is null and v_id_cargo is null and v_id_funcionario_uo is null ) then
           raise exception 'El funcionario % esta inactivo pero aun tiene asignado el Número de Teléfono % en el mes que se intenta pagar, reasigne el número a un funcionario activo.',v_empleado, v_numero_celular;
         end if;
 
-        if (v_id_ot is null and v_id_centro_costo is null and v_id_cargo is not null) then
+        if (v_id_ot is null and v_id_centro_costo is null and v_id_cargo is null and v_id_funcionario_uo is not null) then
+          raise exception 'El funcionario % no tiene asignado un Centro de Costo en la interfaz de Presupuestos por Cargo, contactece con la unidad de presupuestos para su asignacion.',v_empleado;
+        end if;
+
+        if (v_id_ot is null and v_id_centro_costo is null and v_id_cargo is not null and v_id_funcionario_uo is not null) then
           raise exception 'El funcionario % no tiene asignado un Centro de Costo y OT en la interfaz de Presupuestos por Cargo, contactece con la unidad de presupuestos para su asignacion.',v_empleado;
         end if;
 
@@ -548,11 +567,23 @@ DECLARE
         from orga.vfuncionario f
         where f.id_funcionario = v_funcionarios.id_funcionario;
 
-        if (v_id_ot is null and v_id_centro_costo is null and v_id_cargo is null) then
+        select uofun.id_funcionario
+        into v_id_funcionario_uo
+        from orga.tuo_funcionario uofun
+        where uofun.fecha_asignacion <= v_periodo.fecha_fin   AND
+        (uofun.fecha_finalizacion >= v_periodo.fecha_fin  or uofun.fecha_finalizacion is NULL)
+        and uofun.estado_reg = 'activo'
+        and uofun.id_funcionario = v_funcionarios.id_funcionario;
+
+        if (v_id_ot is null and v_id_centro_costo is null and v_id_cargo is null and v_id_funcionario_uo is null ) then
           raise exception 'El funcionario % esta inactivo pero aun tiene asignado el Número de Teléfono % en el mes que se intenta pagar, reasigne el número a un funcionario activo.',v_empleado, v_numero_celular;
         end if;
 
-        if (v_id_ot is null and v_id_centro_costo is null and v_id_cargo is not null) then
+        if (v_id_ot is null and v_id_centro_costo is null and v_id_cargo is null and v_id_funcionario_uo is not null) then
+          raise exception 'El funcionario % no tiene asignado un Centro de Costo en la interfaz de Presupuestos por Cargo, contactece con la unidad de presupuestos para su asignacion.',v_empleado;
+        end if;
+
+        if (v_id_ot is null and v_id_centro_costo is null and v_id_cargo is not null and v_id_funcionario_uo is not null) then
           raise exception 'El funcionario % no tiene asignado un Centro de Costo y OT en la interfaz de Presupuestos por Cargo, contactece con la unidad de presupuestos para su asignacion.',v_empleado;
         end if;
 
