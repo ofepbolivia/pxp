@@ -333,7 +333,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     config:{
                         name: 'edad',
                         fieldLabel: 'Edad',
-                        allowBlank: true,
+                        allowBlank: false,
                         anchor: '80%',
                         gwidth: 100,
                         maxLength:4
@@ -341,6 +341,29 @@ header("content-type: text/javascript; charset=UTF-8");
                     type:'NumberField',
                     filters:{pfiltro:'here.edad',type:'numeric'},
                     id_grupo:1,
+                    grid:true,
+                    form:true
+                },
+                {
+                    config:{
+                        name:'tiempo',
+                        fieldLabel:'Tiempo',
+                        allowBlank:false,
+                        emptyText:'Tiempo...',
+
+                        typeAhead: true,
+                        triggerAction: 'all',
+                        lazyRender:true,
+                        mode: 'local',
+                        store:['dias','meses','años']
+
+                    },
+                    type:'ComboBox',
+                    id_grupo:1,
+                    filters:{
+                        type: 'list',
+                        options: ['dias','meses','años']
+                    },
                     grid:true,
                     form:true
                 },
@@ -880,9 +903,9 @@ header("content-type: text/javascript; charset=UTF-8");
                 /*******************************HEREDERO*******************************/
                 {name:'id_herederos', type: 'numeric'},
                 {name:'estado_reg', type: 'string'},
-                {name:'nombres', type: 'string'},
+                /*{name:'nombres', type: 'string'},
                 {name:'apellido_paterno', type: 'string'},
-                {name:'apellido_materno', type: 'string'},
+                {name:'apellido_materno', type: 'string'},*/
                 {name:'parentesco', type: 'string'},
                 {name:'edad', type: 'numeric'},
                 {name:'nro_documento', type: 'string'},
@@ -896,6 +919,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name:'usr_mod', type: 'string'},
                 {name:'benefactor', type: 'string'},
                 {name:'id_funcionario', type: 'numeric'},
+                {name:'tiempo', type: 'string'},
                 /*******************************HEREDERO*******************************/
                 /*******************************PERSONA*******************************/
                 {name:'nombre', type: 'string'},

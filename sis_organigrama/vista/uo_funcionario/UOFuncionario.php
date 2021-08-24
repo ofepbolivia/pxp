@@ -232,6 +232,35 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 			form: true
 		},
 
+        {
+            config:{
+                name: 'categoria',
+                fieldLabel: 'Categoria Prog.',
+                gwidth: 160,
+                renderer:function (value, p, record){
+                    return String.format('{0}', "<div style='color: red'><b>"+value+"</b></div>");
+                }
+            },
+            type:'TextField',
+            filters:{pfiltro:'cp.codigo_categoria',type:'string'},
+            grid:true,
+            form:false
+        },
+        {
+            config:{
+                name: 'centro_costo',
+                fieldLabel: 'Centro Costo',
+                gwidth: 200,
+                renderer:function (value, p, record){
+                    return String.format('{0}', "<div style='color: green'><b>"+value+"</b></div>");
+                }
+            },
+            type:'TextField',
+            filters:{pfiltro:'vcc.codigo_tcc',type:'string'},
+            grid:false,
+            form:false
+        },
+
 		{
 			config:{
 				name: 'nro_documento_asignacion',
@@ -499,7 +528,10 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
              'USUREG',
              'nro_contrato',
              {name:'fecha_contrato', type: 'date',dateFormat:'Y-m-d'},
-             'USUMOD','correspondencia','codigo_ruta','estado_funcional','certificacion_presupuestaria','nombre_escala','haber_basico'],
+             'USUMOD','correspondencia','codigo_ruta','estado_funcional','certificacion_presupuestaria','nombre_escala','haber_basico',
+             {name:'centro_costo', type: 'string'},
+             {name:'categoria', type: 'string'}
+    ],
 	sortInfo:{
 		field: 'desc_funcionario1',
 		direction: 'ASC',

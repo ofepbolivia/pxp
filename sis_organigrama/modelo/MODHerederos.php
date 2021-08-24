@@ -34,14 +34,15 @@ class MODHerederos extends MODbase{
         $this->captura('usr_mod','varchar');
         $this->captura('id_funcionario','integer');
         $this->captura('benefactor','varchar');
+        $this->captura('tiempo','varchar');
 
         /****************************************************PERSONA****************************************************/
         $this->captura('id_persona','integer');
         $this->captura('desc_person','varchar');
 
         $this->captura('nombre','varchar');
-        $this->captura('ap_paterno','varchar');
         $this->captura('ap_materno','varchar');
+        $this->captura('ap_paterno','varchar');
         $this->captura('fecha_nacimiento','date');
         $this->captura('genero','varchar');
         $this->captura('nacionalidad','varchar');
@@ -84,6 +85,7 @@ class MODHerederos extends MODbase{
         $this->setParametro('edad','edad','int4');
         $this->setParametro('nro_documento','nro_documento','varchar');
         $this->setParametro('id_funcionario','id_funcionario','integer');
+        $this->setParametro('tiempo','tiempo','varchar');
 
 
         /****************************************************PERSONA****************************************************/
@@ -135,7 +137,7 @@ class MODHerederos extends MODbase{
         $this->setParametro('edad','edad','int4');
         $this->setParametro('nro_documento','nro_documento','varchar');
         $this->setParametro('id_funcionario','id_funcionario','integer');
-
+        $this->setParametro('tiempo','tiempo','varchar');
         /****************************************************PERSONA****************************************************/
         $this->setParametro('id_persona','id_persona','integer');
         $this->setParametro('nombre','nombre','varchar');

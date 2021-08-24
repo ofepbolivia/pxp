@@ -158,7 +158,8 @@ BEGIN
 			id_usuario_mod,
 			fecha_mod,
             id_funcionario,
-            id_persona
+            id_persona,
+            tiempo
           	) values(
 			'activo',
 			'heredero',
@@ -170,7 +171,8 @@ BEGIN
 			null,
 			null,
 			v_parametros.id_funcionario,
-			v_id_persona
+			v_id_persona,
+            v_parametros.tiempo
 			)RETURNING id_herederos into v_id_herederos;
 
 			--Definicion de la respuesta
@@ -237,7 +239,8 @@ BEGIN
 			id_usuario_ai = v_parametros._id_usuario_ai,
 			usuario_ai = v_parametros._nombre_usuario_ai,
             id_funcionario = v_parametros.id_funcionario,
-            id_persona = v_id_persona
+            id_persona = v_id_persona,
+            tiempo = v_parametros.tiempo
 			where id_herederos=v_parametros.id_herederos;
 
 			--Definicion de la respuesta
@@ -294,3 +297,5 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.ft_herederos_ime (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar) OWNER TO postgres;

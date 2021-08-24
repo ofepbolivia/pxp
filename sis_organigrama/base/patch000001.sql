@@ -1186,3 +1186,9 @@ ALTER TABLE orga.ttipo_documento_contrato
 COMMENT ON COLUMN orga.ttipo_documento_contrato.id_tipo_contrato
 IS 'Identificador para el tipo de contrato al que corresponde.';
 /*****************************F-SCP-FEA-ORGA-1-22/07/2021*************/
+
+
+/*****************************I-SCP-FEA-ORGA-1-18/08/2021*************/
+ALTER TABLE orga.therederos
+  ADD COLUMN tiempo VARCHAR(16);
+/*****************************F-SCP-FEA-ORGA-1-18/08/2021*************/

@@ -58,6 +58,7 @@ BEGIN
 						usu2.cuenta as usr_mod,
                         here.id_funcionario,
                         vf.desc_funcionario2::varchar benefactor,
+                        here.tiempo,
 
                         here.id_persona,
                         person.nombre_completo2::varchar AS desc_person,
@@ -147,3 +148,5 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.ft_herederos_sel (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar) OWNER TO postgres;

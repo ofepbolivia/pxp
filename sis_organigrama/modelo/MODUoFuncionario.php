@@ -50,6 +50,9 @@ class MODUoFuncionario extends MODbase{
         $this->captura('nro_contrato','varchar');
         $this->captura('fecha_contrato','date');
 
+        $this->captura('centro_costo','varchar');
+        $this->captura('categoria','varchar');
+
         //Ejecuta la funcion
         $this->armarConsulta();
 
@@ -169,7 +172,9 @@ class MODUoFuncionario extends MODbase{
         $this->captura('tipo','varchar');
         $this->captura('haber_basico','numeric');
         $this->captura('tipo_contrato','varchar');
-        
+
+        $this->captura('centro_costo','varchar');
+        $this->captura('categoria','varchar');
 
         //Ejecuta la funcion
         $this->armarConsulta();

@@ -1217,7 +1217,7 @@ ALTER TABLE segu.trol
 
 /*****************************I-SCP-FEA-SEGU-0-29/03/2021*************/
 ALTER TABLE segu.tpersona
-  ADD COLUMN ciudad_residencia VARCHAR(8);
+  ADD COLUMN ciudad_residencia VARCHAR(64);
 
 COMMENT ON COLUMN segu.tpersona.ciudad_residencia
 IS 'Ciudad de residencia de una persona.';

@@ -48,7 +48,7 @@ class MODCentroCosto extends MODbase{
 		$this->captura('id_tipo_cc','int4');
 		$this->captura('codigo_tcc','varchar');
 		$this->captura('descripcion_tcc','varchar');	
-		
+
 		
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -89,7 +89,7 @@ class MODCentroCosto extends MODbase{
 		$this->captura('nombre_financiador','varchar');
 		$this->captura('nombre_regional','varchar');
 		$this->captura('movimiento_tipo_pres','varchar');
-				
+        $this->captura('categoria','varchar');
 		
 		//Ejecuta la instruccion
 		$this->armarConsulta();

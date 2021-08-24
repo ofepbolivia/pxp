@@ -17,6 +17,10 @@ class ACTCentroCosto extends ACTbase{
 		if($this->objParam->getParametro('id_gestion')!=''){
             $this->objParam->addFiltro("cec.id_gestion = ".$this->objParam->getParametro('id_gestion'));    
         }
+
+        if($this->objParam->getParametro('id_uo')!=''){
+            $this->objParam->addFiltro("cec.id_uo = ".$this->objParam->getParametro('id_uo'));
+        }
 		
 		if($this->objParam->getParametro('id_partida')!=''){
 	    	$this->objParam->addFiltro("cec.id_centro_costo in (select id_presupuesto from pre.tpresup_partida where id_partida = " . $this->objParam->getParametro('id_partida') . ")");	

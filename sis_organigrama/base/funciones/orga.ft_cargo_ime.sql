@@ -513,7 +513,8 @@ BEGIN
 
 			select  vcc.id_centro_costo,
             		(vcc.codigo_tcc || ' - ' ||vcc.descripcion_tcc ||' '|| vcc.gestion)::varchar AS desc_tcc,
-            		cp.codigo_categoria
+            		(cp.codigo_categoria||' [ '||cp.descripcion||' ]')::varchar codigo_categoria,
+                    vcc.id_uo
             into v_presupuesto
             from param.vcentro_costo vcc
             inner join pre.tpresupuesto pre on pre.id_centro_costo = vcc.id_centro_costo
@@ -529,6 +530,7 @@ BEGIN
             v_resp = pxp.f_agrega_clave(v_resp,'codigo_categoria',v_presupuesto.codigo_categoria::varchar);
             v_resp = pxp.f_agrega_clave(v_resp,'id_gestion',v_id_gestion::varchar);
             v_resp = pxp.f_agrega_clave(v_resp,'gestion',v_gestion::varchar);
+            v_resp = pxp.f_agrega_clave(v_resp,'id_uo',v_presupuesto.id_uo::varchar);
 
 
             --Devuelve la respuesta

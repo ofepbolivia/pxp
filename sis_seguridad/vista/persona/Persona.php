@@ -203,7 +203,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 config:{
                     name: 'id_lugar',
                     fieldLabel: 'Lugar Nacimiento',
-                    allowBlank: true,
+                    allowBlank: false,
                     emptyText:'Lugar...',
                     resizable:true,
                     store:new Ext.data.JsonStore(

@@ -15,9 +15,43 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
 		this.maestro=config.maestro;
     	//llama al constructor de la clase padre
 		Phx.vista.Entidad.superclass.constructor.call(this,config);
+        this.addButton('btnRepresentante',
+            {
+                text: 'Representante Legal',
+                grupo: [0,1,2],
+                iconCls: 'bmoney',
+                disabled: true,
+                handler: this.onBtnRepresentante,
+                tooltip: 'Representante Legal BoA.'
+            }
+        );
 		this.init();
 		this.load({params:{start:0, limit:this.tam_pag}})
 	},
+
+    onBtnRepresentante: function(){
+        var rec = {maestro: this.getSelectedData()}
+
+        Phx.CP.loadWindows('../../../sis_organigrama/vista/representante_legal/RepresentanteLegal.php',
+            'Representante Legal',
+            {
+                width:900,
+                height:450
+            },
+            rec,
+            this.idContenedor,
+            'RepresentanteLegal'
+        );
+    },
+
+    preparaMenu:function() {
+        this.getBoton('btnRepresentante').enable();
+        Phx.vista.Entidad.superclass.preparaMenu.call(this);
+    },
+    liberaMenu:function() {
+        this.getBoton('btnRepresentante').disable();
+        Phx.vista.Entidad.superclass.liberaMenu.call(this);
+    },
 
 	Atributos:[
 		{

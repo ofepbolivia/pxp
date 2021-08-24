@@ -14,12 +14,12 @@ DECLARE
 BEGIN
 	   v_nombre_funcion = 'orga.f_get_herederos';
 
-     	for v_registros in  select per.nombre_completo2 nombre, her.parentesco, her.edad
+     	for v_registros in  select per.nombre_completo2 nombre, her.parentesco, her.edad, her.tiempo
         					from orga.therederos her
                             inner join segu.vpersona per on per.id_persona = her.id_persona
                             where her.id_funcionario = p_id_funcionario loop
 
-        v_lista_herederos = v_lista_herederos || '<li>' || v_registros.nombre || '  -  '||coalesce(v_registros.edad::varchar,'(N/E)'::varchar)||' años.</li>';
+        v_lista_herederos = v_lista_herederos || '<li>' || v_registros.nombre || '  -  '||coalesce(v_registros.edad::varchar,'(N/E)'::varchar)||' '||v_registros.tiempo||'.</li>';
         end loop;
 
     	if v_lista_herederos is not null then

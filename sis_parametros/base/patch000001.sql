@@ -2424,3 +2424,10 @@ alter table param.tconcepto_ingas
 add tipo_descuento varchar(255);
 
 /************F-SCP-FFP-PARAM-0-05/05/2021**************/
+
+/************I-SCP-FEA-PARAM-0-29/07/2021**************/
+
+ALTER TABLE param.tdocumento
+      ALTER COLUMN codigo TYPE VARCHAR(20);
+
+/************F-SCP-FEA-PARAM-0-29/07/2021**************/

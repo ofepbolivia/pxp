@@ -486,7 +486,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         listWidth: null,
                         gwidth:300,
                         baseParams:{filtrar:'grupo_ep'},
-                        tpl: '<tpl for="."><div class="x-combo-list-item"><p><b style="color: green;">{codigo_cc}</b></p><p>Gestion: {gestion}</p><p>Reg: {nombre_regional}</p><p>Fin.: {nombre_financiador}</p><p>Proy.: {nombre_programa}</p><p>Act.: {nombre_actividad}</p><p>UO: {nombre_uo}</p></div></tpl>',
+                        tpl: '<tpl for="."><div class="x-combo-list-item"><p><b style="color: green;">{codigo_cc}</b></p><p>Gestion: {gestion}</p><p>Reg: {nombre_regional}</p><p>Fin.: {nombre_financiador}</p><p>Proy.: {nombre_programa}</p><p>Act.: {nombre_actividad}</p><p>UO: {nombre_uo}</p><p style="color: green"><b>Categoria: {categoria}</b></p></div></tpl>',
                         renderer:function(value, p, record){return String.format('{0}', record.data['desc_centro_costo']);}
 
                     },
@@ -729,14 +729,13 @@ header("content-type: text/javascript; charset=UTF-8");
 
                         //this.Cmp.id_gestion.setValue(reg.id_gestion);
                         this.Cmp.id_gestion.store.load({params:{start:0, limit:this.tam_pag}, scope:this,callback: function (arr,op,suc) {
-                                console.log('arr',arr,'op',op);
                                 this.Cmp.id_gestion.setValue(reg.id_gestion);
                             }
                         });
                         this.Cmp.id_centro_costo.store.baseParams.id_gestion = reg.id_gestion;
+                        this.Cmp.id_centro_costo.store.baseParams.id_uo = reg.id_uo;
 
                         this.Cmp.id_centro_costo.store.load({params:{start:0, limit:this.tam_pag}, scope:this,callback: function (arr,op,suc) {
-                                console.log('reg.id_centro_costo', reg.id_centro_costo);
                                 this.Cmp.id_centro_costo.setValue(reg.id_centro_costo);
                             }
                         });
