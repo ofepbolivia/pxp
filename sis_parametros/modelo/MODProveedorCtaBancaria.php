@@ -40,6 +40,7 @@ class MODProveedorCtaBancaria extends MODbase{
 
         $this->captura('estado_cta','varchar');
         $this->captura('prioridad','int4');
+        $this->captura('observaciones','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -66,6 +67,7 @@ class MODProveedorCtaBancaria extends MODbase{
 
         $this->setParametro('estado_cta','estado_cta','varchar');
         $this->setParametro('prioridad','prioridad','int4');
+        $this->setParametro('observaciones','observaciones','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -93,6 +95,7 @@ class MODProveedorCtaBancaria extends MODbase{
 
         $this->setParametro('estado_cta','estado_cta','varchar');
         $this->setParametro('prioridad','prioridad','int4');
+        $this->setParametro('observaciones','observaciones','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();

@@ -12,6 +12,9 @@ header("content-type: text/javascript; charset=UTF-8");
 <script>
     Phx.vista.ProveedorCtaBancaria=Ext.extend(Phx.gridInterfaz,{
 
+            fwidth: 480,
+            fheight: 450,
+
             constructor:function(config){
                 this.maestro=config.maestro;
                 //llama al constructor de la clase padre
@@ -159,6 +162,21 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 {
                     config:{
+                        name: 'observaciones',
+                        fieldLabel: 'Observaciones',
+                        allowBlank: true,
+                        anchor: '80%',
+                        gwidth: 100,
+                        maxLength:100
+                    },
+                    type:'TextArea',
+                    filters:{pfiltro:'pctaban.observaciones',type:'string'},
+                    id_grupo:1,
+                    grid:true,
+                    form:true
+                },
+                {
+                    config:{
                         name: 'estado_reg',
                         fieldLabel: 'Estado Reg.',
                         allowBlank: true,
@@ -299,7 +317,8 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name:'usr_reg', type: 'string'},
                 {name:'usr_mod', type: 'string'},
                 {name:'estado_cta', type: 'string'},
-                {name:'prioridad', type: 'numeric'}
+                {name:'prioridad', type: 'numeric'},
+                {name:'observaciones', type: 'string'}
 
             ],
             sortInfo:{
@@ -314,14 +333,17 @@ header("content-type: text/javascript; charset=UTF-8");
                 this.load({params:{start:0, limit:this.tam_pag}})
             },
             onButtonEdit: function () {
-                this.Cmp.nro_cuenta.disable();
-                this.Cmp.id_banco_beneficiario.disable();
+                this.Cmp.nro_cuenta.enable();
+                this.Cmp.id_banco_beneficiario.enable();
                 Phx.vista.ProveedorCtaBancaria.superclass.onButtonEdit.call(this);
+                this.Cmp.observaciones.allowBlank=false;
+
             },
             onButtonNew: function () {
                 this.Cmp.nro_cuenta.enable();
                 this.Cmp.id_banco_beneficiario.enable();
                 Phx.vista.ProveedorCtaBancaria.superclass.onButtonNew.call(this);
+                this.Cmp.observaciones.allowBlank=true;
             },
 
             bdel:true,

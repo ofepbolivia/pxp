@@ -2431,3 +2431,8 @@ ALTER TABLE param.tdocumento
       ALTER COLUMN codigo TYPE VARCHAR(20);
 
 /************F-SCP-FEA-PARAM-0-29/07/2021**************/
+
+/***********************************I-SCP-MAY-PARAM-0-25/08/2021*****************************************/
+ALTER TABLE param.tproveedor_cta_bancaria
+  ADD COLUMN observaciones VARCHAR;
+/***********************************F-SCP-MAY-PARAM-0-25/08/2021*****************************************/
