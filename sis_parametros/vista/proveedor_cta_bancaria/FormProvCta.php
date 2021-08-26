@@ -234,6 +234,21 @@ header("content-type: text/javascript; charset=UTF-8");
                 form: true
             },
             {
+                config:{
+                    name: 'observaciones',
+                    fieldLabel: 'Observaciones',
+                    allowBlank: true,
+                    anchor: '80%',
+                    gwidth: 100,
+                    maxLength:100
+                },
+                type:'TextArea',
+                filters:{pfiltro:'pctaban.observaciones',type:'string'},
+                id_grupo:1,
+                grid:true,
+                form:true
+            },
+            {
                 config: {
                     name: 'estado_reg',
                     fieldLabel: 'Estado Reg.',
