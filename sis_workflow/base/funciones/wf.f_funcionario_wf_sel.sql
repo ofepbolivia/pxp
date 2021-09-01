@@ -398,6 +398,52 @@ BEGIN
                  END IF;
 
        /*
+       (may) 26/08/2021
+       funcion para verificar el funcionario aprobador tesoreria
+       */
+       ELSEIF v_nombre_func_list ='TES_FUN_APROBADOR'  THEN
+
+                 IF p_count=FALSE then
+
+                      --recuperamos el funcionario gerente del proceso de OP
+                      v_consulta='select
+                                          fun.id_funcionario,
+                                          fun.desc_funcionario1 as desc_funcionario,
+                                          ''Aprobador''::text  as desc_funcionario_cargo,
+                                          1 as prioridad
+
+                                  from tes.tobligacion_pago op
+                                  inner join tes.tplan_pago pp on pp.id_obligacion_pago = op.id_obligacion_pago
+                                  inner join  orga.vfuncionario fun on fun.id_funcionario = op.id_funcionario_gerente
+
+                                  where pp.id_estado_wf = '||p_id_estado_wf||'
+                          			and '||p_filtro||'
+                                  order by fun.desc_funcionario1
+                                  limit '|| p_limit::varchar||' offset '||p_start::varchar;
+
+                         FOR g_registros in execute (v_consulta)LOOP
+                  		   RETURN NEXT g_registros;
+                		 END LOOP;
+
+                 ELSE
+
+                        v_consulta='select
+                            				COUNT(fun.id_funcionario)
+                             		from tes.tobligacion_pago op
+                                  inner join tes.tplan_pago pp on pp.id_obligacion_pago = op.id_obligacion_pago
+                                  inner join  orga.vfuncionario fun on fun.id_funcionario = op.id_funcionario_gerente
+
+                                  where pp.id_estado_wf = '||p_id_estado_wf||'
+                                  and '||p_filtro;
+
+                         FOR g_registros in execute (v_consulta)LOOP
+                  		   RETURN NEXT g_registros;
+                		 END LOOP;
+
+
+                 END IF;
+
+       /*
          Recuperamos el RPC de la cotizacion
 
        */
