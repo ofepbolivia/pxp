@@ -166,8 +166,11 @@ BEGIN
 
 		begin
 			--Sentencia de la eliminacion
-			update param.tconcepto_ingas
-            set estado_reg = 'inactivo'
+			--02-09-2021 (may) se comppleta update para el delete
+			update param.tconcepto_ingas set
+            estado_reg = 'inactivo',
+            fecha_mod = now(),
+            id_usuario_mod = p_id_usuario
             where id_concepto_ingas=v_parametros.id_concepto_ingas;
 
             --si se integra con endesis actualizamos la tabla conceptoingas
