@@ -63,7 +63,7 @@ BEGIN
       AND ev.id_uo is not null
       limit 1;
 
-      v_fil = 'ger.id_uo = '||v_id_uo;
+      v_fil = 'ger.id_uo = '||coalesce(v_id_uo,0);
 
     		--Sentencia de la consulta
 			v_consulta:='select	  ger.nombre_unidad,
