@@ -1641,7 +1641,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     anchor: '90%',
                     gwidth: 100,
                     renderer: function (value, p, record) {
-                        return value ? value.dateFormat('d/m/Y') : ''
+                        return value ? value.dateFormat('d/m/Y H:i:s') : ''
                     }
                 },
                 type: 'DateField',
@@ -1673,7 +1673,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     anchor: '90%',
                     gwidth: 100,
                     renderer: function (value, p, record) {
-                        return value ? value.dateFormat('d/m/Y') : ''
+                        return value ? value.dateFormat('d/m/Y H:i:s') : ''
                     }
                 },
                 type: 'DateField',
@@ -1699,9 +1699,9 @@ header("content-type: text/javascript; charset=UTF-8");
             {name: 'estado_reg', type: 'string'},
             {name: 'id_institucion', type: 'numeric'},
             {name: 'id_usuario_reg', type: 'numeric'},
-            {name: 'fecha_reg', type: 'date', dateFormat: 'Y-m-d'},
+            {name: 'fecha_reg', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
             {name: 'id_usuario_mod', type: 'numeric'},
-            {name: 'fecha_mod', type: 'date', dateFormat: 'Y-m-d'},
+            {name: 'fecha_mod', type: 'date', dateFormat: 'Y-m-d H:i:s.u'},
             {name: 'usr_reg', type: 'string'},
             {name: 'usr_mod', type: 'string'},
             {name: 'nombre_completo1', type: 'string'},
