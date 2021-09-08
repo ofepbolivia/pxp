@@ -149,7 +149,6 @@ class ACTFuncion extends ACTbase{
 				if (strpos(str_replace(' ', '', $line),'require:') !== FALSE && strpos($line, '//') === FALSE && $comentado == 0) {
 					$tempString = str_replace('"', "'", $line);
 					$tempArr = explode("'",$tempString);
-					
 					$linesParent = file($tempArr[1]);
 					
 					foreach ($linesParent as $lineParent) {
@@ -188,7 +187,7 @@ class ACTFuncion extends ACTbase{
 			    if (strpos($line, 'Phx.CP.loadWindows')!== FALSE && (strpos($line, '//') === FALSE || strpos(trim($line), '//') !== 0 ) && $comentado == 0) {
 			    	$cadenaLoad = $line;
 			    } else if (strpos($line, ')')!== FALSE && $cadenaLoad != '') {
-			    	$cadenaLoad .= $line; 
+			    	$cadenaLoad .= $line;
 					$newGui = $this->getRelacion($cadenaLoad);
 					//guardar datos de newgui y actualizar el id de newgui
 					
@@ -217,8 +216,7 @@ class ACTFuncion extends ACTbase{
 			    	}
 			    	$cadenaMD = $line;
 			    } else if (strpos($line, '}')!== FALSE && $cadenaMD != '') {
-                    
-			    	$cadenaMD .= $line;
+			    	$cadenaMD .= $line; 
 					$newGui = $this->getRelacion($cadenaMD);
 					if ($booltab == 1) {
 						$cadenaMD = 'tab';
@@ -228,7 +226,6 @@ class ACTFuncion extends ACTbase{
                     if (strpos($line, ']')!== FALSE){
                         $cadenaMD = '';
                     }
-					
 					if (!$this->existe($gui['ruta_archivo'], $newGui['ruta_archivo'])) {
 						//guardar datos de newgui y actualizar el id de newgui
 						$newGui = $this->saveGui($newGui, $gui['id_gui']);
@@ -308,13 +305,15 @@ class ACTFuncion extends ACTbase{
 		} else if (preg_match_all('/\'([^\']+)\'/', $str, $m) ) {
 			
 		}
-		
 		if(count($m) > 0) {
-			return array('ruta_archivo'=>str_replace('../', '', $m[1][0]) , 'nombre'=> $m[1][1], 'descripcion'=>$m[1][1],'clase_vista'=>$m[1][2]);
+            if (strpos('.php',$m[1][0])) {//validacion para la extraccion de rutas .php
+                return array('ruta_archivo'=>str_replace('../', '', $m[1][0]) , 'nombre'=> $m[1][1], 'descripcion'=>$m[1][1],'clase_vista'=>$m[1][2]);
+            } else {
+                return array();
+            }
 		} else {
 			return array();
 		}
-		
 	}
 	
 	function saveGui($gui, $fk) {
@@ -390,10 +389,10 @@ class ACTFuncion extends ACTbase{
 					
 					
 				}
-				if (strpos($line, '/control/')!== FALSE && strpos($line, 'img src') === FALSE && (strpos($line, '//') === FALSE || strpos(trim($line), '//') !== 0 ) && $comentado == 0) {
+				if (strpos($line, '/control/')!== FALSE && strpos($line, 'src') === FALSE && (strpos($line, '//') === FALSE || strpos(trim($line), '//') !== 0 ) && $comentado == 0 ) { // modificacion a condifcion image src a src para ampliacion de condicional
 					
 					if (preg_match_all('/\'([^\']+)\'/', $line, $m)) {
-						
+	
 						$procedimientos = $this->getProcedimientos($m[1], $gui['id_gui']);
 						
 						if (count($procedimientos) > 0) {
@@ -413,11 +412,10 @@ class ACTFuncion extends ACTbase{
 				}
 			}
 		} else {
-			$this->notas .= "No existe el arhcivo de vista : ".$filename . "<BR>";;
+			$this->notas .= "No existe el arhcivo de vista : ".$filename . "<BR>";
 		}
 	}
 	function getProcedimientos($cadenas, $id_gui) {
-
 		$procedimientos = array();
 		//primero buscamos la cadena que tiene la palabra control
 		foreach($cadenas as $cadena) {
@@ -427,7 +425,6 @@ class ACTFuncion extends ACTbase{
 				$arrayUrl[4] = 'ACT' . $arrayUrl[4];
 				$controlFile = '../' . $arrayUrl[0] . '/' . $arrayUrl[1] . '/' . $arrayUrl[2] . '/' . $arrayUrl[3] . '/' . $arrayUrl[4] . '.php';
 				$controlFunction = $arrayUrl[5];
-				
 				$arrayModelos = $this->getModelosFunciones($controlFile, $controlFunction);
 				
 				foreach ($arrayModelos as $modelo) {
@@ -441,7 +438,6 @@ class ACTFuncion extends ACTbase{
 	}
 	
 	function getModelosFunciones($archivo, $funcion) {
-		
 		$funcionesModelo = array();
 		if (file_exists($archivo) && is_readable ($archivo)) {
 				
@@ -450,8 +446,7 @@ class ACTFuncion extends ACTbase{
 			$llaves = 0;
 			$codigoFuncion = '';
 			$modelos = array();
-			
-			foreach ($lines as $line_num => $line) {
+			foreach ($lines as $line_num => $line) { 
 				if (strpos(trim($line), "/*")=== 0) {
 					$comentado = 1;
 					
@@ -473,7 +468,7 @@ class ACTFuncion extends ACTbase{
 					if (strpos($line, '}') !== FALSE) {
 						$llaves--;
 					}
-					if (strpos(str_replace(' ','',$line), '$this->create(') !== FALSE) {
+					if (strpos(str_replace(' ','',$line), '=$this->create(') !== FALSE) {// adicion de = a la condicional $this->create(, para mayor restriccion
 							
 						$arrtemp = explode('=', $line);
 						$varName = trim($arrtemp[0]);
@@ -494,7 +489,6 @@ class ACTFuncion extends ACTbase{
 						array_push($funcionesModelo, array('modelo' => $modelo, 'funcion' => $funcionModelo));
 						} else if(preg_match('/\$this ?-> ?[a-zA-Z0-9_-]*\(.*\);/', $line)) {
 						$funcionControl = trim($this->get_string_between($line, '->', '('));
-						
 						if ($funcionControl != $funcion) {
 							$tempArray = $this->getModelosFunciones($archivo, $funcionControl);
 							foreach($tempArray as $temp) {
