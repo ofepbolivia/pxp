@@ -303,7 +303,8 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: false,
 				emptyText: 'Elija una opción...',
 				store: new Ext.data.JsonStore({
-					url: '../../sis_/control/Clase/Metodo',
+					//url: '../../sis_/control/Clase/Metodo', //rguancollo 08/09/2021
+                    url: '../../sis_parametros/control/TipoArchivo/listarTipoArchivo',
 					id: 'id_',
 					root: 'datos',
 					sortInfo: {
