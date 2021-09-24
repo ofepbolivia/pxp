@@ -73,7 +73,8 @@ class MODGuiRol extends MODbase {
 			$this->captura('id_procedimiento_gui','integer');
 			$this->captura('id_gui','integer');
 			$this->captura('id_procedimiento','integer');
-			$this->captura('codigo','varchar');
+			//$this->captura('codigo','varchar');		
+			$this->captura('codigo','text');		//rguancollo: error en sincronizacion. 24/09/2021
 			$this->captura('descripcion','text');
 			$this->captura('checked','varchar');
 			$this->captura('tipo_meta','varchar');
