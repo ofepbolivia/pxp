@@ -54,7 +54,8 @@ Phx.vista.Alarma=Ext.extend(Phx.gridInterfaz,{
    				emptyText:'Funcionario...',
    				store: new Ext.data.JsonStore({
 
-					url: '../../sis_recursos_humanos/control/Funcionario/listarFuncionario',
+					//url: '../../sis_recursos_humanos/control/Funcionario/listarFuncionario',
+					url: '../../sis_organigrama/control/Funcionario/listarFuncionario',   //rguancollo: error en sincronizacion 24/09/2021
 					id: 'id_funcionario',
 					root: 'datos',
 					sortInfo:{

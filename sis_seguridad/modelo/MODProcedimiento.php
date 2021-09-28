@@ -28,7 +28,8 @@ class MODProcedimiento extends MODbase{
         $this->captura('id_subsistema','integer');
         $this->captura('codigo_sub','varchar');
         $this->captura('nombre_fun','varchar');
-        $this->captura('codigo','varchar');
+        //$this->captura('codigo','varchar');
+	$this->captura('codigo','text'); 		//rguancollo: error en sincronizacion. 24/09/2021
         $this->captura('descripcion','text');
         $this->captura('habilita_log','segu.si_no');	
       	//Ejecuta la funcion

@@ -28,7 +28,8 @@ class MODProcedimientoGui extends MODbase{
         $this->captura('id_gui','integer');
         $this->captura('codigo_sub','varchar');
         $this->captura('nombre_fun','varchar');
-        $this->captura('codigo','varchar');
+        //$this->captura('codigo','varchar');
+	$this->captura('codigo','text');		//rguancollo: solucion error en sincronizacion 24/09/2021
         $this->captura('desc_procedimiento','text');                           
         $this->captura('boton','segu.si_no');
         $this->captura('fecha_reg','date');

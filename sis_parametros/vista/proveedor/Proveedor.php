@@ -445,7 +445,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'nombre',
-				fieldLabel: 'Nombre',
+				fieldLabel: '*Nombre',
 				allowBlank: true,
 				anchor: '100%',
 				gwidth: 100,
@@ -460,7 +460,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'apellido_paterno',
-				fieldLabel: 'Primer Apellido',
+				fieldLabel: '*Primer Apellido',
 				allowBlank: true,
 				anchor: '100%',
 				gwidth: 100,
@@ -661,7 +661,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'nombre_institucion',
-				fieldLabel: 'Nombre',
+				fieldLabel: '*Nombre',
 				allowBlank: true,
 				anchor: '100%',
 				gwidth: 100,
