@@ -29,7 +29,7 @@ Phx.vista.Institucion=Ext.extend(Phx.gridInterfaz,{
 			config:{
 				name: 'codigo',
 				fieldLabel: 'Código',
-				allowBlank: true,
+				allowBlank: false,
 				width: '100%',
 				gwidth: 100,
 				maxLength:100

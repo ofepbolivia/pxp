@@ -77,7 +77,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 		//Inicializa el objeto de los argumentos extra
 		this.argumentExtraSubmit={};
 		this.argumentExtraSubmit.register=this.register;
-		//this.argumentExtraSubmit.tipo=this.tipo;
+		this.argumentExtraSubmit.tipo=this.tipo;
 		
 	},
 	iniciarEventos : function () {
@@ -647,7 +647,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 				name: 'codigo_institucion',
 				qtip:'Sigla de la institución',
 				fieldLabel: 'SIGLA',
-				allowBlank: true,
+				allowBlank: false,
 				anchor: '100%',
 				gwidth: 100,
 				maxLength:50
@@ -1059,7 +1059,7 @@ Phx.vista.proveedor=Ext.extend(Phx.gridInterfaz,{
 					this.getComponente('id_persona').disable();
 					this.register='no_registered';
 		}
-				
+		this.tipo = this.cmbProveedor.getValue();		
 		//},this);
 		//jrr:provisionalmente se ocultan estos campos
 		//this.ocultarComponente(this.getComponente('codigo_institucion'));
