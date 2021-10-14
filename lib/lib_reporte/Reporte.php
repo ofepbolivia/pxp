@@ -159,6 +159,28 @@ class Reporte
 		
 	}
 
+	function generarReporteDatos($datos,$total){
+		$puntero=0;
+		$cantidad_registros=$total;
+		$puntero=$puntero+$_SESSION['cantidad_reportes'];
+		$intNro=1;
+		$arrTmp=json_decode( json_encode( $datos ), true);
+		if($this->swNumeracion=='si'){
+			for($i=0;$i<count($arrTmp);$i++){
+				$arrTmp[$i]['nro']=$intNro;
+				$intNro++;
+			}
+		}
+		$this->objReporteFormato->addTabla($arrTmp);
+		$this->objReporteFormato->generarReporte();
+		$this->mensajeExito=new Mensaje();
+		$this->mensajeExito->setMensaje('EXITO','Reporte.php','Reporte generado',
+			'Se generó con éxito el reporte: '.$this->nombreArchivo,'control');
+		$this->mensajeExito->setArchivoGenerado($this->nombreArchivo);
+
+		return $this->mensajeExito;
+	}
+
 	//RCM 22-11-2011: Para cargar los datos de la cabecera
 	/*public function cargarMaestroBD($pCustom, $pMetodo){
 		if($this->objParam->getParametro('tipoReporte')=='pdf'){

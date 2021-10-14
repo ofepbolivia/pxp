@@ -2459,21 +2459,32 @@ header("content-type: text/javascript; charset=UTF-8");
         /************************************************************* BENEFICIARIO*************************************************************/
 
         onSigepRequest:function(){
-            Phx.CP.loadingShow();
+
             var resp = this.sm.getSelected().data;
             resp.sigep_adq='vbsigepadq';
-            console.log('Grid de Proveedor:',resp);
-            Ext.Ajax.request({
-                url: '../../sis_sigep/control/SigepAdq/consultaBeneficiario',
-                params: {
-                    id_proveedor: resp.id_proveedor,
-                },
-                success: this.successReg,
-                failure: this.failureCheck, //chequea si esta en verificacion presupeusto para enviar correo de transferencia
-                //argument: {wizard: wizard},
-                timeout: this.timeout,
-                scope: this
-            });
+
+            if (resp.tipo != 'entidad_publica') {
+                Phx.CP.loadingShow();
+                Ext.Ajax.request({
+                    url: '../../sis_sigep/control/SigepAdq/consultaBeneficiario',
+                    params: {
+                        id_proveedor: resp.id_proveedor,
+                    },
+                    success: this.successReg,
+                    failure: this.failureCheck, //chequea si esta en verificacion presupeusto para enviar correo de transferencia
+                    //argument: {wizard: wizard},
+                    timeout: this.timeout,
+                    scope: this
+                });
+            }else{
+                Ext.Msg.show({
+                    title: 'Información',
+                    msg: '<b>Estimado Usuario:<br>No puede consultar los proveedores de Tipo Entidad Publica comuniquese con el Administrador para que se pueda completar la información necesaria.</b>',
+                    buttons: Ext.Msg.OK,
+                    width: 512,
+                    icon: Ext.Msg.WARNING
+                });
+            }
 
         },
         successReg:function(resp){
