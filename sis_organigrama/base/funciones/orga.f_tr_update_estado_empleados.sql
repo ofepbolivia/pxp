@@ -50,7 +50,7 @@ BEGIN
                     inner join orga.toficina tof on tof.id_oficina = tc.id_oficina
                     inner join param.tlugar tlug on tlug.id_lugar = tc.id_lugar
                     inner join orga.ttipo_contrato tcon on tcon.id_tipo_contrato = tc.id_tipo_contrato
-                    where (coalesce(tuo.fecha_finalizacion::date, '31/12/9999'::date) between current_date and current_date) and
+                    where (coalesce(tuo.fecha_finalizacion::date, '31/12/9999'::date) between (current_date - 1)::date and current_date) and
                     tuo.tipo='oficial' and tuo.id_funcionario not in (
                     select distinct tu.id_funcionario
                     from orga.tuo_funcionario tu
@@ -114,3 +114,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.f_tr_update_estado_empleados ()
+  OWNER TO postgres;

@@ -547,7 +547,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 		//this.mostrarComponente(this.Cmp.estado_funcional);
 		//this.ocultarComponente(this.Cmp.fecha_finalizacion);
 
-        Ext.Ajax.request({
+        /*Ext.Ajax.request({
             url: '../../sis_organigrama/control/UoFuncionario/recuperarNumeroContrato',
             params: { momento:'new' },
             success: function (resp) {
@@ -557,7 +557,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
             failure: this.conexionFailure,
             timeout: this.timeout,
             scope: this
-        });
+        });*/
 
 		this.ocultarComponente(this.Cmp.observaciones_finalizacion);
 		Phx.vista.uo_funcionario.superclass.onButtonNew.call(this);
@@ -575,7 +575,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 		this.getComponente('fecha_finalizacion').visible=true;
 
         let rec = this.getSelectedData();
-		if ( rec.nro_contrato == '' || rec.nro_contrato == null ) {
+		/*if ( rec.nro_contrato == '' || rec.nro_contrato == null ) {
             Ext.Ajax.request({
                 url: '../../sis_organigrama/control/UoFuncionario/recuperarNumeroContrato',
                 params: {id_uo_funcionario: rec.id_uo_funcionario, momento: 'edit'},
@@ -589,7 +589,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
                 timeout: this.timeout,
                 scope: this
             });
-        }
+        }*/
 
 
 		Phx.vista.uo_funcionario.superclass.onButtonEdit.call(this);

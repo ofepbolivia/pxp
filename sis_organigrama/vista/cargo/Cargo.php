@@ -657,7 +657,7 @@ header("content-type: text/javascript; charset=UTF-8");
             },
             bdel:true,
             bsave:false,
-            bdel:false,
+
             bedit:true,
             iniciarEventos : function() {
                 //inicio de eventos
@@ -672,6 +672,10 @@ header("content-type: text/javascript; charset=UTF-8");
                     }
 
                 },this);
+                this.Cmp.fecha_ini.on('select',function(com, date){
+                    this.Cmp.fecha_ini_cc.setValue(date);
+                },this);
+                //this.Cmp.fecha_ini_cc.setValue(this.Cmp.fecha_ini.getValue) ;
             },
             loadValoresIniciales:function()
             {	//console.log('this.maestro', this.maestro.nombre_cargo);

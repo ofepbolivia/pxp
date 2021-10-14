@@ -26,12 +26,25 @@ header("content-type: text/javascript; charset=UTF-8");
 
                 },this);
 
-                this.cmbGestion.store.load({params:{start:0, limit:this.tam_pag}, scope:this,callback: function (arr,op,suc) {
+                /*this.cmbGestion.store.load({params:{start:0, limit:this.tam_pag}, scope:this,callback: function (arr,op,suc) {
                         //console.log('presupuestos:  ',arr);
                         this.cmbGestion.setValue(arr[0].data.id_gestion);
                         this.Cmp.id_centro_costo.store.baseParams.id_gestion = this.cmbGestion.getValue();
                         this.Cmp.id_centro_costo.modificado = true;
-                    }});
+                }});*/
+
+                this.cmbGestion.store.load({params:{start:0, limit:this.tam_pag}, scope:this,callback: function (arr,op,suc) {
+                        current_year = (new Date()).getFullYear();
+                        let index;
+                        arr.forEach(function(rec, ind){
+                            if (rec.data.gestion == current_year){
+                                index = ind;
+                            }
+                        });
+                        this.cmbGestion.setValue(arr[index].data.id_gestion);
+                        this.Cmp.id_centro_costo.store.baseParams.id_gestion = this.cmbGestion.getValue();
+                        this.Cmp.id_centro_costo.modificado = true;
+                }});
 
             },
 

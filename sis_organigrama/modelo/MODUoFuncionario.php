@@ -53,6 +53,9 @@ class MODUoFuncionario extends MODbase{
         $this->captura('centro_costo','varchar');
         $this->captura('categoria','varchar');
 
+        $this->captura('usr_reg','varchar');
+        $this->captura('usr_mod','varchar');
+
         //Ejecuta la funcion
         $this->armarConsulta();
 
@@ -162,8 +165,8 @@ class MODUoFuncionario extends MODbase{
         $this->captura('fecha_reg','timestamp');
         $this->captura('id_usuario_mod','integer');
         $this->captura('id_usuario_reg','integer');
-        $this->captura('usr_reg','text');
-        $this->captura('usr_mod','text');
+        $this->captura('usr_reg','varchar');
+        $this->captura('usr_mod','varchar');
         $this->captura('id_cargo','integer');
         $this->captura('desc_cargo','text');
         $this->captura('observaciones_finalizacion','varchar');

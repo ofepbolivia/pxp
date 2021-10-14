@@ -170,15 +170,23 @@ BEGIN
                tf.ci,
                tc.nombre as cargo,
                tf.fecha_ingreso,
-               orga.f_get_documentos_list_func(tf.id_funcionario, '''||v_parametros.tipo_archivo||'''::varchar) as documento
+               orga.f_get_documentos_list_func(tf.id_funcionario, '''||v_parametros.tipo_archivo||'''::varchar) as documento,
+
+               tl.nombre as lugar,
+               tl.codigo
+
 					 from orga.vfuncionario_biometrico tf
            inner JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario and (current_date <= uof.fecha_finalizacion or  uof.fecha_finalizacion is null)
            inner JOIN orga.tuo tuo on tuo.id_uo = orga.f_get_uo_gerencia(uof.id_uo,uof.id_funcionario,current_date)
      			 inner JOIN orga.tcargo tc ON tc.id_cargo = uof.id_cargo
      			 inner join orga.ttipo_contrato ttc on ttc.id_tipo_contrato = tc.id_tipo_contrato
+
+           inner join orga.toficina tof on tof.id_oficina = tc.id_oficina
+           inner join param.tlugar tl on tl.id_lugar = tof.id_lugar
+
            where tf.estado_reg = ''activo'' and tc.estado_reg = ''activo'' and uof.estado_reg = ''activo'' and uof.tipo = ''oficial''
            and ttc.codigo in (''PLA'',''EVE'')
-           order by gerencia,desc_funcionario ';
+           order by lugar, gerencia,desc_funcionario ';
 
             RAISE NOTICE 'v_consulta: %', v_consulta;
 			--Devuelve la respuesta
@@ -323,3 +331,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.ft_reporte_sel (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;

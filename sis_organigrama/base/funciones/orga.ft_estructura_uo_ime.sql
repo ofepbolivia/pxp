@@ -228,11 +228,14 @@ BEGIN
               --2) se fija que no tenga funcionarios en estado activo asignados a este uo
               if exists ( select DISTINCT 1
                           from orga.tuo_funcionario uof
-                          where uof.id_uo = v_parametros.id_uo and uof.estado_reg='activo' and uof.estado_funcional = 'activo') then
-
-
+                          where uof.id_uo = v_parametros.id_uo and uof.estado_reg='activo' and coalesce(uof.fecha_finalizacion,'31/12/9999'::date) >= current_date ) then
                         raise exception 'Eliminacion no realizada. La Unidad que se intenta eliminar tiene relaciones vigentes con empleados';
+              end if;
 
+              if exists ( select DISTINCT 1
+                          from orga.tcargo tcar
+                          where tcar.id_uo = v_parametros.id_uo and tcar.estado_reg='activo' and (tcar.fecha_fin is null or tcar.fecha_fin >= current_date) )then
+              	raise exception 'Eliminacion no realizada. La Unidad que se intenta eliminar tiene relaciones vigentes con Items';
               end if;
 
                --3) inactiva la unidad
@@ -245,6 +248,10 @@ BEGIN
                update orga.testructura_uo
                set estado_reg='inactivo'
                where id_uo_hijo=v_parametros.id_uo;
+
+               update orga.tcargo
+               set estado_reg='inactivo'
+               where id_uo = v_parametros.id_uo;
 
                --10-04-2012: sincronizacion de UO entre BD
                /* v_respuesta_sinc:=orga.f_sincroniza_uo_entre_bd(v_parametros.id_uo,'10.172.0.13','5432','db_link','db_link','dbendesis' ,'DELETE');
@@ -269,7 +276,8 @@ BEGIN
         -- 1) si point es igual append
           IF (v_parametros.punto='append') then
                 update orga.testructura_uo  set
-                  id_uo_padre = v_parametros.id_target
+                  id_uo_padre = v_parametros.id_target,
+                  id_uo_padre_operativo = v_parametros.id_target
                   where id_uo_hijo = v_parametros.id_nodo;
 
                   insert into orga.tmod_estructura_uo(
@@ -421,3 +429,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.ft_estructura_uo_ime (par_administrador integer, par_id_usuario integer, par_tabla varchar, par_transaccion varchar)
+  OWNER TO postgres;

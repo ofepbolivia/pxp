@@ -575,7 +575,8 @@ class ACTEstructuraUo extends ACTbase {
 
 	//(franklin.espinoza)17/10/2019
     function procesarDragDrop() {
-	    if($_SESSION["ss_id_funcionario"] == 1957 || $_SESSION["ss_id_funcionario"] == 1534 /*|| $_SESSION["ss_id_funcionario"] == 2134*/){
+	    if($_SESSION["ss_id_funcionario"] == 994 || $_SESSION["ss_id_funcionario"] == 585 || $_SESSION["ss_id_funcionario"] == 1534 || $_SESSION["ss_id_funcionario"] == 1409
+            || $_SESSION["ss_id_funcionario"] == 2153 || $_SESSION["ss_id_funcionario"] == 1599 /*|| $_SESSION["ss_id_funcionario"] == 2134*/){
             $this->objFunSeguridad = $this->create('MODEstructuraUo');
             $this->res = $this->objFunSeguridad->procesarDragDrop($this->objParam);
             $this->res->imprimirRespuesta($this->res->generarJson());

@@ -141,7 +141,8 @@ Phx.vista.EscalaSalarial=Ext.extend(Phx.gridInterfaz,{
 				filters:{pfiltro:'escsal.haber_basico',type:'numeric'},
 				id_grupo:1,
 				grid:true,
-				form:true
+				form:true,
+                bottom_filter: true
 		},
 		
 		{
@@ -310,7 +311,7 @@ Phx.vista.EscalaSalarial=Ext.extend(Phx.gridInterfaz,{
 		direction: 'ASC'
 	},
 	bdel:false,
-	bedit:false,
+	bedit:true,
 	bsave:false,
     bnew:true,
 	onReloadPage:function(m){

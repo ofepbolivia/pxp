@@ -45,6 +45,10 @@ DECLARE
   v_id_cargo_presupuesto	integer;
   v_id_uo					integer;
   v_gestion					integer;
+
+  v_contrato				varchar;
+  v_id_uo_funcionario		integer;
+
 BEGIN
 
     v_nombre_funcion = 'orga.ft_cargo_ime';
@@ -69,6 +73,32 @@ BEGIN
             from orga.ttemporal_cargo tc
             where tc.id_temporal_cargo = v_parametros.id_temporal_cargo;
 
+            select cont.codigo
+            into v_contrato
+            from orga.ttipo_contrato cont
+            where cont.id_tipo_contrato = v_parametros.id_tipo_contrato;
+
+			if v_contrato = 'PLA' then
+            	select tca.codigo, tca.id_cargo, tca.nombre
+                into v_cargo
+                from orga.tcargo tca
+                where tca.codigo = v_parametros.codigo::varchar and coalesce(tca.fecha_fin,'31/12/9999'::date) >= current_date and tca.estado_reg = 'activo';
+
+                if v_cargo.codigo is not null and v_cargo.codigo != '' then
+                	raise 'Estimado Usuario: El item % actualmente sigue vigente, bajo la denominación %.', v_cargo.codigo, v_cargo.nombre;
+                end if;
+
+                select tu.id_funcionario, vf.desc_funcionario2 funcionario
+                into v_asignacion
+                from orga.tuo_funcionario tu
+                inner join orga.vfuncionario vf on vf.id_funcionario = tu.id_funcionario
+                where tu.id_cargo = v_cargo.id_cargo and coalesce(tu.fecha_finalizacion,'31/12/9999'::date) >= current_date and tu.estado_reg = 'activo' and tu.tipo = 'oficial';
+
+                if v_asignacion.id_funcionario is not null then
+                	raise 'Estimado Usuario: El item %, actualmente esta asignado al funcionario %', v_cargo.codigo, v_asignacion.funcionario;
+                end if;
+
+            end if;
 
         	--Sentencia de la insercion
         	insert into orga.tcargo(
@@ -280,6 +310,18 @@ BEGIN
                 );
 
             end if;*/
+
+            if v_parametros.fecha_fin is not null then
+              select tuo.id_uo_funcionario, vf.desc_funcionario2 funcionario
+              into v_funcionarios
+              from orga.tuo_funcionario tuo
+              inner join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
+              where tuo.id_cargo = v_parametros.id_cargo and tuo.tipo = 'oficial' and tuo.estado_reg = 'activo' and coalesce(tuo.fecha_finalizacion, '31/12/9999'::date) > v_parametros.fecha_fin;
+
+              if v_funcionarios is not null then
+              	raise 'Estimado Usuario: <br> Tiene asignación activa el funcionario <b>%</b> para este item, primero finalize la asignación y despues complete la información del campo Fecha Fin.', v_funcionarios.funcionario;
+              end if;
+            end if;
 
             --(franklin.espinoza) se obtiene el nombre para el item
         	select tc.nombre into v_nombre_cargo
@@ -559,3 +601,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.ft_cargo_ime (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;
