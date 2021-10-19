@@ -621,6 +621,8 @@ BEGIN
 
        /* (may) 09-11-2020
          Recuperamos el funcionario de la solicitud desde la cotizacion
+         (may) 12-10-2021
+          se aumenta la condicion tes.fecha_reg porque count sumaba todos los registros si retrocedian estados y daba error de muchos funcionarios
 
        */
        ELSEIF v_nombre_func_list ='ADQ_COT_FUN'  THEN
@@ -645,6 +647,13 @@ BEGIN
                           where tie.codigo = ''borrador''
                           and tes.id_proceso_wf ='||v_id_proceso_wf||'
 
+                          and tes.fecha_reg = (SELECT max(tes.fecha_reg)
+                                               FROM wf.ttipo_estado tie
+                                               inner join wf.testado_wf tes on tes.id_tipo_estado = tie.id_tipo_estado
+                                               WHERE tie.codigo = ''borrador''
+                                               and tes.id_proceso_wf ='||v_id_proceso_wf||')
+
+
                           and '||p_filtro||'
                             order by fun.desc_funcionario1
                             limit 1 ';
@@ -663,6 +672,13 @@ BEGIN
 
                           where tie.codigo = ''borrador''
                           and tes.id_proceso_wf ='||v_id_proceso_wf||'
+
+                          and tes.fecha_reg = (SELECT max(tes.fecha_reg)
+                                               FROM wf.ttipo_estado tie
+                                               inner join wf.testado_wf tes on tes.id_tipo_estado = tie.id_tipo_estado
+                                               WHERE tie.codigo = ''borrador''
+                                               and tes.id_proceso_wf ='||v_id_proceso_wf||')
+
                           and '||p_filtro;
 
                          FOR g_registros in execute (v_consulta)LOOP
