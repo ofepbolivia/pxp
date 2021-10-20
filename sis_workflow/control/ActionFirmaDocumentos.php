@@ -66,7 +66,7 @@ include_once(dirname(__FILE__).'/../../sis_workflow/modelo/MODDocumentoWf.php');
 
 				
        			//Generamos el documento con REST
-				$pxpRestClient = PxpRestClient::connect('127.0.0.1','kerp/pxp/lib/rest/')
+				$pxpRestClient = PxpRestClient::connect('127.0.0.1','pxp/lib/rest/')
                                                                                                 ->setCredentialsPxp($_SESSION['_LOCAL_REST_USR'], $_SESSION['_LOCAL_REST_PASS']);
 					
 				$url_final = str_replace('sis_', '', $d['action']);
