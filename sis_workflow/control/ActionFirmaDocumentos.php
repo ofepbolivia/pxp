@@ -7,11 +7,15 @@
  *          solo deberia llamarse desde ahí, otras llamadas no seran autorizadas 
  Autor:	Kplian (RAC)
  Fecha:	19/07/2010
+ MOD:
+ Autor: breydi.vasquez
+ Fecha: 20/10/2021
+ Descripcion: modificado para que se ejectue al firmar actas de conformidad, y ya no desde una terea programada 
  */
 
-include_once(dirname(__FILE__)."/../../lib/lib_control/CTSesion.php");
-session_start();
-$_SESSION["_SESION"]= new CTSesion(); 
+// include_once(dirname(__FILE__)."/../../lib/lib_control/CTSesion.php");
+// session_start();
+// $_SESSION["_SESION"]= new CTSesion(); 
 
 include(dirname(__FILE__).'/../../lib/DatosGenerales.php');
 include_once(dirname(__FILE__).'/../../lib/lib_general/Errores.php');
@@ -21,7 +25,7 @@ include_once(dirname(__FILE__).'/../../lib/lib_general/cls_correo_externo.php');
 include_once(dirname(__FILE__).'/../../lib/rest/PxpRestClient.php');
 
 
-ob_start();
+// ob_start();
 
 
 //estable aprametros ce la cookie de sesion
@@ -59,10 +63,11 @@ include_once(dirname(__FILE__).'/../../sis_workflow/modelo/MODDocumentoWf.php');
 		foreach ($res->datos as $d){
 			
        		if ($d['accion_pendiente'] == 'firmar') {
-       			
+
+				
        			//Generamos el documento con REST
-				$pxpRestClient = PxpRestClient::connect('127.0.0.1',substr($_SESSION["_FOLDER"], 1) .'pxp/lib/rest/')
-                                                                                                        ->setCredentialsPxp($_GET['user'],$_GET['pw']);
+				$pxpRestClient = PxpRestClient::connect('127.0.0.1','kerp/pxp/lib/rest/')
+                                                                                                ->setCredentialsPxp($_SESSION['_UFIRMADOC'], $_SESSION['_PWFIRMADOC']);
 					
 				$url_final = str_replace('sis_', '', $d['action']);
 				
@@ -79,8 +84,8 @@ include_once(dirname(__FILE__).'/../../sis_workflow/modelo/MODDocumentoWf.php');
 
 				$res_json = json_decode($res);
                 
-				//var_dump($res_json);
-                //exit;
+				// var_dump($res);
+                // exit;
 				$objParam->addParametro('archivo_generado',$res_json->ROOT->detalle->archivo_generado);
 				$objParam->addParametro('hash_firma',$res_json->ROOT->datos->hash);
 				$objParam->addParametro('datos_firma',json_encode($res_json->ROOT->datos->datos_documento));
@@ -89,7 +94,6 @@ include_once(dirname(__FILE__).'/../../sis_workflow/modelo/MODDocumentoWf.php');
 				//y actualizamos los datos del documento firmado dentro de un pdo
 				$objFunc=new MODDocumentoWf($objParam);
         		$res=$objFunc->firmarDocumento();
-				
 								
 				
        		} else if ($d['accion_pendiente'] == 'eliminar_firma') {
@@ -101,7 +105,8 @@ include_once(dirname(__FILE__).'/../../sis_workflow/modelo/MODDocumentoWf.php');
        		}		
 			
         }		
-        var_dump($res);
+        // var_dump($res);
+		echo('exito');
 		exit;
  
 ?>
