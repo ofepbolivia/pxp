@@ -88,7 +88,7 @@ BEGIN
 	    FROM wf.tproceso_wf pwf
 	    inner join wf.testado_wf ewf on ewf.id_estado_wf = pwf.id_estado_wf_prev
 	    WHERE pwf.id_proceso_wf = p_id_proceso_wf
-	
+
 	    UNION
 	    SELECT
 	    pwf2.id_estado_wf_prev,
@@ -149,8 +149,13 @@ BEGIN
          v_orden = 'defecto';
       end if;
 
+
       IF v_orden = 'defecto' then
         IF not ( wf.f_gant_wf_recursiva(v_id_proceso_wf_prev,NULL ,p_id_usuario, NULL, NULL)) THEN
+           raise exception 'Error al recuperar los datos del diagrama gant';
+        END IF;
+      ELSIF v_orden = 'grilla' THEN
+      	IF not ( wf.f_gant_wf_recursiva_grilla(v_id_proceso_wf_prev,NULL ,p_id_usuario, NULL, NULL)) THEN
            raise exception 'Error al recuperar los datos del diagrama gant';
         END IF;
       ELSE
@@ -158,6 +163,8 @@ BEGIN
           raise exception 'Error al recuperar los datos del diagrama gant';
          END IF;
       END IF;
+
+
 
 
        raise notice 'consulta tabla temporal';
@@ -236,3 +243,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100 ROWS 1000;
+
+ALTER FUNCTION wf.f_gant_wf (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;
