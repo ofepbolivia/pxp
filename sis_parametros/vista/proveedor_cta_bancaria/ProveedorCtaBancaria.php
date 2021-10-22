@@ -20,6 +20,13 @@ header("content-type: text/javascript; charset=UTF-8");
                 //llama al constructor de la clase padre
                 Phx.vista.ProveedorCtaBancaria.superclass.constructor.call(this,config);
                 this.init();
+
+                if(Phx.CP.getPagina(this.idContenedorPadre)){
+                    var dataMaestro=Phx.CP.getPagina(this.idContenedorPadre).getSelectedData();
+                    if(dataMaestro){
+                        this.onEnablePanel(this,dataMaestro)
+                    }
+                }
             },
 
             Atributos:[
