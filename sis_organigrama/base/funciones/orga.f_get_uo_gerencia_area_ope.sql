@@ -32,7 +32,9 @@ BEGIN
         	on ni.id_nivel_organizacional = uo.id_nivel_organizacional
         where euo.id_uo_hijo = par_id_uo;
 
-        if (v_nivel in (2,3,4,6) or v_es_gerencia = 'si') then
+        --25-10-2021 (may) modificacion en cordinacion con Grover respecto al nuevo organigrama
+        --if (v_nivel in (2,3,4,6) or v_es_gerencia = 'si') then
+        if (v_nivel in (2,4) or v_es_gerencia = 'si') then
         	return par_id_uo;
         else
         	if (v_id_uo = v_id_uo_hijo) then
