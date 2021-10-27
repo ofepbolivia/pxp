@@ -17,7 +17,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		color: red;
 }
 .fin_proceso_wf {
-    background-color: yellow;
+    background-color: #56F42B;
 }
 
 </style>
@@ -30,12 +30,12 @@ Phx.vista.GanttGrilla=Ext.extend(Phx.gridInterfaz,{
 			autoFill: false,
 			getRowClass: function (record) {
 
-					if (record.json.tipo == 'proceso') {
-						return 'proceso_estado_wf_grilla';
+					if (record.json.estado_reg == 'activo') {
+						return 'fin_proceso_wf';
 					}
-					if(/*(record.json.disparador == 'no' && record.json.estado_reg == 'activo') ||*/ record.json.tipo =='estado_final'){
-	 			 		return 'fin_proceso_wf';
-	 			 }
+					// if(/*(record.json.disparador == 'no' && record.json.estado_reg == 'activo') ||*/ record.json.tipo =='estado_final'){
+	 			 // 		return 'fin_proceso_wf';
+	 			 // }
 			},
 			listener: {
 					render: this.createTooltip
@@ -54,7 +54,9 @@ Phx.vista.GanttGrilla=Ext.extend(Phx.gridInterfaz,{
     this.store.baseParams.id_proceso_wf = that.id_proceso_wf;
 		this.store.baseParams.orden = "grilla";
 
-
+    this.cm.setHidden(3, true);
+    this.cm.setHidden(4, true);
+    this.cm.setHidden(7, true);
 		this.load({params:{start:0, limit:this.tam_pag}})
 	},
 
@@ -62,9 +64,73 @@ Phx.vista.GanttGrilla=Ext.extend(Phx.gridInterfaz,{
 
 	Atributos:[
 
+    {
+			config:{
+				name: 'id_estado_wf',
+				fieldLabel: 'Estado WF',
+				allowBlank: false,
+				anchor: '100%',
+				gwidth: 150,
+				maxLength:10,
+			},
+				type:'TextField',
+				id_grupo:1,
+				grid:true,
+				form:false,
+				bottom_filter:true
+		},
+
+    {
+			config:{
+				name: 'nombre_proceso',
+				fieldLabel: 'Proceso',
+				allowBlank: false,
+				anchor: '100%',
+				gwidth: 270,
+				maxLength:10,
+			},
+				type:'TextField',
+				id_grupo:1,
+				grid:true,
+				form:false,
+				bottom_filter:true
+		},
+
+    {
+			config:{
+				name: 'estado_reg',
+				fieldLabel: 'Estado',
+				allowBlank: false,
+				anchor: '100%',
+				gwidth: 150,
+				maxLength:10,
+			},
+				type:'TextField',
+				id_grupo:1,
+				grid:true,
+				form:false,
+				bottom_filter:true
+		},
+
+    {
+			config:{
+				name: 'codigo',
+				fieldLabel: 'Código Proceso WF',
+				allowBlank: false,
+				anchor: '100%',
+				gwidth: 150,
+				maxLength:10,
+			},
+				type:'TextField',
+				id_grupo:1,
+				grid:true,
+				form:false,
+				bottom_filter:true
+		},
+
 		{
 			config:{
-				name: 'nombre',
+				name: 'etapa_consulta',
 				fieldLabel: 'Estado Proceso',
 				allowBlank: false,
 				anchor: '100%',
@@ -99,7 +165,7 @@ Phx.vista.GanttGrilla=Ext.extend(Phx.gridInterfaz,{
 							desc_principal = desc_principal+' <b>(por AI: '+record.json.nombre_usuario_ai+')</b>' ;
 					}
 					else if(record.json.cuenta !='' && record.json.cuenta != null){
-						 desc_principal = desc_principal+' <b>(por: '+record.json.cuenta+')</b>' ;
+						 desc_principal = desc_principal+' <b>(por: '+record.json.funcionario+')</b>' ;
 					}
 
 					if((record.json.disparador == 'no' && record.json.estado_reg == 'activo') || record.json.tipo =='estado_final'){
@@ -114,7 +180,7 @@ Phx.vista.GanttGrilla=Ext.extend(Phx.gridInterfaz,{
 						//if (record.json.descripcion != '') {
 						//	return '<span style="font-size:12px; margin-left: 20px;">-'+desc_principal+'</span><br><table style="margin-left:35px;"><tbody><tr><td><b>OBSERVACIONES:</b></td></tr><tr><td style="padding-left:15px;"><b>*</b> '+record.json.descripcion+'</td></tr></tbody></table>';
 						//} else {
-							return '<span style="font-size:12px; margin-left: 20px;">-'+desc_principal+'</span>';
+							return '<span style="font-size:12px; ">'+desc_principal+'</span>';
 					//	}
 
 
@@ -155,14 +221,46 @@ Phx.vista.GanttGrilla=Ext.extend(Phx.gridInterfaz,{
 
     {
 			config:{
-				name: 'observaciones',
+				name: 'cuenta',
+				fieldLabel: 'Cuenta de Usuario',
+				allowBlank: false,
+				anchor: '100%',
+				gwidth: 250,
+				maxLength:10,
+			},
+				type:'TextField',
+				id_grupo:1,
+				grid:true,
+				form:false,
+				bottom_filter:true
+		},
+
+    {
+			config:{
+				name: 'desc_usuario',
+				fieldLabel: 'Nombre de Usuario',
+				allowBlank: false,
+				anchor: '100%',
+				gwidth: 250,
+				maxLength:10,
+			},
+				type:'TextField',
+				id_grupo:1,
+				grid:true,
+				form:false,
+				bottom_filter:true
+		},
+
+    {
+			config:{
+				name: 'descripcion',
 				fieldLabel: 'Observaciones',
 				allowBlank: false,
 				anchor: '100%',
 				gwidth: 500,
 				maxLength:10,
 				renderer: function (value, p, record) {
-					return '<table style="margin-left:35px;"><tbody><tr><td style="padding-left:15px;">'+record.json.descripcion+'</td></tr></tbody></table>';
+					return '<table><tbody><tr><td>'+record.json.descripcion+'</td></tr></tbody></table>';
 				}
 			},
 				type:'TextField',
@@ -214,7 +312,7 @@ Phx.vista.GanttGrilla=Ext.extend(Phx.gridInterfaz,{
 		},
     {
 			config:{
-				name: 'duracion',
+				name: 'duracion_dias',
 				fieldLabel: 'Duración',
 				allowBlank: false,
 				anchor: '100%',
@@ -232,8 +330,13 @@ Phx.vista.GanttGrilla=Ext.extend(Phx.gridInterfaz,{
 
 						var diferencia_calculada = (diferencia_fechas / 86400000).toFixed(0);
 
-						console.log( diferencia_calculada );
-						return diferencia_calculada + ' días';
+            if (diferencia_calculada == 1) {
+              return diferencia_calculada + ' día';
+            } else {
+              return diferencia_calculada + ' días';
+            }
+
+
 					}
 				}
 			},
@@ -243,6 +346,7 @@ Phx.vista.GanttGrilla=Ext.extend(Phx.gridInterfaz,{
 				form:false,
 				bottom_filter:true
 		},
+
 	],
 	tam_pag:50,
 	title:'Diagrama de Gantt',
@@ -254,7 +358,16 @@ Phx.vista.GanttGrilla=Ext.extend(Phx.gridInterfaz,{
     {name:'nombre', type: 'string'},
     {name:'fecha_ini', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
     {name:'fecha_fin', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
-		{name:'funcionario', type: 'string'},
+    {name:'funcionario', type: 'string'},
+    {name:'id_estado_wf', type: 'numeric'},
+    {name:'nombre_proceso', type: 'string'},
+    {name:'cuenta', type: 'string'},
+    {name:'descripcion', type: 'string'},
+    {name:'etapa', type: 'string'},
+    {name:'codigo', type: 'string'},
+    {name:'estado_reg', type: 'string'},
+		{name:'desc_usuario', type: 'string'},
+
 
 
 	],
@@ -265,7 +378,7 @@ Phx.vista.GanttGrilla=Ext.extend(Phx.gridInterfaz,{
     bnew:false,
     bedit:false,
     btest:false,
-		bexcel:false,
+		bexcel:true,
 
 
 	}

@@ -203,13 +203,17 @@ function listarGantWf(){
         $this->captura('id_depto','integer');
         $this->captura('depto','varchar');
         $this->captura('nombre_usuario_ai','varchar');
-		$this->captura('arbol','varchar');
-		$this->captura('id_padre','integer');
-		$this->captura('id_obs','integer');
-		$this->captura('id_anterior','integer');
-		$this->captura('etapa','varchar');
-		$this->captura('estado_reg','varchar');
-		$this->captura('disparador','varchar');
+				$this->captura('arbol','varchar');
+				$this->captura('id_padre','integer');
+				$this->captura('id_obs','integer');
+				$this->captura('id_anterior','integer');
+				$this->captura('etapa','varchar');
+				$this->captura('estado_reg','varchar');
+				$this->captura('disparador','varchar');
+				$this->captura('nombre_proceso','varchar');
+				$this->captura('etapa_consulta','varchar');
+				$this->captura('duracion_dias','varchar');
+				$this->captura('desc_usuario','varchar');
 
 
 
@@ -218,7 +222,7 @@ function listarGantWf(){
         //Ejecuta la funcion
         $this->armarConsulta();
 
-        //echo $this->getConsulta();
+        //echo $this->getConsulta();exit;
         $this->ejecutarConsulta();
         return $this->respuesta;
 

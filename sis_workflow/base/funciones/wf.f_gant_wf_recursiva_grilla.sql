@@ -134,8 +134,8 @@ BEGIN
                          ewf.usuario_ai,
                          te.etapa,
                          te.disparador,
-                         ewf.estado_reg
-
+                         ewf.estado_reg,
+                         ewf.id_proceso_wf
 
                        FROM  wf.testado_wf ewf
                        INNER JOIN  wf.ttipo_estado te on ewf.id_tipo_estado = te.id_tipo_estado
@@ -181,7 +181,7 @@ BEGIN
                              )
                              VALUES(
 
-                              NULL,
+                              v_registros.id_proceso_wf,
                               v_registros.id_estado_wf,
                               'estado',
                               v_registros.nombre,
@@ -190,7 +190,7 @@ BEGIN
                               COALESCE(v_registros.descripcion,''),
                               NULL,-- id_siguiente, no lo conocemos todavia
                               v_registro_proceso_wf.nro_tramite,
-                              v_registro_proceso_wf.codigo,
+                              v_registros.codigo,
                               v_registros.id_funcionario,
                               v_registros.funcionario,
                               v_registros.id_usuario,

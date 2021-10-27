@@ -263,9 +263,16 @@ class ACTProcesoWf extends ACTbase{
         $this->objParam->addParametroConsulta('cantidad',1000);
         $this->objParam->addParametroConsulta('puntero',0);
 
-        $this->objFunc = $this->create('MODProcesoWf');
 
-        $resultSolicitud = $this->objFunc->listarGantWf();
+				if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+
+            $this->objReporte = new Reporte($this->objParam,$this);
+            $resultSolicitud = $this->objReporte->generarReporteListado('MODProcesoWf','listarGantWf');
+
+        } else{
+					$this->objFunc = $this->create('MODProcesoWf');
+					$resultSolicitud = $this->objFunc->listarGantWf();
+        }
 
         $resultSolicitud->imprimirRespuesta($resultSolicitud->generarJson());
 
