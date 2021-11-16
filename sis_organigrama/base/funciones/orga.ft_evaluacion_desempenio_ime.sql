@@ -800,7 +800,7 @@ BEGIN
             into v_datos
             from orga.vfuncionario_ultimo_cargo ca
             inner join orga.tuo ger ON ger.id_uo = orga.f_get_uo_gerencia(ca.id_uo, NULL::integer, NULL::date)
-            where ca.id_funcionario = v_id_funcionario  and (ca.fecha_finalizacion is null or ca.fecha_finalizacion >= now()::date);
+            where ca.id_funcionario = v_id_funcionario; -- and (ca.fecha_finalizacion is null or ca.fecha_finalizacion >= now()::date);
 
     -- Modificado por (breydi.vasquez)19/11/2019
     -- control existencia de funcionario en la cabecera evaluacion, se modifica si la evaluacion esta en estado borrador
