@@ -798,7 +798,7 @@ BEGIN
                    ca.nombre_cargo
 
             into v_datos
-            from orga.vfuncionario_cargo ca
+            from orga.vfuncionario_ultimo_cargo ca
             inner join orga.tuo ger ON ger.id_uo = orga.f_get_uo_gerencia(ca.id_uo, NULL::integer, NULL::date)
             where ca.id_funcionario = v_id_funcionario  and (ca.fecha_finalizacion is null or ca.fecha_finalizacion >= now()::date);
 
