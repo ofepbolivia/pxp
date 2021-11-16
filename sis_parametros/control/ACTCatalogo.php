@@ -86,6 +86,18 @@ class ACTCatalogo extends ACTbase{
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
 
+	function listadoCatalogoCodigo(){
+
+		if($this->objParam->getParametro('codigo')!=''){
+			$cond=$this->objParam->getParametro('codigo');
+			$this->objParam->addFiltro("cat.codigo = ''$cond''");
+		}
+
+		$this->objFunc=$this->create('MODCatalogo');
+		$this->res=$this->objFunc->listarCatalogoCombo();
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
+
 }
 
 ?>
