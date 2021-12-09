@@ -88,7 +88,7 @@ class Reporte
 	 * @param cadena $nombre_clase -> es el nombre de la clase de funciones ej:FuncionesSeguridad
 	 * @param cadena $metodo_ejecutar -> es el metodo a ejecutar de la clase de funciones
 	 */
-	function generarReporteListado($nombre_clase,$metodo_ejecutar){
+	function generarReporteListado($nombre_clase,$metodo_ejecutar, $from_json = 'N'){
 		$puntero=0;
 
 		$this->objParam->addParametroConsulta('puntero','0');
@@ -104,8 +104,17 @@ class Reporte
 			return $this->res;
 		}
 		
-		$cantidad_registros=$this->res->getTotal();
-	
+		if(isset($from_json) && $from_json === 'Y') {
+			$d =$this->res->getDatos();
+			$dataJson = json_decode($d["mensaje"]);
+			$cantidad_registros = $dataJson->total;
+			$arrTmp = $dataJson->datos != null ? json_decode(json_encode($dataJson->datos), true) : [];
+
+		} else {
+			$cantidad_registros=$this->res->getTotal();
+			$arrTmp=$this->res->getDatos();
+		}
+
 		
 		$puntero=$puntero+$_SESSION['cantidad_reportes'];
 						
@@ -115,7 +124,6 @@ class Reporte
 		}
 		
 		$intNro=1;
-		$arrTmp=$this->res->getDatos();
 		if($this->swNumeracion=='si'){
 			for($i=0;$i<count($arrTmp);$i++){
 				$arrTmp[$i]['nro']=$intNro;
@@ -135,7 +143,14 @@ class Reporte
 				return $this->res;
 			}
 			
-			$arrTmp=$this->res->getDatos();
+			if(isset($from_json) && $from_json === 'Y') {
+				$d =$this->res->getDatos();
+				$dataJson = json_decode($d["mensaje"]);
+				$arrTmp = $dataJson->datos != null ? json_decode(json_encode($dataJson->datos), true) : [];
+			} else {
+				$arrTmp=$this->res->getDatos();
+			}
+
 			if($this->swNumeracion=='si'){
 				for($i=0;$i<count($arrTmp);$i++){
 					$arrTmp[$i]['nro']=$intNro;
