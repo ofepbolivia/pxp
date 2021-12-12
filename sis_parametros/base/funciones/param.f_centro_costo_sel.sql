@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION param.f_centro_costo_sel (
   p_administrador integer,
   p_id_usuario integer,
@@ -628,6 +626,89 @@ BEGIN
       return v_consulta;
 
     end;
+
+    /*********************************
+ 	#TRANSACCION:  'PM_COMBCC_SEL'
+ 	#DESCRIPCION:	Consulta de datos
+ 	#AUTOR:		maylee.perez
+ 	#FECHA:		29-11-2021 04:11:23
+	***********************************/
+
+	elsif(p_transaccion='PM_COMBCC_SEL')then
+
+    	begin
+
+          v_filadd = '';
+          v_inner='';
+
+
+    		--Sentencia de la consulta
+			v_consulta:=' select
+						  cec.id_centro_costo,
+                          cec.estado_reg,
+                          cec.id_ep,
+                          cec.id_gestion,
+                          cec.id_uo,
+                          cec.id_usuario_reg,
+                          cec.fecha_reg,
+                          cec.id_usuario_mod,
+                          cec.fecha_mod,
+                          cec.usr_reg,
+                          cec.usr_mod,
+                          cec.codigo_uo,
+                          cec.nombre_uo,
+                          cec.ep,
+                          cec.gestion,
+                          cec.codigo_cc,
+                          cec.nombre_programa,
+         				  cec.nombre_proyecto,
+         				  cec.nombre_actividad,
+         				  cec.nombre_financiador,
+         				  cec.nombre_regional,
+                          cec.movimiento_tipo_pres
+
+						from pre.vpresupuesto_cc cec
+                        inner join cd.tcuenta_doc_det cdet on cdet.id_cc = cec.id_centro_costo
+                        inner join cd.tcuenta_doc cdoc on cdoc.id_cuenta_doc_fk = cdet.id_cuenta_doc
+
+                         WHERE cec.estado_reg = ''activo'' and  ';
+
+			--Definicion de la respuesta
+			v_consulta:=v_consulta||v_parametros.filtro;
+			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
+			raise notice '%',v_consulta;
+			--Devuelve la respuesta
+			return v_consulta;
+
+		end;
+
+      /*********************************
+      #TRANSACCION:  'PM_COMBCC_CONT'
+      #DESCRIPCION:	Conteo de registros de la Consulta  de centro de costos
+      #AUTOR:		maylee.perez
+ 		#FECHA:		29-11-2021 04:11:23
+      ***********************************/
+
+      elsif(p_transaccion='PM_COMBCC_CONT')then
+
+          begin
+			--Sentencia de la consulta de conteo de registros
+			v_consulta:='select count(cec.id_centro_costo)
+					    from pre.vpresupuesto_cc cec
+                        inner join cd.tcuenta_doc_det cdet on cdet.id_cc = cec.id_centro_costo
+                        inner join cd.tcuenta_doc cdoc on cdoc.id_cuenta_doc_fk = cdet.id_cuenta_doc
+                        where  cec.estado_reg = ''activo'' and  ';
+
+			--Definicion de la respuesta
+			v_consulta:=v_consulta||v_parametros.filtro;
+
+			--Devuelve la respuesta
+			return v_consulta;
+
+		end;
+
+
+
 
   else
 		raise exception 'Transaccion inexistente';

@@ -99,7 +99,7 @@ BEGIN
                                   from orga.tevaluacion_desempenio evd
                                   inner join orga.tuo_funcionario fun on fun.id_uo_funcionario=evd.id_uo_funcionario
                                   inner join orga.tcargo ca on ca.id_temporal_cargo=evd.id_cargo_evaluado
-                                  inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(ca.id_uo,null::integer,null::date)
+                                  inner join orga.tuo ger on ger.id_uo=evd.id_uo --orga.f_get_uo_gerencia(ca.id_uo,null::integer,null::date)
                                   inner join segu.tusuario usu1 on usu1.id_usuario=evd.id_usuario_reg
                                   left join segu.tusuario usu2 on usu2.id_usuario=evd.id_usuario_mod
                                   inner join orga.vfuncionario_cargo f  on f.id_funcionario=fun.id_funcionario and ca.id_cargo=f.id_cargo
@@ -124,16 +124,29 @@ BEGIN
 	elsif(p_transaccion='MEM_EVD_CONT')then
 
 		begin
+            SELECT codigo into v_cod
+            FROM orga.tuo 
+            where id_uo = v_parametros.id_gerencia;
+
+            SELECT ev.id_uo into v_id_uo
+            FROM orga.tevaluacion_desempenio ev
+            INNER JOIN orga.tuo uo on uo.id_uo = ev.id_uo and uo.codigo = v_cod
+            WHERE ev.gestion = v_parametros.id_gestion
+            AND ev.id_uo is not null
+            limit 1;
+            
+            v_fil = 'ger.id_uo = '||coalesce(v_id_uo,0);
+
 			--Sentencia de la consulta de conteo de registros
 			v_consulta:='select count(id_evaluacion_desempenio)
                       from orga.tevaluacion_desempenio evd
                                   inner join orga.tuo_funcionario fun on fun.id_uo_funcionario=evd.id_uo_funcionario
                                   inner join orga.tcargo ca on ca.id_temporal_cargo=evd.id_cargo_evaluado
-                                  inner join orga.tuo ger on ger.id_uo=orga.f_get_uo_gerencia(ca.id_uo,null::integer,null::date)
+                                  inner join orga.tuo ger on ger.id_uo=evd.id_uo --orga.f_get_uo_gerencia(ca.id_uo,null::integer,null::date)
                                   inner join segu.tusuario usu1 on usu1.id_usuario=evd.id_usuario_reg
                                   left join segu.tusuario usu2 on usu2.id_usuario=evd.id_usuario_mod
                                   inner join orga.vfuncionario_cargo f  on f.id_funcionario=fun.id_funcionario and ca.id_cargo=f.id_cargo
-					    where ';
+					    where  '||v_fil||' and ';
 
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;

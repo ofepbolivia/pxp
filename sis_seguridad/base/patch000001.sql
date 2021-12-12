@@ -1234,3 +1234,94 @@ ALTER TABLE segu.tpersona
 COMMENT ON COLUMN segu.tpersona.numero_domicilio
 IS 'Numero de domicilio donde reside una persona.';
 /*****************************F-SCP-FEA-SEGU-0-29/03/2021*************/
+/*****************************I-SCP-BVP-SEGU-0-16/11/2021*************/
+CREATE TABLE segu.tcertificados_seguridad (
+  id_certificado_seguridad SERIAL,
+  nro_serie VARCHAR(100),
+  fecha_emision DATE,
+  fecha_vencimiento DATE,
+  clave_publica VARCHAR,
+  ip_servidor TEXT,
+  observaciones TEXT,
+  notificacion_vencimiento DATE,
+  area_de_uso VARCHAR(150),
+  dias_anticipacion_alerta INTEGER,
+  id_funcionario_cc INTEGER [],
+  id_funcionario_resp INTEGER,
+  estado_notificacion VARCHAR(20) DEFAULT 'no_enviado'::character varying,
+  id_proceso_wf INTEGER NOT NULL,
+  id_estado_wf INTEGER NOT NULL,
+  id_gestion INTEGER NOT NULL,
+  nro_tramite VARCHAR(255),
+  estado VARCHAR(15),
+  id_titular_certificado INTEGER,
+  id_entidad_certificadora INTEGER,
+  id_tipo_certificado INTEGER,
+  CONSTRAINT tcertificados_seguridad_nro_tramite_key UNIQUE(nro_tramite),
+  CONSTRAINT tcertificados_seguridad_pkey PRIMARY KEY(id_certificado_seguridad),
+  CONSTRAINT tcertificados_seguridad_fk FOREIGN KEY (id_proceso_wf)
+    REFERENCES wf.tproceso_wf(id_proceso_wf)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE,
+  CONSTRAINT tcertificados_seguridad_fk1 FOREIGN KEY (id_estado_wf)
+    REFERENCES wf.testado_wf(id_estado_wf)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE,
+  CONSTRAINT tcertificados_seguridad_fk2 FOREIGN KEY (id_gestion)
+    REFERENCES param.tgestion(id_gestion)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE,
+  CONSTRAINT tcertificados_seguridad_fk3 FOREIGN KEY (id_titular_certificado)
+    REFERENCES param.tcatalogo(id_catalogo)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE,
+  CONSTRAINT tcertificados_seguridad_fk4 FOREIGN KEY (id_entidad_certificadora)
+    REFERENCES param.tcatalogo(id_catalogo)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE,
+  CONSTRAINT tcertificados_seguridad_fk5 FOREIGN KEY (id_tipo_certificado)
+    REFERENCES param.tcatalogo(id_catalogo)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+    NOT DEFERRABLE
+) INHERITS (pxp.tbase)
+WITH (oids = false);
+
+COMMENT ON TABLE segu.tcertificados_seguridad
+IS 'almancena informacion de cerificados de serguridad, uso para notificar. El vencimiento de certificado de seguridad.';
+
+COMMENT ON COLUMN segu.tcertificados_seguridad.notificacion_vencimiento
+IS 'fecha de vencimiento de certificado, se notificara al funcionario responsable y con copia a los sub encargados.';
+
+COMMENT ON COLUMN segu.tcertificados_seguridad.dias_anticipacion_alerta
+IS 'dias en los que se alertara la fecha de vencimiento del certificado';
+
+COMMENT ON COLUMN segu.tcertificados_seguridad.id_funcionario_cc
+IS 'funcionarios en copia para enviarles la alerta de vencimiento de certificado. email de empresa del funcionario';
+
+COMMENT ON COLUMN segu.tcertificados_seguridad.id_funcionario_resp
+IS 'Funcionario responsable de certficado';
+
+COMMENT ON COLUMN segu.tcertificados_seguridad.estado_notificacion
+IS 'estado de la notificacion de vencimiento del certificado de seguridad';
+
+COMMENT ON COLUMN segu.tcertificados_seguridad.estado
+IS 'estado del proceso';
+
+COMMENT ON COLUMN segu.tcertificados_seguridad.id_titular_certificado
+IS 'referencia con la tabla catalodo id_catalogo';
+
+COMMENT ON COLUMN segu.tcertificados_seguridad.id_entidad_certificadora
+IS 'referencia con la tabla catalodo id_catalogo';
+
+COMMENT ON COLUMN segu.tcertificados_seguridad.id_tipo_certificado
+IS 'referencia con la tabla catalodo id_catalogo';
+
+ALTER TABLE segu.tcertificados_seguridad
+  OWNER TO postgres;
+/*****************************F-SCP-BVP-SEGU-0-16/11/2021*************/

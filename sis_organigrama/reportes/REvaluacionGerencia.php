@@ -29,7 +29,7 @@ class REvaluacionGerencia extends  ReportePDF{
     }
     function setDatos($datos) {
         $this->datos = $datos;
-		var_dump($this->datos);exit;
+		// var_dump($this->datos);exit;
     }
     function  reporteGeneralPrimer($genero,$nombre_funcioario,$cargo_evaluado,$gestion,$recomendacion,$nota,$cite){
 
@@ -76,6 +76,10 @@ EOF;
         }else{
             $gen = 'Señora';
         }
+        $text = 'se evidencia';
+        if ($gestion == 2020){
+            $text = 'la cual estuvo a cargo de otra administración, se le hace conocer';
+        }       
 
         $this->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
         $this->SetFont('helvetica','B',11);
@@ -106,7 +110,7 @@ EOF;
 
         if ($nota >= 91 and $nota<= 100) {
             $this->writeHTML('<p>'.$gen.':</p>
-       <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la <b>Evaluación de Desempeño de la Gestión '.$gestion.'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
+       <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la <b>Evaluación de Desempeño de la Gestión '.$gestion.'</b>, '.$text.' que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
                             <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso el agradecimiento y felicitación por su desempeño tesonero y compromiso con nuestros valores corporativos.</p>                            
                             <p>'.$recomendacion.'</p>
                             <p align="justica">Seguro de que estos resultados obtenidos serán replicados en adelante, reciba usted mis consideraciones distinguidas.</p>
@@ -114,7 +118,7 @@ EOF;
             $this->firmas();
         } elseif ($nota >= 81 and $nota<=90) {
             $this->writeHTML('<p>'.$gen.':</p>
-       <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la <b>Evaluación de Desempeño de la Gestión '.$gestion.'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
+       <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la <b>Evaluación de Desempeño de la Gestión '.$gestion.'</b>, '.$text.' que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
                             <p align="justica">En este sentido, expreso mis felicitaciones  por su desempeño en Boliviana de Aviación.</p>
                             <p>'.$recomendacion.'</p>
                             <p align="justica">Seguro de que estos resultados obtenidos serán replicados y mejorados en adelante, reciba usted mis consideraciones distinguidas.</p>
@@ -123,7 +127,7 @@ EOF;
 
         } elseif ($nota >= 0 and $nota <= 80) {
             $this->writeHTML('<p>'.$gen.':</p>
-       <p align="justica">De acuerdo a procedimientos establecidos tengo a bien comunicar, que habiéndose realizado la Evaluación de Desempeño de la Gestión '.$gestion.', se evidencia que usted ha obtenido una calificación de <b>suficiente</b> en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
+       <p align="justica">De acuerdo a procedimientos establecidos tengo a bien comunicar, que habiéndose realizado la Evaluación de Desempeño de la Gestión '.$gestion.', '.$text.' que usted ha obtenido una calificación de <b>suficiente</b> en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
                             <p align="justica">En este sentido, a fin de mejorar su desempeño se sugiere tomar en cuenta las siguientes observaciones que reflejan la Evaluación de Desempeño Gestión '.$array["gestion"].':</p>
                             <p>'.$recomendacion.'</p>
                             <p align="justica">Con este motivo, saludo a usted atentamente.</p>

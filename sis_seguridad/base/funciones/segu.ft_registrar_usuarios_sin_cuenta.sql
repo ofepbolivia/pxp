@@ -74,7 +74,14 @@ modificado para recivir dos parametros, para registrar de un funcionario epecifi
                /*Si la cuenta de usuario no existe entonces crearemos el usuario*/
                   if (v_existe_cuenta = 0) then
 
-                  	select md5(v_cuenta_user) into v_pass_usuario;
+                    --{dev: breydi.vasquez, date: 05/11/2021, desc: Ññ convert codificacion latin-1} 
+                    if (position('ñ' in  v_cuenta_user) > 0) then
+                        select md5(convert_to(v_cuenta_user, 'latin-1')) into v_pass_usuario;                    
+                    elsif (position('Ñ' in v_cuenta_user) > 0) then
+                        select md5(convert_to(v_cuenta_user, 'latin-1')) into v_pass_usuario;
+                    else 
+                        select md5(v_cuenta_user) into v_pass_usuario;                     
+                    end if;
 
                   	 IF (v_usuario_new.fecha_finalizacion is null) then
                         v_fecha_finalizacion = '31/12/9999';
@@ -129,7 +136,14 @@ modificado para recivir dos parametros, para registrar de un funcionario epecifi
                           where us.cuenta = v_cuenta_user;
 
                   	if (v_existe_cuenta = 0) then
-                    		select md5(v_cuenta_user) into v_pass_usuario;
+                            --{dev: breydi.vasquez, date: 05/11/2021, desc: Ññ convert codificacion latin-1} 
+                            if (position('ñ' in  v_cuenta_user) > 0) then
+                                select md5(convert_to(v_cuenta_user, 'latin-1')) into v_pass_usuario;                    
+                            elsif (position('Ñ' in v_cuenta_user) > 0) then
+                                select md5(convert_to(v_cuenta_user, 'latin-1')) into v_pass_usuario;
+                            else 
+                                select md5(v_cuenta_user) into v_pass_usuario;                     
+                            end if;
 
                              IF (v_usuario_new.fecha_finalizacion is null) then
                                 v_fecha_finalizacion = '31/12/9999';
@@ -192,7 +206,14 @@ modificado para recivir dos parametros, para registrar de un funcionario epecifi
 
 
                               if (v_existe_cuenta = 0) then
-                                    select md5(v_cuenta_user) into v_pass_usuario;
+                                   --{dev: breydi.vasquez, date: 05/11/2021, desc: Ññ convert codificacion latin-1} 
+                                   if (position('ñ' in  v_cuenta_user) > 0) then
+                                       select md5(convert_to(v_cuenta_user, 'latin-1')) into v_pass_usuario;                    
+                                   elsif (position('Ñ' in v_cuenta_user) > 0) then
+                                       select md5(convert_to(v_cuenta_user, 'latin-1')) into v_pass_usuario;
+                                   else 
+                                        select md5(v_cuenta_user) into v_pass_usuario;                     
+                                   end if;
 
                                     IF (v_usuario_new.fecha_finalizacion is null) then
                                         v_fecha_finalizacion = '31/12/9999';

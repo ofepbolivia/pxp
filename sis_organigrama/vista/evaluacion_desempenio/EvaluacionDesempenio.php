@@ -748,9 +748,9 @@ Phx.vista.EvaluacionDesempenio=Ext.extend(Phx.gridInterfaz,{
             displayField: 'gestion',
             hiddenName: 'id_gestion',
             mode:'remote',
-            pageSize:50,
+            pageSize:8,
             queryDelay:500,
-            listWidth:'280',
+            listWidth:'250',
             width:80
         }),
     onButtonAcTEvaluacion: function(record){

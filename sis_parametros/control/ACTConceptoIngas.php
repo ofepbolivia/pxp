@@ -241,6 +241,71 @@ class ACTConceptoIngas extends ACTbase{
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
 
+	//(may) combo para  FA
+    function listarConceptoIngasParFA(){
+        $this->objParam->defecto('ordenacion','id_concepto_ingas');
+        $this->objParam->defecto('dir_ordenacion','asc');
+
+        if($this->objParam->getParametro('id_cuenta_doc')!=''){
+            $this->objParam->addFiltro("cdoc.id_cuenta_doc = ".$this->objParam->getParametro('id_cuenta_doc'));
+        }
+
+
+        if($this->objParam->getParametro('tipo')!=''){
+
+            if($this->objParam->getParametro('tipo')=='Bien'){
+                $this->objParam->addFiltro("conig.tipo =''Bien''");
+            }
+            if($this->objParam->getParametro('tipo')=='Servicio'){
+                $this->objParam->addFiltro("conig.tipo =''Servicio''");
+            }
+        }
+        if($this->objParam->getParametro('movimiento')!=''){
+            if(  $this->objParam->getParametro('movimiento') == 'ingreso_egreso'){
+                $this->objParam->addFiltro("conig.movimiento in (''ingreso'',''gasto'')");
+            }
+            else{
+                $this->objParam->addFiltro("conig.movimiento =''".$this->objParam->getParametro('movimiento')."''");
+            }
+        }
+        if($this->objParam->getParametro('id_gestion')!=''){
+            $this->objParam->addFiltro("par.id_gestion =".$this->objParam->getParametro('id_gestion'));
+        }
+
+        if($this->objParam->getParametro('requiere_ot')!=''){
+            $this->objParam->addFiltro("conig.requiere_ot =''".$this->objParam->getParametro('requiere_ot')."''");
+        }
+
+        if($this->objParam->getParametro('id_concepto_ingas')!=''){
+            $this->objParam->addFiltro("conig.id_concepto_ingas =''".$this->objParam->getParametro('id_concepto_ingas')."''");
+        }
+
+        if($this->objParam->getParametro('id_partida')!=''){
+            $this->objParam->addFiltro("par.id_partida =''".$this->objParam->getParametro('id_partida')."''");
+        }
+
+        /*Aumentando para filtrar solo los conceptos que seran para gestion de materiales (Ismael Valdivia 18/02/2020)*/
+        if($this->objParam->getParametro('gestion_materiales')=='si'){
+            $this->objParam->addFiltro("''gestion_materiales'' =ANY (conig.sw_autorizacion)");
+        }
+        /**************************************************************************************************************/
+
+        /*Aumentando para filtrar solo los conceptos de acuero al grupo de la ot (Ismael Valdivia 24/09/2020)*/
+        if($this->objParam->getParametro('id_grupo_ots')!=''){
+            $this->objParam->addFiltro("''{".$this->objParam->getParametro('id_grupo_ots')."}''::integer[] && conig.id_grupo_ots");
+        }
+        /**************************************************************************************************************/
+
+        if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+            $this->objReporte = new Reporte($this->objParam,$this);
+            $this->res = $this->objReporte->generarReporteListado('MODConceptoIngas','listarConceptoIngasParFA');
+        } else{
+            $this->objFunc=$this->create('MODConceptoIngas');
+
+            $this->res=$this->objFunc->listarConceptoIngasParFA($this->objParam);
+        }
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 
 
 
