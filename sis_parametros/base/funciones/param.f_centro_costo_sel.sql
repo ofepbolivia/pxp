@@ -30,6 +30,8 @@ DECLARE
     v_filadd			varchar;
     v_codigo_subsistema	varchar;
     v_inner 			varchar;
+    v_id_usuario		integer;
+    v_id_funcionario_solicitante	integer;
 
 BEGIN
 
@@ -69,8 +71,7 @@ BEGIN
          				  nombre_actividad,
          				  nombre_financiador,
          				  nombre_regional,
-                          movimiento_tipo_pres,
-                          cec.codigo_categoria
+                          movimiento_tipo_pres
 						from pre.vpresupuesto_cc cec
 						where  ';
 
@@ -430,6 +431,22 @@ BEGIN
 
           IF   p_administrador != 1   and  pxp.f_existe_parametro(p_tabla,'filtrar')  THEN
 
+        	 if (pxp.f_existe_parametro(par_tabla,'desde_adquisiciones')) then
+           --raise exception 'Aqui llega data %',v_parametros.desde_adquisiciones;
+               if (v_parametros.reparaciones = 'si') then
+                    v_id_funcionario_solicitante = pxp.f_get_variable_global('funcionario_solicitante_gm');        	/**********************************************************************/
+
+                    select usu.id_usuario into v_id_usuario
+                    from orga.vfuncionario_persona per
+                    inner join segu.tusuario usu on usu.id_persona = per.id_persona
+                    where per.id_funcionario = v_id_funcionario_solicitante;
+                else
+                	v_id_usuario = p_id_usuario;
+                end if;
+             else
+               v_id_usuario = p_id_usuario;
+             end if;
+
 
               IF v_parametros.filtrar = 'grupo_ep'  THEN
                   select
@@ -437,7 +454,7 @@ BEGIN
                   into
                   v_filadd
                  from segu.tusuario_grupo_ep uge
-                 where  uge.id_usuario = p_id_usuario;
+                 where  uge.id_usuario = v_id_usuario;
 
                   v_inner =  'inner join param.tgrupo_ep gep on gep.estado_reg = ''activo'' and
 
@@ -729,3 +746,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION param.f_centro_costo_sel (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;
