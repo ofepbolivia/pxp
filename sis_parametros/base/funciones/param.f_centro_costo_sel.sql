@@ -431,8 +431,7 @@ BEGIN
 
           IF   p_administrador != 1   and  pxp.f_existe_parametro(p_tabla,'filtrar')  THEN
 
-        	 if (pxp.f_existe_parametro(par_tabla,'desde_adquisiciones')) then
-           --raise exception 'Aqui llega data %',v_parametros.desde_adquisiciones;
+        	 if (pxp.f_existe_parametro(p_tabla,'reparaciones')) then
                if (v_parametros.reparaciones = 'si') then
                     v_id_funcionario_solicitante = pxp.f_get_variable_global('funcionario_solicitante_gm');        	/**********************************************************************/
 
@@ -540,13 +539,29 @@ BEGIN
           IF   p_administrador != 1   and  pxp.f_existe_parametro(p_tabla,'filtrar')  THEN
 
 
+          if (pxp.f_existe_parametro(p_tabla,'reparaciones')) then
+               if (v_parametros.reparaciones = 'si') then
+                    v_id_funcionario_solicitante = pxp.f_get_variable_global('funcionario_solicitante_gm');        	/**********************************************************************/
+
+                    select usu.id_usuario into v_id_usuario
+                    from orga.vfuncionario_persona per
+                    inner join segu.tusuario usu on usu.id_persona = per.id_persona
+                    where per.id_funcionario = v_id_funcionario_solicitante;
+                else
+                	v_id_usuario = p_id_usuario;
+                end if;
+             else
+               v_id_usuario = p_id_usuario;
+             end if;
+
+
               IF v_parametros.filtrar = 'grupo_ep'  THEN
                   select
                   pxp.list(uge.id_grupo::text)
                   into
                   v_filadd
                  from segu.tusuario_grupo_ep uge
-                 where  uge.id_usuario = p_id_usuario;
+                 where  uge.id_usuario = v_id_usuario;
 
                   v_inner =  'inner join param.tgrupo_ep gep on gep.estado_reg = ''activo'' and
 
