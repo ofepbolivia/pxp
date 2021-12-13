@@ -71,7 +71,8 @@ BEGIN
          				  nombre_actividad,
          				  nombre_financiador,
          				  nombre_regional,
-                          movimiento_tipo_pres
+                          movimiento_tipo_pres,
+                          categoria
 						from pre.vpresupuesto_cc cec
 						where  ';
 
