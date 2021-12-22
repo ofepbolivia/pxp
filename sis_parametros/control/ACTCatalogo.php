@@ -56,6 +56,12 @@ class ACTCatalogo extends ACTbase{
 			$cond=$this->objParam->getParametro('cod_subsistema');
 			$this->objParam->addFiltro("subsis.codigo = ''$cond''");
 		}
+		/*Aumentando para filtrar por la descipcion*/
+		if($this->objParam->getParametro('filtro_descripcion')!=''){
+			$cond=$this->objParam->getParametro('filtro_descripcion');
+			$this->objParam->addFiltro("cat.descripcion = ''$cond''");
+		}
+		/*******************************************/
 
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
 			$this->objReporte = new Reporte($this->objParam,$this);
