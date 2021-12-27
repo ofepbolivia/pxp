@@ -209,11 +209,15 @@ class ACTProveedor extends ACTbase{
                                 "MotivoHabilitacion"=>$motivo_habilitacion
 
                             );
+
                             $dato_json = json_encode($dato);
+                        var_dump('llega',$dato_json);
                             $dato_envio = array ("Credenciales"=>$credenciales, "dato"=>$dato_json);
                             $dato_envio_json = json_encode ($dato_envio);
 
-                              $request =  'http://sms.obairlines.bo/ServSisComm/servSiscomm.svc/RegistrarProveedor';
+                              //27-12-2021(may) se modifico el servicio por Jhon Claros
+                              //$request =  'http://sms.obairlines.bo/ServSisComm/servSiscomm.svc/RegistrarProveedor';
+                              $request =  'http://sms.obairlines.bo/ServMantenimiento/servSiscomm.svc/RegistrarProveedor';
                               $session = curl_init($request);
                               curl_setopt($session, CURLOPT_CUSTOMREQUEST, "POST");
                               curl_setopt($session, CURLOPT_POSTFIELDS, $dato_envio_json);
@@ -319,11 +323,14 @@ class ACTProveedor extends ACTbase{
                                     "TipoHabilitacion"=>$tipo_habilitacion,
                                     "MotivoHabilitacion"=>$motivo_habilitacion
                                 );
+
                                 $dato_json = json_encode($dato);
                                 $dato_envio = array ("Credenciales"=>$credenciales, "dato"=>$dato_json);
                                 $dato_envio_json = json_encode ($dato_envio);
 
-                                  $request =  'http://sms.obairlines.bo/ServSisComm/servSiscomm.svc/RegistrarProveedor';
+                                  //27-12-2021(may) se modifico el servicio por Jhon Claros
+                                  //$request =  'http://sms.obairlines.bo/ServSisComm/servSiscomm.svc/RegistrarProveedor';
+                                  $request =  'http://sms.obairlines.bo/ServMantenimiento/servSiscomm.svc/RegistrarProveedor';
                                   $session = curl_init($request);
                                   curl_setopt($session, CURLOPT_CUSTOMREQUEST, "POST");
                                   curl_setopt($session, CURLOPT_POSTFIELDS, $dato_envio_json);
