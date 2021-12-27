@@ -211,7 +211,6 @@ class ACTProveedor extends ACTbase{
                             );
 
                             $dato_json = json_encode($dato);
-                        var_dump('llega',$dato_json);
                             $dato_envio = array ("Credenciales"=>$credenciales, "dato"=>$dato_json);
                             $dato_envio_json = json_encode ($dato_envio);
 
