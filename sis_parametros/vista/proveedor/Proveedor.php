@@ -974,7 +974,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 config: {
                     name: 'id_moneda',
                     origen: 'MONEDA',
-                    allowBlank: true,
+                    allowBlank: false,
                     fieldLabel: 'Moneda',
                     gdisplayField: 'moneda', //mapea al store del grid
                     gwidth: 100,
@@ -2230,6 +2230,18 @@ header("content-type: text/javascript; charset=UTF-8");
                 this.Cmp.observaciones.on('change', function (cmp, rec) {
                     this.Cmp.observaciones_dinamico.setValue(rec);
                 }, this);
+
+                //moneda
+                //console.log('legaMODcodID',this.Cmp.id_moneda.value )
+                if(this.Cmp.id_moneda.value == 1){
+                    this.Cmp.cod_moneda.setValue('BOB');
+                }else if(this.Cmp.id_moneda.value == 2){
+                    this.Cmp.cod_moneda.setValue('USD');
+                }else if(this.Cmp.id_moneda.value == 5) {
+                    this.Cmp.cod_moneda.setValue('ARS');
+                }else if(this.Cmp.id_moneda.value == 4) {
+                    this.Cmp.cod_moneda.setValue('EUR');
+                }
 
             }
             this.getComponente('id_persona').disable();
