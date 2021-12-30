@@ -1756,7 +1756,9 @@ header("content-type: text/javascript; charset=UTF-8");
             'lugar_depto',
             'lugar_ciudad',
             {name:'id_beneficiario', type: 'string'},
-            {name:'razon_social_sigep', type: 'string'}
+            {name:'razon_social_sigep', type: 'string'},
+
+            {name:'ci_usr_reg', type: 'string'},
         ],
 
         arrayDefaultColumHidden: ['estado', 'correo','email1_institucion', 'email2_institucion','telefono1_institucion' , 'telefono2_institucion',
@@ -1967,10 +1969,6 @@ header("content-type: text/javascript; charset=UTF-8");
                         this.Cmp.correo_dinamico.setValue(rec);
                     }, this);
                 }, this);
-                //nombre
-                this.Cmp.id_institucion.on('select', function (cmp, rec) {
-                    this.Cmp.nombre_dinamico.setValue(rec.data.nombre);
-                }, this);
                 //correo 2
                 this.Cmp.id_institucion.on('select', function (cmp, rec) {
                     console.log('recinti2 recdata', rec.data)
@@ -1980,6 +1978,14 @@ header("content-type: text/javascript; charset=UTF-8");
                         this.Cmp.correo_dinamico2.setValue(rec);
                     }, this);
                 }, this);
+                //nombre
+                /*this.Cmp.id_institucion.on('select', function (cmp, rec) {
+                    this.Cmp.nombre_dinamico.setValue(rec.data.nombre);
+                }, this); */
+                this.Cmp.rotulo_comercial.on('change', function (cmp, rec) {
+                    this.Cmp.nombre_dinamico.setValue(rec);
+                }, this);
+
                 //telefono
                 this.Cmp.id_institucion.on('select', function (cmp, rec) {
                     console.log('recinti2 recdata', rec.data)
@@ -2016,6 +2022,9 @@ header("content-type: text/javascript; charset=UTF-8");
                         this.Cmp.observaciones_dinamico.setValue(rec);
                     }, this);
                 }, this);
+                //29-12-2021 (may) Jhon Claros confirma que CI es del que registra el proveedor
+                //CI
+                this.Cmp.doc_ci.setValue(datos.ci_usr_reg);
 
 
             }
@@ -2132,8 +2141,10 @@ header("content-type: text/javascript; charset=UTF-8");
                     this.Cmp.direccion_dinamico.setValue(rec);
                 }, this);
                 //correo
-                this.Cmp.correo_dinamico.setValue(datos.correo);
-                this.Cmp.correo.on('change', function (cmp, rec) {
+                //this.Cmp.correo_dinamico.setValue(datos.correo);
+                //this.Cmp.correo.on('change', function (cmp, rec) {
+                this.Cmp.correo_dinamico.setValue(datos.email1_institucion);
+                this.Cmp.email1_institucion.on('change', function (cmp, rec) {
                     this.Cmp.correo_dinamico.setValue(rec);
                 }, this);
                 //nombre
@@ -2193,23 +2204,25 @@ header("content-type: text/javascript; charset=UTF-8");
 
 
                 //(may) modificacion campos para guardar en el Alkym
+                console.log('llega datos',datos )
                 //direccion
                 this.Cmp.direccion_dinamico.setValue(datos.direccion_institucion);
                 this.Cmp.direccion_institucion.on('change', function (cmp, rec) {
                     this.Cmp.direccion_dinamico.setValue(rec);
                 }, this);
-                //correo 1
-                this.Cmp.correo_dinamico.setValue(datos.email1_institucion);
-                this.Cmp.email1_institucion.on('change', function (cmp, rec) {
+                //correo 1 (emailContacto)
+                this.Cmp.correo_dinamico.setValue(datos.ccorreo);
+                this.Cmp.ccorreo.on('change', function (cmp, rec) {
                     this.Cmp.correo_dinamico.setValue(rec);
                 }, this);
-                //nombre
-                this.Cmp.nombre_dinamico.setValue(datos.nombre_proveedor);
-                //correo 2
-                this.Cmp.correo_dinamico2.setValue(datos.email2_institucion);
-                this.Cmp.email2_institucion.on('change', function (cmp, rec) {
+                //correo 2 (email)
+                this.Cmp.correo_dinamico2.setValue(datos.email1_institucion);
+                this.Cmp.email1_institucion.on('change', function (cmp, rec) {
                     this.Cmp.correo_dinamico2.setValue(rec);
                 }, this);
+                //nombre
+                //this.Cmp.nombre_dinamico.setValue(datos.nombre_proveedor);
+                this.Cmp.nombre_dinamico.setValue(datos.rotulo_comercial);
                 //telefono
                 this.Cmp.telefono_dinamico.setValue(datos.telefono1_institucion);
                 this.Cmp.telefono1_institucion.on('change', function (cmp, rec) {
@@ -2242,6 +2255,9 @@ header("content-type: text/javascript; charset=UTF-8");
                 }else if(this.Cmp.id_moneda.value == 4) {
                     this.Cmp.cod_moneda.setValue('EUR');
                 }
+                //29-12-2021 (may) Jhon Claros confirma que CI es del que registra el proveedor //solo para insertar
+                //CI
+                //this.Cmp.doc_ci.setValue(datos.ci_usr_reg);
 
             }
             this.getComponente('id_persona').disable();
@@ -2252,12 +2268,18 @@ header("content-type: text/javascript; charset=UTF-8");
             //
 
             //(may) modificacion campos para guardar en el Alkym
+            //pais
+            this.Cmp.nombre_pais.setValue(datos.lugar);
             this.Cmp.id_lugar.on('select', function (cmp, rec) {
                 this.Cmp.nombre_pais.setValue(rec.data.nombre);
             }, this);
+            //depto
+            this.Cmp.nombre_departamento.setValue(datos.lugar_depto);
             this.Cmp.id_lugar_fk.on('select', function (cmp, rec) {
                 this.Cmp.nombre_departamento.setValue(rec.data.nombre);
             }, this);
+            //ciudad
+            this.Cmp.nombre_ciudad.setValue(datos.lugar_ciudad);
             this.Cmp.id_lugar_fk2.on('select', function (cmp, rec) {
                 this.Cmp.nombre_ciudad.setValue(rec.data.nombre);
             }, this);

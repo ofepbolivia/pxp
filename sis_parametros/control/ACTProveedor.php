@@ -216,7 +216,10 @@ class ACTProveedor extends ACTbase{
 
                               //27-12-2021(may) se modifico el servicio por Jhon Claros
                               //$request =  'http://sms.obairlines.bo/ServSisComm/servSiscomm.svc/RegistrarProveedor';
-                              $request =  'http://sms.obairlines.bo/ServMantenimiento/servSiscomm.svc/RegistrarProveedor';
+                              //produccion -> ServMantenimiento
+                              //dearrollo -> ServSisComm
+                              //$request =  'http://sms.obairlines.bo/ServMantenimiento/servSiscomm.svc/RegistrarProveedor';
+                              $request =  'http://sms.obairlines.bo/ServSisComm/servSiscomm.svc/RegistrarProveedor';
                               $session = curl_init($request);
                               curl_setopt($session, CURLOPT_CUSTOMREQUEST, "POST");
                               curl_setopt($session, CURLOPT_POSTFIELDS, $dato_envio_json);
@@ -233,7 +236,7 @@ class ACTProveedor extends ACTbase{
                               $respuesta_final = json_decode($respuesta->RegistrarProveedorResult);
 
 
-                      //var_dump('llega ressp', $respuesta_final);exit;
+                                //var_dump('llega ressp', $respuesta_final);exit;
                               if (($respuesta_final->codigo == null) || ($respuesta_final->codigo == '')) {
                                   throw new Exception('No se puede conectar con el servicio Alkym. Porfavor consulte con el Área de Sistemas');
                               }
@@ -324,12 +327,16 @@ class ACTProveedor extends ACTbase{
                                 );
 
                                 $dato_json = json_encode($dato);
+
                                 $dato_envio = array ("Credenciales"=>$credenciales, "dato"=>$dato_json);
                                 $dato_envio_json = json_encode ($dato_envio);
 
                                   //27-12-2021(may) se modifico el servicio por Jhon Claros
                                   //$request =  'http://sms.obairlines.bo/ServSisComm/servSiscomm.svc/RegistrarProveedor';
-                                  $request =  'http://sms.obairlines.bo/ServMantenimiento/servSiscomm.svc/RegistrarProveedor';
+                                  //produccion -> ServMantenimiento
+                                  //dearrollo -> ServSisComm
+                                  //$request =  'http://sms.obairlines.bo/ServMantenimiento/servSiscomm.svc/RegistrarProveedor';
+                                  $request =  'http://sms.obairlines.bo/ServSisComm/servSiscomm.svc/RegistrarProveedor';
                                   $session = curl_init($request);
                                   curl_setopt($session, CURLOPT_CUSTOMREQUEST, "POST");
                                   curl_setopt($session, CURLOPT_POSTFIELDS, $dato_envio_json);

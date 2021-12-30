@@ -219,8 +219,8 @@ BEGIN
                         lugdepto.nombre as lugar_depto,
                         lugciudad.nombre as lugar_ciudad,
                         provee.id_beneficiario,
-						provee.razon_social_sigep
-
+						provee.razon_social_sigep,
+                        person1.ci as ci_usr_reg
 
                         from param.tproveedor provee
 						inner join segu.tusuario usu1 on usu1.id_usuario = provee.id_usuario_reg
@@ -232,6 +232,7 @@ BEGIN
                         left join param.tlugar lugdepto on lugdepto.id_lugar = provee.id_lugar_departamento
                         left join param.tlugar lugciudad on lugciudad.id_lugar = provee.id_lugar_ciudad
                         left join param.tmoneda mon on mon.id_moneda = provee.id_moneda
+                        left join segu.vpersona2 person1 on person1.id_persona=usu1.id_persona
 				        where '||v_where||' and ';
 
 			--Definicion de la respuesta
@@ -260,7 +261,7 @@ BEGIN
                 v_where:= 'provee.id_persona is null';
             end if;
 			--Sentencia de la consulta de conteo de registros
-			v_consulta:='select count(id_proveedor)
+			v_consulta:='select count(provee.id_proveedor)
 					    from param.tproveedor provee
 						inner join segu.tusuario usu1 on usu1.id_usuario = provee.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = provee.id_usuario_mod
@@ -270,6 +271,7 @@ BEGIN
                         left join param.tlugar lugdepto on lugdepto.id_lugar = provee.id_lugar_departamento
                         left join param.tlugar lugciudad on lugciudad.id_lugar = provee.id_lugar_ciudad
                         left join param.tmoneda mon on mon.id_moneda = provee.id_moneda
+                        left join segu.vpersona2 person1 on person1.id_persona=usu1.id_persona
 				        where '||v_where||' and ';
 
 			--Definicion de la respuesta
