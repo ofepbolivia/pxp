@@ -1104,7 +1104,7 @@ BEGIN
             SELECT ev.id_uo into v_id_uo
             FROM orga.tevaluacion_desempenio ev
             INNER JOIN orga.tuo uo on uo.id_uo = ev.id_uo and uo.codigo = v_cod
-            WHERE ev.gestion = v_parametros.id_gestion
+            WHERE ev.gestion = v_parametros.gestion
             AND ev.id_uo is not null
             limit 1;
 
