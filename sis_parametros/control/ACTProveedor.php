@@ -130,7 +130,7 @@ class ACTProveedor extends ACTbase{
                 $tipo = $this->objParam->getParametro('tipo');
 
                 //TIPO PROVEEDOR GENERAL
-                if($tipo == 'general' || $tipo == ''){
+                if($tipo == 'general' || $tipo == 'funcionario' || $tipo == ''){
                     //var_dump('llega general' );exit;
 
                      $this->objFunc=$this->create('MODProveedor');
@@ -218,8 +218,8 @@ class ACTProveedor extends ACTbase{
                               //$request =  'http://sms.obairlines.bo/ServSisComm/servSiscomm.svc/RegistrarProveedor';
                               //produccion -> ServMantenimiento
                               //dearrollo -> ServSisComm
-                              //$request =  'http://sms.obairlines.bo/ServMantenimiento/servSiscomm.svc/RegistrarProveedor';
-                              $request =  'http://sms.obairlines.bo/ServSisComm/servSiscomm.svc/RegistrarProveedor';
+                              $request =  'http://sms.obairlines.bo/ServMantenimiento/servSiscomm.svc/RegistrarProveedor';
+                              //$request =  'http://sms.obairlines.bo/ServSisComm/servSiscomm.svc/RegistrarProveedor';
                               $session = curl_init($request);
                               curl_setopt($session, CURLOPT_CUSTOMREQUEST, "POST");
                               curl_setopt($session, CURLOPT_POSTFIELDS, $dato_envio_json);
@@ -335,8 +335,8 @@ class ACTProveedor extends ACTbase{
                                   //$request =  'http://sms.obairlines.bo/ServSisComm/servSiscomm.svc/RegistrarProveedor';
                                   //produccion -> ServMantenimiento
                                   //dearrollo -> ServSisComm
-                                  //$request =  'http://sms.obairlines.bo/ServMantenimiento/servSiscomm.svc/RegistrarProveedor';
-                                  $request =  'http://sms.obairlines.bo/ServSisComm/servSiscomm.svc/RegistrarProveedor';
+                                  $request =  'http://sms.obairlines.bo/ServMantenimiento/servSiscomm.svc/RegistrarProveedor';
+                                  //$request =  'http://sms.obairlines.bo/ServSisComm/servSiscomm.svc/RegistrarProveedor';
                                   $session = curl_init($request);
                                   curl_setopt($session, CURLOPT_CUSTOMREQUEST, "POST");
                                   curl_setopt($session, CURLOPT_POSTFIELDS, $dato_envio_json);

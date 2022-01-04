@@ -2066,7 +2066,7 @@ header("content-type: text/javascript; charset=UTF-8");
 
 
             //(may) modificacion grupo de campos segun el tipo
-            if (datos.tipo == 'General' || datos.tipo == 'general' || datos.tipo == '' || datos.tipo == 'Funcionario') {
+            if (datos.tipo == 'General' || datos.tipo == 'general' || datos.tipo == '' || datos.tipo == 'Funcionario' || datos.tipo == 'funcionario') {
                 this.ocultarGrupo(4);
                 this.ocultarGrupo(5);
 
