@@ -2436,3 +2436,40 @@ ALTER TABLE param.tdocumento
 ALTER TABLE param.tproveedor_cta_bancaria
   ADD COLUMN observaciones VARCHAR;
 /***********************************F-SCP-MAY-PARAM-0-25/08/2021*****************************************/
+/***********************************I-SCP-BVP-PARAM-0-03/01/2022*****************************************/
+ALTER TABLE param.tplantilla
+  ADD COLUMN importe_iehd VARCHAR(3) DEFAULT 'no' NOT NULL;
+
+COMMENT ON COLUMN param.tplantilla.importe_iehd
+IS 'Importe correspondiente al IEHD. Caso contrario registrar cero (0).';
+
+ALTER TABLE param.tplantilla
+  ADD COLUMN importe_ipj VARCHAR(3) DEFAULT 'no' NOT NULL;
+
+COMMENT ON COLUMN param.tplantilla.importe_ipj
+IS 'Importe correspondiente al IPJ. Caso contrario registrar cero (0).';
+
+ALTER TABLE param.tplantilla
+  ADD COLUMN importe_tasas VARCHAR(3) DEFAULT 'no' NOT NULL;
+
+COMMENT ON COLUMN param.tplantilla.importe_tasas
+IS 'Importe correspondiente a Tasas. Caso contrario registrar cero (0).';
+
+ALTER TABLE param.tplantilla
+  ADD COLUMN otro_no_sujeto_credito_fiscal VARCHAR(3) DEFAULT 'no' NOT NULL;
+
+COMMENT ON COLUMN param.tplantilla.otro_no_sujeto_credito_fiscal
+IS 'Importe correspondiente a otros conceptos no sujetos al IVA. Caso contrario registrar cero (0).';
+
+ALTER TABLE param.tplantilla
+  ADD COLUMN importe_gift_card VARCHAR(3) DEFAULT 'no' NOT NULL;
+
+COMMENT ON COLUMN param.tplantilla.importe_gift_card
+IS 'Importe de la GIFT CARD, caso contrario registrar cero(0).';
+
+ALTER TABLE param.tplantilla
+  ADD COLUMN importe_compras_gravadas_tasa_cero VARCHAR(3) DEFAULT 'no' NOT NULL;
+
+COMMENT ON COLUMN param.tplantilla.importe_compras_gravadas_tasa_cero
+IS 'Importe compras gravadas a tasa cero(0).';
+/***********************************F-SCP-BVP-PARAM-0-03/01/2022*****************************************/

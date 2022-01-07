@@ -56,6 +56,13 @@ class MODPlantilla extends MODbase{
         $this->captura('codigo','varchar');
         $this->captura('letra_tipo_plantilla','varchar');
 
+        $this->captura('importe_iehd','varchar');
+        $this->captura('importe_ipj','varchar');
+        $this->captura('importe_tasas','varchar');
+        $this->captura('otro_no_sujeto_credito_fiscal','varchar');
+        $this->captura('importe_gift_card','varchar');
+        $this->captura('importe_compras_gravadas_tasa_cero','varchar');
+
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
@@ -98,6 +105,13 @@ class MODPlantilla extends MODbase{
 
         $this->setParametro('codigo','codigo','varchar');
         $this->setParametro('letra_tipo_plantilla','letra_tipo_plantilla','varchar');
+
+		$this->setParametro('importe_iehd','importe_iehd','varchar');
+        $this->setParametro('importe_ipj','importe_ipj','varchar');
+        $this->setParametro('importe_tasas','importe_tasas','varchar');
+        $this->setParametro('otro_no_sujeto_credito_fiscal','otro_no_sujeto_credito_fiscal','varchar');
+        $this->setParametro('importe_gift_card','importe_gift_card','varchar');
+        $this->setParametro('importe_compras_gravadas_tasa_cero','importe_compras_gravadas_tasa_cero','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -142,6 +156,13 @@ class MODPlantilla extends MODbase{
 
         $this->setParametro('codigo','codigo','varchar');
         $this->setParametro('letra_tipo_plantilla','letra_tipo_plantilla','varchar');
+
+		$this->setParametro('importe_iehd','importe_iehd','varchar');
+        $this->setParametro('importe_ipj','importe_ipj','varchar');
+        $this->setParametro('importe_tasas','importe_tasas','varchar');
+        $this->setParametro('otro_no_sujeto_credito_fiscal','otro_no_sujeto_credito_fiscal','varchar');
+        $this->setParametro('importe_gift_card','importe_gift_card','varchar');
+        $this->setParametro('importe_compras_gravadas_tasa_cero','importe_compras_gravadas_tasa_cero','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -210,6 +231,13 @@ class MODPlantilla extends MODbase{
 
         $this->captura('codigo','varchar');
         $this->captura('letra_tipo_plantilla','varchar');
+        
+        $this->captura('importe_iehd','varchar');
+        $this->captura('importe_ipj','varchar');
+        $this->captura('importe_tasas','varchar');
+        $this->captura('otro_no_sujeto_credito_fiscal','varchar');
+        $this->captura('importe_gift_card','varchar');
+        $this->captura('importe_compras_gravadas_tasa_cero','varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();

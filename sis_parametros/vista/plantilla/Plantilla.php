@@ -45,7 +45,8 @@ Phx.vista.Plantilla=Ext.extend(Phx.gridInterfaz,{
 			filters:{pfiltro:'plt.desc_plantilla',type:'string'},
 			id_grupo:1,
 			grid:true,
-			form:true
+			form:true,
+            bottom_filter: true
 		},
 
         {
@@ -61,7 +62,8 @@ Phx.vista.Plantilla=Ext.extend(Phx.gridInterfaz,{
             filters:{pfiltro:'plt.codigo',type:'string'},
             id_grupo:1,
             grid:true,
-            form:true
+            form:true,
+            bottom_filter: true
         },
 
         {
@@ -180,7 +182,8 @@ Phx.vista.Plantilla=Ext.extend(Phx.gridInterfaz,{
                     
             grid: true,
             egrid: true,
-            form: true
+            form: true,
+            bottom_filter: true
        },
         {
             config:{
@@ -498,7 +501,8 @@ Phx.vista.Plantilla=Ext.extend(Phx.gridInterfaz,{
                     },
             grid: true,
             egrid: true,
-            form: true
+            form: true,
+            bottom_filter: true
        },
         
         {
@@ -555,6 +559,174 @@ Phx.vista.Plantilla=Ext.extend(Phx.gridInterfaz,{
 			grid:true,
 			form:true
 		},
+        {
+            config:{
+                name: 'cod_inter',
+                qtip:'Cod. del tipo de documento para internacionales',
+                fieldLabel: 'Cod. Internacionales',
+                anchor: '80%',
+                gwidth: 170,
+                allowBlank: false,
+                typeAhead: true,
+                triggerAction: 'all',
+                lazyRender:true,
+                mode: 'local',
+                valueField: 'inicio',
+                forcSselect:true,
+                enableMultiSelect: true,
+                store:['BOL','BUE','MIA','SAO','MAD']
+            },
+            type:'AwesomeCombo',
+            filters:{pfiltro:'plt.cod_inter',type:'string'},
+
+            id_grupo:1,
+            grid:true,
+            form:true
+        },        
+        {
+            config:{
+                name: 'importe_iehd',
+                fieldLabel: 'Importe IEHD',
+                qtip: 'Importe correspondiente al IEHD. Caso contrario registrar cero (0).',
+                allowBlank: false,
+                anchor: '40%',
+                gwidth: 80,
+                typeAhead: true,
+                triggerAction: 'all',
+                lazyRender: true,
+                mode: 'local',
+                store: ['si','no']
+            },
+            type:'ComboBox',
+            id_grupo:1,
+            filters:{   pfiltro:'plt.importe_iehd',
+                type: 'list',
+                options: ['si','no']
+            },
+            valorInicial: 'no',
+            grid:true,            
+            form:true
+        },                                                                 
+        {
+            config:{
+                name: 'importe_ipj',
+                fieldLabel: 'Importe IPJ',
+                qtip: 'Importe correspondiente al IPJ. Caso contrario registrar cero (0).',
+                allowBlank: false,
+                anchor: '40%',
+                gwidth: 80,
+                typeAhead: true,
+                triggerAction: 'all',
+                lazyRender: true,
+                mode: 'local',
+                store: ['si','no']
+            },
+            type:'ComboBox',
+            id_grupo:1,
+            filters:{   pfiltro:'plt.importe_ipj',
+                type: 'list',
+                options: ['si','no']
+            },
+            valorInicial: 'no',
+            grid:true,            
+            form:true
+        },                                 
+        {
+            config:{
+                name: 'importe_tasas',
+                fieldLabel: 'Importe a Tasas',
+                qtip: 'Importe correspondiente a Tasas. Caso contrario registrar cero (0).',
+                allowBlank: false,
+                anchor: '40%',
+                gwidth: 80,
+                typeAhead: true,
+                triggerAction: 'all',
+                lazyRender: true,
+                mode: 'local',
+                store: ['si','no']
+            },
+            type:'ComboBox',
+            id_grupo:1,
+            filters:{   pfiltro:'plt.importe_tasas',
+                type: 'list',
+                options: ['si','no']
+            },
+            valorInicial: 'no',
+            grid:true,            
+            form:true
+        },                                 
+        {
+            config:{
+                name: 'otro_no_sujeto_credito_fiscal',
+                fieldLabel: 'Otro No Sujeto A Credito Fiscal',
+                qtip: 'Importe correspondiente a otros conceptos no sujetos al IVA. Caso contrario registrar cero (0).',
+                allowBlank: false,
+                anchor: '40%',
+                gwidth: 80,
+                typeAhead: true,
+                triggerAction: 'all',
+                lazyRender: true,
+                mode: 'local',
+                store: ['si','no']
+            },
+            type:'ComboBox',
+            id_grupo:1,
+            filters:{   pfiltro:'plt.otro_no_sujeto_credito_fiscal',
+                type: 'list',
+                options: ['si','no']
+            },
+            valorInicial: 'no',
+            grid:true,            
+            form:true
+        },                                 
+        {
+            config:{
+                name: 'importe_gift_card',
+                fieldLabel: 'Importe Gift Card',
+                qtip: 'Importe de la GIFT CARD, caso contrario registrar cero(0).',
+                allowBlank: false,
+                anchor: '40%',
+                gwidth: 80,
+                typeAhead: true,
+                triggerAction: 'all',
+                lazyRender: true,
+                mode: 'local',
+                store: ['si','no']
+            },
+            type:'ComboBox',
+            id_grupo:1,
+            filters:{   pfiltro:'plt.importe_gift_card',
+                type: 'list',
+                options: ['si','no']
+            },
+            valorInicial: 'no',
+            grid:true,            
+            form:true
+        },
+        {
+            config:{
+                name: 'importe_compras_gravadas_tasa_cero',
+                fieldLabel: 'Importe Compras Gravadas Tasa Cero',
+                qtip: 'Importe Compras Gravadas Tasa Cero.',
+                allowBlank: false,
+                anchor: '40%',
+                gwidth: 80,
+                typeAhead: true,
+                triggerAction: 'all',
+                lazyRender: true,
+                mode: 'local',
+                store: ['si','no']
+            },
+            type:'ComboBox',
+            id_grupo:1,
+            filters:{   pfiltro:'plt.importe_compras_gravadas_tasa_cero',
+                type: 'list',
+                options: ['si','no']
+            },
+            valorInicial: 'no',
+            grid:true,            
+            form:true
+        },        
 		{
 			config:{
 				name: 'estado_reg',
@@ -631,31 +803,7 @@ Phx.vista.Plantilla=Ext.extend(Phx.gridInterfaz,{
 			id_grupo:1,
 			grid:true,
 			form:false
-		},
-        {
-            config:{
-                name: 'cod_inter',
-                qtip:'Cod. del tipo de documento para internacionales',
-                fieldLabel: 'Cod. Internacionales',
-                anchor: '80%',
-                gwidth: 170,
-                allowBlank: false,
-                typeAhead: true,
-                triggerAction: 'all',
-                lazyRender:true,
-                mode: 'local',
-                valueField: 'inicio',
-                forcSselect:true,
-                enableMultiSelect: true,
-                store:['BOL','BUE','MIA','SAO','MAD']
-            },
-            type:'AwesomeCombo',
-            filters:{pfiltro:'plt.cod_inter',type:'string'},
-
-            id_grupo:1,
-            grid:true,
-            form:true
-        },
+		}
 	],
 	
 	title:'Plantilla Documento',
@@ -681,7 +829,13 @@ Phx.vista.Plantilla=Ext.extend(Phx.gridInterfaz,{
 		'sw_nro_dui','sw_ic','tipo_excento','valor_excento','tipo_informe',
 		'sw_qr','sw_nit','plantilla_qr', 'sw_estacion', 'sw_punto_venta', 'sw_codigo_no_iata','cod_inter',
         {name:'codigo', type: 'string'},
-        {name:'letra_tipo_plantilla', type: 'string'}
+        {name:'letra_tipo_plantilla', type: 'string'},
+        {name:'importe_iehd', type: 'string'},
+        {name:'importe_ipj', type: 'string'},
+        {name:'importe_tasas', type: 'string'},
+        {name:'otro_no_sujeto_credito_fiscal', type: 'string'},
+        {name:'importe_gift_card', type: 'string'},
+        {name:'importe_compras_gravadas_tasa_cero', type: 'string'},
 		
 	],
 	sortInfo:{

@@ -90,8 +90,13 @@ BEGIN
                 cod_inter,
 
                 codigo,
-                letra_tipo_plantilla
-
+                letra_tipo_plantilla,
+                importe_iehd,
+                importe_ipj,
+                importe_tasas,
+                importe_no_sujeto_iva,
+                otro_no_sujeto_credito_fiscal,
+                importe_compras_gravadas_tasa_cero 
 
 
           	) values(
@@ -121,7 +126,12 @@ BEGIN
             string_to_array(v_parametros.cod_inter,',')::varchar[],
 
             v_parametros.codigo,
-            v_parametros.letra_tipo_plantilla
+            v_parametros.letra_tipo_plantilla,
+            v_parametros.importe_iehd,
+            v_parametros.importe_ipj,
+            v_parametros.importe_tasas,
+            v_parametros.otro_no_sujeto_credito_fiscal,
+            v_parametros.importe_compras_gravadas_tasa_cero             
 
 		)RETURNING id_plantilla into v_id_plantilla;
 
@@ -147,7 +157,7 @@ BEGIN
 
 
             if v_parametros.sw_ic = 'si' and v_parametros.sw_monto_excento = 'no' then
-               raise exception 'Si tenemos IC es necesario habilitar el Excento';
+               --raise exception 'Si tenemos IC es necesario habilitar el Excento'; //{dev:bvasquez, date: 07/01/2021, desc: campo sw_monto_excento se dividió en varias, informado por Grover velasquez}
             end if;
 
            v_parametros.valor_excento = COALESCE(v_parametros.valor_excento,0);
@@ -189,7 +199,13 @@ BEGIN
               cod_inter = string_to_array(v_parametros.cod_inter,',')::varchar[],
 
               codigo = v_parametros.codigo,
-              letra_tipo_plantilla = v_parametros.letra_tipo_plantilla
+              letra_tipo_plantilla = v_parametros.letra_tipo_plantilla,
+              importe_iehd = v_parametros.importe_iehd,
+              importe_ipj = v_parametros.importe_ipj,
+              importe_tasas = v_parametros.importe_tasas,
+              otro_no_sujeto_credito_fiscal = v_parametros.otro_no_sujeto_credito_fiscal,
+              importe_gift_card = v_parametros.importe_gift_card,  
+			  importe_compras_gravadas_tasa_cero  = v_parametros.importe_compras_gravadas_tasa_cero              
 
 			where id_plantilla=v_parametros.id_plantilla;
 
