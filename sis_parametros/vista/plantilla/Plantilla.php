@@ -286,7 +286,7 @@ Phx.vista.Plantilla=Ext.extend(Phx.gridInterfaz,{
             config:{
                 name: 'sw_ic',
                 fieldLabel: 'ICE',
-                qtip: 'Impuesto ICE , si esta habilitado es necesario habilitar el monto exento',
+                // qtip: 'Impuesto ICE , si esta habilitado es necesario habilitar el monto exento',
                 allowBlank: false,
                 anchor: '40%',
                 gwidth: 80,
