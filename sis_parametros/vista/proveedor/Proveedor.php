@@ -206,7 +206,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 this.Cmp.nombre_institucion.setDisabled(true);
                 this.Cmp.nombre_institucion.setValue(r.data.nombre);
                 this.Cmp.doc_id.setValue(r.data.doc_id);
-                this.Cmp.codigo_institucion.setValue(r.data.codigo);
+                //this.Cmp.codigo_institucion.setValue(r.data.codigo);
                 this.Cmp.casilla.setValue(r.data.casilla);
                 this.Cmp.telefono1_institucion.setValue(r.data.telefono1);
                 this.Cmp.telefono2_institucion.setValue(r.data.telefono2);

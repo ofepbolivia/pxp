@@ -124,6 +124,7 @@ class ACTProveedor extends ACTbase{
         $conexionAlkym = $variable_global->getDatos();
         $respuesta = $conexionAlkym[0]["variable_obtenida"];
 
+
         //variable global = 'si'
         if ($respuesta == 'si') {
 
@@ -378,18 +379,126 @@ class ACTProveedor extends ACTbase{
                                 }
 
                         }else{
+                                //PARA INSERTAR AL ALKYM al MODIFICAR
 
-                            throw new Exception('No tiene registrado el párametro id_proveedor_alkym');
+                                //var_dump('llega INS' );exit;
+
+                            $credenciales = '';
+
+                            $codigo = $this->objParam->getParametro('codigo_alkym');
+                            $nombre_dinamico = $this->objParam->getParametro('nombre_dinamico');
+
+                            $fecha = new DateTime($this->objParam->getParametro('fecha_reg'));
+                            $fecha_format =  date_format($fecha,'Y-m-d');
+
+                            $direccion_dinamico = $this->objParam->getParametro('direccion_dinamico');
+                            $nombre_ciudad = $this->objParam->getParametro('nombre_ciudad');
+                            $nombre_departamento = $this->objParam->getParametro('nombre_departamento');
+                            $nombre_pais = $this->objParam->getParametro('nombre_pais');
+                            $correo_dinamico = $this->objParam->getParametro('correo_dinamico');
+                            $num_proveedor = $this->objParam->getParametro('num_proveedor');
+                            $telefono_dinamico = $this->objParam->getParametro('telefono_dinamico');
+                            $fax_dinamico = $this->objParam->getParametro('fax_dinamico');
+                            $correo_dinamico2 = $this->objParam->getParametro('correo_dinamico2');
+                            $codigo_fabricante = $this->objParam->getParametro('codigo_fabricante');
+                            $pagweb_dinamico =  $this->objParam->getParametro('pagweb_dinamico');
+                            $observaciones = $this->objParam->getParametro('observaciones_dinamico');
+                            $ci = $this->objParam->getParametro('doc_ci');
+
+                            $dnrp = $this->objParam->getParametro('dnrp');
+                            $nit = $this->objParam->getParametro('nit');
+                            $ingreso_bruto = $this->objParam->getParametro('ingreso_bruto');
+                            $cod_moneda= $this->objParam->getParametro('cod_moneda');
+                            $codigo_externo = $this->objParam->getParametro('codigo_externo');
+                            $tipo_habilitacion = $this->objParam->getParametro('tipo_habilitacion');
+                            $motivo_habilitacion = $this->objParam->getParametro('motivo_habilitacion');
+
+
+
+                            $dato = array (
+                                "Tipo"=>"INS",
+                                "IdProveedor"=>"0",
+                                "Codigo"=>$codigo,
+                                "Nombre"=>$nombre_dinamico,
+                                "FechaAlta"=>$fecha_format,
+                                "Direccion"=>$direccion_dinamico,
+                                "Ciudad"=>$nombre_ciudad,
+                                "Estado"=>$nombre_departamento,
+                                "Pais"=>$nombre_pais,
+                                "emailContacto"=>$correo_dinamico,
+                                "cp"=>$num_proveedor,
+                                "Telefono"=>$telefono_dinamico,
+                                "Fax"=>$fax_dinamico,
+                                "email"=>$correo_dinamico2,
+                                "CodigoFabricante"=>$codigo_fabricante,
+                                "DireccInternet"=>$pagweb_dinamico,
+                                "Observacion"=>$observaciones,
+                                "NroDocumento"=>$ci,
+                                "DNRP"=>$dnrp,
+                                "CUIT"=>$nit,
+                                "IngrBrutos"=>$ingreso_bruto,
+                                "Moneda"=>$cod_moneda,
+                                "CodigoExterno"=>$codigo_externo,
+                                "TipoHabilitacion"=>$tipo_habilitacion,
+                                "MotivoHabilitacion"=>$motivo_habilitacion
+
+                            );
+
+                            $dato_json = json_encode($dato);
+                            $dato_envio = array ("Credenciales"=>$credenciales, "dato"=>$dato_json);
+                            $dato_envio_json = json_encode ($dato_envio);
+
+                            //27-12-2021(may) se modifico el servicio por Jhon Claros
+                            //$request =  'http://sms.obairlines.bo/ServSisComm/servSiscomm.svc/RegistrarProveedor';
+                            //produccion -> ServMantenimiento
+                            //dearrollo -> ServSisComm
+                            $request =  'http://sms.obairlines.bo/ServMantenimiento/servSiscomm.svc/RegistrarProveedor';
+                            //$request =  'http://sms.obairlines.bo/ServSisComm/servSiscomm.svc/RegistrarProveedor';
+                            $session = curl_init($request);
+                            curl_setopt($session, CURLOPT_CUSTOMREQUEST, "POST");
+                            curl_setopt($session, CURLOPT_POSTFIELDS, $dato_envio_json);
+                            curl_setopt($session, CURLOPT_RETURNTRANSFER, true);
+                            curl_setopt($session, CURLOPT_HTTPHEADER, array(
+                                    'Content-Type: application/json',
+                                    'Content-Length: ' . strlen($dato_envio_json))
+                            );
+
+                            $result = curl_exec($session);
+                            curl_close($session);
+
+                            $respuesta = json_decode($result);
+                            $respuesta_final = json_decode($respuesta->RegistrarProveedorResult);
+
+
+                            //var_dump('llega ressp', $respuesta_final);exit;
+                            if (($respuesta_final->codigo == null) || ($respuesta_final->codigo == '')) {
+                                throw new Exception('No se puede conectar con el servicio Alkym. Porfavor consulte con el Área de Sistemas');
+                            }
+
+
+                            if ($respuesta_final->codigo != 1) {
+
+                                throw new Exception($respuesta_final->mensaje.'favor verifique');
+
+                            } else {
+                                $id_alkym_recu=$respuesta_final->objeto;
+                                $id_alkym_proveedor = $id_alkym_recu->IdProveedor_alkym;
+
+                                $this->objParam->addParametro('id_alkym_proveedor',$id_alkym_proveedor);
+
+                                $this->objFunc=$this->create('MODProveedor');
+                                $this->res=$this->objFunc->modificarProveedorAlkym();
+
+                                $this->res->imprimirRespuesta($this->res->generarJson());
+                            }
+
+
+                            //throw new Exception('No tiene registrado el párametro id_proveedor_alkym');
 
                         }
 
 
-
-
-
-
                     }
-
 
                 }
 

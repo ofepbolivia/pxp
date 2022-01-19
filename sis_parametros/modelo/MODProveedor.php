@@ -406,6 +406,7 @@ class MODProveedor extends MODbase{
         $this->setParametro('id_beneficiario','id_beneficiario','int4');
         $this->setParametro('razon_social_sigep','razon_social_sigep','varchar');
 
+
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
@@ -543,6 +544,93 @@ class MODProveedor extends MODbase{
         $this->armarConsulta();
         //echo $this->consulta;exit;
         $this->ejecutarConsulta();
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
+
+    function modificarProveedorAlkym(){
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento='param.f_tproveedor_ime';
+        $this->transaccion='PM_PROVEALK_MOD';
+        $this->tipo_procedimiento='IME';
+
+
+        //Define los parametros para la funcion
+        $this->setParametro('id_proveedor','id_proveedor','int4');
+        $this->setParametro('id_persona','id_persona','int4');
+        $this->setParametro('codigo','codigo','varchar');
+        $this->setParametro('numero_sigma','numero_sigma','varchar');
+        $this->setParametro('tipo','tipo','varchar');
+        $this->setParametro('id_institucion','id_institucion','int4');
+        $this->setParametro('doc_id','doc_id','varchar');
+        $this->setParametro('nombre_institucion','nombre_institucion','varchar');
+        $this->setParametro('direccion_institucion','direccion_institucion','varchar');
+        $this->setParametro('casilla','casilla','bigint');
+        $this->setParametro('telefono1_institucion','telefono1_institucion','varchar');
+        $this->setParametro('telefono2_institucion','telefono2_institucion','varchar');
+        $this->setParametro('celular1_institucion','celular1_institucion','varchar');
+        $this->setParametro('celular2_institucion','celular2_institucion','varchar');
+        $this->setParametro('fax','fax','varchar');
+        $this->setParametro('email1_institucion','email1_institucion','varchar');
+        $this->setParametro('email2_institucion','email2_institucion','varchar');
+        $this->setParametro('pag_web','pag_web','varchar');
+        $this->setParametro('observaciones','observaciones','varchar');
+        $this->setParametro('codigo_banco','codigo_banco','varchar');
+        $this->setParametro('codigo_institucion','codigo_institucion','varchar');
+
+        $this->setParametro('nit','nit','varchar');
+        $this->setParametro('id_lugar','id_lugar','int4');
+
+        $this->setParametro('register','register','varchar');
+        //27-02-2020 (may) se comenta porq nodebe modificarsenombre y apellidos
+        /*$this->setParametro('nombre','nombre','varchar');
+        $this->setParametro('apellido_paterno','apellido_paterno','varchar');
+        $this->setParametro('apellido_materno','apellido_materno','varchar');*/
+        $this->setParametro('ci','ci','varchar');
+        $this->setParametro('correo','correo','varchar');
+        $this->setParametro('celular1','celular1','varchar');
+        $this->setParametro('celular2','celular2','varchar');
+        $this->setParametro('telefono1','telefono1','varchar');
+        $this->setParametro('telefono2','telefono2','varchar');
+        $this->setParametro('genero','genero','varchar');
+        $this->setParametro('fecha_nacimiento','fecha_nacimiento','date');
+        $this->setParametro('direccion','direccion','varchar');
+        $this->setParametro('rotulo_comercial','rotulo_comercial','varchar');
+        //$this->setParametro('contacto','contacto','text');
+
+        $this->setParametro('condicion','condicion','varchar');
+        $this->setParametro('actividad','actividad','varchar');
+        $this->setParametro('num_proveedor','num_proveedor','varchar');
+        $this->setParametro('codigo_telf','codigo_telf','varchar');
+        $this->setParametro('codigo_telf_institucion','codigo_telf_institucion','varchar');
+
+        $this->setParametro('id_lugar_fk','id_lugar_fk','int4');
+        $this->setParametro('id_lugar_fk2','id_lugar_fk2','int4');
+
+        $this->setParametro('id_moneda','id_moneda','int4');
+        $this->setParametro('dnrp','dnrp','varchar');
+        $this->setParametro('ingreso_bruto','ingreso_bruto','numeric');
+        $this->setParametro('tipo_habilitacion','tipo_habilitacion','varchar');
+        $this->setParametro('motivo_habilitacion','motivo_habilitacion','varchar');
+        $this->setParametro('codigo_alkym','codigo_alkym','varchar');
+        $this->setParametro('ccorreo','ccorreo','varchar');
+
+        $this->setParametro('codigo_fabricante','codigo_fabricante','varchar');
+        $this->setParametro('codigo_externo','codigo_externo','varchar');
+
+        $this->setParametro('fax_persona','fax_persona','varchar');
+        $this->setParametro('pag_web_persona','pag_web_persona','varchar');
+        $this->setParametro('observaciones_persona','observaciones_persona','varchar');
+
+        $this->setParametro('id_beneficiario','id_beneficiario','int4');
+        $this->setParametro('razon_social_sigep','razon_social_sigep','varchar');
+
+        $this->setParametro('id_alkym_proveedor','id_alkym_proveedor','int4');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+
         //Devuelve la respuesta
         return $this->respuesta;
     }

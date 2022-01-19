@@ -1262,6 +1262,200 @@ BEGIN
 
      end;
 
+     /*********************************
+     #TRANSACCION:  'PM_PROVEALK_MOD'
+     #DESCRIPCION:    Modificacion de registros para registrar al alkym
+     #AUTOR:        maylee.perez
+     #FECHA:        19-01-2022 10:44:58
+    ***********************************/
+
+    elsif(p_transaccion='PM_PROVEALK_MOD')then
+
+        begin
+
+
+          /* if exists(select 1 from param.tproveedor
+                    where codigo = v_parametros.codigo
+                    and id_proveedor != v_parametros.id_proveedor) then
+                raise exception 'Código de Proveedor duplicado';
+            end if;
+            */
+            --recupera datos previos del proveedor
+            select
+                  *
+               into
+                v_registros_prov
+            from param.tproveedor pr
+            where pr.id_proveedor = v_parametros.id_proveedor;
+
+            select
+                   p.desc_proveedor
+               INTO
+                  v_desc_proveedor_antes
+            from param.vproveedor p
+            where p.id_proveedor = v_id_proveedor;
+
+
+            --Sentencia de la modificacion
+
+            update param.tproveedor set
+                numero_sigma = v_parametros.numero_sigma,
+                id_institucion = v_parametros.id_institucion,
+                id_persona = v_parametros.id_persona,
+                id_lugar = v_parametros.id_lugar,
+                nit = v_parametros.nit,
+                id_usuario_mod = p_id_usuario,
+                fecha_mod = now(),
+                rotulo_comercial = UPPER(v_parametros.rotulo_comercial),
+                --contacto = v_parametros.contacto,
+                tipo = v_parametros.tipo,
+
+                condicion = v_parametros.condicion,
+                actividad = v_parametros.actividad,
+                num_proveedor = v_parametros.num_proveedor,
+                id_lugar_departamento = v_parametros.id_lugar_fk,
+                id_lugar_ciudad = v_parametros.id_lugar_fk2,
+
+                id_moneda= v_parametros.id_moneda,
+                dnrp= v_parametros.dnrp,
+                ingreso_bruto= v_parametros.ingreso_bruto,
+                tipo_habilitacion= v_parametros.tipo_habilitacion,
+                motivo_habilitacion= v_parametros.motivo_habilitacion,
+                codigo_alkym= v_parametros.codigo_alkym,
+                ccorreo= v_parametros.ccorreo,
+
+                codigo_externo = v_parametros.codigo_externo,
+                codigo_fabricante = v_parametros.codigo_fabricante,
+
+                --08-12-2020(may)
+				id_beneficiario = v_parametros.id_beneficiario,
+                razon_social_sigep = v_parametros.razon_social_sigep,
+
+                id_proveedor_alkym = v_parametros.id_alkym_proveedor
+
+            where id_proveedor=v_parametros.id_proveedor;
+
+
+            --modificar datos basicos de proveedor y persona ,....isntitucion el nit
+            if v_parametros.id_persona is not null then
+
+
+                    update  segu.tpersona  set
+                       --27-02-2020 (may) se comenta porq nodebe modificarsenombre y apellidos
+                     /*  nombre = v_parametros.nombre,
+                       apellido_paterno = v_parametros.apellido_paterno,
+                       apellido_materno = v_parametros.apellido_materno,*/
+                       ci = v_parametros.ci,
+                       correo = v_parametros.correo,
+                       celular1 =v_parametros.celular1,
+                       telefono1 =v_parametros.telefono1,
+                       telefono2 =v_parametros.telefono2,
+                       celular2 =v_parametros.celular2,
+                       genero = v_parametros.genero,
+                       fecha_nacimiento =v_parametros.fecha_nacimiento,
+                       direccion = v_parametros.direccion,
+                       codigo_telf = v_parametros.codigo_telf,
+
+                       fax= v_parametros.fax_persona,
+                       pag_web= v_parametros.pag_web_persona,
+                       observaciones = v_parametros.observaciones_persona
+
+                     WHERE id_persona  = v_parametros.id_persona;
+
+            else
+
+                  /*    IF   exists(select
+                                       1
+                                    from param.tinstitucion i
+                                    where i.estado_reg = 'activo'
+                                          and  i.codigo =  v_parametros.codigo_institucion
+                                          and i.id_institucion != v_parametros.id_institucion) THEN
+                             raise exception 'Ya existe una institución con esta sigla %',  v_parametros.codigo_institucion;
+                         END IF;
+					*/
+                     --Sentencia de la insercion  --modifica datos de la institucion
+
+                        update  param.tinstitucion set
+                            fax = v_parametros.fax,
+                            casilla = v_parametros.casilla,
+                            direccion = v_parametros.direccion_institucion,
+                            doc_id =  v_parametros.nit,
+                            telefono2 = v_parametros.telefono2_institucion,
+                            email2 = v_parametros.email2_institucion,
+                            celular1 = v_parametros.celular1_institucion,
+                            email1 =  v_parametros.email1_institucion,
+                            nombre = v_parametros.nombre_institucion,
+                            observaciones = v_parametros.observaciones,
+                            telefono1 =  v_parametros.telefono1_institucion,
+                            celular2 = v_parametros.celular2_institucion,
+                            pag_web = v_parametros.pag_web,
+                            id_usuario_mod = p_id_usuario,
+                            fecha_mod = now(),
+                            codigo = null, --v_parametros.codigo_institucion,
+                            codigo_telf_institucion = v_parametros.codigo_telf_institucion
+
+                       WHERE id_institucion = v_parametros.id_institucion;
+
+
+            end if;
+
+
+
+
+
+            --si etenemos sitema de contabildiad
+
+            IF EXISTS (
+                       SELECT 1
+                       FROM   information_schema.tables
+                       WHERE  table_schema = 'conta'
+                       AND    table_name = 'tauxiliar'
+                    ) THEN
+
+
+                  select
+                         p.desc_proveedor
+                      INTO
+                         v_desc_proveedor
+                   from param.vproveedor p
+                   where p.id_proveedor = v_id_proveedor;
+
+
+                  -- si fue cambiado el codigo o la descripcion del proveedor
+                  IF v_desc_proveedor_antes != v_desc_proveedor  THEN
+
+                      IF  exists(select
+                               1
+                            from conta.tauxiliar a
+                            where      a.estado_reg = 'activo'
+                                  and   a.nombre_auxiliar =  v_desc_proveedor
+                                  and  a.id_auxiliar !=  v_registros_prov.id_auxiliar ) THEN
+
+                           raise exception 'Ya existe otro auxiliar con esta descripcion  %',v_desc_proveedor;
+
+                      END IF;
+
+                       update conta.tauxiliar aux set
+                         nombre_auxiliar = v_desc_proveedor
+                       where aux.id_auxiliar = v_registros_prov.id_auxiliar;
+                  END IF;
+              END IF;
+
+
+
+
+
+
+
+            --Definicion de la respuesta
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Proveedores modificado(a)');
+            v_resp = pxp.f_agrega_clave(v_resp,'id_proveedor',v_parametros.id_proveedor::varchar);
+
+            --Devuelve la respuesta
+            return v_resp;
+
+        end;
+
     else
 
         raise exception 'Transaccion inexistente: %',p_transaccion;
