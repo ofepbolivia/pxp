@@ -17,6 +17,7 @@ DECLARE
     v_es_gerencia		varchar;
 BEGIN
   	v_nombre_funcion = 'orga.f_get_uo_gerencia';
+    --raise notice 'par_id_funcionario Gerencia: %, par_id_uo: %', par_id_funcionario, par_id_uo;
     if (par_id_uo is not null) then
     	select euo.id_uo_padre, uo.gerencia, euo.id_uo_hijo,ni.numero_nivel, uo.gerencia
         into v_id_uo, v_gerencia, v_id_uo_hijo, v_nivel, v_es_gerencia
@@ -69,3 +70,6 @@ STABLE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.f_get_uo_gerencia (par_id_uo integer, par_id_funcionario integer, par_fecha date)
+  OWNER TO postgres;

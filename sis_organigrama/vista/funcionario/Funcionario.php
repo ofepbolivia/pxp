@@ -536,6 +536,52 @@ header("content-type: text/javascript; charset=UTF-8");
 
             {
                 config:{
+                    fieldLabel: "Tiempo Empresa",
+                    gwidth: 150,
+                    name: 'tiempo_empresa',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'TextField',
+                //filters:{pfiltro:'tca.nombre',type:'string'},
+                //bottom_filter : true,
+                id_grupo:1,
+                grid:true,
+                form:false
+            },
+
+            {
+                config:{
+                    fieldLabel: "Jubilado",
+                    gwidth: 70,
+                    name: 'jubilado',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'TextField',
+                //filters:{pfiltro:'tca.nombre',type:'string'},
+                //bottom_filter : true,
+                id_grupo:1,
+                grid:true,
+                form:false
+            },
+
+            {
+                config:{
                     name: 'fecha_asignacion',
                     fieldLabel: 'Fecha Ultima Asignación',
                     allowBlank: true,
@@ -631,6 +677,51 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid:true,
                 form:false
             },
+
+            {
+                config:{
+                    name: 'categoria',
+                    fieldLabel: 'Categoria Prog.',
+                    gwidth: 160,
+                    renderer:function (value, p, record){
+                        return String.format('{0}', "<div style='color: red'><b>"+value+"</b></div>");
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'cp.codigo_categoria',type:'string'},
+                grid:true,
+                form:false
+            },
+            {
+                config:{
+                    name: 'centro_costo',
+                    fieldLabel: 'Centro Costo',
+                    gwidth: 200,
+                    renderer:function (value, p, record){
+                        return String.format('{0}', "<div style='color: green'><b>"+value+"</b></div>");
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'vcc.codigo_tcc',type:'string'},
+                grid:true,
+                form:false
+            },
+
+            /*{
+                config:{
+                    name: 'nombre_unidad',
+                    fieldLabel: 'Departamento',
+                    gwidth: 160,
+                    renderer:function (value, p, record){
+                        return String.format('{0}', "<div style='color: green'><b>"+value+"</b></div>");
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'dep.nombre_unidad',type:'string'},
+                grid:true,
+                form:false
+            },*/
+
             {
                 config:{
                     fieldLabel: "Código",
@@ -1491,7 +1582,11 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:'id_tipo_doc_identificacion', type: 'numeric'},
             {name:'id_especialidad_nivel', type: 'numeric'},
             {name:'desc_titulo', type: 'string'},
-            {name:'base_operativa', type: 'string'}
+            {name:'base_operativa', type: 'string'},
+            {name:'centro_costo', type: 'string'},
+            {name:'categoria', type: 'string'},
+            {name:'tiempo_empresa', type: 'string'},
+            {name:'jubilado', type: 'string'}
 
         ],
         sortInfo:{

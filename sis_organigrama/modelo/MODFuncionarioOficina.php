@@ -35,6 +35,11 @@ class MODFuncionarioOficina extends MODbase{
         $this->captura('fecha_mod','timestamp');
         $this->captura('usr_reg','varchar');
         $this->captura('usr_mod','varchar');
+        $this->captura('id_cargo','int4');
+
+        $this->captura('nombre_oficina','varchar');
+        $this->captura('funcionario','varchar');
+        $this->captura('lugar','varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();

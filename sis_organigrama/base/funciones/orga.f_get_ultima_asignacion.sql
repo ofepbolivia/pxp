@@ -13,7 +13,7 @@ BEGIN
 
   v_nombre_funcion = 'orga.f_get_ultima_asignacion';
 
-  
+   --raise notice 'p_id_funcionario Ultima: %', p_id_funcionario;
    select tuo.id_uo_funcionario
    into v_id_uo_funcionario
    from orga.tuo_funcionario tuo
@@ -21,11 +21,11 @@ BEGIN
    inner join orga.ttipo_contrato ttc on ttc.id_tipo_contrato = tc.id_tipo_contrato
    where tuo.id_funcionario = p_id_funcionario and tuo.estado_reg = 'activo' and tuo.tipo = 'oficial' and ttc.codigo in ('PLA', 'EVE')
    order by tuo.fecha_asignacion desc limit 1;
-  
+
   return v_id_uo_funcionario;
- 
-  
-  
+
+
+
 EXCEPTION
 WHEN OTHERS THEN
 		v_resp='';
@@ -39,3 +39,6 @@ STABLE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.f_get_ultima_asignacion (p_id_funcionario integer)
+  OWNER TO postgres;

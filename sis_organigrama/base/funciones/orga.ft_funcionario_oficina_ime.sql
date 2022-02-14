@@ -33,7 +33,7 @@ DECLARE
     v_id_lugar					integer;
 
     v_lugar						record;
-
+    v_reg_old                   record;
 BEGIN
 
     v_nombre_funcion = 'orga.ft_funcionario_oficina_ime';
@@ -48,7 +48,7 @@ BEGIN
 
 	if(p_transaccion='OR_FUNCOFI_INS')then
 
-        begin
+        begin raise 'OR_FUNCOFI_INS';
         	--Sentencia de la insercion
         	insert into orga.tfuncionario_oficina(
 			estado_reg,
@@ -100,18 +100,30 @@ BEGIN
 	elsif(p_transaccion='OR_FUNCOFI_MOD')then
 
 		begin
-			--Sentencia de la modificacion
-			update orga.tfuncionario_oficina set
-			id_funcionario = v_parametros.id_funcionario,
-			id_oficina = v_parametros.id_oficina,
-			fecha_ini = v_parametros.fecha_ini,
-			fecha_fin = v_parametros.fecha_fin,
-			observaciones = v_parametros.observaciones,
-			id_usuario_mod = p_id_usuario,
-			fecha_mod = now(),
-			id_usuario_ai = v_parametros._id_usuario_ai,
-			usuario_ai = v_parametros._nombre_usuario_ai
-			where id_funcionario_oficina=v_parametros.id_funcionario_oficina;
+
+		    select * into v_reg_old
+			from orga.tfuncionario_oficina
+			where id_funcionario_oficina = v_parametros.id_funcionario_oficina;
+
+			if v_parametros.fecha_fin < coalesce(v_reg_old.fecha_fin,'31/12/9999'::date) then
+			    --raise 'a: % b: % , c: %',v_parametros.fecha_fin, coalesce(v_reg_old.fecha_fin,'31/12/9999'::date),v_parametros.fecha_fin < coalesce(v_reg_old.fecha_fin,'31/12/9999'::date);
+				insert into orga.tfuncionario_oficina (
+				    id_funcionario ,    id_oficina,			fecha_ini,
+					fecha_fin,			observaciones,		id_usuario_reg,
+					fecha_reg
+				) values (
+				    v_parametros.id_funcionario ,   v_parametros.id_oficina,	    v_parametros.fecha_ini+1,
+					null,         v_parametros.observaciones,		p_id_usuario,
+					now()
+				);
+
+				--Sentencia de la modificacion
+                update orga.tfuncionario_oficina set
+                    fecha_fin = v_parametros.fecha_fin,
+                    id_usuario_mod = p_id_usuario,
+                    fecha_mod = now()
+                where id_funcionario_oficina=v_parametros.id_funcionario_oficina;
+			end if;
 
 			--Definicion de la respuesta
             v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Funcionario Oficina modificado(a)');

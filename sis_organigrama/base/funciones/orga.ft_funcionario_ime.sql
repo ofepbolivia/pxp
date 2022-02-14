@@ -56,6 +56,7 @@ v_resultado					varchar;
 v_gerente					record;
 v_cuenta					varchar;
 v_existe_usuario			integer;
+v_funcionario               record;
 
 BEGIN
 	--raise exception 'COMUNIQUESE CON EL DEPTO. INFORMATICO';
@@ -610,6 +611,29 @@ BEGIN
 
         END;
 
+    /*******************************
+     #TRANSACCION:  RH_UPD_FECHA_ING_IME
+     #DESCRIPCION:	Actualiza la fecha de ingreso de todos los funcianarios activos
+     #AUTOR:	    franklin.espinoza
+     #FECHA:		29-03-2021
+    ***********************************/
+
+    elsif(par_transaccion='RH_UPD_FECHA_ING_IME')then
+        BEGIN
+
+            for v_funcionario in select asig.id_funcionario, asig.id_uo_funcionario, asig.fecha_asignacion
+                                 from orga.tuo_funcionario asig
+        	                     where asig.tipo = 'oficial' and asig.estado_reg = 'activo' and coalesce(asig.fecha_finalizacion,'31/12/9999'::date) >= current_date loop
+                update orga.tfuncionario set
+                    fecha_ingreso_calculado = plani.f_get_fecha_primer_contrato_empleado (v_funcionario.id_uo_funcionario, v_funcionario.id_funcionario, v_funcionario.fecha_asignacion)
+                where id_funcionario = v_funcionario.id_funcionario;
+            end loop;
+
+        	v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Fecha de ingreso actualizado exitosamente');
+            v_resp = pxp.f_agrega_clave(v_resp,'estado','success');
+
+        END;
+
     else
 
          raise exception 'No existe la transaccion: %',par_transaccion;
@@ -634,3 +658,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.ft_funcionario_ime (par_administrador integer, par_id_usuario integer, par_tabla varchar, par_transaccion varchar)
+  OWNER TO postgres;

@@ -525,7 +525,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     config:{
                         name:'id_tipo_doc_identificacion',
                         fieldLabel:'Tipo Documento',
-                        allowBlank:false,
+                        allowBlank:true,
                         emptyText:'Seleccione una opción',
                         msgTarget: 'side',
                         store:new Ext.data.JsonStore(
@@ -586,7 +586,7 @@ header("content-type: text/javascript; charset=UTF-8");
                         fieldLabel: "Nro. Documento",
                         gwidth: 120,
                         name: 'ci',
-                        allowBlank:false,
+                        allowBlank:true,
                         maxLength:20,
                         minLength:1,
                         msgTarget: 'side',

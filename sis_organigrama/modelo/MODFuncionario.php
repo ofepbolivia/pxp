@@ -88,6 +88,11 @@ class MODFuncionario extends MODbase{
         $this->captura('base_operativa','varchar');
 
 
+        $this->captura('centro_costo','varchar');
+        $this->captura('categoria','varchar');
+
+        $this->captura('tiempo_empresa','varchar');
+        $this->captura('jubilado','varchar');
         //Ejecuta la funcion
         $this->armarConsulta();
         //echo $this->getConsulta(); exit;
@@ -709,6 +714,20 @@ class MODFuncionario extends MODbase{
 
         //Ejecuta la instruccion
         $this->armarConsulta();
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
+
+    function updateFechaIngreso(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='orga.ft_funcionario_ime';
+        $this->transaccion='RH_UPD_FECHA_ING_IME';
+        $this->tipo_procedimiento='IME';
+
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+
         $this->ejecutarConsulta();
         return $this->respuesta;
     }

@@ -598,7 +598,7 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 		onButtonEdit:function(){
 	
 			var nodo = this.sm.getSelectedNode();			
-						
+			console.log('onButtonEdit',nodo);
 			//this.getComponente('nivel').setValue((nodo.attributes.nivel*1)+1);
 			
 			/*if(nodo.attributes.tipo_dato=='interface'){		

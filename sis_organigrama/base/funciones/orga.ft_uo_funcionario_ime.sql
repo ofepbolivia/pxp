@@ -44,6 +44,7 @@ $body$
 
 	v_numero_contrato       varchar;
     v_nro_documento_asignacion  varchar;
+    v_id_oficina				integer;
   BEGIN
 
     v_nombre_funcion:='orga.ft_uo_funcionario_ime';
@@ -155,6 +156,11 @@ $body$
           	RETURNING id_uo_funcionario INTO v_id_uo_funcionario;
         end if;
 
+        select car.id_oficina
+        into v_id_oficina
+        from orga.tcargo car
+        where car.id_cargo = v_parametros.id_cargo;
+
 
         --10-04-2012: sincronizacion de UO entre BD
         /* v_respuesta_sinc:=orga.f_sincroniza_uo_empleado_entre_bd(v_id_uo_funcionario,'10.172.0.13','5432','db_link','db_link','dbendesis' ,'INSERT');
@@ -165,6 +171,7 @@ $body$
 
         v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Asignacion empleado-uo registrada con exito: Funcionario ('|| (select desc_funcionario1 from orga.vfuncionario where id_funcionario=v_parametros.id_funcionario) || ') - UO'|| (select nombre_unidad from orga.tuo where id_uo=v_parametros.id_uo));
         v_resp = pxp.f_agrega_clave(v_resp,'id_uo',v_id_uo::varchar);
+        v_resp = pxp.f_agrega_clave(v_resp,'id_oficina',v_id_oficina::varchar);
       END;
     /*******************************
     #TRANSACCION:  RH_UOFUNC_MOD
@@ -190,13 +197,13 @@ $body$
 
 
         --verficar que el funcionario no este activo en dos unidades simultaneamente
-        --raise exception '%    %',v_parametros.id_funcionario,v_parametros.id_uo;
-        /*if ( ((select count(id_funcionario) from
+        --raise exception '%, %, %',v_parametros.id_funcionario,v_parametros.id_uo, v_parametros.fecha_asignacion;
+        if ( ((select count(id_funcionario) from
           orga.tuo_funcionario  a
         where a.id_funcionario=v_parametros.id_funcionario
               and a.estado_reg = 'activo' and
               a.fecha_finalizacion > v_parametros.fecha_asignacion
-              and a.id_uo != v_parametros.id_uo))>0) then
+              and a.id_uo != v_parametros.id_uo and a.tipo = 'oficial'))>0) then
 
           select tuo.tipo
           into v_tipo
@@ -206,7 +213,7 @@ $body$
           if v_tipo = 'oficial' then
 			      raise exception 'El Funcionario se encuentra en otro cargo vigente primero inactive su asignacion actual';
           end if;
-        end if;*/
+        end if;
 
 
 
@@ -256,8 +263,14 @@ $body$
                           raise exception 'Sincronizacion de UO en BD externa no realizada%',v_respuesta_sinc;
                         end if;*/
 
+		select car.id_oficina
+        into v_id_oficina
+        from orga.tcargo car
+        where car.id_cargo = v_parametros.id_cargo;
+
         v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Modificacion a asignacion empleado-uo modificada con exito '||v_parametros.id_uo_funcionario||': Funcionario ('|| (select desc_funcionario1 from orga.vfuncionario where id_funcionario=v_parametros.id_funcionario) || ') - UO'|| (select nombre_unidad from orga.tuo where id_uo=v_parametros.id_uo));
         v_resp = pxp.f_agrega_clave(v_resp,'id_uo',v_parametros.id_uo::varchar);
+        v_resp = pxp.f_agrega_clave(v_resp,'id_oficina',v_id_oficina::varchar);
       END;
 
     /*******************************
@@ -355,3 +368,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.ft_uo_funcionario_ime (par_administrador integer, par_id_usuario integer, par_tabla varchar, par_transaccion varchar)
+  OWNER TO postgres;

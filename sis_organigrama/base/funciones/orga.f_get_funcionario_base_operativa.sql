@@ -17,8 +17,8 @@ BEGIN
   into v_base_operativa
   from orga.tfuncionario_oficina tf
   inner join param.tlugar tlu on tlu.id_lugar = tf.id_lugar
-  where tf.id_funcionario = p_id_funcionario
-  order by tf.fecha_ini desc
+  where tf.id_funcionario = p_id_funcionario and current_date between tf.fecha_ini and tf.fecha_fin
+  order by /*tf.fecha_ini*/tf.id_funcionario_oficina desc
   limit 1;
 
   return coalesce(v_base_operativa,'NO TIENE');
@@ -37,3 +37,6 @@ STABLE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.f_get_funcionario_base_operativa (p_id_funcionario integer)
+  OWNER TO postgres;

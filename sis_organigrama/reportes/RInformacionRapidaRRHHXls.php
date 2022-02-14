@@ -70,6 +70,7 @@ class RInformacionRapidaRRHHXls{
         $this->docexcel->getActiveSheet()->getColumnDimension('O')->setWidth(40);
         $this->docexcel->getActiveSheet()->getColumnDimension('P')->setWidth(25);
         $this->docexcel->getActiveSheet()->getColumnDimension('Q')->setWidth(25);
+        $this->docexcel->getActiveSheet()->getColumnDimension('R')->setWidth(25);
 
         $this->docexcel->getActiveSheet()->setCellValue('A1','Nro');
         $this->docexcel->getActiveSheet()->setCellValue('B1','NOMBRE');
@@ -91,6 +92,7 @@ class RInformacionRapidaRRHHXls{
         $this->docexcel->getActiveSheet()->setCellValue('O1','CONTRATO');
         $this->docexcel->getActiveSheet()->setCellValue('P1','HABER BASICO');
         $this->docexcel->getActiveSheet()->setCellValue('Q1','LICENCIA');
+        $this->docexcel->getActiveSheet()->setCellValue('R1','NRO. CUENTA');
 
     }
 
@@ -203,8 +205,8 @@ class RInformacionRapidaRRHHXls{
         $color_pestana = array('ff0000','1100ff','55ff00','3ba3ff','ff4747','697dff','78edff','ba8cff',
             'ff80bb','ff792b','ffff5e','52ff97','bae3ff','ffaf9c','bfffc6','b370ff','ffa8b4','7583ff','9aff17','ff30c8');
         $this->docexcel->getActiveSheet()->freezePaneByColumnAndRow(0,2);
-        $this->docexcel->getActiveSheet()->getStyle('A1:Q1')->getAlignment()->setWrapText(true);
-        $this->docexcel->getActiveSheet()->getStyle('A1:Q1')->applyFromArray($styleTitulos3);
+        $this->docexcel->getActiveSheet()->getStyle('A1:R1')->getAlignment()->setWrapText(true);
+        $this->docexcel->getActiveSheet()->getStyle('A1:R1')->applyFromArray($styleTitulos3);
         $profesion = null;
         $contrato = null;
         foreach ($datos as $value) {
@@ -245,6 +247,7 @@ class RInformacionRapidaRRHHXls{
             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(14, $fila, $contrato);
             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(15, $fila, number_format($value['haber_basico'],2));
             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(16, $fila, $value['licencia']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(17, $fila, (string)$value['nro_cuenta']);
 
             $fila++;
             $numero++;

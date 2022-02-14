@@ -1,7 +1,11 @@
-CREATE OR REPLACE FUNCTION "orga"."ft_funcionario_oficina_sel"(
-				p_administrador integer, p_id_usuario integer, p_tabla character varying, p_transaccion character varying)
-RETURNS character varying AS
-$BODY$
+CREATE OR REPLACE FUNCTION orga.ft_funcionario_oficina_sel (
+  p_administrador integer,
+  p_id_usuario integer,
+  p_tabla varchar,
+  p_transaccion varchar
+)
+RETURNS varchar AS
+$body$
 /**************************************************************************
  SISTEMA:		Organigrama
  FUNCION: 		orga.ft_funcionario_oficina_sel
@@ -45,8 +49,8 @@ BEGIN
 						funcofi.id_funcionario,
 						funcofi.id_oficina,
 						funcofi.fecha_ini,
-						funcofi.fecha_fin,
-						funcofi.observaciones,
+			            funcofi.fecha_fin,
+						case when funcofi.observaciones = '''' or funcofi.observaciones is null then ''Ninguna'' else funcofi.observaciones end observaciones,
 						funcofi.id_usuario_reg,
 						funcofi.fecha_reg,
 						funcofi.id_usuario_ai,
@@ -54,8 +58,15 @@ BEGIN
 						funcofi.id_usuario_mod,
 						funcofi.fecha_mod,
 						usu1.cuenta as usr_reg,
-						usu2.cuenta as usr_mod
+						usu2.cuenta as usr_mod,
+                        funcofi.id_cargo,
+			            ofi.nombre nombre_oficina,
+                        vf.desc_funcionario2::varchar funcionario,
+                        (lug.nombre||'' (''||lug.codigo||'')'')::varchar lugar
 						from orga.tfuncionario_oficina funcofi
+			            inner join orga.toficina ofi on ofi.id_oficina = funcofi.id_oficina
+			            inner join orga.vfuncionario vf on vf.id_funcionario = funcofi.id_funcionario
+			            inner join param.tlugar lug on lug.id_lugar = ofi.id_lugar
 						inner join segu.tusuario usu1 on usu1.id_usuario = funcofi.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = funcofi.id_usuario_mod
 				        where  ';
@@ -80,8 +91,11 @@ BEGIN
 
 		begin
 			--Sentencia de la consulta de conteo de registros
-			v_consulta:='select count(id_funcionario_oficina)
+			v_consulta:='select count(funcofi.id_funcionario_oficina)
 					    from orga.tfuncionario_oficina funcofi
+					    inner join orga.toficina ofi on ofi.id_oficina = funcofi.id_oficina
+			            inner join orga.vfuncionario vf on vf.id_funcionario = funcofi.id_funcionario
+			            inner join param.tlugar lug on lug.id_lugar = ofi.id_lugar
 					    inner join segu.tusuario usu1 on usu1.id_usuario = funcofi.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = funcofi.id_usuario_mod
 					    where ';
@@ -109,7 +123,12 @@ EXCEPTION
 			v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
 			raise exception '%',v_resp;
 END;
-$BODY$
-LANGUAGE 'plpgsql' VOLATILE
+$body$
+LANGUAGE 'plpgsql'
+VOLATILE
+CALLED ON NULL INPUT
+SECURITY INVOKER
 COST 100;
-ALTER FUNCTION "orga"."ft_funcionario_oficina_sel"(integer, integer, character varying, character varying) OWNER TO postgres;
+
+ALTER FUNCTION orga.ft_funcionario_oficina_sel (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;

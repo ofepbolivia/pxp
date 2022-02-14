@@ -52,7 +52,7 @@ BEGIN
              if v_id_persona is null then
              	--CI
                 if exists(select 1 from segu.tpersona
-                      where ci = v_parametros.ci) then
+                      where ci = v_parametros.ci and v_parametros.ci != '') then
                   raise exception 'Este número de Carnet de Identidad ya fue registrado';
                 end if;
 

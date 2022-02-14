@@ -115,6 +115,9 @@ class RDocumentosRHDXls
         $this->docexcel->getActiveSheet()->mergeCells('B1:B2');
         $this->docexcel->getActiveSheet()->mergeCells('C1:C2');
         $this->docexcel->getActiveSheet()->mergeCells('D1:D2');
+        $this->docexcel->getActiveSheet()->mergeCells('E1:E2');
+        $this->docexcel->getActiveSheet()->mergeCells('F1:F2');
+        $this->docexcel->getActiveSheet()->mergeCells('G1:G2');
 
         /*************************************Cabecera*****************************************/
         $this->docexcel->getActiveSheet()->getColumnDimension($this->celdas[0])->setWidth(7);
@@ -130,7 +133,13 @@ class RDocumentosRHDXls
         $this->docexcel->getActiveSheet()->getColumnDimension($this->celdas[3])->setWidth(30);
         $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4,1,'CI');
 
-        $column = 4;
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5,1,'CARGO');
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->celdas[3])->setWidth(30);
+
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6,1,'FECHA NACIMIENTO');
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->celdas[3])->setWidth(30);
+
+        $column = 6;
         $headers_size = 0;
         $codigo = '';
         $inicio = 5;
@@ -175,7 +184,7 @@ class RDocumentosRHDXls
         $tamano = count($datos)+2;
         $this->docexcel->getActiveSheet()->freezePaneByColumnAndRow(0,3);
 
-        $column = 5;
+        $column = 7;
         $codigo = '';
         $duplicado = '';
         /***********************************Detalle***********************************************/
@@ -187,6 +196,8 @@ class RDocumentosRHDXls
             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(2,$fila,$value['lugar']);
             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3,$fila,$value['desc_funcionario']);
             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4,$fila,$value['ci']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5,$fila,$value['cargo']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6,$fila,DateTime::createFromFormat('Y-m-d', $value['fecha_nacimiento'])->format('d/m/Y'));
 
             $file_content = json_decode($value['documento'])->files;
 

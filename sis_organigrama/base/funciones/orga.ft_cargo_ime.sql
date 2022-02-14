@@ -84,7 +84,7 @@ BEGIN
                 from orga.tcargo tca
                 where tca.codigo = v_parametros.codigo::varchar and coalesce(tca.fecha_fin,'31/12/9999'::date) >= current_date and tca.estado_reg = 'activo';
 
-                if v_cargo.codigo is not null and v_cargo.codigo != '' then
+                if v_cargo.codigo is not null or v_cargo.codigo != '' then
                 	raise 'Estimado Usuario: El item % actualmente sigue vigente, bajo la denominación %.', v_cargo.codigo, v_cargo.nombre;
                 end if;
 
@@ -340,9 +340,19 @@ BEGIN
 			id_usuario_mod = p_id_usuario,
 			id_oficina = v_parametros.id_oficina,
       id_escala_salarial = v_parametros.id_escala_salarial/*,
+      id_tipo_contrato = v_parametros.id_tipo_contrato,
       estado_reg = 'inactivo'*/
 			where id_cargo=v_parametros.id_cargo;
 
+			/*update  orga.tcargo_presupuesto set
+              id_centro_costo = v_parametros.id_centro_costo,
+              id_ot = v_parametros.id_ot,
+              --porcentaje = v_parametros.porcentaje,
+              --fecha_ini = v_parametros.fecha_ini_cc,
+              fecha_fin = v_parametros.fecha_fin_cc,
+              id_usuario_mod = p_id_usuario,
+              fecha_mod = now()
+            where id_cargo=v_parametros.id_cargo;*/
 			--Definicion de la respuesta
             v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Cargo modificado(a)');
             v_resp = pxp.f_agrega_clave(v_resp,'id_cargo',v_parametros.id_cargo::varchar);
@@ -464,10 +474,10 @@ BEGIN
                                   inner join orga.ttipo_contrato tipcon on tipcon.id_tipo_contrato = cargo.id_tipo_contrato
                                   inner join orga.tescala_salarial escsal on escsal.id_escala_salarial = cargo.id_escala_salarial
                                   LEFT join orga.toficina ofi on ofi.id_oficina = cargo.id_oficina
-                                  left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = 19
+                                  left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = 20
                                   LEFT join orga.tuo_funcionario tuo on tuo.id_cargo = cargo.id_cargo and (tuo.fecha_finalizacion is null or current_date <= tuo.fecha_finalizacion)
                                   LEFT join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
-                                  where cargo.estado_reg = 'activo' and tipcon.codigo != 'PCP'
+                                  where cargo.estado_reg = 'activo' and tipcon.codigo != 'PCP' and tuo.estado_reg = 'activo' and tuo.tipo = 'oficial'
                                   /*and (tcp.id_cargo_presupuesto is null and tcp.id_ot is null and tuo.id_uo_funcionario is null)*/ loop
 
                 select
@@ -480,7 +490,7 @@ BEGIN
                   tcp.id_ot
               	into v_presupuesto
                 from orga.tcargo_presupuesto tcp
-                where tcp.id_cargo = v_funcionarios.identificador and tcp.id_gestion = 19 and (tcp.fecha_fin is null or tcp.fecha_fin between '01/01/2020'::date and '31/12/2020'::date);
+                where tcp.id_cargo = v_funcionarios.identificador and tcp.id_gestion = 20 and (tcp.fecha_fin is null or tcp.fecha_fin between '01/01/2021'::date and '31/12/2021'::date);
 
 
 
@@ -517,14 +527,14 @@ BEGIN
                   v_id_gestion,
                   v_id_presupuesto,
                   v_presupuesto.porcentaje,
-                  '01/01/2021'::date,
+                  '01/01/2022'::date,
                   'activo',
                   p_id_usuario,
                   now(),
                   null,
                   null,
                   v_presupuesto.id_ot,
-                  '31/12/2021'::date
+                  '31/12/2022'::date
                 );
             end loop;
 

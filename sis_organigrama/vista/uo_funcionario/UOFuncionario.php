@@ -395,12 +395,12 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 	       		mode: 'local',
 				gwidth: 150,
                 anchor:'100%',
-				store:['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia', 'renuncia_tacita' ,'transferencia', 'desvinculación', 'cambio_item', 'cambio_escala_salarial','fin_delegacion_interina', 'despido_indirecto']
+				store:['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia', 'renuncia_tacita' ,'transferencia', 'desvinculación', 'cambio_item', 'cambio_escala_salarial','fin_delegacion_interina', 'despido_indirecto', 'reestructura', 'artificio_beneficio']
 			},
 				type:'ComboBox',
 				filters:{	
 	       		         type: 'list',
-	       				 options: ['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia','renuncia_tacita','transferencia', 'desvinculación', 'cambio_item', 'cambio_escala_salarial','fin_delegacion_interina', 'despido_indirecto'],
+	       				 options: ['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia','renuncia_tacita','transferencia', 'desvinculación', 'cambio_item', 'cambio_escala_salarial','fin_delegacion_interina', 'despido_indirecto', 'reestructura', 'artificio_beneficio'],
 	       		 	},
 				id_grupo:0,
 				grid:true,

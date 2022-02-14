@@ -91,6 +91,7 @@ class MODReporte extends MODbase{
         
         $this->captura('lugar','varchar');
         $this->captura('codigo','varchar');
+        $this->captura('fecha_nacimiento','date');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -157,6 +158,7 @@ class MODReporte extends MODbase{
         $this->captura('genero','varchar');
         $this->captura('haber_basico','numeric');
         $this->captura('licencia','varchar');
+        $this->captura('nro_cuenta','varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();

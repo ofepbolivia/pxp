@@ -52,6 +52,15 @@ class MODCargo extends MODbase{
         $this->captura('codigo_tipo_contrato','varchar');
         $this->captura('haber_basico','numeric');
 
+        $this->captura('id_gestion','integer');
+        $this->captura('porcentaje','numeric');
+        $this->captura('id_ot','integer');
+        $this->captura('fecha_ini_cc','date');
+        $this->captura('fecha_fin_cc','date');
+
+        $this->captura('id_funcionario','integer');
+
+
         //Ejecuta la instruccion
         $this->armarConsulta();//var_dump($this->consulta);exit;
         $this->ejecutarConsulta();
@@ -150,7 +159,7 @@ class MODCargo extends MODbase{
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($result){
+        if (/*$result &&*/ false){
             if($result['id_oficina'] != $id_oficina) {
 
                 $conex = "
@@ -193,11 +202,11 @@ class MODCargo extends MODbase{
                 $conexion = new ConexionSqlServer($param_conex[0], $param_conex[2], $param_conex[3], $param_conex[1]);
                 $conn = $conexion->conectarSQL();
 
-                @mssql_query(utf8_decode("exec Ende_Item 'UPD', $id_cargo, $organigrama, $contrato, '$nroitem', $cargo, $escala, '$initial', ".$base['id_lugar'].", '".$base['lugar']."', '".$fecha_ini."', '".$fecha_fin."';"), $conn);
+                @mssql_query(utf8_decode("exec Ende_Item 'UPD', $id_cargo, $organigrama, $contrato, '$nroitem', $cargo, $escala, '$initial', ".$base['id_lugar'].", '".$base['lugar']."', '".$fecha_ini."', '".$fecha_fin."','activo';"), $conn);
                 @mssql_query(utf8_decode("exec Ende_HistorialCargo 'UPD', ".$result['idende'].", ".$result['idempleado'].", ".$result['iditem'].", '".$result['resolucion']."', '".$result['fechainicio']."', '".$result['fechafin']."', $usuario, '".$result['aprobado']."', '".$result['estado']."', $id_oficina, '".$base['base']."';"), $conn);
 
                 $conexion->closeSQL();
-                if (false) {
+                if (true) {
                     $data = array(
                         "id_funcionario" => $result['idempleado'],
                         "usuario" => $_SESSION["_LOGIN"] ? $_SESSION["_LOGIN"] : 'erp'
@@ -243,6 +252,15 @@ class MODCargo extends MODbase{
         $this->setParametro('fecha_ini','fecha_ini','date');
         $this->setParametro('estado_reg','estado_reg','varchar');
         $this->setParametro('fecha_fin','fecha_fin','date');
+
+        /*********************************presupuesto*********************************/
+        $this->setParametro('id_gestion','id_gestion','int4');
+        $this->setParametro('id_centro_costo','id_centro_costo','int4');
+        $this->setParametro('id_ot','id_ot','int4');
+        $this->setParametro('porcentaje','porcentaje','numeric');
+        $this->setParametro('fecha_ini_cc','fecha_ini_cc','date');
+        $this->setParametro('fecha_fin_cc','fecha_fin_cc','date');
+        /*********************************presupuesto*********************************/
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -316,6 +334,9 @@ class MODCargo extends MODbase{
 
         $this->captura('desc_tcc','varchar');
         $this->captura('codigo_categoria','varchar');
+
+        $this->captura('nombre_unidad','varchar');
+
 
         //Ejecuta la instruccion
         $this->armarConsulta();//echo($this->consulta);exit;

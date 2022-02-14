@@ -266,6 +266,23 @@ header("content-type: text/javascript; charset=UTF-8");
                 form:false,
                 bottom_filter:true
             },
+
+            {
+                config:{
+                    name: 'nombre_unidad',
+                    fieldLabel: 'Departamento',
+                    gwidth: 250,
+                    renderer:function (value, p, record){
+                        return String.format('{0}', "<div style='color: green'><b>"+value+"</b></div>");
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'dep.nombre_unidad',type:'string'},
+                grid:true,
+                form:false,
+                bottom_filter:true
+            },
+
             //04-08-2021 (may)
             {
                 config: {
@@ -688,6 +705,7 @@ header("content-type: text/javascript; charset=UTF-8");
 
             {name:'desc_tcc', type: 'string'},
             {name:'codigo_categoria', type: 'string'},
+            {name:'nombre_unidad', type: 'string'}
 
         ],
 

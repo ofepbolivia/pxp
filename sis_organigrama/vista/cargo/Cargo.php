@@ -9,6 +9,30 @@
 
 header("content-type: text/javascript; charset=UTF-8");
 ?>
+<style type="text/css" rel="stylesheet">
+    .x-selectable,
+    .x-selectable * {
+        -moz-user-select: text !important;
+        -khtml-user-select: text !important;
+        -webkit-user-select: text !important;
+    }
+
+    .x-grid-row td,
+    .x-grid-summary-row td,
+    .x-grid-cell-text,
+    .x-grid-hd-text,
+    .x-grid-hd,
+    .x-grid-row,
+
+    .x-grid-row,
+    .x-grid-cell,
+    .x-unselectable
+    {
+        -moz-user-select: text !important;
+        -khtml-user-select: text !important;
+        -webkit-user-select: text !important;
+    }
+</style>
 <script>
     Phx.vista.Cargo=Ext.extend(Phx.gridInterfaz,{
 
@@ -29,6 +53,17 @@ header("content-type: text/javascript; charset=UTF-8");
                         tooltip: 'Centros de Costo asociados al cargo'
                     }
                 );
+
+                this.addButton('btnBase',
+                    {
+                        text: 'Base Operativa',
+                        iconCls: 'bengineadd',
+                        disabled: true,
+                        handler: this.onBaseOperativa,
+                        tooltip: 'Base Operativa de un funcionario'
+                    }
+                );
+
                 this.store.baseParams.id_uo = this.maestro.id_uo;
                 if (this.maestro.fecha) {
                     this.store.baseParams.fecha = this.maestro.fecha;
@@ -37,6 +72,20 @@ header("content-type: text/javascript; charset=UTF-8");
                     this.store.baseParams.tipo = this.maestro.tipo;
                 }
                 this.load({params:{start:0, limit:50}});
+            },
+
+            onBaseOperativa : function (){
+                let record = this.getSelectedData();
+                Phx.CP.loadWindows('../../../sis_organigrama/vista/base_operativa/BaseOperativa.php',
+                    'Base Operativa',
+                    {
+                        width: 800,
+                        height: 300
+                    },
+                    record,
+                    this.idContenedor,
+                    'BaseOperativa'
+                );
             },
 
             Atributos:[
@@ -554,7 +603,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     config:{
                         name: 'fecha_fin_cc',
                         fieldLabel: 'Fecha Finalización',
-                        allowBlank: true,
+                        allowBlank: false,
                         //anchor: '80%',
                         width: 177,
                         gwidth: 150,
@@ -648,7 +697,14 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name:'usr_mod', type: 'string'},
                 {name:'acefalo', type: 'string'},
                 {name:'identificador', type: 'numeric'},
-                {name:'haber_basico', type: 'numeric'}
+                {name:'haber_basico', type: 'numeric'},
+
+                {name:'id_gestion', type: 'numeric'},
+                {name:'porcentaje', type: 'numeric'},
+                {name:'id_ot', type: 'numeric'},
+                {name:'fecha_ini_cc', type: 'date',dateFormat:'Y-m-d'},
+                {name:'fecha_fin_cc', type: 'date',dateFormat:'Y-m-d'},
+                {name:'id_funcionario', type: 'numeric'}
 
             ],
             sortInfo:{
@@ -686,11 +742,13 @@ header("content-type: text/javascript; charset=UTF-8");
             preparaMenu:function()
             {
                 this.getBoton('btnCostos').enable();
+                this.getBoton('btnBase').enable();
                 Phx.vista.Cargo.superclass.preparaMenu.call(this);
             },
             liberaMenu:function()
             {
                 this.getBoton('btnCostos').disable();
+                this.getBoton('btnBase').disable();
                 Phx.vista.Cargo.superclass.liberaMenu.call(this);
             },
 
@@ -705,6 +763,39 @@ header("content-type: text/javascript; charset=UTF-8");
                 this.ocultarComponente(this.Cmp.porcentaje);
                 this.ocultarComponente(this.Cmp.fecha_ini_cc);
                 this.ocultarComponente(this.Cmp.fecha_fin_cc);
+
+                /*this.mostrarComponente(this.Cmp.id_gestion);
+                this.mostrarComponente(this.Cmp.id_centro_costo);
+                this.mostrarComponente(this.Cmp.id_ot);
+                this.mostrarComponente(this.Cmp.porcentaje);
+                this.mostrarComponente(this.Cmp.fecha_ini_cc);
+                this.mostrarComponente(this.Cmp.fecha_fin_cc);
+                Ext.Ajax.request({
+                    url:'../../sis_organigrama/control/Cargo/loadCargoPresupuesto',
+                    params:{
+                        id_uo : this.maestro.id_uo
+                    },
+                    success:function(resp){
+                        var reg =  (Ext.decode(Ext.util.Format.trim(resp.responseText))).ROOT.datos;
+                        //console.log('loadCargoPresupuesto',reg);
+
+                        //this.Cmp.id_gestion.setValue(reg.id_gestion);
+                        this.Cmp.id_gestion.store.load({params:{start:0, limit:this.tam_pag}, scope:this,callback: function (arr,op,suc) {
+                                this.Cmp.id_gestion.setValue(reg.id_gestion);
+                            }
+                        });
+                        this.Cmp.id_centro_costo.store.baseParams.id_gestion = reg.id_gestion;
+                        this.Cmp.id_centro_costo.store.baseParams.id_uo = reg.id_uo;
+
+                        this.Cmp.id_centro_costo.store.load({params:{start:0, limit:this.tam_pag}, scope:this,callback: function (arr,op,suc) {
+                                this.Cmp.id_centro_costo.setValue(reg.id_centro_costo);
+                            }
+                        });
+                    },
+                    failure: this.conexionFailure,
+                    timeout:this.timeout,
+                    scope:this
+                });*/
                 /***********************presupuesto************************/
 
                 Phx.vista.Cargo.superclass.onButtonEdit.call(this);

@@ -38,6 +38,7 @@ class MODCargoPresupuesto extends MODbase{
         $this->captura('id_ot','int4');
         $this->captura('desc_orden','varchar');
         $this->captura('nombre_actividad','varchar');
+        $this->captura('codigo_categoria','varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();//echo $this->consulta; exit;

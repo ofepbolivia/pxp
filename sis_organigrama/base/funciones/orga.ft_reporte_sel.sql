@@ -173,9 +173,9 @@ BEGIN
                orga.f_get_documentos_list_func(tf.id_funcionario, '''||v_parametros.tipo_archivo||'''::varchar) as documento,
 
                tl.nombre as lugar,
-               tl.codigo
-
-					 from orga.vfuncionario_biometrico tf
+               tl.codigo,
+               tf.fecha_nacimiento
+					 from orga.vfuncionario tf
            inner JOIN orga.tuo_funcionario uof ON uof.id_funcionario = tf.id_funcionario and (current_date <= uof.fecha_finalizacion or  uof.fecha_finalizacion is null)
            inner JOIN orga.tuo tuo on tuo.id_uo = orga.f_get_uo_gerencia(uof.id_uo,uof.id_funcionario,current_date)
      			 inner JOIN orga.tcargo tc ON tc.id_cargo = uof.id_cargo
@@ -282,7 +282,8 @@ BEGIN
                       WHEN tper.genero::text = ANY (ARRAY[''mujer''::character varying,''MUJER''::character varying, ''Mujer''::character varying]::text[]) THEN ''F''
                       ELSE '''' END)::varchar genero,
                 esc.haber_basico,
-			    (case when plani.f_get_licencia(fun.id_funcionario, current_date) then ''SI'' else ''NO'' end)::varchar licencia
+			    (case when plani.f_get_licencia(fun.id_funcionario, current_date) then ''SI'' else ''NO'' end)::varchar licencia,
+                tcb.nro_cuenta
 			   from orga.vfuncionario_biometrico tf
 			   inner join orga.tfuncionario fun on fun.id_funcionario = tf.id_funcionario
                inner join segu.tpersona tper on tper.id_persona = fun.id_persona
@@ -298,6 +299,8 @@ BEGIN
 
                inner  join orga.toficina ofi on ofi.id_oficina = tc.id_oficina
      		   inner  join param.tlugar lug on lug.id_lugar = ofi.id_lugar
+
+               left join orga.tfuncionario_cuenta_bancaria tcb on tcb.id_funcionario = fun.id_funcionario and tcb.estado_reg = ''activo''
 
                inner join orga.tuo uo on uo.id_uo = orga.f_get_uo_gerencia(uof.id_uo,NULL,NULL)
 

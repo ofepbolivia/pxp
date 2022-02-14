@@ -40,6 +40,7 @@ DECLARE
 
     v_numero_celular			varchar;
     v_id_funcionario_uo			integer;
+    v_descripcion				varchar;
 
 
   BEGIN
@@ -473,13 +474,11 @@ DECLARE
       for v_funcionarios in (
         select id_funcionario, count(id_funcionario) OVER () as total,row_number() OVER () as numero
         from orga.tuo_funcionario uofun
-          inner join orga.tcargo car
-            on uofun.id_cargo = car.id_cargo
-          inner join orga.ttipo_contrato tc
-            on tc.id_tipo_contrato = car.id_tipo_contrato and tc.codigo in ('PLA','EVE')
+          inner join orga.tcargo car on uofun.id_cargo = car.id_cargo
+          inner join orga.ttipo_contrato tc on tc.id_tipo_contrato = car.id_tipo_contrato and tc.codigo in ('PLA','EVE')
         where uofun.fecha_asignacion <= v_periodo.fecha_fin AND
               (uofun.fecha_finalizacion >= v_periodo.fecha_fin or uofun.fecha_finalizacion is NULL)
-              and uofun.estado_reg = 'activo' and car.id_oficina = v_id_oficina )loop
+              and uofun.estado_reg = 'activo' and car.id_oficina = v_id_oficina)loop
         v_id_centro_costo = null;
 
         select po_id_cargo,
@@ -527,15 +526,18 @@ DECLARE
           raise exception 'El funcionario % no tiene asignada una OT en la interfaz de Presupuestos por Cargo, contactece con la unidad de presupuestos para su asignacion.',v_empleado;
         end if;
 
+        v_descripcion = 'Prorrateo por oficina (POFI): Cuenta: ' || v_num_cuenta || ', Funcionario: ' || v_empleado ;
+
         if (v_funcionarios.total = v_funcionarios.numero) then
 
           insert into tes_temp_prorrateo (id_tabla,id_funcionario,id_centro_costo,monto,id_orden_trabajo,descripcion)
-          values ( p_id_cuenta,v_funcionarios.id_funcionario,v_id_centro_costo,p_monto - v_suma,v_id_ot ,'Prorrateo por oficina: ' || v_oficina || ' cuenta: ' || v_num_cuenta);
+          values ( p_id_cuenta,v_funcionarios.id_funcionario,v_id_centro_costo,p_monto - v_suma,v_id_ot ,v_descripcion);
+          --values ( p_id_cuenta,v_funcionarios.id_funcionario,v_id_centro_costo,p_monto - v_suma,v_id_ot ,'Prorrateo por oficina: ' || v_oficina || ' cuenta: ' || v_num_cuenta);
 
           v_suma = p_monto;
         else
           insert into tes_temp_prorrateo (id_tabla,id_funcionario,id_centro_costo,monto,id_orden_trabajo,descripcion)
-          values ( p_id_cuenta,v_funcionarios.id_funcionario,v_id_centro_costo,round((p_monto/v_funcionarios.total),2),v_id_ot,'Prorrateo por oficina: ' || v_oficina || ' cuenta: ' || v_num_cuenta);
+          values ( p_id_cuenta,v_funcionarios.id_funcionario,v_id_centro_costo,round((p_monto/v_funcionarios.total),2),v_id_ot,v_descripcion);
 
           v_suma = v_suma + round((p_monto/v_funcionarios.total),2);
         end if;

@@ -99,13 +99,28 @@ header("content-type: text/javascript; charset=UTF-8");
                         name: 'nombre_actividad',
                         fieldLabel: 'Programa',
                         allowBlank: true,
-                        anchor: '80%',
-                        gwidth: 200,
+                        gwidth: 100,
                         maxLength:10,
                         renderer:function(value, p, record){return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);}
                     },
                     type:'TextField',
                     filters:{pfiltro:'cc.nombre_actividad',type:'string'},
+                    id_grupo:1,
+                    grid:true,
+                    form:false
+                },
+
+                {
+                    config:{
+                        name: 'codigo_categoria',
+                        fieldLabel: 'Categoria Programática',
+                        allowBlank: true,
+                        gwidth: 180,
+                        maxLength:10,
+                        renderer:function(value, p, record){return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);}
+                    },
+                    type:'TextField',
+                    filters:{pfiltro:'cp.codigo_categoria',type:'string'},
                     id_grupo:1,
                     grid:true,
                     form:false
@@ -279,7 +294,8 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name:'id_usuario_mod', type: 'numeric'},
                 {name:'usr_reg', type: 'string'},
                 {name:'usr_mod', type: 'string'},
-                {name:'nombre_actividad', type: 'string'}
+                {name:'nombre_actividad', type: 'string'},
+                {name:'codigo_categoria', type: 'string'}
 
             ],
             sortInfo:{
