@@ -17,7 +17,7 @@ class RCertificadoPDF extends  ReportePDF{
 
         if ($fecha > '2020-12-04'){
           $firma_gerente = '/../media/firma.png';
-          $cargo = 'Jefe de Recursos Humanos';
+          $cargo = 'Jefe Departamento Talento Humano';
           $w = 160;
           $h = 120;
           $jefe = $this->datos[0]['jefa_recursos'];

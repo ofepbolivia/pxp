@@ -23,7 +23,7 @@ class RCertificadoHtml{
 
         if ($fecha > '2020-12-04'){
           $firma_gerente = '../../../sis_organigrama/media/firma.png';
-          $cargo = 'Jefe de Recursos Humanos';
+          $cargo = 'Jefe Departamento Talento Humano';
           $w = 160;
           $h = 120;
           $jefe = $datos['jefa_recursos'];

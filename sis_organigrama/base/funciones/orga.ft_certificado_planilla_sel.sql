@@ -86,7 +86,8 @@ BEGIN
                               planc.estado,
                               planc.id_proceso_wf,
                               planc.id_estado_wf,
-                              fun.nombre_cargo,
+                              -- fun.nombre_cargo,
+                              car.nombre as nombre_cargo,
                               pe.ci,
                               orga.f_ultimo_sueldo_funcionario(planc.id_funcionario, planc.fecha_solicitud) as  haber_basico,
                               pe.expedicion,
@@ -207,7 +208,8 @@ BEGIN
 
 
         v_consulta:='select  initcap (fu.desc_funcionario1) as  nombre_funcionario,
-                              fu.nombre_cargo,
+                              -- fu.nombre_cargo,
+                              ca.nombre as nombre_cargo,
                               plani.f_get_fecha_primer_contrato_empleado(fu.id_uo_funcionario, fu.id_funcionario, fu.fecha_asignacion) as fecha_contrato,
                               orga.f_ultimo_sueldo_funcionario(c.id_funcionario, c.fecha_solicitud) as  haber_basico,
                               pe.ci,
@@ -281,7 +283,8 @@ BEGIN
 
 
         v_consulta:='select  initcap (fu.desc_funcionario1) as  nombre_funcionario,
-                              fu.nombre_cargo,
+                              -- fu.nombre_cargo,
+                              ca.nombre as nombre_cargo,
                               plani.f_get_fecha_primer_contrato_empleado(fu.id_uo_funcionario, fu.id_funcionario, fu.fecha_asignacion) as fecha_contrato,
                               orga.f_ultimo_sueldo_funcionario(c.id_funcionario, c.fecha_solicitud)  as haber_basico,
                               pe.ci,
@@ -342,7 +345,8 @@ BEGIN
                             to_char(  planc.fecha_solicitud,''DD/MM/YYYY'')::text as fecha_solicitud,
                             planc.tipo_certificado,
                             planc.estado,
-                            f.nombre_cargo,
+                            -- f.nombre_cargo,
+                            car.nombre as nombre_cargo
                             orga.f_ultimo_sueldo_funcionario(planc.id_funcionario, planc.fecha_solicitud) as  remuneracion
                             from orga.tcertificado_planilla planc
                             inner join orga.vfuncionario_cargo f on f.id_funcionario = planc.id_funcionario and (f.fecha_finalizacion is null or f.fecha_finalizacion >= now())
