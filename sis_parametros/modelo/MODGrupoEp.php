@@ -33,6 +33,8 @@ class MODGrupoEp extends MODbase{
 		$this->captura('ep','text');
 		$this->captura('id_uo','int4');
 		$this->captura('desc_uo','text');
+
+        $this->captura('estado_reg_uo','varchar');
 		
 		//Ejecuta la instruccion
 		$this->armarConsulta();

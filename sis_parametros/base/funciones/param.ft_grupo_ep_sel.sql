@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION param.ft_grupo_ep_sel (
   p_administrador integer,
   p_id_usuario integer,
@@ -59,7 +57,9 @@ BEGIN
 						usu2.cuenta as usr_mod,
                         e.ep,
                         uo.id_uo,
-                        ''(''||uo.codigo||'')-''||uo.nombre_unidad as desc_uo
+                        ''(''||uo.codigo||'')-''||uo.nombre_unidad as desc_uo,
+                        uo.estado_reg as estado_reg_uo
+
 						from param.tgrupo_ep gqp
                         left join orga.tuo uo on uo.id_uo = gqp.id_uo
 						inner join segu.tusuario usu1 on usu1.id_usuario = gqp.id_usuario_reg
