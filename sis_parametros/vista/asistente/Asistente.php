@@ -122,6 +122,25 @@ Phx.vista.Asistente=Ext.extend(Phx.gridInterfaz,{
    		     grid:true,
    			form:true
    	      },
+
+        {
+            config: {
+                name: 'estado_reg_uo',
+                fieldLabel: 'Estado Unidad',
+                allowBlank: true,
+                anchor: '30%',
+                gwidth: 80,
+                //gdisplayField: 'estado_reg_uo',//mapea al store del grid
+                maxLength: 100
+
+            },
+            type: 'TextField',
+            filters: {pfiltro: 'estado_reg_uo', type: 'string'},
+            id_grupo: 1,
+            grid: true,
+            form: false
+        },
+
 		{
 			config: {
 				name: 'uo',
@@ -247,7 +266,8 @@ Phx.vista.Asistente=Ext.extend(Phx.gridInterfaz,{
 		{name:'fecha_mod', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
 		{name:'usr_reg', type: 'string'},
 		{name:'usr_mod', type: 'string'},
-		{name:'recursivo', type: 'string'}
+		{name:'recursivo', type: 'string'},
+        {name: 'estado_reg_uo', type: 'string'},
 	],
 	sortInfo:{
 		field: 'desc_funcionario1',

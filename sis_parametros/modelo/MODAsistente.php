@@ -35,7 +35,9 @@ class MODAsistente extends MODbase{
 		$this->captura('desc_funcionario1','text');
 		$this->captura('desc_uo','text');
 		$this->captura('recursivo','varchar');
-		
+
+		$this->captura('estado_reg_uo','varchar');
+
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();

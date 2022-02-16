@@ -68,7 +68,9 @@ BEGIN
                             usu2.cuenta as usr_mod,
                             fun.desc_funcionario1,
                             COALESCE((COALESCE(uo.codigo,''''::varchar)) ||''-''||uo.nombre_unidad,''''::varchar) as desc_uo,
-                            asis.recursivo
+                            asis.recursivo,
+                            uo.estado_reg as estado_reg_uo
+                            
                             from param.tasistente asis
                             inner join segu.tusuario usu1 on usu1.id_usuario = asis.id_usuario_reg
                             inner join orga.vfuncionario fun on fun.id_funcionario = asis.id_funcionario
