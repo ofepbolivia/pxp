@@ -269,7 +269,7 @@ class CorreoExterno
       
     function validateEmail($email){
     		list($userName, $mailDomain) = split("@", $email);
-    	    if (checkdnsrr($mailDomain, "MX")) { 
+    	    if (checkdnsrr($mailDomain, "MX")) {
 			   return true;
 			} 
 			else { 

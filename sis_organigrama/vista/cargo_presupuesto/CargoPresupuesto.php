@@ -17,7 +17,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 this.initButtons=[this.cmbGestion];
                 Phx.vista.CargoPresupuesto.superclass.constructor.call(this,config);
                 this.init();
-
+                var that = this;
                 this.cmbGestion.on('select',function () {
 
                     this.load({params:{start:0, limit:this.tam_pag,id_cargo:this.maestro.id_cargo,id_gestion:this.cmbGestion.getValue()}});
@@ -42,7 +42,7 @@ header("content-type: text/javascript; charset=UTF-8");
                             }
                         });
                         this.cmbGestion.setValue(arr[index].data.id_gestion);
-                        this.Cmp.id_centro_costo.store.baseParams.id_gestion = this.cmbGestion.getValue();
+                        this.Cmp.id_centro_costo.store.baseParams.id_gestion = arr[index].data.id_gestion;
                         this.Cmp.id_centro_costo.modificado = true;
                 }});
 

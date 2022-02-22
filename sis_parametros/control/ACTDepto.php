@@ -220,6 +220,12 @@ class ACTDepto extends ACTbase
 
         }
 
+        if( $this->objParam->getParametro('bandeja') == 'integracion' ){
+            $this->objParam->addFiltro('DEPPTO.prioridad in (1,3)');
+        }else{
+            $this->objParam->addFiltro('DEPPTO.prioridad = 3');
+        }
+
 
             if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {
                 $this->objReporte = new Reporte($this->objParam, $this);

@@ -83,7 +83,7 @@ BEGIN
                               tl.nombre as nombre_lugar
                           FROM segu.vpersona p
                           inner join segu.tpersona per on per.id_persona = p.id_persona
-                          inner join segu.ttipo_documento td on td.id_tipo_documento = per.id_tipo_doc_identificacion
+                          left join segu.ttipo_documento td on td.id_tipo_documento = per.id_tipo_doc_identificacion
                           left join param.tlugar tl on tl.id_lugar = per.id_lugar
                           WHERE ';
                v_consulta:=v_consulta||v_parametros.filtro;
@@ -171,7 +171,7 @@ BEGIN
                           FROM segu.tpersona p
                           left join param.tlugar lu on lu.id_lugar = p.id_lugar
                           inner join segu.vpersona per on per.id_persona = p.id_persona
-                          inner join segu.ttipo_documento td on td.id_tipo_documento = p.id_tipo_doc_identificacion
+                          left join segu.ttipo_documento td on td.id_tipo_documento = p.id_tipo_doc_identificacion
                            WHERE ';
 
 

@@ -1330,7 +1330,10 @@ header("content-type: text/javascript; charset=UTF-8");
                     anchor:'100%'
                 },
                 type:'NumberField',
-                filters:{type:'string'},
+                filters:{
+                    pfiltro: 'person.telefono1',
+                    type:'string'
+                },
                 id_grupo:4,
                 grid:true,
                 form:true
@@ -1347,7 +1350,10 @@ header("content-type: text/javascript; charset=UTF-8");
                     anchor:'100%'
                 },
                 type:'NumberField',
-                filters:{type:'string'},
+                filters:{
+                    pfiltro: 'person.celular1',
+                    type:'string'
+                },
                 id_grupo:4,
                 grid:true,
                 form:true
@@ -1384,7 +1390,10 @@ header("content-type: text/javascript; charset=UTF-8");
                     anchor:'100%'
                 },
                 type:'TextField',
-                filters:{type:'string'},
+                filters:{
+                    pfiltro: 'person.telefono2',
+                    type:'string'
+                },
                 id_grupo:4,
                 grid:true,
                 form:true
@@ -1400,7 +1409,10 @@ header("content-type: text/javascript; charset=UTF-8");
                     anchor:'100%'
                 },
                 type:'TextField',
-                filters:{type:'string'},
+                filters:{
+                    pfiltro: 'person.celular2',
+                    type: 'string'
+                },
                 id_grupo:4,
                 grid:true,
                 form:true
@@ -1416,7 +1428,10 @@ header("content-type: text/javascript; charset=UTF-8");
                     anchor:'100%'
                 },
                 type:'TextArea',
-                filters:{type:'string'},
+                filters:{
+                    pfiltro: 'PERSON2.direccion',
+                    type:'string'
+                },
                 id_grupo:4,
                 grid:true,
                 form:true

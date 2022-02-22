@@ -851,7 +851,7 @@ BEGIN
                                   FROM param.tdepto DEPPTO
                                   INNER JOIN segu.tsubsistema SUBSIS on SUBSIS.id_subsistema=DEPPTO.id_subsistema
 
-                                  WHERE DEPPTO.estado_reg =''activo'' and DEPPTO.prioridad = 3 and '||v_filadd;
+                                  WHERE DEPPTO.estado_reg =''activo'' /*and DEPPTO.prioridad = 3*/ and '||v_filadd;
 
 
 
