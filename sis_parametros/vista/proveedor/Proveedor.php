@@ -909,7 +909,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 config: {
                     name: 'codigo_alkym',
                     fieldLabel: 'Código Alkym',
-                    allowBlank: true,
+                    allowBlank: false,
                     anchor: '100%',
                     gwidth: 100,
                     maxLength: 50,
