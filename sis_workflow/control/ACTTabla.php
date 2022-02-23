@@ -152,10 +152,12 @@ class ACTTabla extends ACTbase{
 		$res = 0 ;
 
 		foreach ($prof as $value) {
-			$cadena .=  "[detalles][$value]";
+            /* ANPM - Se aajusta el armado de la cadena para detalles */
+			//$cadena .=  "[detalles][$value]";
+            $cadena .=  '["detalles"]['.$value.']';
 		}
 		eval('$variable = '. $cadena . ';');		
-						
+		
 		if ($variable['atributos']['id_tabla'] == $id_tabla) {
 		    //echo 'FUCK';
 		    //var_dump($variable);exit;
