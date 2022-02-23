@@ -33,7 +33,9 @@ class MODDeptoUoEp extends MODbase{
 		$this->captura('usr_mod','varchar');
 		$this->captura('ep','text');
 		$this->captura('desc_uo','text');
-		
+
+		$this->captura('estado_reg_uo','varchar');
+
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
