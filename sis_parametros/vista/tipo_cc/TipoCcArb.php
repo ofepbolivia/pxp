@@ -120,7 +120,7 @@ Phx.vista.TipoCcArb=Ext.extend(Phx.arbGridInterfaz,{
 			config:{
 				name: 'control_techo',
 				qtip:'Si es Techo el presupuestario  se valida a este nivel',
-				fieldLabel: 'Techo Presupeustario',
+				fieldLabel: 'Techo Presupuestario',
 				allowBlank: false,
 				anchor: '80%',
 				gwidth: 70,
