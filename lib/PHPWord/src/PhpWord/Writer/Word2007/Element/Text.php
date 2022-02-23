@@ -10,16 +10,14 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @see         https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2018 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Writer\Word2007\Element;
 
-use PhpOffice\PhpWord\Element\PageBreak as PageBreakElement;
-use PhpOffice\PhpWord\Writer\Word2007\Style\Font as FontStyleWriter;
-use PhpOffice\PhpWord\Writer\Word2007\Style\Paragraph as ParagraphStyleWriter;
+use PhpOffice\PhpWord\Element\TrackChange;
 
 /**
  * Text element writer
@@ -29,7 +27,7 @@ use PhpOffice\PhpWord\Writer\Word2007\Style\Paragraph as ParagraphStyleWriter;
 class Text extends AbstractElement
 {
     /**
-     * Write text element
+     * Write text element.
      */
     public function write()
     {
@@ -39,84 +37,68 @@ class Text extends AbstractElement
             return;
         }
 
-        $this->writeOpeningWP();
+        $this->startElementP();
+
+        $this->writeOpeningTrackChange();
 
         $xmlWriter->startElement('w:r');
 
         $this->writeFontStyle();
 
-        $xmlWriter->startElement('w:t');
+        $textElement = 'w:t';
+        //'w:delText' in case of deleted text
+        $changed = $element->getTrackChange();
+        if ($changed != null && $changed->getChangeType() == TrackChange::DELETED) {
+            $textElement = 'w:delText';
+        }
+        $xmlWriter->startElement($textElement);
+
         $xmlWriter->writeAttribute('xml:space', 'preserve');
-        $xmlWriter->writeRaw($this->getText($element->getText()));
+        $this->writeText($this->getText($element->getText()));
         $xmlWriter->endElement();
         $xmlWriter->endElement(); // w:r
 
-        $this->writeClosingWP();
+        $this->writeClosingTrackChange();
+
+        $this->endElementP(); // w:p
     }
 
     /**
-     * Write opening
-     *
-     * @uses \PhpOffice\PhpWord\Writer\Word2007\Element\PageBreak::write()
+     * Write opening of changed element
      */
-    protected function writeOpeningWP()
+    protected function writeOpeningTrackChange()
     {
-        $xmlWriter = $this->getXmlWriter();
-        $element = $this->getElement();
-
-        if (!$this->withoutP) {
-            $xmlWriter->startElement('w:p');
-            // Paragraph style
-            if (method_exists($element, 'getParagraphStyle')) {
-                $this->writeParagraphStyle();
-            }
-            // PageBreak
-            if ($this->hasPageBreakBefore()) {
-                $elementWriter = new PageBreak($xmlWriter, new PageBreakElement());
-                $elementWriter->write();
-            }
+        $changed = $this->getElement()->getTrackChange();
+        if ($changed == null) {
+            return;
         }
-    }
 
-    /**
-     * Write ending
-     */
-    protected function writeClosingWP()
-    {
         $xmlWriter = $this->getXmlWriter();
 
-        if (!$this->withoutP) {
-            $xmlWriter->endElement(); // w:p
+        if (($changed->getChangeType() == TrackChange::INSERTED)) {
+            $xmlWriter->startElement('w:ins');
+        } elseif ($changed->getChangeType() == TrackChange::DELETED) {
+            $xmlWriter->startElement('w:del');
         }
+        $xmlWriter->writeAttribute('w:author', $changed->getAuthor());
+        if ($changed->getDate() != null) {
+            $xmlWriter->writeAttribute('w:date', $changed->getDate()->format('Y-m-d\TH:i:s\Z'));
+        }
+        $xmlWriter->writeAttribute('w:id', $this->getElement()->getElementId());
     }
 
     /**
      * Write ending
      */
-    protected function writeParagraphStyle()
+    protected function writeClosingTrackChange()
     {
+        $changed = $this->getElement()->getTrackChange();
+        if ($changed == null) {
+            return;
+        }
+
         $xmlWriter = $this->getXmlWriter();
 
-        /** @var \PhpOffice\PhpWord\Element\Text $element Type hint */
-        $element = $this->getElement();
-        $paragraphStyle = $element->getParagraphStyle();
-        $styleWriter = new ParagraphStyleWriter($xmlWriter, $paragraphStyle);
-        $styleWriter->setIsInline(true);
-        $styleWriter->write();
-    }
-
-    /**
-     * Write ending
-     */
-    protected function writeFontStyle()
-    {
-        $xmlWriter = $this->getXmlWriter();
-
-        /** @var \PhpOffice\PhpWord\Element\Text $element Type hint */
-        $element = $this->getElement();
-        $fontStyle = $element->getFontStyle();
-        $styleWriter = new FontStyleWriter($xmlWriter, $fontStyle);
-        $styleWriter->setIsInline(true);
-        $styleWriter->write();
+        $xmlWriter->endElement(); // w:ins|w:del
     }
 }

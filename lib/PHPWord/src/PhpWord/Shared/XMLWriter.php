@@ -10,81 +10,71 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @see         https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2018 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Shared;
 
-use PhpOffice\PhpWord\Settings;
-
 /**
- * XMLWriter wrapper
+ * XMLWriter
  *
  * @method bool endElement()
+ * @method mixed flush(bool $empty = null)
+ * @method bool openMemory()
+ * @method string outputMemory(bool $flush = null)
+ * @method bool setIndent(bool $indent)
  * @method bool startDocument(string $version = 1.0, string $encoding = null, string $standalone = null)
  * @method bool startElement(string $name)
  * @method bool text(string $content)
- * @method bool writeAttribute(string $name, mixed $value)
+ * @method bool writeCData(string $content)
+ * @method bool writeComment(string $content)
  * @method bool writeElement(string $name, string $content = null)
  * @method bool writeRaw(string $content)
  */
-class XMLWriter
+class XMLWriter extends \XMLWriter
 {
-    /** Temporary storage location */
+    /** Temporary storage method */
     const STORAGE_MEMORY = 1;
     const STORAGE_DISK = 2;
-
-    /**
-     * Internal XMLWriter
-     *
-     * @var \XMLWriter
-     */
-    private $xmlWriter;
 
     /**
      * Temporary filename
      *
      * @var string
      */
-    private $tempFile = '';
+    private $tempFileName = '';
 
     /**
-     * Create new XMLWriter
+     * Create a new \PhpOffice\PhpWord\Shared\XMLWriter instance
      *
-     * @param int $tempLocation Temporary storage location
-     * @param string $tempFolder Temporary storage folder
+     * @param int $pTemporaryStorage Temporary storage location
+     * @param string $pTemporaryStorageDir Temporary storage folder
+     * @param bool $compatibility
      */
-    public function __construct($tempLocation = self::STORAGE_MEMORY, $tempFolder = './')
+    public function __construct($pTemporaryStorage = self::STORAGE_MEMORY, $pTemporaryStorageDir = null, $compatibility = false)
     {
-        // Create internal XMLWriter
-        $this->xmlWriter = new \XMLWriter();
-
         // Open temporary storage
-        if ($tempLocation == self::STORAGE_MEMORY) {
-            $this->xmlWriter->openMemory();
+        if ($pTemporaryStorage == self::STORAGE_MEMORY) {
+            $this->openMemory();
         } else {
-            // Create temporary filename
-            $this->tempFile = @tempnam($tempFolder, 'xml');
-
-            // Fallback to memory when temporary file cannot be used
-            // @codeCoverageIgnoreStart
-            // Can't find any test case. Uncomment when found.
-            if ($this->xmlWriter->openUri($this->tempFile) === false) {
-                $this->xmlWriter->openMemory();
+            if (!is_dir($pTemporaryStorageDir)) {
+                $pTemporaryStorageDir = sys_get_temp_dir();
             }
-            // @codeCoverageIgnoreEnd
+            // Create temporary filename
+            $this->tempFileName = @tempnam($pTemporaryStorageDir, 'xml');
+
+            // Open storage
+            $this->openUri($this->tempFileName);
         }
 
-        // Set xml Compatibility
-        $compatibility = Settings::hasCompatibility();
         if ($compatibility) {
-            $this->xmlWriter->setIndent(false);
-            $this->xmlWriter->setIndentString('');
+            $this->setIndent(false);
+            $this->setIndentString('');
         } else {
-            $this->xmlWriter->setIndent(true);
-            $this->xmlWriter->setIndentString('  ');
+            $this->setIndent(true);
+            $this->setIndentString('  ');
         }
     }
 
@@ -93,50 +83,52 @@ class XMLWriter
      */
     public function __destruct()
     {
-        // Destruct XMLWriter
-        unset($this->xmlWriter);
-
         // Unlink temporary files
-        if ($this->tempFile != '') {
-            @unlink($this->tempFile);
+        if (empty($this->tempFileName)) {
+            return;
         }
-    }
-
-    /**
-     * Catch function calls (and pass them to internal XMLWriter)
-     *
-     * @param mixed $function
-     * @param mixed $args
-     * @throws \BadMethodCallException
-     */
-    public function __call($function, $args)
-    {
-        // Catch exception
-        if (method_exists($this->xmlWriter, $function) === false) {
-            throw new \BadMethodCallException("Method '{$function}' does not exists.");
-        }
-
-        // Run method
-        try {
-            @call_user_func_array(array($this->xmlWriter, $function), $args);
-        } catch (\Exception $ex) {
-            // Do nothing!
+        if (PHP_OS != 'WINNT' && @unlink($this->tempFileName) === false) {
+            throw new \Exception('The file ' . $this->tempFileName . ' could not be deleted.');
         }
     }
 
     /**
      * Get written data
      *
-     * @return string XML data
+     * @return string
      */
     public function getData()
     {
-        if ($this->tempFile == '') {
-            return $this->xmlWriter->outputMemory(true);
-        } else {
-            $this->xmlWriter->flush();
-            return file_get_contents($this->tempFile);
+        if ($this->tempFileName == '') {
+            return $this->outputMemory(true);
         }
+
+        $this->flush();
+
+        return file_get_contents($this->tempFileName);
+    }
+
+    /**
+     * Write simple element and attribute(s) block
+     *
+     * There are two options:
+     * 1. If the `$attributes` is an array, then it's an associative array of attributes
+     * 2. If not, then it's a simple attribute-value pair
+     *
+     * @param string $element
+     * @param string|array $attributes
+     * @param string $value
+     */
+    public function writeElementBlock($element, $attributes, $value = null)
+    {
+        $this->startElement($element);
+        if (!is_array($attributes)) {
+            $attributes = array($attributes => $value);
+        }
+        foreach ($attributes as $attribute => $value) {
+            $this->writeAttribute($attribute, $value);
+        }
+        $this->endElement();
     }
 
     /**
@@ -151,11 +143,11 @@ class XMLWriter
     {
         if ($condition == true) {
             if (is_null($attribute)) {
-                $this->xmlWriter->writeElement($element, $value);
+                $this->writeElement($element, $value);
             } else {
-                $this->xmlWriter->startElement($element);
-                $this->xmlWriter->writeAttribute($attribute, $value);
-                $this->xmlWriter->endElement();
+                $this->startElement($element);
+                $this->writeAttribute($attribute, $value);
+                $this->endElement();
             }
         }
     }
@@ -170,7 +162,21 @@ class XMLWriter
     public function writeAttributeIf($condition, $attribute, $value)
     {
         if ($condition == true) {
-            $this->xmlWriter->writeAttribute($attribute, $value);
+            $this->writeAttribute($attribute, $value);
         }
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return bool
+     */
+    public function writeAttribute($name, $value)
+    {
+        if (is_float($value)) {
+            $value = json_encode($value);
+        }
+
+        return parent::writeAttribute($name, $value);
     }
 }

@@ -10,16 +10,17 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @see         https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2018 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
 namespace PhpOffice\PhpWord\Writer\Word2007\Style;
 
 use PhpOffice\PhpWord\Shared\XMLWriter;
-use PhpOffice\PhpWord\Style\Alignment as AlignmentStyle;
+use PhpOffice\PhpWord\SimpleType\TblWidth;
 use PhpOffice\PhpWord\Style\Table as TableStyle;
+use PhpOffice\PhpWord\Writer\Word2007\Element\TableAlignment;
 
 /**
  * Table style writer
@@ -34,7 +35,7 @@ class Table extends AbstractStyle
     private $width;
 
     /**
-     * Write style
+     * Write style.
      */
     public function write()
     {
@@ -48,26 +49,46 @@ class Table extends AbstractStyle
             $xmlWriter->startElement('w:tblStyle');
             $xmlWriter->writeAttribute('w:val', $style);
             $xmlWriter->endElement();
-            if ($this->width !== null) {
-                $this->writeWidth($xmlWriter, $this->width, 'pct');
+            if (null !== $this->width) {
+                $this->writeTblWidth($xmlWriter, 'w:tblW', TblWidth::PERCENT, $this->width);
             }
             $xmlWriter->endElement();
         }
     }
 
     /**
-     * Write full style
+     * Write full style.
+     *
+     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
+     * @param \PhpOffice\PhpWord\Style\Table $style
      */
     private function writeStyle(XMLWriter $xmlWriter, TableStyle $style)
     {
         // w:tblPr
         $xmlWriter->startElement('w:tblPr');
 
-        // Alignment
-        $styleWriter = new Alignment($xmlWriter, new AlignmentStyle(array('value' => $style->getAlign())));
+        // Table alignment
+        if ('' !== $style->getAlignment()) {
+            $tableAlignment = new TableAlignment($style->getAlignment());
+            $xmlWriter->startElement($tableAlignment->getName());
+            foreach ($tableAlignment->getAttributes() as $attributeName => $attributeValue) {
+                $xmlWriter->writeAttribute($attributeName, $attributeValue);
+            }
+            $xmlWriter->endElement();
+        }
+
+        $this->writeTblWidth($xmlWriter, 'w:tblW', $style->getUnit(), $style->getWidth());
+        $this->writeTblWidth($xmlWriter, 'w:tblCellSpacing', TblWidth::TWIP, $style->getCellSpacing());
+        $this->writeIndent($xmlWriter, $style);
+        $this->writeLayout($xmlWriter, $style->getLayout());
+
+        // Position
+        $styleWriter = new TablePosition($xmlWriter, $style->getPosition());
         $styleWriter->write();
 
-        $this->writeWidth($xmlWriter, $style->getWidth(), $style->getUnit());
+        //Right to left
+        $xmlWriter->writeElementIf($style->isBidiVisual() !== null, 'w:bidiVisual', 'w:val', $this->writeOnOf($style->isBidiVisual()));
+
         $this->writeMargin($xmlWriter, $style);
         $this->writeBorder($xmlWriter, $style);
 
@@ -83,22 +104,23 @@ class Table extends AbstractStyle
     }
 
     /**
-     * Write width
+     * Enable/Disable automatic resizing of the table
      *
      * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
-     * @param int $width
-     * @param string $unit
+     * @param string $layout autofit / fixed
      */
-    private function writeWidth(XMLWriter $xmlWriter, $width, $unit)
+    private function writeLayout(XMLWriter $xmlWriter, $layout)
     {
-        $xmlWriter->startElement('w:tblW');
-        $xmlWriter->writeAttribute('w:w', $width);
-        $xmlWriter->writeAttribute('w:type', $unit);
-        $xmlWriter->endElement(); // w:tblW
+        $xmlWriter->startElement('w:tblLayout');
+        $xmlWriter->writeAttribute('w:type', $layout);
+        $xmlWriter->endElement(); // w:tblLayout
     }
 
     /**
-     * Write margin
+     * Write margin.
+     *
+     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
+     * @param \PhpOffice\PhpWord\Style\Table $style
      */
     private function writeMargin(XMLWriter $xmlWriter, TableStyle $style)
     {
@@ -114,7 +136,10 @@ class Table extends AbstractStyle
     }
 
     /**
-     * Write border
+     * Write border.
+     *
+     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
+     * @param \PhpOffice\PhpWord\Style\Table $style
      */
     private function writeBorder(XMLWriter $xmlWriter, TableStyle $style)
     {
@@ -131,7 +156,29 @@ class Table extends AbstractStyle
     }
 
     /**
-     * Write row style
+     * Writes a table width
+     *
+     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
+     * @param string $elementName
+     * @param string $unit
+     * @param int|float $width
+     */
+    private function writeTblWidth(XMLWriter $xmlWriter, $elementName, $unit, $width = null)
+    {
+        if (null === $width) {
+            return;
+        }
+        $xmlWriter->startElement($elementName);
+        $xmlWriter->writeAttributeIf(null !== $width, 'w:w', $width);
+        $xmlWriter->writeAttribute('w:type', $unit);
+        $xmlWriter->endElement();
+    }
+
+    /**
+     * Write row style.
+     *
+     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
+     * @param \PhpOffice\PhpWord\Style\Table $style
      */
     private function writeFirstRow(XMLWriter $xmlWriter, TableStyle $style)
     {
@@ -147,11 +194,14 @@ class Table extends AbstractStyle
     }
 
     /**
-     * Write shading
+     * Write shading.
+     *
+     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
+     * @param \PhpOffice\PhpWord\Style\Table $style
      */
     private function writeShading(XMLWriter $xmlWriter, TableStyle $style)
     {
-        if ($style->getShading() !== null) {
+        if (null !== $style->getShading()) {
             $xmlWriter->startElement('w:tcPr');
 
             $styleWriter = new Shading($xmlWriter, $style->getShading());
@@ -162,12 +212,27 @@ class Table extends AbstractStyle
     }
 
     /**
-     * Set width
+     * Set width.
      *
      * @param int $value
      */
     public function setWidth($value = null)
     {
         $this->width = $value;
+    }
+
+    /**
+     * @param XMLWriter $xmlWriter
+     * @param TableStyle $style
+     */
+    private function writeIndent(XMLWriter $xmlWriter, TableStyle $style)
+    {
+        $indent = $style->getIndent();
+
+        if ($indent === null) {
+            return;
+        }
+
+        $this->writeTblWidth($xmlWriter, 'w:tblInd', $indent->getType(), $indent->getValue());
     }
 }

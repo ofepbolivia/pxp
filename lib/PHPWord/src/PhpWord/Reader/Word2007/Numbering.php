@@ -10,8 +10,8 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @see         https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2018 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -28,11 +28,11 @@ use PhpOffice\PhpWord\Shared\XMLReader;
 class Numbering extends AbstractPart
 {
     /**
-     * Read numbering.xml
+     * Read numbering.xml.
      *
      * @param \PhpOffice\PhpWord\PhpWord $phpWord
      */
-    public function read(PhpWord &$phpWord)
+    public function read(PhpWord $phpWord)
     {
         $abstracts = array();
         $numberings = array();
@@ -91,7 +91,7 @@ class Numbering extends AbstractPart
      *
      * @param \PhpOffice\PhpWord\Shared\XMLReader $xmlReader
      * @param \DOMElement $subnode
-     * @param integer $levelId
+     * @param int $levelId
      * @return array
      */
     private function readLevel(XMLReader $xmlReader, \DOMElement $subnode, $levelId)
@@ -104,7 +104,7 @@ class Numbering extends AbstractPart
         $level['restart'] = $xmlReader->getAttribute('w:val', $subnode, 'w:lvlRestart');
         $level['suffix'] = $xmlReader->getAttribute('w:val', $subnode, 'w:suff');
         $level['text'] = $xmlReader->getAttribute('w:val', $subnode, 'w:lvlText');
-        $level['align'] = $xmlReader->getAttribute('w:val', $subnode, 'w:lvlJc');
+        $level['alignment'] = $xmlReader->getAttribute('w:val', $subnode, 'w:lvlJc');
         $level['tab'] = $xmlReader->getAttribute('w:pos', $subnode, 'w:pPr/w:tabs/w:tab');
         $level['left'] = $xmlReader->getAttribute('w:left', $subnode, 'w:pPr/w:ind');
         $level['hanging'] = $xmlReader->getAttribute('w:hanging', $subnode, 'w:pPr/w:ind');

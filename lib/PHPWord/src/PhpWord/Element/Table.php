@@ -10,8 +10,8 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @see         https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2018 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -52,7 +52,7 @@ class Table extends AbstractElement
      */
     public function __construct($style = null)
     {
-        $this->style = $this->setStyle(new TableStyle(), $style);
+        $this->style = $this->setNewStyle(new TableStyle(), $style);
     }
 
     /**
@@ -65,9 +65,7 @@ class Table extends AbstractElement
     public function addRow($height = null, $style = null)
     {
         $row = new Row($height, $style);
-        $row->setDocPart($this->getDocPart(), $this->getDocPartId());
-        $row->setPhpWord($this->phpWord);
-        $row->setNestedLevel($this->getNestedLevel());
+        $row->setParentContainer($this);
         $this->rows[] = $row;
 
         return $row;
@@ -120,7 +118,7 @@ class Table extends AbstractElement
     }
 
     /**
-     * Set table width
+     * Set table width.
      *
      * @param int $width
      */
@@ -137,18 +135,40 @@ class Table extends AbstractElement
     public function countColumns()
     {
         $columnCount = 0;
-        if (is_array($this->rows)) {
-            $rowCount = count($this->rows);
-            for ($i = 0; $i < $rowCount; $i++) {
-                /** @var \PhpOffice\PhpWord\Element\Row $row Type hint */
-                $row = $this->rows[$i];
-                $cellCount = count($row->getCells());
-                if ($columnCount < $cellCount) {
-                    $columnCount = $cellCount;
-                }
+
+        $rowCount = count($this->rows);
+        for ($i = 0; $i < $rowCount; $i++) {
+            /** @var \PhpOffice\PhpWord\Element\Row $row Type hint */
+            $row = $this->rows[$i];
+            $cellCount = count($row->getCells());
+            if ($columnCount < $cellCount) {
+                $columnCount = $cellCount;
             }
         }
 
         return $columnCount;
+    }
+
+    /**
+     * The first declared cell width for each column
+     *
+     * @return int[]
+     */
+    public function findFirstDefinedCellWidths()
+    {
+        $cellWidths = array();
+
+        foreach ($this->rows as $row) {
+            $cells = $row->getCells();
+            if (count($cells) <= count($cellWidths)) {
+                continue;
+            }
+            $cellWidths = array();
+            foreach ($cells as $cell) {
+                $cellWidths[] = $cell->getWidth();
+            }
+        }
+
+        return $cellWidths;
     }
 }

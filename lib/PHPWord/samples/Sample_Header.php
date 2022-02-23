@@ -1,28 +1,33 @@
 <?php
-/**
- * Header file
- */
-use PhpOffice\PhpWord\Autoloader;
-use PhpOffice\PhpWord\Settings;
-use PhpOffice\PhpWord\IOFactory;
+require_once __DIR__ . '/../bootstrap.php';
 
+use PhpOffice\PhpWord\Settings;
+
+date_default_timezone_set('UTC');
 error_reporting(E_ALL);
 define('CLI', (PHP_SAPI == 'cli') ? true : false);
 define('EOL', CLI ? PHP_EOL : '<br />');
 define('SCRIPT_FILENAME', basename($_SERVER['SCRIPT_FILENAME'], '.php'));
 define('IS_INDEX', SCRIPT_FILENAME == 'index');
 
-require_once __DIR__ . '/../src/PhpWord/Autoloader.php';
-Autoloader::register();
 Settings::loadConfig();
+
+$dompdfPath = $vendorDirPath . '/dompdf/dompdf';
+if (file_exists($dompdfPath)) {
+    define('DOMPDF_ENABLE_AUTOLOAD', false);
+    Settings::setPdfRenderer(Settings::PDF_RENDERER_DOMPDF, $vendorDirPath . '/dompdf/dompdf');
+}
 
 // Set writers
 $writers = array('Word2007' => 'docx', 'ODText' => 'odt', 'RTF' => 'rtf', 'HTML' => 'html', 'PDF' => 'pdf');
 
 // Set PDF renderer
-if (Settings::getPdfRendererPath() === null) {
+if (null === Settings::getPdfRendererPath()) {
     $writers['PDF'] = null;
 }
+
+// Turn output escaping on
+Settings::setOutputEscapingEnabled(true);
 
 // Return to the caller script when runs by CLI
 if (CLI) {
@@ -38,13 +43,19 @@ $pageHeading = IS_INDEX ? '' : "<h1>{$pageHeading}</h1>";
 // Populate samples
 $files = '';
 if ($handle = opendir('.')) {
-    while (false !== ($file = readdir($handle))) {
+    $sampleFiles = array();
+    while (false !== ($sampleFile = readdir($handle))) {
+        $sampleFiles[] = $sampleFile;
+    }
+    sort($sampleFiles);
+    closedir($handle);
+
+    foreach ($sampleFiles as $file) {
         if (preg_match('/^Sample_\d+_/', $file)) {
             $name = str_replace('_', ' ', preg_replace('/(Sample_|\.php)/', '', $file));
             $files .= "<li><a href='{$file}'>{$name}</a></li>";
         }
     }
-    closedir($handle);
 }
 
 /**
@@ -53,25 +64,26 @@ if ($handle = opendir('.')) {
  * @param \PhpOffice\PhpWord\PhpWord $phpWord
  * @param string $filename
  * @param array $writers
+ *
+ * @return string
  */
 function write($phpWord, $filename, $writers)
 {
     $result = '';
 
     // Write documents
-    foreach ($writers as $writer => $extension) {
-        $result .= date('H:i:s') . " Write to {$writer} format";
-        if (!is_null($extension)) {
-            $xmlWriter = IOFactory::createWriter($phpWord, $writer);
-            $xmlWriter->save(__DIR__ . "/{$filename}.{$extension}");
-            rename(__DIR__ . "/{$filename}.{$extension}", __DIR__ . "/results/{$filename}.{$extension}");
+    foreach ($writers as $format => $extension) {
+        $result .= date('H:i:s') . " Write to {$format} format";
+        if (null !== $extension) {
+            $targetFile = __DIR__ . "/results/{$filename}.{$extension}";
+            $phpWord->save($targetFile, $format);
         } else {
             $result .= ' ... NOT DONE!';
         }
         $result .= EOL;
     }
 
-    $result .= getEndingNotes($writers);
+    $result .= getEndingNotes($writers, $filename);
 
     return $result;
 }
@@ -80,15 +92,17 @@ function write($phpWord, $filename, $writers)
  * Get ending notes
  *
  * @param array $writers
+ * @param mixed $filename
+ * @return string
  */
-function getEndingNotes($writers)
+function getEndingNotes($writers, $filename)
 {
     $result = '';
 
     // Do not show execution time for index
     if (!IS_INDEX) {
-        $result .= date('H:i:s') . " Done writing file(s)" . EOL;
-        $result .= date('H:i:s') . " Peak memory usage: " . (memory_get_peak_usage(true) / 1024 / 1024) . " MB" . EOL;
+        $result .= date('H:i:s') . ' Done writing file(s)' . EOL;
+        $result .= date('H:i:s') . ' Peak memory usage: ' . (memory_get_peak_usage(true) / 1024 / 1024) . ' MB' . EOL;
     }
 
     // Return
@@ -108,6 +122,12 @@ function getEndingNotes($writers)
                 }
             }
             $result .= '</p>';
+
+            $result .= '<pre>';
+            if (file_exists($filename . '.php')) {
+                $result .= highlight_file($filename . '.php', true);
+            }
+            $result .= '</pre>';
         }
     }
 
@@ -144,7 +164,7 @@ function getEndingNotes($writers)
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="https://github.com/PHPOffice/PHPWord"><i class="fa fa-github fa-lg" title="GitHub"></i>&nbsp;</a></li>
-                <li><a href="http://phpword.readthedocs.org/en/develop/"><i class="fa fa-book fa-lg" title="Docs"></i>&nbsp;</a></li>
+                <li><a href="http://phpword.readthedocs.org/"><i class="fa fa-book fa-lg" title="Docs"></i>&nbsp;</a></li>
                 <li><a href="http://twitter.com/PHPWord"><i class="fa fa-twitter fa-lg" title="Twitter"></i>&nbsp;</a></li>
             </ul>
         </div>

@@ -10,8 +10,8 @@
  * file that was distributed with this source code. For the full list of
  * contributors, visit https://github.com/PHPOffice/PHPWord/contributors.
  *
- * @link        https://github.com/PHPOffice/PHPWord
- * @copyright   2010-2014 PHPWord contributors
+ * @see         https://github.com/PHPOffice/PHPWord
+ * @copyright   2010-2018 PHPWord contributors
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  */
 
@@ -32,7 +32,7 @@ use PhpOffice\PhpWord\Writer\Word2007\Style\Tab as TabStyleWriter;
 class TOC extends AbstractElement
 {
     /**
-     * Write element
+     * Write element.
      */
     public function write()
     {
@@ -97,8 +97,8 @@ class TOC extends AbstractElement
             $styleWriter->write();
         }
         $xmlWriter->startElement('w:t');
-        $xmlWriter->writeRaw($title->getText());
-        $xmlWriter->endElement();
+        $this->writeText($title->getText());
+        $xmlWriter->endElement(); // w:t
         $xmlWriter->endElement(); // w:r
 
         $xmlWriter->startElement('w:r');
@@ -114,7 +114,7 @@ class TOC extends AbstractElement
         $xmlWriter->startElement('w:r');
         $xmlWriter->startElement('w:instrText');
         $xmlWriter->writeAttribute('xml:space', 'preserve');
-        $xmlWriter->writeRaw("PAGEREF _Toc{$rId} \h");
+        $xmlWriter->text("PAGEREF _Toc{$rId} \h");
         $xmlWriter->endElement();
         $xmlWriter->endElement();
 
@@ -176,7 +176,10 @@ class TOC extends AbstractElement
     }
 
     /**
-     * Write TOC Field
+     * Write TOC Field.
+     *
+     * @param \PhpOffice\PhpWord\Shared\XMLWriter $xmlWriter
+     * @param \PhpOffice\PhpWord\Element\TOC $element
      */
     private function writeFieldMark(XMLWriter $xmlWriter, TOCElement $element)
     {
@@ -192,7 +195,7 @@ class TOC extends AbstractElement
         $xmlWriter->startElement('w:r');
         $xmlWriter->startElement('w:instrText');
         $xmlWriter->writeAttribute('xml:space', 'preserve');
-        $xmlWriter->writeRaw("TOC \o {$minDepth}-{$maxDepth} \h \z \u");
+        $xmlWriter->text("TOC \o {$minDepth}-{$maxDepth} \h \z \u");
         $xmlWriter->endElement();
         $xmlWriter->endElement();
 
