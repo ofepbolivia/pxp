@@ -478,7 +478,8 @@ DECLARE
           inner join orga.ttipo_contrato tc on tc.id_tipo_contrato = car.id_tipo_contrato and tc.codigo in ('PLA','EVE')
         where uofun.fecha_asignacion <= v_periodo.fecha_fin AND
               (uofun.fecha_finalizacion >= v_periodo.fecha_fin or uofun.fecha_finalizacion is NULL)
-              and uofun.estado_reg = 'activo' and car.id_oficina = v_id_oficina)loop
+              and uofun.estado_reg = 'activo' and car.id_oficina = v_id_oficina
+             and uofun.tipo = 'oficial' )loop
         v_id_centro_costo = null;
 
         select po_id_cargo,
