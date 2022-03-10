@@ -31,7 +31,7 @@ header("content-type: text/javascript; charset=UTF-8");
             this.init();
 
             Ext.Ajax.request({
-                url:'../../sis_gestion_materiales/control/Solicitud/getDatos',
+                //url:'../../sis_gestion_materiales/control/Solicitud/getDatos',
                 params:{id_usuario: 0},
                 success:function(resp){
                     var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
