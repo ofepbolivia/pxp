@@ -17,7 +17,7 @@ class ACTDeptoUo extends ACTbase{
 		$this->objFunc=$this->create('MODDeptoUo');	
 		$id_depto=$this->objParam->getParametro('id_depto');
 		
-		if($id_depto!= null && $id_depto!=undefined && $id_depto!='' && strlen($id_depto)>0){
+		if($id_depto!= null && isset($id_depto) && $id_depto!='' && strlen($id_depto)>0){
 		   $this->objParam->addParametro('id_depto',$id_depto);
 		}
 		
