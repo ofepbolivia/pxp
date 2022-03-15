@@ -53,6 +53,11 @@ v_consulta					varchar;
 v_id_usuario 				integer;
 v_resultado					varchar;
 
+v_gerente					record;
+v_cuenta					varchar;
+v_existe_usuario			integer;
+v_funcionario               record;
+
 BEGIN
 	--raise exception 'COMUNIQUESE CON EL DEPTO. INFORMATICO';
      v_nombre_funcion:='orga.ft_funcionario_ime';
@@ -93,7 +98,7 @@ BEGIN
                                genero,
                                nacionalidad,
                                id_lugar,
-                               tipo_documento,
+                               --tipo_documento,
                                ci,
                                expedicion,
                                estado_civil,
@@ -115,7 +120,7 @@ BEGIN
                       v_parametros.genero,
                       v_parametros.nacionalidad,
                       v_parametros.id_lugar,
-                      v_parametros.tipo_documento,
+                      --v_parametros.tipo_documento,
                       v_parametros.ci,
                       v_parametros.expedicion,
                       v_parametros.estado_civil,
@@ -231,7 +236,7 @@ BEGIN
                        codigo_rc_iva,id_especialidad_nivel)
                values(
                       v_codigo_empleado,
-                        v_parametros.id_persona,
+                        coalesce(v_parametros.id_persona,v_id_persona),
                         'activo',
                         now(),
                         par_id_usuario,
@@ -245,9 +250,23 @@ BEGIN
                         v_parametros.codigo_rc_iva, v_parametros.id_especialidad_nivel)
                RETURNING id_funcionario into v_id_funcionario;
 
+               --breydi.vasquez 19/04/2021 verificacion de exisencia de usuario
+               select count (id_usuario)
+               into
+               v_existe_usuario
+               from segu.tusuario
+               where id_persona = coalesce(v_parametros.id_persona,v_id_persona);
 
+               if v_existe_usuario = 0 then
+               -- breydi.vasquez 19/04/2021 registro de usuario, al dar de alta un funcionario.
+                 v_cuenta =  segu.ft_registrar_usuarios_sin_cuenta(v_id_funcionario, 'Usuario registrado al dar de alta a funcionario.');
+                 if v_cuenta != 'Cuentas de Usuario Registradas Correctamente' then
+                      raise 'Aviso! %',v_cuenta;
+                 end if;
+               end if;
                v_resp = pxp.f_agrega_clave(v_resp,'mensaje','funcionario '||v_codigo_empleado ||' insertado con exito ');
-               v_resp = pxp.f_agrega_clave(v_resp,'id_funcionario',v_id_funcion::varchar);
+               v_resp = pxp.f_agrega_clave(v_resp,'id_funcionario',v_id_funcionario::varchar);
+               v_resp = pxp.f_agrega_clave(v_resp,'acciones',v_cuenta::varchar);
          END;
  /*******************************
  #TRANSACCION:      RH_FUNCIO_MOD
@@ -256,7 +275,7 @@ BEGIN
  #FECHA:		25-01-2011
 ***********************************/
      elsif(par_transaccion='RH_FUNCIO_MOD')then
-     	BEGIN --RAISE EXCEPTION 'UPDATE:  %', v_parametros.id_persona;
+     	BEGIN --RAISE EXCEPTION 'UPDATE:  %, %', v_parametros, pxp.f_existe_parametro(par_tabla, 'estado_correo');
           	if pxp.f_existe_parametro(par_tabla, 'estado_correo') then
             	update orga.tfuncionario set
                 	email_empresa=v_parametros.email_empresa
@@ -325,7 +344,7 @@ BEGIN
                 update orga.tfuncionario set
                 	codigo=v_parametros.codigo,
                     id_usuario_mod=par_id_usuario,
-                    id_persona=v_parametros.id_persona,
+                    --id_persona=v_parametros.id_persona,
                     estado_reg=v_parametros.estado_reg,
                     email_empresa=v_parametros.email_empresa,
                     --interno=v_parametros.interno,
@@ -337,6 +356,26 @@ BEGIN
                     id_especialidad_nivel = v_parametros.id_especialidad_nivel
                 where id_funcionario=v_parametros.id_funcionario;
 			end if;
+
+      -- breydi.vasquez 19/04/2021 inactivar usuarios de funcionario,  si se inacitva al funcionario
+      if pxp.f_existe_parametro(par_tabla, 'estado_reg') then
+        if v_parametros.estado_reg = 'inactivo' then
+
+           update segu.tusuario set
+              fecha_caducidad=now()::date,
+              id_usuario_mod=par_id_usuario,
+              fecha_mod=now(),
+              id_usuario_ai=v_parametros._id_usuario_ai,
+              usuario_ai=v_parametros._nombre_usuario_ai
+           where id_usuario in (select u.id_usuario
+                                from orga.tfuncionario f
+                                inner join segu.tusuario u on u.id_persona = f.id_persona and u.estado_reg = 'activo'
+                                where f.id_funcionario = v_parametros.id_funcionario
+                                );
+
+        end if;
+      end if;
+
                v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Funcionario modificado con exito '||v_parametros.id_funcionario);
                v_resp = pxp.f_agrega_clave(v_resp,'id_funcionario',v_parametros.id_funcionario::varchar);
         END;
@@ -394,6 +433,17 @@ BEGIN
 	ELSEIF (par_transaccion='RH_CUMPLECORR_INS')then
 
        begin
+
+        select vf.desc_funcionario1 as nombre, ten.abreviatura
+        into v_gerente
+        from orga.tcargo tcar
+        inner join orga.tuo_funcionario tuo on tuo.id_cargo = tcar.id_cargo
+        inner join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
+        inner join orga.tfuncionario tf on tf.id_funcionario = vf.id_funcionario
+        inner join orga.tespecialidad_nivel ten on ten.id_especialidad_nivel =  tf.id_especialidad_nivel
+        inner join orga.tuo uo on uo.id_uo = tuo.id_uo
+        where tuo.estado_reg = 'activo' and tuo.tipo = 'oficial' and tcar.codigo = '1' and uo.estado_reg = 'activo'
+        and current_date <= coalesce(tuo.fecha_finalizacion,'31/12/9999'::date);
 
         -- seleccionar los cumpleaneros del dia
          FOR v_registros in (SELECT FUNCIO.id_funcionario,
@@ -457,7 +507,7 @@ BEGIN
                         	  <td style="width: 100%; color: #ffffff;" align="center">
                               <br/>
 
-                              <span >Lic. Juan Carlos Ossio Vidal</span><br />
+                              <span >'||v_gerente.abreviatura||' '||v_gerente.nombre||'</span><br />
                               <span >GERENTE GENERAL</span><br />
                               <span >Empresa Pública Nacional Estratégica</span><br />
                               <span >Boliviana de Aviaci&oacute;n - BoA</span>
@@ -510,6 +560,80 @@ BEGIN
             v_resp = pxp.f_agrega_clave(v_resp,'envio',v_resultado::varchar);
 
         END;
+
+    /*******************************
+     #TRANSACCION:  RH_TRI_FIN_CONT_IME
+     #DESCRIPCION:	Verifica la fecha fin contrato y la replica a SQL
+     #AUTOR:	    franklin.espinoza
+     #FECHA:		11-08-2020
+    ***********************************/
+
+    elsif(par_transaccion='RH_TRI_FIN_CONT_IME')then
+        BEGIN
+        	v_resultado = orga.f_tr_update_estado_empleados();
+        	v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Replicacion Exitosa Fin Contrato de Funcionario');
+          v_resp = pxp.f_agrega_clave(v_resp,'replicacion',v_resultado::varchar);
+
+        END;
+
+    /*******************************
+     #TRANSACCION:  RH_MOD_FUNC_REST
+     #DESCRIPCION:	Actualiza datos de tpersona y tfuncionario
+     #AUTOR:	    franklin.espinoza
+     #FECHA:		29-03-2021
+    ***********************************/
+
+    elsif(par_transaccion='RH_MOD_FUNC_REST')then
+        BEGIN
+
+        	select tf.id_persona
+            into v_id_persona
+            from orga.tfuncionario tf
+            where tf.id_funcionario = v_parametros.idFuncionario;
+
+            update segu.tpersona set
+                ci                = v_parametros.CI,
+                expedicion        = v_parametros.Expedito,
+                telefono1         = v_parametros.TelefonoFijo,
+                celular1          = v_parametros.TelefonoCelular,
+                correo            = v_parametros.Email,
+                fecha_nacimiento  = v_parametros.FechaNacimiento::date,
+                genero            = case when v_parametros.Genero = 'M' then 'VARON' else 'MUJER' end ,
+                direccion         = v_parametros.Direccion,
+                estado_civil      = v_parametros.EstadoCivil,
+                zona_residencia   = v_parametros.Zona,
+                numero_domicilio  = v_parametros.Numero,
+                ciudad_residencia = v_parametros.Ciudad
+            where id_persona = v_id_persona;
+
+        	v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Campos de Persona modificados exitosamente');
+            v_resp = pxp.f_agrega_clave(v_resp,'estado','success');
+
+        END;
+
+    /*******************************
+     #TRANSACCION:  RH_UPD_FECHA_ING_IME
+     #DESCRIPCION:	Actualiza la fecha de ingreso de todos los funcianarios activos
+     #AUTOR:	    franklin.espinoza
+     #FECHA:		29-03-2021
+    ***********************************/
+
+    elsif(par_transaccion='RH_UPD_FECHA_ING_IME')then
+        BEGIN
+
+            for v_funcionario in select asig.id_funcionario, asig.id_uo_funcionario, asig.fecha_asignacion
+                                 from orga.tuo_funcionario asig
+        	                     where asig.tipo = 'oficial' and asig.estado_reg = 'activo' and coalesce(asig.fecha_finalizacion,'31/12/9999'::date) >= current_date loop
+                update orga.tfuncionario set
+                    fecha_ingreso_calculado = plani.f_get_fecha_primer_contrato_empleado (v_funcionario.id_uo_funcionario, v_funcionario.id_funcionario, v_funcionario.fecha_asignacion)
+                where id_funcionario = v_funcionario.id_funcionario;
+            end loop;
+
+        	v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Fecha de ingreso actualizado exitosamente');
+            v_resp = pxp.f_agrega_clave(v_resp,'estado','success');
+
+        END;
+
     else
 
          raise exception 'No existe la transaccion: %',par_transaccion;
@@ -534,3 +658,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.ft_funcionario_ime (par_administrador integer, par_id_usuario integer, par_tabla varchar, par_transaccion varchar)
+  OWNER TO postgres;

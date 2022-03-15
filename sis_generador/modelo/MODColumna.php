@@ -140,6 +140,28 @@ class MODColumna extends MODbase{
 
 		return $this->respuesta;
 	}
+	//{develop:franklin.espinoza date:27/7/2020}
+	function listarNameColumnsTable(){
+		//Definicion de variables para ejecucion del procedimientp
+		$this->procedimiento='gen.ft_columna_sel';// nombre procedimiento almacenado
+		$this->transaccion='GEN_COLS_TABLE_SEL';//nombre de la transaccion
+		$this->tipo_procedimiento='SEL';//tipo de transaccion
+
+		$this->setParametro('esquema','esquema','varchar');
+		$this->setParametro('tabla','tabla','varchar');
+		//Definicion de la lista del resultado del query
+
+		$this->captura('dtd_identifier','integer');
+		$this->captura('column_name','varchar');
+		$this->captura('udt_name','varchar');
+		$this->captura('name_type','varchar');
+
+		//Ejecuta la funcion
+		$this->armarConsulta(); //echo $this->consulta;exit;
+		$this->ejecutarConsulta();
+
+		return $this->respuesta;
+	}
 	
 }
 ?>

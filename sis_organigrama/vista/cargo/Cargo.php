@@ -1,4 +1,4 @@
-m<?php
+<?php
 /**
  *@package pXP
  *@file gen-Cargo.php
@@ -9,6 +9,30 @@ m<?php
 
 header("content-type: text/javascript; charset=UTF-8");
 ?>
+<style type="text/css" rel="stylesheet">
+    .x-selectable,
+    .x-selectable * {
+        -moz-user-select: text !important;
+        -khtml-user-select: text !important;
+        -webkit-user-select: text !important;
+    }
+
+    .x-grid-row td,
+    .x-grid-summary-row td,
+    .x-grid-cell-text,
+    .x-grid-hd-text,
+    .x-grid-hd,
+    .x-grid-row,
+
+    .x-grid-row,
+    .x-grid-cell,
+    .x-unselectable
+    {
+        -moz-user-select: text !important;
+        -khtml-user-select: text !important;
+        -webkit-user-select: text !important;
+    }
+</style>
 <script>
     Phx.vista.Cargo=Ext.extend(Phx.gridInterfaz,{
 
@@ -29,6 +53,17 @@ header("content-type: text/javascript; charset=UTF-8");
                         tooltip: 'Centros de Costo asociados al cargo'
                     }
                 );
+
+                this.addButton('btnBase',
+                    {
+                        text: 'Base Operativa',
+                        iconCls: 'bengineadd',
+                        disabled: true,
+                        handler: this.onBaseOperativa,
+                        tooltip: 'Base Operativa de un funcionario'
+                    }
+                );
+
                 this.store.baseParams.id_uo = this.maestro.id_uo;
                 if (this.maestro.fecha) {
                     this.store.baseParams.fecha = this.maestro.fecha;
@@ -37,6 +72,20 @@ header("content-type: text/javascript; charset=UTF-8");
                     this.store.baseParams.tipo = this.maestro.tipo;
                 }
                 this.load({params:{start:0, limit:50}});
+            },
+
+            onBaseOperativa : function (){
+                let record = this.getSelectedData();
+                Phx.CP.loadWindows('../../../sis_organigrama/vista/base_operativa/BaseOperativa.php',
+                    'Base Operativa',
+                    {
+                        width: 800,
+                        height: 300
+                    },
+                    record,
+                    this.idContenedor,
+                    'BaseOperativa'
+                );
             },
 
             Atributos:[
@@ -75,14 +124,18 @@ header("content-type: text/javascript; charset=UTF-8");
                     config:{
                         name: 'acefalo',
                         fieldLabel: 'ACEFALO',
-                        gwidth: 90,
+                        anchor: '100%',
+                        gwidth: 200,
                         renderer: function(value, p, record) {
                             if (record.data['acefalo'] == 'ACEFALO') {
                                 return String.format('{0}', '<font color="green">ACEFALO</font>');
+                            }else{
+                                return String.format('{0}', '<font color="green">'+record.data['acefalo']+'</font>');
                             }
                         }
                     },
                     type:'TextField',
+                    id_grupo: 0,
                     grid:true,
                     form:false
                 },
@@ -121,7 +174,8 @@ header("content-type: text/javascript; charset=UTF-8");
                         minChars: 2,
                         renderer : function(value, p, record) {
                             return String.format('{0}', record.data['nombre_tipo_contrato']);
-                        }
+                        },
+                        msgTarget: 'side'
                     },
                     type: 'ComboBox',
                     id_grupo: 0,
@@ -174,7 +228,8 @@ header("content-type: text/javascript; charset=UTF-8");
                         gwidth:150,
                         minChars:2,
                         tpl:'<tpl for="."><div class="x-combo-list-item"><p>{codigo}</p><p>{nombre}</p><p>{nombre_lugar}</p> </div></tpl>',
-                        renderer:function (value, p, record){return String.format('{0}', record.data['nombre_oficina']);}
+                        renderer:function (value, p, record){return String.format('{0}', record.data['nombre_oficina']);},
+                        msgTarget: 'side'
                     },
                     type:'TrigguerCombo',
                     filters:{pfiltro:'ofi.nombre',type:'string'},
@@ -217,7 +272,8 @@ header("content-type: text/javascript; charset=UTF-8");
                         minChars: 2,
                         renderer : function(value, p, record) {
                             return String.format('{0}', record.data['nombre']);
-                        }
+                        },
+                        msgTarget: 'side'
                     },
                     type: 'ComboBox',
                     id_grupo: 0,
@@ -251,7 +307,7 @@ header("content-type: text/javascript; charset=UTF-8");
                                 direction: 'ASC'
                             },
                             totalProperty: 'total',
-                            fields: ['id_escala_salarial', 'nombre', 'codigo','haber_basico'],
+                            fields: ['id_escala_salarial', 'nombre', 'codigo','haber_basico','tipo'],
                             remoteSort: true,
                             baseParams: {par_filtro: 'escsal.haber_basico#escsal.nombre#escsal.codigo'}
                         }),
@@ -269,10 +325,11 @@ header("content-type: text/javascript; charset=UTF-8");
                         anchor: '100%',
                         gwidth: 200,
                         minChars: 2,
-                        tpl:'<tpl for="."><div class="x-combo-list-item"><p>{nombre}</p><p>{codigo}</p><p>Haber Basico {haber_basico}</p> </div></tpl>',
+                        tpl:'<tpl for="."><div class="x-combo-list-item"><p style="color: darkmagenta"><b>Nombre:</b> {nombre} <b>Codigo:</b> {codigo}</p><p style="color:darkgreen"><b>Tipo: </b>{tipo}</p><p style="color: red"><b>Haber Basico: </b> {haber_basico}</p> </div></tpl>',
                         renderer : function(value, p, record) {
                             return String.format('{0}', record.data['nombre_escala']);
-                        }
+                        },
+                        msgTarget: 'side'
                     },
                     type: 'ComboBox',
                     id_grupo: 0,
@@ -282,16 +339,34 @@ header("content-type: text/javascript; charset=UTF-8");
                 },
                 {
                     config:{
+                        name: 'haber_basico',
+                        fieldLabel: 'Haber Basico',
+                        allowBlank: false,
+                        anchor: '80%',
+                        gwidth: 100,
+                        maxLength:20,
+                        msgTarget: 'side'
+                    },
+                    type:'TextField',
+                    filters:{pfiltro:'escsal.haber_basico',type:'string'},
+                    id_grupo:0,
+                    grid:true,
+                    form:false,
+                    bottom_filter : false
+                },
+                {
+                    config:{
                         name: 'codigo',
                         fieldLabel: 'Item/contrato',
                         allowBlank: false,
                         anchor: '80%',
                         gwidth: 100,
-                        maxLength:20
+                        maxLength:20,
+                        msgTarget: 'side'
                     },
                     type:'TextField',
                     filters:{pfiltro:'cargo.codigo',type:'string'},
-                    id_grupo:1,
+                    id_grupo:0,
                     grid:true,
                     form:true,
                     bottom_filter : true
@@ -304,11 +379,12 @@ header("content-type: text/javascript; charset=UTF-8");
                         anchor: '80%',
                         gwidth: 100,
                         format: 'd/m/Y',
-                        renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+                        renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''},
+                        msgTarget: 'side'
                     },
                     type:'DateField',
                     filters:{pfiltro:'cargo.fecha_ini',type:'date'},
-                    id_grupo:1,
+                    id_grupo:0,
                     grid:true,
                     form:true
                 },
@@ -321,11 +397,12 @@ header("content-type: text/javascript; charset=UTF-8");
                         anchor: '80%',
                         gwidth: 100,
                         format: 'd/m/Y',
-                        renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+                        renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''},
+                        msgTarget: 'side'
                     },
                     type:'DateField',
                     filters:{pfiltro:'cargo.fecha_fin',type:'date'},
-                    id_grupo:1,
+                    id_grupo:0,
                     grid:true,
                     form:true
                 },
@@ -340,7 +417,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     },
                     type:'TextField',
                     filters:{pfiltro:'cargo.estado_reg',type:'string'},
-                    id_grupo:1,
+                    id_grupo:0,
                     grid:true,
                     form:false
                 },
@@ -372,7 +449,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     },
                     type:'NumberField',
                     filters:{pfiltro:'usu1.cuenta',type:'string'},
-                    id_grupo:1,
+                    id_grupo:0,
                     grid:true,
                     form:false
                 },
@@ -388,7 +465,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     },
                     type:'DateField',
                     filters:{pfiltro:'cargo.fecha_mod',type:'date'},
-                    id_grupo:1,
+                    id_grupo:0,
                     grid:true,
                     form:false
                 },
@@ -403,11 +480,192 @@ header("content-type: text/javascript; charset=UTF-8");
                     },
                     type:'NumberField',
                     filters:{pfiltro:'usu2.cuenta',type:'string'},
-                    id_grupo:1,
+                    id_grupo:0,
                     grid:true,
                     form:false
+                },
+                /**************************************************PRESUPUESTO**************************************************/
+                {
+                    config:{
+                        name:'id_gestion',
+                        fieldLabel: 'Gestion',
+                        allowBlank: false,
+                        msgTarget: 'side',
+                        emptyText:'Gestion...',
+                        store:new Ext.data.JsonStore(
+                            {
+                                url: '../../sis_parametros/control/Gestion/listarGestion',
+                                id: 'id_gestion',
+                                root: 'datos',
+                                sortInfo:{
+                                    field: 'gestion',
+                                    direction: 'DESC'
+                                },
+                                totalProperty: 'total',
+                                fields: ['id_gestion','gestion'],
+                                // turn on remote sorting
+                                remoteSort: true,
+                                baseParams:{par_filtro:'gestion'}
+                            }),
+                        valueField: 'id_gestion',
+                        triggerAction: 'all',
+                        displayField: 'gestion',
+                        hiddenName: 'id_gestion',
+                        mode:'remote',
+                        pageSize:50,
+                        queryDelay:500,
+                        listWidth:'240',
+                        width:240
+                    },
+                    type: 'ComboBox',
+                    id_grupo: 1,
+                    filters: {pfiltro: 'gestion',type: 'string'},
+                    grid: false,
+                    form: true
+                },
+                {
+                    config:{
+                        name:'id_centro_costo',
+                        origen:'CENTROCOSTO',
+                        fieldLabel: 'Centro de Costos',
+                        emptyText : 'Centro Costo...',
+                        allowBlank:false,
+                        msgTarget: 'side',
+                        anchor: '100%',
+                        listWidth: null,
+                        gwidth:300,
+                        baseParams:{filtrar:'grupo_ep'},
+                        tpl: '<tpl for="."><div class="x-combo-list-item"><p><b style="color: green;">{codigo_cc}</b></p><p>Gestion: {gestion}</p><p>Reg: {nombre_regional}</p><p>Fin.: {nombre_financiador}</p><p>Proy.: {nombre_programa}</p><p>Act.: {nombre_actividad}</p><p>UO: {nombre_uo}</p><p style="color: green"><b>Categoria: {categoria}</b></p></div></tpl>',
+                        renderer:function(value, p, record){return String.format('{0}', record.data['desc_centro_costo']);}
+
+                    },
+                    type:'ComboRec',
+                    id_grupo:1,
+                    form:true,
+                    grid:false
+                },
+                {
+                    config:{
+                        name:'id_ot',
+                        fieldLabel: 'Orden Trabajo',
+                        sysorigen:'sis_contabilidad',
+                        origen:'OT',
+                        allowBlank:false,
+                        gwidth:200,
+                        anchor: '100%',
+                        msgTarget: 'side',
+                        listWidth: null,
+                        baseParams:{par_filtro:'desc_orden#motivo_orden#codigo'},
+                        renderer:function(value, p, record){return String.format('{0}', record.data['desc_orden']);}
+
+                    },
+                    type:'ComboRec',
+                    id_grupo:1,
+                    filters:{pfiltro:'ot.motivo_orden#ot.desc_orden#ot.codigo',type:'string'},
+                    grid:false,
+                    form:true
+                },
+                {
+                    config:{
+                        name: 'porcentaje',
+                        fieldLabel: 'Porcentaje',
+                        allowBlank: false,
+                        width:177,
+                        gwidth: 100,
+                        maxLength:3,
+                        msgTarget: 'side'
+                    },
+                    type:'NumberField',
+                    filters:{pfiltro:'carpre.porcentaje',type:'numeric'},
+                    id_grupo:1,
+                    grid:false,
+                    form:true
+                },
+                {
+                    config:{
+                        name: 'fecha_ini_cc',
+                        fieldLabel: 'Fecha Aplicación',
+                        allowBlank: false,
+                        //anchor: '80%',
+                        width: 177,
+                        gwidth: 150,
+                        format: 'd/m/Y',
+                        msgTarget: 'side',
+                        renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+                    },
+                    type:'DateField',
+                    filters:{pfiltro:'carpre.fecha_ini',type:'date'},
+                    id_grupo:1,
+                    grid:false,
+                    form:true
+                },
+                {
+                    config:{
+                        name: 'fecha_fin_cc',
+                        fieldLabel: 'Fecha Finalización',
+                        allowBlank: false,
+                        //anchor: '80%',
+                        width: 177,
+                        gwidth: 150,
+                        format: 'd/m/Y',
+                        msgTarget: 'side',
+                        renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+                    },
+                    type:'DateField',
+                    filters:{pfiltro:'carpre.fecha_fin',type:'date'},
+                    id_grupo:1,
+                    grid:false,
+                    form:true
+                }
+                /**************************************************PRESUPUESTO**************************************************/
+            ],
+            Grupos: [
+                {
+                    layout: 'column',
+                    border: false,
+                    labelAlign: 'top',
+                    defaults: {
+                        border: false
+                    },
+
+                    items: [
+                        {
+                            columnWidth: .50,
+                            border: false,
+                            layout: 'fit',
+                            bodyStyle: 'padding-right:10px;',
+                            items: [
+
+                                {
+                                    xtype: 'fieldset',
+                                    title: '<b style="color: green;">DATOS ITEM<b>',
+                                    autoHeight: true,
+                                    items: [],
+                                    id_grupo: 0
+                                }
+
+                            ]
+                        },
+                        {
+                            columnWidth: .50,
+                            border: false,
+                            layout: 'fit',
+                            bodyStyle: 'padding-right:10px;',
+                            items: [
+                                {
+                                    xtype: 'fieldset',
+                                    title: '<b style="color: green;">DATOS PRESUPUESTO<b>',
+                                    autoHeight: true,
+                                    items: [],
+                                    id_grupo: 1
+                                }
+                            ]
+                        }
+                    ]
                 }
             ],
+            fwidth: 800,
+            fheight: 500,
             tam_pag:50,
             title:'Cargo',
             ActSave:'../../sis_organigrama/control/Cargo/insertarCargo',
@@ -439,6 +697,14 @@ header("content-type: text/javascript; charset=UTF-8");
                 {name:'usr_mod', type: 'string'},
                 {name:'acefalo', type: 'string'},
                 {name:'identificador', type: 'numeric'},
+                {name:'haber_basico', type: 'numeric'},
+
+                {name:'id_gestion', type: 'numeric'},
+                {name:'porcentaje', type: 'numeric'},
+                {name:'id_ot', type: 'numeric'},
+                {name:'fecha_ini_cc', type: 'date',dateFormat:'Y-m-d'},
+                {name:'fecha_fin_cc', type: 'date',dateFormat:'Y-m-d'},
+                {name:'id_funcionario', type: 'numeric'}
 
             ],
             sortInfo:{
@@ -446,7 +712,9 @@ header("content-type: text/javascript; charset=UTF-8");
                 direction: 'ASC'
             },
             bdel:true,
-            bsave:true,
+            bsave:false,
+
+            bedit:true,
             iniciarEventos : function() {
                 //inicio de eventos
                 this.Cmp.id_tipo_contrato.on('select',function(x,rec,z){
@@ -460,6 +728,10 @@ header("content-type: text/javascript; charset=UTF-8");
                     }
 
                 },this);
+                this.Cmp.fecha_ini.on('select',function(com, date){
+                    this.Cmp.fecha_ini_cc.setValue(date);
+                },this);
+                //this.Cmp.fecha_ini_cc.setValue(this.Cmp.fecha_ini.getValue) ;
             },
             loadValoresIniciales:function()
             {	//console.log('this.maestro', this.maestro.nombre_cargo);
@@ -470,11 +742,13 @@ header("content-type: text/javascript; charset=UTF-8");
             preparaMenu:function()
             {
                 this.getBoton('btnCostos').enable();
+                this.getBoton('btnBase').enable();
                 Phx.vista.Cargo.superclass.preparaMenu.call(this);
             },
             liberaMenu:function()
             {
                 this.getBoton('btnCostos').disable();
+                this.getBoton('btnBase').disable();
                 Phx.vista.Cargo.superclass.liberaMenu.call(this);
             },
 
@@ -482,11 +756,90 @@ header("content-type: text/javascript; charset=UTF-8");
                 //this.ocultarComponente(this.Cmp.id_escala_salarial);
                 this.ocultarComponente(this.Cmp.id_tipo_contrato);
 
+                /***********************presupuesto************************/
+                this.ocultarComponente(this.Cmp.id_gestion);
+                this.ocultarComponente(this.Cmp.id_centro_costo);
+                this.ocultarComponente(this.Cmp.id_ot);
+                this.ocultarComponente(this.Cmp.porcentaje);
+                this.ocultarComponente(this.Cmp.fecha_ini_cc);
+                this.ocultarComponente(this.Cmp.fecha_fin_cc);
+
+                /*this.mostrarComponente(this.Cmp.id_gestion);
+                this.mostrarComponente(this.Cmp.id_centro_costo);
+                this.mostrarComponente(this.Cmp.id_ot);
+                this.mostrarComponente(this.Cmp.porcentaje);
+                this.mostrarComponente(this.Cmp.fecha_ini_cc);
+                this.mostrarComponente(this.Cmp.fecha_fin_cc);
+                Ext.Ajax.request({
+                    url:'../../sis_organigrama/control/Cargo/loadCargoPresupuesto',
+                    params:{
+                        id_uo : this.maestro.id_uo
+                    },
+                    success:function(resp){
+                        var reg =  (Ext.decode(Ext.util.Format.trim(resp.responseText))).ROOT.datos;
+                        //console.log('loadCargoPresupuesto',reg);
+
+                        //this.Cmp.id_gestion.setValue(reg.id_gestion);
+                        this.Cmp.id_gestion.store.load({params:{start:0, limit:this.tam_pag}, scope:this,callback: function (arr,op,suc) {
+                                this.Cmp.id_gestion.setValue(reg.id_gestion);
+                            }
+                        });
+                        this.Cmp.id_centro_costo.store.baseParams.id_gestion = reg.id_gestion;
+                        this.Cmp.id_centro_costo.store.baseParams.id_uo = reg.id_uo;
+
+                        this.Cmp.id_centro_costo.store.load({params:{start:0, limit:this.tam_pag}, scope:this,callback: function (arr,op,suc) {
+                                this.Cmp.id_centro_costo.setValue(reg.id_centro_costo);
+                            }
+                        });
+                    },
+                    failure: this.conexionFailure,
+                    timeout:this.timeout,
+                    scope:this
+                });*/
+                /***********************presupuesto************************/
+
                 Phx.vista.Cargo.superclass.onButtonEdit.call(this);
             },
             onButtonNew : function () {
                 this.mostrarComponente(this.Cmp.id_escala_salarial);
                 this.mostrarComponente(this.Cmp.id_tipo_contrato);
+
+                /***********************presupuesto************************/
+                this.mostrarComponente(this.Cmp.id_gestion);
+                this.mostrarComponente(this.Cmp.id_centro_costo);
+                this.mostrarComponente(this.Cmp.id_ot);
+                this.mostrarComponente(this.Cmp.porcentaje);
+                this.mostrarComponente(this.Cmp.fecha_ini_cc);
+                this.mostrarComponente(this.Cmp.fecha_fin_cc);
+                /***********************presupuesto************************/
+
+                Ext.Ajax.request({
+                    url:'../../sis_organigrama/control/Cargo/loadCargoPresupuesto',
+                    params:{
+                        id_uo : this.maestro.id_uo
+                    },
+                    success:function(resp){
+                        var reg =  (Ext.decode(Ext.util.Format.trim(resp.responseText))).ROOT.datos;
+                        console.log('loadCargoPresupuesto',reg);
+
+                        //this.Cmp.id_gestion.setValue(reg.id_gestion);
+                        this.Cmp.id_gestion.store.load({params:{start:0, limit:this.tam_pag}, scope:this,callback: function (arr,op,suc) {
+                                this.Cmp.id_gestion.setValue(reg.id_gestion);
+                            }
+                        });
+                        this.Cmp.id_centro_costo.store.baseParams.id_gestion = reg.id_gestion;
+                        this.Cmp.id_centro_costo.store.baseParams.id_uo = reg.id_uo;
+
+                        this.Cmp.id_centro_costo.store.load({params:{start:0, limit:this.tam_pag}, scope:this,callback: function (arr,op,suc) {
+                                this.Cmp.id_centro_costo.setValue(reg.id_centro_costo);
+                            }
+                        });
+                    },
+                    failure: this.conexionFailure,
+                    timeout:this.timeout,
+                    scope:this
+                });
+
                 Phx.vista.Cargo.superclass.onButtonNew.call(this);
             },
             south:{

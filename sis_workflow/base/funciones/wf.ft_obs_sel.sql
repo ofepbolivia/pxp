@@ -75,7 +75,10 @@ BEGIN
                             fun.desc_funcionario1 as desc_funcionario,
                             te.codigo as codigo_tipo_estado,
                             te.nombre_estado as nombre_tipo_estado,
-                            tp.nombre as nombre_tipo_proceso
+                            tp.nombre as nombre_tipo_proceso,
+                            array_to_string(obs.id_funcionario_cc,'','')::varchar,
+                            (select pxp.list(email_empresa) from orga.vfuncionario_persona p where p.id_funcionario =ANY(obs.id_funcionario_cc))::varchar as email_cc,
+                            obs.tipo
                       from wf.tobs obs
                          inner join segu.tusuario usu1 on usu1.id_usuario = obs.id_usuario_reg
                          left join segu.tusuario usu2 on usu2.id_usuario = obs.id_usuario_mod

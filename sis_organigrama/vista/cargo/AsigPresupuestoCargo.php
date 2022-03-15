@@ -9,8 +9,41 @@
 
 header("content-type: text/javascript; charset=UTF-8");
 ?>
+
+<style type="text/css" rel="stylesheet">
+    .x-selectable,
+    .x-selectable * {
+        -moz-user-select: text !important;
+        -khtml-user-select: text !important;
+        -webkit-user-select: text !important;
+    }
+
+    .x-grid-row td,
+    .x-grid-summary-row td,
+    .x-grid-cell-text,
+    .x-grid-hd-text,
+    .x-grid-hd,
+    .x-grid-row,
+
+    .x-grid-row,
+    .x-grid-cell,
+    .x-unselectable
+    {
+        -moz-user-select: text !important;
+        -khtml-user-select: text !important;
+        -webkit-user-select: text !important;
+    }
+</style>
+
 <script>
     Phx.vista.AsigPresupuestoCargo=Ext.extend(Phx.gridInterfaz,{
+
+        viewConfig: {
+            stripeRows: false,
+            getRowClass: function(record) {
+                return "x-selectable";
+            }
+        },
 
 
         beditGroups: [],
@@ -102,25 +135,39 @@ header("content-type: text/javascript; charset=UTF-8");
         },
 
         clonarPresupuesto: function(){
-            Phx.CP.loadingShow();
-            Ext.Ajax.request({
-                url: '../../sis_organigrama/control/Cargo/clonarPresupuesto',
-                params:{
-                    id_gestion: 0
-                },
-                success:function(resp){
-                    Phx.CP.loadingHide();
-                    var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
-                    if(!reg.ROOT.error){
-                        this.reload();
-                    }else{
-                        alert('Ocurrió un error durante el proceso')
+
+            Ext.Msg.show({
+                title: 'Información',
+                msg: '<b>Estimado Funcionario: <br> Esta seguro de Clonar Presupuestos.</b>',
+                buttons: Ext.Msg.OK,
+                width: 512,
+                icon: Ext.Msg.INFO,
+                fn: function (btn) {
+                    if (btn == 'ok') {
+                        Phx.CP.loadingShow();
+                        Ext.Ajax.request({
+                            url: '../../sis_organigrama/control/Cargo/clonarPresupuesto',
+                            params:{
+                                id_gestion: 0
+                            },
+                            success:function(resp){
+                                Phx.CP.loadingHide();
+                                var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+                                if(!reg.ROOT.error){
+                                    this.reload();
+                                }else{
+                                    alert('Ocurrió un error durante el proceso')
+                                }
+                            },
+                            failure: this.conexionFailure,
+                            timeout:this.timeout,
+                            scope:this
+                        });
                     }
-                },
-                failure: this.conexionFailure,
-                timeout:this.timeout,
-                scope:this
+                }
             });
+
+
         },
 
         cmbActivos: new Ext.form.ComboBox({
@@ -217,6 +264,56 @@ header("content-type: text/javascript; charset=UTF-8");
 
                 grid:true,
                 form:false,
+                bottom_filter:true
+            },
+
+            {
+                config:{
+                    name: 'nombre_unidad',
+                    fieldLabel: 'Departamento',
+                    gwidth: 250,
+                    renderer:function (value, p, record){
+                        return String.format('{0}', "<div style='color: green'><b>"+value+"</b></div>");
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'dep.nombre_unidad',type:'string'},
+                grid:true,
+                form:false,
+                bottom_filter:true
+            },
+
+            //04-08-2021 (may)
+            {
+                config: {
+                    name: 'desc_tcc',
+                    fieldLabel: 'Centro de Costo',
+                    allowBlank: true,
+                    anchor: '80%',
+                    gwidth: 290,
+                    maxLength: 50
+                },
+                type: 'TextField',
+                filters: {pfiltro: 'vcc.codigo_tcc#vcc.descripcion_tcc', type: 'string'},
+                id_grupo: 1,
+                grid: true,
+                form: false,
+                bottom_filter:true
+            },
+            {
+                config: {
+                    name: 'codigo_categoria',
+                    fieldLabel: 'Categoria Programática',
+                    allowBlank: true,
+                    anchor: '80%',
+                    gwidth: 200,
+                    maxLength: 50
+                },
+                type: 'TextField',
+                filters: {pfiltro: 'cp.codigo_categoria', type: 'string'},
+                id_grupo: 1,
+                grid: true,
+                form: false,
                 bottom_filter:true
             },
 
@@ -489,6 +586,8 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid:true,
                 form:true
             },
+
+
             {
                 config:{
                     name: 'estado_reg',
@@ -604,7 +703,12 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:'fecha_asignacion', type: 'date',dateFormat:'Y-m-d'},
             {name:'fecha_finalizacion',type: 'date',dateFormat:'Y-m-d'},
 
+            {name:'desc_tcc', type: 'string'},
+            {name:'codigo_categoria', type: 'string'},
+            {name:'nombre_unidad', type: 'string'}
+
         ],
+
         sortInfo:{
             field: 'desc_func',
             direction: 'ASC'

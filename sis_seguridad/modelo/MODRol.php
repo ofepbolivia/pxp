@@ -30,11 +30,14 @@ class MODRol extends MODbase{
 		$this->captura('rol','varchar');
 		$this->captura('id_subsistema','integer');
 		$this->captura('desc_subsis','varchar');
-		//$this->captura('estado_reg','varchar');
+		$this->captura('usr_reg','varchar');
+		$this->captura('usr_mod','varchar');
+		$this->captura('fecha_mod','timestamp');
+		$this->captura('fecha_reg_hora','timestamp');
 
 		//Ejecuta la funcion
 		$this->armarConsulta();
-
+		// echo $this->consulta;exit;
 
 		$this->ejecutarConsulta();
 
@@ -105,8 +108,15 @@ class MODRol extends MODbase{
 		$this->captura('id_rol','integer');
 		$this->captura('nombre','text');
 		$this->captura('cargo','varchar');
+		$this->captura('fecha_reg','date');
+		$this->captura('usr_reg','varchar');
+		$this->captura('usr_mod','varchar');
+		$this->captura('fecha_mod','timestamp');
+		$this->captura('id_usuario_rol','integer');
+		$this->captura('fecha_reg_hora','timestamp');
 		//Ejecuta la funcion
 		$this->armarConsulta();
+		// $this->consulta;exit;
 		$this->ejecutarConsulta();
 		return $this->respuesta;
 

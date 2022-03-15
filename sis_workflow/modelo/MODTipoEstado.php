@@ -63,9 +63,12 @@ class MODTipoEstado extends MODbase{
 		$this->captura('id_tipo_estado_anterior','integer');
 		$this->captura('desc_tipo_estado_anterior','text');
 		$this->captura('icono','varchar');
-		
-		
-		
+		$this->captura('control_tiempo','varchar');
+        $this->captura('tiempo_estado','interval');
+        $this->captura('tipo_accion', 'varchar');
+        $this->captura('funcion_cambio_estado', 'varchar');
+        $this->captura('id_funcionario_cc','varchar');
+        $this->captura('email_cc','varchar');
 		
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -171,8 +174,12 @@ class MODTipoEstado extends MODbase{
 		$this->setParametro('grupo_doc','grupo_doc','codigo_html');
 		$this->setParametro('id_tipo_estado_anterior','id_tipo_estado_anterior','integer');
 		$this->setParametro('icono','icono','varchar');
-		
-		
+        $this->setParametro('control_tiempo','control_tiempo','varchar');        
+        $this->setParametro('tiempo_estado','tiempo_estado','varchar');
+        $this->setParametro('tipo_accion', 'tipo_accion', 'varchar');
+        $this->setParametro('funcion_cambio_estado', 'funcion_cambio_estado', 'varchar');
+        $this->setParametro('id_funcionario_cc', 'id_funcionario_cc', 'varchar'); 
+               
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
@@ -218,6 +225,11 @@ class MODTipoEstado extends MODbase{
 		$this->setParametro('grupo_doc','grupo_doc','codigo_html');
 		$this->setParametro('id_tipo_estado_anterior','id_tipo_estado_anterior','integer');
 		$this->setParametro('icono','icono','varchar');
+		$this->setParametro('control_tiempo','control_tiempo','varchar');
+        $this->setParametro('tiempo_estado','tiempo_estado','varchar');
+        $this->setParametro('tipo_accion', 'tipo_accion', 'varchar');
+        $this->setParametro('funcion_cambio_estado', 'funcion_cambio_estado', 'varchar');
+        $this->setParametro('id_funcionario_cc', 'id_funcionario_cc', 'varchar'); 
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();

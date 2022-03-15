@@ -204,7 +204,8 @@ Phx.vista.CategoriaSalarial=Ext.extend(Phx.gridInterfaz,{
 		direction: 'ASC'
 	},
 	bdel:true,
-	bsave:true,
+	bsave:false,
+    bdel:false,
 	Grupos: [
             {
                 layout: 'column',

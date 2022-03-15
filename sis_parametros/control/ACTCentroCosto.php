@@ -12,10 +12,13 @@ class ACTCentroCosto extends ACTbase{
 		$this->objParam->defecto('ordenacion','id_centro_costo');
 
 		$this->objParam->defecto('dir_ordenacion','asc');
-		
-		
+
 		if($this->objParam->getParametro('id_gestion')!=''){
             $this->objParam->addFiltro("cec.id_gestion = ".$this->objParam->getParametro('id_gestion'));    
+        }
+
+        if($this->objParam->getParametro('id_uo')!=''){
+            $this->objParam->addFiltro("cec.id_uo = ".$this->objParam->getParametro('id_uo'));
         }
 		
 		if($this->objParam->getParametro('id_partida')!=''){
@@ -131,7 +134,7 @@ class ACTCentroCosto extends ACTbase{
         $this->objParam->defecto('ordenacion','id_centro_costo');
 		
 		if($this->objParam->getParametro('tipo_pres') == 'gasto'){
-				$tip_pres = "(''2'',''3'')"; 
+				$tip_pres = "(''2'',''3'')";
 				$this->objParam->addFiltro("cec.tipo_pres in  ".$tip_pres);   
 		}
 		
@@ -173,7 +176,7 @@ class ACTCentroCosto extends ACTbase{
 		
 		if($this->objParam->getParametro('tipo_pres')!=''){
 			if($this->objParam->getParametro('tipo_pres') == 'gasto'){
-				$tip_pres = "(''2'',''3'')"; 
+                $tip_pres = "(''2'',''3'',''0'')";
 				$this->objParam->addFiltro("cec.tipo_pres in ".$tip_pres);   
 			}
 			
@@ -250,6 +253,65 @@ class ACTCentroCosto extends ACTbase{
         }
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
-			
+
+
+    //(may) combo para FA
+    function listarCC(){
+        $this->objParam->defecto('ordenacion','id_centro_costo');
+
+        $this->objParam->defecto('dir_ordenacion','asc');
+
+        if($this->objParam->getParametro('id_cuenta_doc')!=''){
+            $this->objParam->addFiltro("cdoc.id_cuenta_doc = ".$this->objParam->getParametro('id_cuenta_doc'));
+        }
+
+
+        if($this->objParam->getParametro('tipo_pres')!=''){
+            if($this->objParam->getParametro('tipo_pres') == 'gasto'){
+                $tip_pres = "(''2'',''3'',''0'')";
+                $this->objParam->addFiltro("cec.tipo_pres in ".$tip_pres);
+            }
+
+            if($this->objParam->getParametro('tipo_pres') == 'recurso'){
+                $tip_pres = "(''1'')";
+                $this->objParam->addFiltro("cec.tipo_pres in  ".$tip_pres);
+            }
+
+            if($this->objParam->getParametro('tipo_pres') == 'recurso,administrativo'){
+                $tip_pres = "(''1'',''0'')";
+                $this->objParam->addFiltro("cec.tipo_pres in  ".$tip_pres);
+            }
+
+            if($this->objParam->getParametro('tipo_pres') == 'administrativo'){
+                $tip_pres = "(''0'')";
+                $this->objParam->addFiltro("cec.tipo_pres in ".$tip_pres);
+            }
+
+            if($this->objParam->getParametro('tipo_pres') == 'gasto,administrativo'){
+                $tip_pres = "(''0'',''2'',''3'')";
+                $this->objParam->addFiltro("cec.tipo_pres in ".$tip_pres);
+            }
+
+        }
+
+        if($this->objParam->getParametro('id_uo')!=''){
+            $this->objParam->addFiltro("cec.id_uo = ".$this->objParam->getParametro('id_uo'));
+        }
+
+        if($this->objParam->getParametro('id_gestion')!=''){
+            $this->objParam->addFiltro("cec.id_gestion = ".$this->objParam->getParametro('id_gestion'));
+        }
+        if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
+            $this->objReporte = new Reporte($this->objParam,$this);
+            $this->res = $this->objReporte->generarReporteListado('MODCentroCosto','listarCC');
+        } else{
+            $this->objFunc=$this->create('MODCentroCosto');
+
+            $this->res=$this->objFunc->listarCC($this->objParam);
+        }
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
+
 }
 ?>

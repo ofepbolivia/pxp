@@ -6,20 +6,20 @@ CREATE OR REPLACE FUNCTION orga.ft_cargo_sel (
 )
 RETURNS varchar AS
 $body$
-  /**************************************************************************
-   SISTEMA:		Organigrama
-   FUNCION: 		orga.ft_cargo_sel
-   DESCRIPCION:   Funcion que devuelve conjuntos de registros de las consultas relacionadas con la tabla 'orga.tcargo'
-   AUTOR: 		 (admin)
-   FECHA:	        14-01-2014 19:16:06
-   COMENTARIOS:
-  ***************************************************************************
-   HISTORIAL DE MODIFICACIONES:
+/**************************************************************************
+     SISTEMA:		Organigrama
+     FUNCION: 		orga.ft_cargo_sel
+     DESCRIPCION:   Funcion que devuelve conjuntos de registros de las consultas relacionadas con la tabla 'orga.tcargo'
+     AUTOR: 		 (admin)
+     FECHA:	        14-01-2014 19:16:06
+     COMENTARIOS:
+    ***************************************************************************
+     HISTORIAL DE MODIFICACIONES:
 
-   DESCRIPCION:
-   AUTOR:
-   FECHA:
-  ***************************************************************************/
+     DESCRIPCION:
+     AUTOR:
+     FECHA:
+    ***************************************************************************/
 
   DECLARE
 
@@ -59,7 +59,7 @@ $body$
 						cargo.id_temporal_cargo,
 						cargo.id_escala_salarial,
 						cargo.codigo,
-						cargo.nombre,
+						ttc.nombre,
 						cargo.fecha_ini,
 						cargo.estado_reg,
 						cargo.fecha_fin,
@@ -69,24 +69,34 @@ $body$
 						cargo.id_usuario_mod,
 						usu1.cuenta as usr_reg,
 						usu2.cuenta as usr_mod,
-						tipcon.nombre,
-						escsal.nombre,
-						ofi.nombre,
-						(case when (orga.f_get_empleado_x_item(cargo.id_cargo)  is null and cargo.fecha_fin is null) then
+						tipcon.nombre as nombre_tipo_contrato,
+						escsal.nombre as nombre_escala,
+						ofi.nombre as nombre_oficina,
+						(case when (orga.f_get_empleado_nombre_x_item(cargo.id_cargo)  is null /*and cargo.fecha_fin >= ''31/12/9999''::date*/) then
 						  ''ACEFALO''
 						else
-						  ''ASIGNADO''
+						  orga.f_get_empleado_nombre_x_item(cargo.id_cargo)
 						end)::varchar as acefalo,
 						cargo.id_oficina,
 						cargo.id_cargo as identificador,
 						tipcon.codigo as codigo_tipo_contrato,
-						escsal.haber_basico
-						 from orga.tcargo cargo
+						escsal.haber_basico,
+                        pres.id_gestion,
+                        pres.porcentaje,
+                        pres.id_ot,
+                        pres.fecha_ini fecha_ini_cc,
+                        pres.fecha_fin fecha_fin_cc,
+                        coalesce(orga.f_get_empleado_x_item(cargo.id_cargo, current_date),0)::integer id_funcionario
+						from orga.tcargo cargo
+                        inner join orga.ttemporal_cargo ttc on ttc.id_temporal_cargo = cargo.id_temporal_cargo
 						inner join segu.tusuario usu1 on usu1.id_usuario = cargo.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = cargo.id_usuario_mod
 						inner join orga.ttipo_contrato tipcon on tipcon.id_tipo_contrato = cargo.id_tipo_contrato
 						inner join orga.tescala_salarial escsal on escsal.id_escala_salarial = cargo.id_escala_salarial
 						left join orga.toficina ofi on ofi.id_oficina = cargo.id_oficina
+
+                        left join orga.tcargo_presupuesto pres on pres.id_cargo =  cargo.id_cargo and pres.id_gestion = (select ges.id_gestion from param.tgestion ges where ges.gestion = date_part(''year'',current_date))
+
 				        where cargo.estado_reg = ''activo'' and  ';
 
         --Definicion de la respuesta
@@ -187,13 +197,17 @@ $body$
 
       begin
         --Sentencia de la consulta de conteo de registros
-        v_consulta:='select count(id_cargo)
+        v_consulta:='select count(cargo.id_cargo)
 					    from orga.tcargo cargo
+                        inner join orga.ttemporal_cargo ttc on ttc.id_temporal_cargo = cargo.id_temporal_cargo
 					    inner join segu.tusuario usu1 on usu1.id_usuario = cargo.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = cargo.id_usuario_mod
 						inner join orga.ttipo_contrato tipcon on tipcon.id_tipo_contrato = cargo.id_tipo_contrato
 						inner join orga.tescala_salarial escsal on escsal.id_escala_salarial = cargo.id_escala_salarial
 						left join orga.toficina ofi on ofi.id_oficina = cargo.id_oficina
+
+                        left join orga.tcargo_presupuesto pres on pres.id_cargo =  cargo.id_cargo and pres.id_gestion = (select ges.id_gestion from param.tgestion ges where ges.gestion = date_part(''year'',current_date))
+
 					    where cargo.estado_reg = ''activo'' and ';
 
         --Definicion de la respuesta
@@ -237,9 +251,9 @@ $body$
       	v_condicion = 'true';
       	if(pxp.f_existe_parametro(p_tabla,'presupuesto'))then
         	if (v_parametros.presupuesto = 'con_presupuesto') then
-            	v_condicion = 'and (tuo.tipo = ''oficial'' or tuo.tipo is null) and (tuo.estado_reg = ''activo'' or tuo.estado_reg is null) and (tcp.id_cargo_presupuesto is not null and tcp.id_ot is not null)';
+            	v_condicion = 'and (tuo.tipo = ''oficial'' /*or tuo.tipo is null*/) and (tuo.estado_reg = ''activo'' /*or tuo.estado_reg is null*/) and (tcp.id_cargo_presupuesto is not null /*and tcp.id_ot is not null*/)';
             elsif(v_parametros.presupuesto = 'sin_presupuesto')then
-            	v_condicion = 'and tuo.tipo = ''oficial'' and tuo.estado_reg = ''activo'' and (tcp.id_cargo_presupuesto is null or tcp.id_ot is null)';
+            	v_condicion = 'and tuo.tipo = ''oficial'' and tuo.estado_reg = ''activo'' and (tcp.id_cargo_presupuesto is null /*or tcp.id_ot is null*/)';
             elsif(v_parametros.presupuesto = 'acefalo')then
             	v_condicion = 'and (tcp.id_cargo_presupuesto is null and tcp.id_ot is null and tuo.id_uo_funcionario is null)';
             end if;
@@ -252,49 +266,67 @@ $body$
         --Sentencia de la consulta
         v_consulta:='select
         				vf.id_funcionario,
-						cargo.id_cargo,
-						cargo.id_uo,
-						cargo.id_tipo_contrato,
-						cargo.id_lugar,
-						cargo.id_temporal_cargo,
-						cargo.id_escala_salarial,
-						cargo.codigo,
+                        cargo.id_cargo,
+                        cargo.id_uo,
+                        cargo.id_tipo_contrato,
+                        cargo.id_lugar,
+                        cargo.id_temporal_cargo,
+                        cargo.id_escala_salarial,
+                        cargo.codigo,
 						cargo.nombre as cargo,
-						cargo.fecha_ini,
-						cargo.estado_reg,
-						cargo.fecha_fin,
-						cargo.fecha_reg,
-						cargo.id_usuario_reg,
-						cargo.fecha_mod,
-						cargo.id_usuario_mod,
+                        cargo.fecha_ini,
+                        cargo.estado_reg,
+                        cargo.fecha_fin,
+                        cargo.fecha_reg,
+                        cargo.id_usuario_reg,
+                        cargo.fecha_mod,
+                        cargo.id_usuario_mod,
 						usu1.cuenta as usr_reg,
-						usu2.cuenta as usr_mod,
-
-						tipcon.nombre as nombre_tipo_contrato,
-						escsal.nombre as nombre_escala,
+                        usu2.cuenta as usr_mod,
+                        tipcon.nombre as nombre_tipo_contrato,
+                        escsal.nombre as nombre_escala,
 						ofi.nombre as nombre_oficina,
-						(case when (orga.f_get_empleado_x_item(cargo.id_cargo)  is null and cargo.fecha_fin is null) then
+                        (case when (orga.f_get_empleado_x_item(cargo.id_cargo)  is null and cargo.fecha_fin is null) then
 						  ''ACEFALO''
 						else
 						  ''ASIGNADO''
 						end)::varchar as acefalo,
-						cargo.id_oficina,
-						cargo.id_cargo::varchar as identificador,
-						tipcon.codigo as codigo_tipo_contrato,
+                        cargo.id_oficina,
+                        cargo.id_cargo::varchar as identificador,
+                        tipcon.codigo as codigo_tipo_contrato,
                         vf.desc_funcionario1::varchar as desc_func,
                         tuo.fecha_asignacion,
-                        tuo.fecha_finalizacion
+                        tuo.fecha_finalizacion,
+
+                        (''(''||vcc.codigo_tcc ||'') '' ||vcc.descripcion_tcc)::varchar AS desc_tcc,
+                        cp.codigo_categoria,
+                        dep.nombre_unidad
+
 						from orga.tcargo cargo
 						inner join segu.tusuario usu1 on usu1.id_usuario = cargo.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = cargo.id_usuario_mod
 						inner join orga.ttipo_contrato tipcon on tipcon.id_tipo_contrato = cargo.id_tipo_contrato
 						inner join orga.tescala_salarial escsal on escsal.id_escala_salarial = cargo.id_escala_salarial
 						LEFT join orga.toficina ofi on ofi.id_oficina = cargo.id_oficina
-                        left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = '||v_id_gestion||'
-                        LEFT join orga.tuo_funcionario tuo on tuo.id_cargo = cargo.id_cargo and '||v_activo||'
-                        LEFT join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
-				        where cargo.estado_reg = ''activo'' and tipcon.codigo != ''PCP'' '||v_condicion||' and ';
 
+                        --left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = '||v_id_gestion||'
+
+
+                        LEFT join orga.tuo_funcionario tuo on tuo.id_cargo = cargo.id_cargo and '||v_activo||'
+
+                        left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = (select tg.id_gestion from param.tgestion tg where tg.gestion = date_part(''year'',current_date))
+                        and (current_date between tcp.fecha_ini and coalesce(tcp.fecha_fin, (''31/12/''||date_part(''year'',current_date))::date))
+
+                        LEFT join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
+
+                        left join param.vcentro_costo vcc on vcc.id_centro_costo = tcp.id_centro_costo
+                        left join pre.tpresupuesto pre on pre.id_centro_costo = tcp.id_centro_costo
+                        left join pre.vcategoria_programatica cp on cp.id_categoria_programatica = pre.id_categoria_prog
+
+                        left join orga.tuo dep ON dep.id_uo = orga.f_get_uo_departamento_presupuesta(tuo.id_uo, NULL::integer, NULL::date)
+
+				        where cargo.estado_reg = ''activo'' and tipcon.codigo IN (''CONS'',''PLA'',''EVE'') '||v_condicion||' and ';
+raise notice 'v_id_gestion: %, v_activo: %, v_condicion: %',v_id_gestion, v_activo, v_condicion;
         --Definicion de la respuesta
         v_consulta:=v_consulta||v_parametros.filtro;
         v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
@@ -324,9 +356,9 @@ $body$
       	v_condicion = 'true';
       	if(pxp.f_existe_parametro(p_tabla,'presupuesto'))then
         	if (v_parametros.presupuesto = 'con_presupuesto') then
-            	v_condicion = 'and (tuo.tipo = ''oficial'' or tuo.tipo is null) and (tuo.estado_reg = ''activo'' or tuo.estado_reg is null) and (tcp.id_cargo_presupuesto is not null and tcp.id_ot is not null)';
+            	v_condicion = 'and (tuo.tipo = ''oficial'' /*or tuo.tipo is null*/) and (tuo.estado_reg = ''activo'' /*or tuo.estado_reg is null*/) and (tcp.id_cargo_presupuesto is not null /*and tcp.id_ot is not null*/)';
             elsif(v_parametros.presupuesto = 'sin_presupuesto')then
-            	v_condicion = 'and tuo.tipo = ''oficial'' and tuo.estado_reg = ''activo'' and (tcp.id_cargo_presupuesto is null or tcp.id_ot is null)';
+            	v_condicion = 'and tuo.tipo = ''oficial'' and tuo.estado_reg = ''activo'' and (tcp.id_cargo_presupuesto is null /*or tcp.id_ot is null*/)';
             elsif(v_parametros.presupuesto = 'acefalo')then
             	v_condicion = 'and (tcp.id_cargo_presupuesto is null and tcp.id_ot is null and tuo.id_uo_funcionario is null)';
             end if;
@@ -344,10 +376,21 @@ $body$
 						inner join orga.ttipo_contrato tipcon on tipcon.id_tipo_contrato = cargo.id_tipo_contrato
 						inner join orga.tescala_salarial escsal on escsal.id_escala_salarial = cargo.id_escala_salarial
 						LEFT join orga.toficina ofi on ofi.id_oficina = cargo.id_oficina
-                        left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = '||v_id_gestion||'
+                        --left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = '||v_id_gestion||'
                         LEFT join orga.tuo_funcionario tuo on tuo.id_cargo = cargo.id_cargo and '||v_activo||'
+
+                        left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = (select tg.id_gestion from param.tgestion tg where tg.gestion = date_part(''year'',current_date))
+                        and (current_date between tcp.fecha_ini and coalesce(tcp.fecha_fin, (''31/12/''||date_part(''year'',current_date))::date))
+
                         LEFT join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
-				        where cargo.estado_reg = ''activo'' and tipcon.codigo != ''PCP'' '||v_condicion||' and ';
+
+                        left join param.vcentro_costo vcc on vcc.id_centro_costo = tcp.id_centro_costo
+                        left join pre.tpresupuesto pre on pre.id_centro_costo = tcp.id_centro_costo
+                        left join pre.vcategoria_programatica cp on cp.id_categoria_programatica = pre.id_categoria_prog
+
+                        left join orga.tuo dep ON dep.id_uo = orga.f_get_uo_departamento_presupuesta(tuo.id_uo, NULL::integer, NULL::date)
+
+				        where cargo.estado_reg = ''activo'' and tipcon.codigo IN (''CONS'',''PLA'',''EVE'') '||v_condicion||' and ';
 
         --Definicion de la respuesta
         v_consulta:=v_consulta||v_parametros.filtro;
@@ -377,3 +420,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.ft_cargo_sel (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;

@@ -88,7 +88,7 @@ class Reporte
 	 * @param cadena $nombre_clase -> es el nombre de la clase de funciones ej:FuncionesSeguridad
 	 * @param cadena $metodo_ejecutar -> es el metodo a ejecutar de la clase de funciones
 	 */
-	function generarReporteListado($nombre_clase,$metodo_ejecutar){
+	function generarReporteListado($nombre_clase,$metodo_ejecutar, $from_json = 'N'){
 		$puntero=0;
 		$this->objParam->addParametroConsulta('puntero','0');
 		$this->objParam->addParametroConsulta('cantidad',$_SESSION['cantidad_reportes']);
@@ -103,8 +103,17 @@ class Reporte
 			return $this->res;
 		}
 		
-		$cantidad_registros=$this->res->getTotal();
-	
+		if(isset($from_json) && $from_json === 'Y') {
+			$d =$this->res->getDatos();
+			$dataJson = json_decode($d["mensaje"]);
+			$cantidad_registros = $dataJson->total;
+			$arrTmp = $dataJson->datos != null ? json_decode(json_encode($dataJson->datos), true) : [];
+
+		} else {
+			$cantidad_registros=$this->res->getTotal();
+			$arrTmp=$this->res->getDatos();
+		}
+
 		
 		$puntero=$puntero+$_SESSION['cantidad_reportes'];
 						
@@ -114,7 +123,6 @@ class Reporte
 		}
 		
 		$intNro=1;
-		$arrTmp=$this->res->getDatos();
 		if($this->swNumeracion=='si'){
 			for($i=0;$i<count($arrTmp);$i++){
 				$arrTmp[$i]['nro']=$intNro;
@@ -134,7 +142,14 @@ class Reporte
 				return $this->res;
 			}
 			
-			$arrTmp=$this->res->getDatos();
+			if(isset($from_json) && $from_json === 'Y') {
+				$d =$this->res->getDatos();
+				$dataJson = json_decode($d["mensaje"]);
+				$arrTmp = $dataJson->datos != null ? json_decode(json_encode($dataJson->datos), true) : [];
+			} else {
+				$arrTmp=$this->res->getDatos();
+			}
+
 			if($this->swNumeracion=='si'){
 				for($i=0;$i<count($arrTmp);$i++){
 					$arrTmp[$i]['nro']=$intNro;
@@ -157,6 +172,28 @@ class Reporte
 	
 		return $this->mensajeExito;
 		
+	}
+
+	function generarReporteDatos($datos,$total){
+		$puntero=0;
+		$cantidad_registros=$total;
+		$puntero=$puntero+$_SESSION['cantidad_reportes'];
+		$intNro=1;
+		$arrTmp=json_decode( json_encode( $datos ), true);
+		if($this->swNumeracion=='si'){
+			for($i=0;$i<count($arrTmp);$i++){
+				$arrTmp[$i]['nro']=$intNro;
+				$intNro++;
+			}
+		}
+		$this->objReporteFormato->addTabla($arrTmp);
+		$this->objReporteFormato->generarReporte();
+		$this->mensajeExito=new Mensaje();
+		$this->mensajeExito->setMensaje('EXITO','Reporte.php','Reporte generado',
+			'Se generó con éxito el reporte: '.$this->nombreArchivo,'control');
+		$this->mensajeExito->setArchivoGenerado($this->nombreArchivo);
+
+		return $this->mensajeExito;
 	}
 
 	//RCM 22-11-2011: Para cargar los datos de la cabecera

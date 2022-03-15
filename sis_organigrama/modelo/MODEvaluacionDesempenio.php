@@ -12,13 +12,15 @@ class MODEvaluacionDesempenio extends MODbase{
 	function __construct(CTParametro $pParam){
 		parent::__construct($pParam);
 	}
-			
+
 	function listarEvaluacionDesempenio(){
 		//Definicion de variables para ejecucion del procedimientp
 		$this->procedimiento='orga.ft_evaluacion_desempenio_sel';
 		$this->transaccion='MEM_EVD_SEL';
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
-				
+
+		$this->setParametro('id_gestion', 'id_gestion', 'integer');
+		$this->setParametro('id_gerencia', 'id_gerencia', 'integer');
 		//Definicion de la lista del resultado del query}
         $this->captura('nombre_unidad','varchar');
         $this->captura('id_uo','int4');
@@ -50,21 +52,22 @@ class MODEvaluacionDesempenio extends MODbase{
 		$this->captura('revisado','varchar');
 		$this->captura('estado_modificado','varchar');
 		$this->captura('email_empresa','varchar');
-		
+
 		//Ejecuta la instruccion
 		$this->armarConsulta();
+		// echo($this->consulta);exit;
 		$this->ejecutarConsulta();
-		
+
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
-			
+
 	function insertarEvaluacionDesempenio(){
 		//Definicion de variables para ejecucion del procedimiento
 		$this->procedimiento='orga.ft_evaluacion_desempenio_ime';
 		$this->transaccion='MEM_EVD_INS';
 		$this->tipo_procedimiento='IME';
-				
+
 		//Define los parametros para la funcion
 		$this->setParametro('codigo','codigo','varchar');
 		$this->setParametro('estado','estado','varchar');
@@ -84,13 +87,13 @@ class MODEvaluacionDesempenio extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
-			
+
 	function modificarEvaluacionDesempenio(){
 		//Definicion de variables para ejecucion del procedimiento
 		$this->procedimiento='orga.ft_evaluacion_desempenio_ime';
 		$this->transaccion='MEM_EVD_MOD';
 		$this->tipo_procedimiento='IME';
-				
+
 		//Define los parametros para la funcion
 		$this->setParametro('id_evaluacion_desempenio','id_evaluacion_desempenio','int4');
 		$this->setParametro('nro_tramite','nro_tramite','varchar');
@@ -113,13 +116,13 @@ class MODEvaluacionDesempenio extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
-			
+
 	function eliminarEvaluacionDesempenio(){
 		//Definicion de variables para ejecucion del procedimiento
 		$this->procedimiento='orga.ft_evaluacion_desempenio_ime';
 		$this->transaccion='MEM_EVD_ELI';
 		$this->tipo_procedimiento='IME';
-				
+
 		//Define los parametros para la funcion
 		$this->setParametro('id_evaluacion_desempenio','id_evaluacion_desempenio','int4');
 
@@ -418,6 +421,6 @@ class MODEvaluacionDesempenio extends MODbase{
         //Devuelve la respuesta
         return $this->respuesta;
     }
-			
+
 }
 ?>

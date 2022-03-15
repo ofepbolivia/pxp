@@ -105,7 +105,13 @@ EOF;
 	}else{
 		$htmlR='';
 	}		
-	//var_dump($htmlR);exit;	
+	//var_dump($htmlR);exit;
+        $text = 'se evidencia';	
+        $gestion = $this->datos[0]['gestion'];
+        if ($gestion == 2020) {
+            $text = 'la cual estuvo a cargo de otra administración, se le hace conocer';
+        }
+
         $this->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
         $this->SetFont('helvetica','B',11);
         $this->Ln(10);
@@ -126,7 +132,7 @@ EOF;
         $this->Cell(15, 2,'Asunto', 0, 0, 'L', false, '', 0, false, 'T', 'C');
         $this->Cell(25, 2,'  :', 0, 0, 'L', false, '', 0, false, 'T', 'C');
         $this->SetFont('helvetica','BU',11);
-        $this->Cell(0, 2,'Evaluación del desempeño gestión '.$this->datos[0]['gestion'], 0, 0, 'L', false, '', 0, false, 'T', 'C');
+        $this->Cell(0, 2,'Evaluación del desempeño gestión '.$gestion, 0, 0, 'L', false, '', 0, false, 'T', 'C');
         $this->ln();
         $style = array('width' => 0.5, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => 'black');
         $this->Line(30, 100, 185, 100, $style);
@@ -135,7 +141,7 @@ EOF;
 
         if ($this->datos[0]['nota'] >= 91 and $this->datos[0]['nota']<= 100) {
             $this->writeHTML('<p>'.$gen.':</p>
-       <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la <b>Evaluación de Desempeño de la Gestión '.$this->datos[0]['gestion'].'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
+       <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la <b>Evaluación de Desempeño de la Gestión '.$gestion.'</b>, '.$text.' que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
 
                             <p align="justica">En este sentido, a nombre de Boliviana de Aviación, expreso el agradecimiento y felicitación por su desempeño tesonero y compromiso con nuestros valores corporativos.</p>
                             <p align="justica">'.$htmlR.'</p>
@@ -145,7 +151,7 @@ EOF;
 
         } elseif ($this->datos[0]['nota'] >= 81 and $this->datos[0]['nota']<=90) {
             $this->writeHTML('<p>'.$gen.':</p>
-       <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la <b>Evaluación de Desempeño de la Gestión '.$this->datos[0]['gestion'].'</b>, se evidencia que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
+       <p align="justica">De acuerdo a normativa vigente tengo a bien comunicar, que habiéndose realizado la <b>Evaluación de Desempeño de la Gestión '.$gestion.'</b>, '.$text.' que usted ha obtenido una calificación favorable en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
                             <p align="justica">En este sentido, expreso mis felicitaciones  por su desempeño en Boliviana de Aviación.  </p>
                             <p align="justica">'.$htmlR.'</p>
                             <p align="justica">Seguro de que estos resultados obtenidos serán replicados y mejorados en adelante, reciba usted mis consideraciones distinguidas.</p>
@@ -154,8 +160,8 @@ EOF;
 
         } elseif ($this->datos[0]['nota'] >= 0 and $this->datos[0]['nota'] <= 80) {
             $this->writeHTML('<p>'.$gen.':</p>
-       <p align="justica">De acuerdo a procedimientos establecidos tengo a bien comunicar, que habiéndose realizado la Evaluación de Desempeño de la Gestión '.$this->datos[0]['gestion'].', se evidencia que usted ha obtenido una calificación de <b>suficiente</b> en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
-                            <p align="justica">En este sentido, a fin de mejorar su desempeño se sugiere tomar en cuenta las siguientes observaciones que reflejan la Evaluación de Desempeño Gestión '.$this->datos[0]['gestion'].':  </p>
+       <p align="justica">De acuerdo a procedimientos establecidos tengo a bien comunicar, que habiéndose realizado la Evaluación de Desempeño de la Gestión '.$gestion.', '.$text.' que usted ha obtenido una calificación de <b>suficiente</b> en los ejes de evaluación: Funciones, Habilidades y Actitudes.</p>
+                            <p align="justica">En este sentido, a fin de mejorar su desempeño se sugiere tomar en cuenta las siguientes observaciones que reflejan la Evaluación de Desempeño Gestión '.$gestion.':  </p>
                             <p align="justica">'.$htmlR.'</p>                            
                             <p align="justica">Con este motivo, saludo a usted atentamente.</p>
                             ',true);

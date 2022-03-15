@@ -22,7 +22,7 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 		this.crearFormAuto();
 		this.addButton('inserOT',{ text: 'Configurar OT', iconCls: 'blist',disabled: false, handler: this.mostarFormOt, tooltip: '<b>Configurar OT</b><br/>Permite añadir grupos de OT autorizados para el concepto de gasto'});
         this.addButton('inserAuto',{ text: 'Configurar Autorizaciones', iconCls: 'blist', disabled: false, handler: this.mostarFormAuto, tooltip: '<b>Configurar autorizaciones</b><br/>Permite seleccionar desde que modulos  puede selecionarse el concepto'});
-        
+
         this.addButton('addImagen', {
 				text : 'Imagen',
 				iconCls : 'bundo',
@@ -30,11 +30,11 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 				handler : this.addImagen,
 				tooltip : ' <b>Subir imagen</b>'
 			});
-			
-	
-	
+
+
+
 	},
-	
+
 	addImagen : function() {
 
 
@@ -45,12 +45,12 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 				height : 250
 			}, rec.data, this.idContenedor, 'subirImagenConcepto')
 
-			
+
 
 	},
-	
-	
-			
+
+
+
 	Atributos:[
 		{
 			//configuracion del componente
@@ -58,7 +58,7 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 					labelSeparator:'',
 					inputType:'hidden',
 					name: 'id_concepto_ingas',
-					renderer:function (value, p, record){	
+					renderer:function (value, p, record){
 						//return  String.format('{0}',"<div style='text-align:center'><img src = ../../control/foto_persona/"+ record.data['foto']+"?"+record.data['nombre_foto']+hora_actual+" align='center' width='70' height='70'/></div>");
 						var splittedArray = record.data['ruta_foto'].split('.');
 						if (splittedArray[splittedArray.length - 1] != "") {
@@ -66,12 +66,12 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 						} else {
 							return  String.format('{0}',"<div style='text-align:center'><img src = '../../../lib/imagenes/noimagen2.jpg' align='center' width='70' height='70'/></div>");
 						}
-						
+
 					},
 			},
 			type:'Field',
 			grid:true,
-			form:true 
+			form:true
 		},
 	       	{
 	       		config:{
@@ -88,10 +88,10 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 	       		},
 	       		type:'ComboBox',
 	       		id_grupo:0,
-	       		filters:{	
+	       		filters:{
 	       		         type: 'list',
 	       		         pfiltro:'conig.movimiento',
-	       				 options: ['recurso','gasto'],	
+	       				 options: ['recurso','gasto'],
 	       		 	},
 	       		grid:true,
 	       		form:true
@@ -112,14 +112,29 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 	       		},
 	       		type:'ComboBox',
 	       		id_grupo:0,
-	       		filters:{	
+	       		filters:{
 	       		         type: 'list',
 	       		         pfiltro:'conig.tipo',
-	       				 options: ['Bien','Servicio'],	
+	       				 options: ['Bien','Servicio'],
 	       		 	},
 	       		grid:true,
 	       		form:true
 	       	},
+					{
+						config:{
+							name: 'codigo',
+							fieldLabel: 'Codigo',
+							allowBlank: true,
+							anchor: '50%',
+							gwidth: 50
+						},
+						type:'TextField',
+						filters:{pfiltro:'conig.codigo',type:'string'},
+						id_grupo:1,
+						grid:true,
+						form:true,
+						bottom_filter : true
+					},
 		{
 			config:{
 				name: 'desc_ingas',
@@ -152,11 +167,11 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
        	     },
    			type:'ComboRec',
    			id_grupo:0,
-   			filters:{	
+   			filters:{
 		        pfiltro:'um.codigo#um.descripcion',
 				type:'string'
 			},
-   		   
+
    			grid:true,
    			form:true
 	   	},
@@ -186,20 +201,20 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 	       			typeAhead: true,
 	       		    triggerAction: 'all',
 	       		    lazyRender:true,
-	       		    mode: 'local',	       		    
+	       		    mode: 'local',
 	       		    gwidth: 100,
 	       		    store:new Ext.data.ArrayStore({
 		        	fields: ['ID', 'valor'],
-		        	data :	[[1,'si'],	
+		        	data :	[[1,'si'],
 		        			[2,'no']]
-		        				
+
 		    		}),
 					valueField:'ID',
 					displayField:'valor',
 					renderer:function (value, p, record){if (value == 1) {return 'si'} else {return 'no'}}
 	       		},
 	       		type:'ComboBox',
-	       		id_grupo:0,	       		
+	       		id_grupo:0,
 	       		grid:true,
 	       		form:true
 	       },
@@ -224,7 +239,7 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 			filters:{pfiltro:'conig.activo_fijo',type:'string'},
 			grid: true,
 			form: true
-		},  
+		},
 		{
 			config: {
 				name: 'almacenable',
@@ -258,12 +273,44 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 			},
 			type:'TextArea',
 			filters: {pfiltro:'conig.sw_autorizacion', type:'string'},
-			
+
 			id_grupo:1,
 			grid:true,
 			form:false
-		 },	
-		 
+		 },
+		 {
+		 config:{
+			 name: 'regionales',
+			 fieldLabel: 'Regionales',
+			 allowBlank: true,
+			 anchor: '80%',
+			 gwidth: 200,
+			 maxLength:500
+		 },
+		 type:'TextArea',
+		 filters: {pfiltro:'conig.regionales', type:'string'},
+
+		 id_grupo:1,
+		 grid:true,
+		 form:false
+		},
+		{
+		config:{
+			name: 'nivel_permiso',
+			fieldLabel: 'Nivel Permiso',
+			allowBlank: true,
+			anchor: '80%',
+			gwidth: 200,
+			maxLength:500
+		},
+		type:'TextArea',
+		filters: {pfiltro:'conig.nivel_permiso', type:'string'},
+
+		id_grupo:1,
+		grid:true,
+		form:false
+	 },
+
 		{
 			config: {
 				typeAhead: false,
@@ -312,8 +359,8 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 			},
 			grid: true,
 			form: true
-		}, 
-	     
+		},
+
 		{
 			config:{
 				name: 'estado_reg',
@@ -351,7 +398,7 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
-						format: 'd/m/Y', 
+						format: 'd/m/Y',
 						renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 			type:'DateField',
@@ -367,7 +414,7 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
-						format: 'd/m/Y', 
+						format: 'd/m/Y',
 						renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 			type:'DateField',
@@ -392,18 +439,18 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 			form:false
 		}
 	],
-	
-	
+
+
 	crearFormularioOt:function(){
 		  this.formOt = new Ext.form.FormPanel({
             baseCls: 'x-plain',
             autoDestroy: true,
-           
+
             border: false,
             layout: 'form',
              autoHeight: true,
-           
-    
+
+
             items: [
                   {
 	       			name:'requiere_ot',
@@ -418,7 +465,7 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 	       		    gwidth: 100,
 	       		    store:['opcional','obligatorio']
 	       		},
-	       		
+
 	       		{
 	       			name:'filtro_ot',
 	       			xtype:'combo',
@@ -432,7 +479,7 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 	       		    gwidth: 100,
 	       		    store:['todos','listado']
 	       		},
-            
+
                 {
        				name:'id_grupo_ots',
        				xtype:"awesomecombo",
@@ -452,7 +499,7 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
        					// turn on remote sorting
        					remoteSort: true,
        					baseParams:{par_filtro:'descripcion'}
-       					
+
        				}),
        				valueField: 'id_grupo_ot',
        				displayField: 'descripcion',
@@ -466,14 +513,14 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
        				width:250,
        				minChars:2,
 	       			enableMultiSelect:true
-       			
+
        				//renderer:function(value, p, record){return String.format('{0}', record.data['descripcion']);}
 
        			}]
         });
-        
-		
-		
+
+
+
 		this.wOt = new Ext.Window({
             title: 'Estados',
             collapsible: true,
@@ -492,7 +539,7 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
                 text: 'Guardar',
                 handler:this.saveOt,
                 scope:this
-                
+
             },
              {
                 text: 'Cancelar',
@@ -500,12 +547,12 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
                 scope:this
             }]
         });
-        
+
          this.cmpOt=this.formOt.getForm().findField('id_grupo_ots');
          this.cmpFiltroOt=this.formOt.getForm().findField('filtro_ot');
          this.cmpRequiereOt=this.formOt.getForm().findField('requiere_ot');
-         
-         
+
+
 	},
 	mostarFormOt:function(){
 		var data = this.getSelectedData();
@@ -515,17 +562,17 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 			this.cmpRequiereOt.setValue(data.requiere_ot);
 		    this.wOt.show();
 		}
-		
+
 	},
 	saveOt:function(){
 		    var d = this.getSelectedData();
 		    Phx.CP.loadingShow();
             Ext.Ajax.request({
                 url: '../../sis_parametros/control/ConceptoIngas/editOt',
-                params: { 
+                params: {
                 	      id_grupo_ots: this.cmpOt.getValue(),
-                	      requiere_ot: this.cmpRequiereOt.getValue(), 
-                	      filtro_ot: this.cmpFiltroOt.getValue(),  
+                	      requiere_ot: this.cmpRequiereOt.getValue(),
+                	      filtro_ot: this.cmpFiltroOt.getValue(),
                 	      id_concepto_ingas: d.id_concepto_ingas
                 	    },
                 success: this.successSinc,
@@ -533,55 +580,171 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
                 timeout: this.timeout,
                 scope: this
             });
-		
+
 	},
 	//formulario de autorizaciones
 	crearFormAuto:function(){
 		  this.formAuto = new Ext.form.FormPanel({
             baseCls: 'x-plain',
             autoDestroy: true,
-           
+
             border: false,
             layout: 'form',
              autoHeight: true,
-           
-    
+
+
             items: [
-                 {
-       				name:'sw_autorizacion',
-       				xtype:"awesomecombo",
-       				fieldLabel:'Autorizaciones',
-       				allowBlank: true,
-       				emptyText:'Autorizaciones...',
-       				store: new Ext.data.ArrayStore({
-                        fields: ['variable', 'valor'],
-                        data : [ ['adquisiciones', 'Adquisiciones'],
-                                 ['pago_directo', 'Pago Recurrente'],
-                                 ['caja_chica', 'Caja Chica'],
-                                 ['fondo_avance', 'Fondo en Avance'],
-                                 ['contrato', 'Contratos'],
-                                 ['pago_unico', 'Pago Único'],
-                                 ['especial', 'Especial'],
-                                 ['viatico', 'Viáticos'],
-                                 ['boarep', 'Boa Rep']
-                               ]
-                        }),
-       				valueField: 'variable',
-				    displayField: 'valor',
-				    mode: 'local',
-	       		    forceSelection:true,
-       				typeAhead: true,
-           			triggerAction: 'all',
-           			lazyRender: true,
-       				queryDelay: 1000,
-       				width: 250,
-       				minChars: 2 ,
-	       			enableMultiSelect: true
-       			}]
+							{
+								 name:'sw_autorizacion',
+								 xtype:"awesomecombo",
+								 fieldLabel:'Autorizaciones',
+								 allowBlank: true,
+								 emptyText:'Autorizaciones...',
+								 store : new Ext.data.JsonStore({
+									 url : '../../sis_parametros/control/Catalogo/listarCatalogoCombo',
+									 id : 'id_catalogo',
+									 root : 'datos',
+									 sortInfo : {
+										 field : 'codigo',
+										 direction : 'ASC'
+									 },
+									 totalProperty : 'total',
+									 fields: ['codigo','descripcion'],
+									 remoteSort : true,
+									 baseParams:{
+										cod_subsistema:'PARAM',
+										catalogo_tipo:'autorizaciones_concepto'
+									},
+								 }),
+								 valueField: 'codigo',
+								 displayField: 'descripcion',
+								 mode: 'remote',
+								 forceSelection:true,
+								 typeAhead: true,
+								 triggerAction: 'all',
+								 lazyRender: true,
+								 queryDelay: 1000,
+								 width: 250,
+								 minChars: 2 ,
+							   enableMultiSelect: true,
+								 pageSize: 200,
+	 							 queryDelay: 100
+							},
+
+							{
+								 name:'regionales',
+								 xtype:"awesomecombo",
+								 fieldLabel:'Regionales',
+								 allowBlank: true,
+								 emptyText:'Regionales...',
+								 store : new Ext.data.JsonStore({
+									 url : '../../sis_parametros/control/Catalogo/listarCatalogoCombo',
+									 id : 'id_catalogo',
+									 root : 'datos',
+									 sortInfo : {
+										 field : 'codigo',
+										 direction : 'ASC'
+									 },
+									 totalProperty : 'total',
+									 fields: ['codigo','descripcion'],
+									 remoteSort : true,
+									 baseParams:{
+										cod_subsistema:'PARAM',
+										catalogo_tipo:'regionales_conceptos'
+									},
+								 }),
+								 valueField: 'codigo',
+								 displayField: 'descripcion',
+								 mode: 'remote',
+								 forceSelection:true,
+								 typeAhead: true,
+								 triggerAction: 'all',
+								 lazyRender: true,
+								 queryDelay: 1000,
+								 width: 250,
+								 minChars: 2 ,
+							   enableMultiSelect: true,
+								 pageSize: 200,
+	 							 queryDelay: 100
+							},
+
+							/*Aumentando el nivel del Permiso*/
+							{
+								 name:'nivel_permiso',
+								 xtype:"awesomecombo",
+								 fieldLabel:'Nivel Permiso',
+								 allowBlank: true,
+								 emptyText:'Nivel Permiso...',
+								 store : new Ext.data.JsonStore({
+									 url : '../../sis_parametros/control/Catalogo/listarCatalogoCombo',
+									 id : 'id_catalogo',
+									 root : 'datos',
+									 sortInfo : {
+										 field : 'codigo',
+										 direction : 'ASC'
+									 },
+									 totalProperty : 'total',
+									 fields: ['codigo','descripcion'],
+									 remoteSort : true,
+									 baseParams:{
+										cod_subsistema:'PARAM',
+										catalogo_tipo:'nivel_permiso'
+									},
+								 }),
+								 valueField: 'codigo',
+								 displayField: 'descripcion',
+								 mode: 'remote',
+								 forceSelection:true,
+								 typeAhead: true,
+								 triggerAction: 'all',
+								 lazyRender: true,
+								 queryDelay: 1000,
+								 width: 250,
+								 minChars: 2 ,
+							   enableMultiSelect: true,
+								 pageSize: 200,
+	 							 queryDelay: 100
+							},
+							/*********************************/
+
+						// 	{
+       			// 	name:'sw_autorizacion',
+       			// 	xtype:"awesomecombo",
+       			// 	fieldLabel:'Autorizaciones',
+       			// 	allowBlank: true,
+       			// 	emptyText:'Autorizaciones...',
+       			// 	store: new Ext.data.ArrayStore({
+            //             fields: ['variable', 'valor'],
+            //             data : [ ['adquisiciones', 'Adquisiciones'],
+            //                      ['pago_directo', 'Pago Recurrente'],
+            //                      ['caja_chica', 'Caja Chica'],
+            //                      ['fondo_avance', 'Fondo en Avance'],
+            //                      ['contrato', 'Contratos'],
+            //                      ['pago_unico', 'Pago Único'],
+            //                      ['especial', 'Especial'],
+            //                      ['viatico', 'Viáticos'],
+            //                      ['boarep', 'Boa Rep'],
+            //                      ['RO', 'Recibos Oficiales'],
+						// 										 ['gestion_materiales', 'Gestión de Materiales']
+            //                    ]
+            //             }),
+       			// 	valueField: 'variable',
+				    // displayField: 'valor',
+				    // mode: 'local',
+	       		//     forceSelection:true,
+       			// 	typeAhead: true,
+           	// 		triggerAction: 'all',
+           	// 		lazyRender: true,
+       			// 	queryDelay: 1000,
+       			// 	width: 250,
+       			// 	minChars: 2 ,
+	       		// 	enableMultiSelect: true
+       			// }
+					]
         });
-        
-		
-		
+
+
+
 		this.wAuto = new Ext.Window({
             title: 'Configuracion',
             collapsible: true,
@@ -600,7 +763,7 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
                 text: 'Guardar',
                 handler: this.saveAuto,
                 scope: this
-                
+
             },
              {
                 text: 'Cancelar',
@@ -608,27 +771,33 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
                 scope: this
             }]
         });
-        
-         this.cmpAuto = this.formAuto.getForm().findField('sw_autorizacion');
-         
-         
+
+					this.cmpAuto = this.formAuto.getForm().findField('sw_autorizacion');
+					this.cmpRegionales = this.formAuto.getForm().findField('regionales');
+				 	this.cmpNivelPermiso = this.formAuto.getForm().findField('nivel_permiso');
+
+
 	},
-	
+
 	mostarFormAuto:function(){
 		var data = this.getSelectedData();
 		if(data){
 			this.cmpAuto.setValue(data.sw_autorizacion);
+			this.cmpRegionales.setValue(data.regionales);
+			this.cmpNivelPermiso.setValue(data.nivel_permiso);
 			this.wAuto.show();
 		}
-		
+
 	},
 	saveAuto: function(){
 		    var d = this.getSelectedData();
 		    Phx.CP.loadingShow();
             Ext.Ajax.request({
                 url: '../../sis_parametros/control/ConceptoIngas/editAuto',
-                params: { 
-                	      sw_autorizacion: this.cmpAuto.getValue(),
+                params: {
+												sw_autorizacion: this.cmpAuto.getValue(),
+												regionales: this.cmpRegionales.getValue(),
+                	      nivel_permiso: this.cmpNivelPermiso.getValue(),
                 	      id_concepto_ingas: d.id_concepto_ingas
                 	    },
                 success: this.successSinc,
@@ -636,19 +805,19 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
                 timeout: this.timeout,
                 scope: this
             });
-		
+
 	},
 	successSinc:function(resp){
             Phx.CP.loadingHide();
             var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
             if(!reg.ROOT.error){
             	if(this.wOt){
-            		this.wOt.hide(); 
+            		this.wOt.hide();
             	}
             	if(this.wAuto){
-            		this.wAuto.hide(); 
+            		this.wAuto.hide();
             	}
-                
+
                 this.reload();
              }else{
                 alert('ocurrio un error durante el proceso')
@@ -677,8 +846,9 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 		{name:'almacenable', type: 'string'},
 		'id_grupo_ots','filtro_ot','requiere_ot',
 		'sw_autorizacion','desc_unidad_medida','id_unidad_medida',
-		'nandina','ruta_foto','id_cat_concepto','desc_cat_concepto'
-		
+		'nandina','ruta_foto','id_cat_concepto','desc_cat_concepto','codigo',
+		'regionales','nivel_permiso'
+
 	],
 	sortInfo:{
 		field: 'id_concepto_ingas',
@@ -688,36 +858,34 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 	bsave:(Phx.CP.config_ini.sis_integracion=='ENDESIS')?false:true,
 	//bnew:(Phx.CP.config_ini.sis_integracion=='ENDESIS')?false:true,
 	//bedit:(Phx.CP.config_ini.sis_integracion=='ENDESIS')?false:true,
-	
+
 	 preparaMenu:function(n){
         var data = this.getSelectedData();
         var tb =this.tbar;
-        
+
         Phx.vista.ConceptoIngas.superclass.preparaMenu.call(this,n);
         this.getBoton('inserOT').enable();
-        this.getBoton('inserAuto').enable();       
+        this.getBoton('inserAuto').enable();
         this.getBoton('addImagen').enable();
-		
-        
-        
-        
-        
-        return tb 
-     }, 
+
+
+
+
+
+        return tb
+     },
      liberaMenu:function(){
         var tb = Phx.vista.ConceptoIngas.superclass.liberaMenu.call(this);
         if(tb){
             this.getBoton('inserOT').disable();
             this.getBoton('inserAuto').disable();
             this.getBoton('addImagen').disable();
-		
+
         }
        return tb
     }
-      
-	
+
+
 	}
 )
 </script>
-		
-		

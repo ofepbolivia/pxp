@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION param.f_centro_costo_sel (
   p_administrador integer,
   p_id_usuario integer,
@@ -14,13 +12,13 @@ $body$
  DESCRIPCION:   Funcion que devuelve conjuntos de registros de las consultas relacionadas con la tabla 'param.tcentro_costo'
  AUTOR: 		 (admin)
  FECHA:	        19-02-2013 22:53:59
- COMENTARIOS:	
+ COMENTARIOS:
 ***************************************************************************
  HISTORIAL DE MODIFICACIONES:
 
- DESCRIPCION:	
- AUTOR:			
- FECHA:		
+ DESCRIPCION:
+ AUTOR:
+ FECHA:
 ***************************************************************************/
 
 DECLARE
@@ -32,21 +30,23 @@ DECLARE
     v_filadd			varchar;
     v_codigo_subsistema	varchar;
     v_inner 			varchar;
-			    
+    v_id_usuario		integer;
+    v_id_funcionario_solicitante	integer;
+
 BEGIN
 
 	v_nombre_funcion = 'param.f_centro_costo_sel';
     v_parametros = pxp.f_get_record(p_tabla);
 
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'PM_CEC_SEL'
  	#DESCRIPCION:	Consulta de datos
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		19-02-2013 22:53:59
 	***********************************/
 
 	if(p_transaccion='PM_CEC_SEL')then
-     				
+
     	begin
     		--Sentencia de la consulta
 			v_consulta:='select
@@ -71,23 +71,24 @@ BEGIN
          				  nombre_actividad,
          				  nombre_financiador,
          				  nombre_regional,
-                          movimiento_tipo_pres
+                          movimiento_tipo_pres,
+                          categoria
 						from pre.vpresupuesto_cc cec
 						where  ';
-			
+
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
 			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
 
 			--Devuelve la respuesta
 			return v_consulta;
-						
+
 		end;
 
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'PM_CEC_CONT'
  	#DESCRIPCION:	Conteo de registros
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		19-02-2013 22:53:59
 	***********************************/
 
@@ -98,23 +99,23 @@ BEGIN
 			v_consulta:='select count(id_centro_costo)
 					    from pre.vpresupuesto_cc cec
                         where ';
-			
-			--Definicion de la respuesta		    
+
+			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
 
 			--Devuelve la respuesta
 			return v_consulta;
 
 		end;
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'PM_CENCOS_SEL'
  	#DESCRIPCION:	Consulta de datos
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		19-02-2013 22:53:59
 	***********************************/
 
 	elsif(p_transaccion='PM_CENCOS_SEL')then
-     				
+
     	begin
     		--Sentencia de la consulta
 			v_consulta:='select
@@ -141,23 +142,23 @@ BEGIN
          				  nombre_regional,
                           cec.id_tipo_cc,
                           cec.codigo_tcc,
-                          cec.descripcion_tcc 
+                          cec.descripcion_tcc
 						from param.vcentro_costo cec
 						 where  ';
-			
+
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
 			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
 
 			--Devuelve la respuesta
 			return v_consulta;
-						
+
 		end;
 
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'PM_CENCOS_CONT'
  	#DESCRIPCION:	Conteo de registros
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		19-02-2013 22:53:59
 	***********************************/
 
@@ -168,37 +169,37 @@ BEGIN
 			v_consulta:='select count(id_centro_costo)
 					    from param.vcentro_costo cec
                         where ';
-			
-			--Definicion de la respuesta		    
+
+			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
 
 			--Devuelve la respuesta
 			return v_consulta;
 
 		end;
-    
-    
-    /*********************************    
+
+
+    /*********************************
  	#TRANSACCION:  'PM_CECCOM_SEL'
  	#DESCRIPCION:	Consulta de datos de centro de costo combo
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		07-05-2013 22:53:59
-	***********************************/				
+	***********************************/
 	elsif(p_transaccion='PM_CECCOM_SEL')then
-    	     				
+
     	begin
-        
+
          /*********   NOTA     ***********************
         *
-        *   PARA AUMENTAR CAMPOS EN LA COSULTA AUMENTAR TAMBIEN EN 
+        *   PARA AUMENTAR CAMPOS EN LA COSULTA AUMENTAR TAMBIEN EN
         *         PM_CCFILDEP_SEL
         *        PM_CECCOMFU_SEL
         *        PM_CECCOM_SEL
         *  ESTO POR QUE ESTA TRES CONSULTAS UTILIZAN EL MISMO COMBO REC PARA MOSTRAR LOS RESULTADOS
-        * 
+        *
         **********************************/
-        
-        
+
+
           v_filadd = '';
           v_codigo_subsistema = NULL;
           if (pxp.f_existe_parametro(p_tabla,'codigo_subsistema')) then
@@ -233,20 +234,20 @@ BEGIN
                           cec.movimiento_tipo_pres
 						from pre.vpresupuesto_cc cec
 						 WHERE '||v_filadd;
-			
+
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
 			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
 			--raise exception '%',v_consulta;
 			--Devuelve la respuesta
 			return v_consulta;
-						
+
 		end;
 
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'PM_CECCOM_CONT'
  	#DESCRIPCION:	Conteo de registros centro de costo combo
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		07-05-2013 22:53:59
 	***********************************/
 
@@ -265,56 +266,56 @@ BEGIN
 			v_consulta:='select count(id_centro_costo)
 					    from pre.vpresupuesto_cc cec
                         WHERE '||v_filadd;
-			
-			--Definicion de la respuesta		    
+
+			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
-			
+
 			--Devuelve la respuesta
 			return v_consulta;
 
 		end;
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'PM_CECCOMFU_SEL'
  	#DESCRIPCION:	Consulta de datos de centro de costo combo filtrado por grupo_ep del usuario
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		31-05-2013 22:53:59
-	***********************************/				
+	***********************************/
 	elsif(p_transaccion='PM_CECCOMFU_SEL')then
-    	     				
+
     	begin
-        
+
          /*********   NOTA     ***********************
         *
-        *   PARA AUMENTAR CAMPOS EN LA COSULTA AUMENTAR TAMBIEN EN 
+        *   PARA AUMENTAR CAMPOS EN LA COSULTA AUMENTAR TAMBIEN EN
         *         PM_CCFILDEP_SEL
         *        PM_CECCOMFU_SEL
         *        PM_CECCOM_SEL
         *  ESTO POR QUE ESTA TRES CONSULTAS UTILIZAN EL MISMO COMBO REC PARA MOSTRAR LOS RESULTADOS
-        * 
+        *
         **********************************/
           v_filadd = '';
           v_inner='';
-          
+
           IF   p_administrador != 1 THEN
-          
-              select 
+
+              select
               pxp.list(uge.id_grupo::text)
-              into 
-              v_filadd  
-             from segu.tusuario_grupo_ep uge 
+              into
+              v_filadd
+             from segu.tusuario_grupo_ep uge
              where  uge.id_usuario = p_id_usuario;
-              
+
               v_inner =  'inner join param.tgrupo_ep gep on gep.estado_reg = ''activo'' and
-                            
+
                                  ((gep.id_uo = cec.id_uo  and gep.id_ep = cec.id_ep )
-                               or 
+                               or
                                  (gep.id_uo = cec.id_uo  and gep.id_ep is NULL )
                                or
                                  (gep.id_uo is NULL and gep.id_ep = cec.id_ep )) and gep.id_grupo in ('||COALESCE(v_filadd,'0')||') ';
-              		
-             
-               
-          
+
+
+
+
           END IF;
     		--Sentencia de la consulta
 			v_consulta:='select
@@ -343,20 +344,20 @@ BEGIN
 						from pre.vpresupuesto_cc cec
                         '||v_inner||'
 						 WHERE ';
-			
+
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
 			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
 			--raise exception '%',v_consulta;
 			--Devuelve la respuesta
 			return v_consulta;
-						
+
 		end;
 
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'PM_CECCOMFU_CONT'
  	#DESCRIPCION:	Conteo de registros centro de costo combo
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		07-05-2013 22:53:59
 	***********************************/
 
@@ -365,99 +366,114 @@ BEGIN
 		begin
           v_filadd = '';
           v_inner='';
-          
+
            IF   p_administrador != 1 THEN
-          
-              select 
+
+              select
               pxp.list(uge.id_grupo::text)
-              into 
-              v_filadd  
-              from segu.tusuario_grupo_ep uge 
+              into
+              v_filadd
+              from segu.tusuario_grupo_ep uge
               where  uge.id_usuario = p_id_usuario;
-              
+
               v_inner =  'inner join param.tgrupo_ep gep on gep.estado_reg = ''activo'' and
-                            
+
                                  ((gep.id_uo = cec.id_uo  and gep.id_ep = cec.id_ep )
-                               or 
+                               or
                                  (gep.id_uo = cec.id_uo  and gep.id_ep is NULL )
                                or
                                  (gep.id_uo is NULL and gep.id_ep = cec.id_ep )) and gep.id_grupo in ('||COALESCE(v_filadd,'0')||') ';
-              		
-             
-               
-          
+
+
+
+
           END IF;
 			--Sentencia de la consulta de conteo de registros
 			v_consulta:='select count(id_centro_costo)
 					    from pre.vpresupuesto_cc cec
                          '||v_inner||'
                         WHERE ';
-			
-			--Definicion de la respuesta		    
+
+			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
-			
+
 			--Devuelve la respuesta
 			return v_consulta;
 
-		end;				
-	/*********************************    
+		end;
+	/*********************************
  	#TRANSACCION:  'PM_CCFILDEP_SEL'
  	#DESCRIPCION:	Consulta  de centro de costos filtrado por el departamento que llega como parametros id_depto
-                    ademas si la opcio filtrar = grupo_ep ademas anhade al filtro las 
+                    ademas si la opcio filtrar = grupo_ep ademas anhade al filtro las
                     lo grupo_de ep correspondiente al usuario
- 	#AUTOR:		rac	
+ 	#AUTOR:		rac
  	#FECHA:		03-06-2013 22:53:59
-	***********************************/				
+	***********************************/
 	elsif(p_transaccion='PM_CCFILDEP_SEL')then
-    	     				
+
     	begin
-        
-        
+
+
        /*********   NOTA     ***********************
         *
-        *   PARA AUMENTAR CAMPOS EN LA COSULTA AUMENTAR TAMBIEN EN 
+        *   PARA AUMENTAR CAMPOS EN LA COSULTA AUMENTAR TAMBIEN EN
         *         PM_CCFILDEP_SEL
         *        PM_CECCOMFU_SEL
         *        PM_CECCOM_SEL
         *  ESTO POR QUE ESTA TRES CONSULTAS UTILIZAN EL MISMO COMBO REC PARA MOSTRAR LOS RESULTADOS
-        * 
+        *
         **********************************/
-        
-        
+
+
           v_filadd = '';
           v_inner='';
-          
-     
-          
+
+
+
           IF   p_administrador != 1   and  pxp.f_existe_parametro(p_tabla,'filtrar')  THEN
-          
-        
+
+        	 if (pxp.f_existe_parametro(p_tabla,'reparaciones')) then
+               if (v_parametros.reparaciones = 'si') then
+                    v_id_funcionario_solicitante = pxp.f_get_variable_global('funcionario_solicitante_gm');        	/**********************************************************************/
+
+                    select usu.id_usuario into v_id_usuario
+                    from orga.vfuncionario_persona per
+                    inner join segu.tusuario usu on usu.id_persona = per.id_persona
+                    where per.id_funcionario = v_id_funcionario_solicitante;
+                else
+                	v_id_usuario = p_id_usuario;
+                end if;
+             else
+               v_id_usuario = p_id_usuario;
+             end if;
+
+
               IF v_parametros.filtrar = 'grupo_ep'  THEN
-                  select 
+                  select
                   pxp.list(uge.id_grupo::text)
-                  into 
-                  v_filadd  
-                 from segu.tusuario_grupo_ep uge 
-                 where  uge.id_usuario = p_id_usuario;
-                  
+                  into
+                  v_filadd
+                 from segu.tusuario_grupo_ep uge
+                 where  uge.id_usuario = v_id_usuario;
+
                   v_inner =  'inner join param.tgrupo_ep gep on gep.estado_reg = ''activo'' and
-                                
+
                                      ((gep.id_uo = cec.id_uo  and gep.id_ep = cec.id_ep )
-                                   or 
+                                   or
                                      (gep.id_uo = cec.id_uo  and gep.id_ep is NULL )
                                    or
                                      (gep.id_uo is NULL and gep.id_ep = cec.id_ep )) and gep.id_grupo in ('||COALESCE(v_filadd,'0')||') ';
-                  		
-                 
-               END IF;    
-               
-            
-          
+
+
+               END IF;
+
+
+
           END IF;
-        
-        
-        
-        
+
+
+
+
     		--Sentencia de la consulta
 			v_consulta:='select
                          DISTINCT
@@ -485,92 +501,108 @@ BEGIN
                           cec.movimiento_tipo_pres
 						from pre.vpresupuesto_cc cec
                         inner join param.tdepto_uo_ep due on due.estado_reg = ''activo'' and
-                            
+
                                  ((due.id_uo = cec.id_uo  and due.id_ep = cec.id_ep )
-                               or 
+                               or
                                  (due.id_uo = cec.id_uo  and due.id_ep is NULL )
                                or
-                                 (due.id_uo is NULL and due.id_ep = cec.id_ep )) 
-                                 
-                                 
+                                 (due.id_uo is NULL and due.id_ep = cec.id_ep ))
+
+
                                  and due.id_depto = '||COALESCE(v_parametros.id_depto,0)||'
 						 '||v_inner||'
-                        
+
                          WHERE ';
-			
+
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
 			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
 			raise notice '%',v_consulta;
 			--Devuelve la respuesta
 			return v_consulta;
-						
+
 		end;
 
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'PM_CCFILDEP_CONT'
  	#DESCRIPCION:	Conteo de registros de la Consulta  de centro de costos filtrado por el departamento que llega como parametros id_depto
- 	#AUTOR:		rac	
+ 	#AUTOR:		rac
  	#FECHA:		03-06-2013 22:53:59
 	***********************************/
 
 	elsif(p_transaccion='PM_CCFILDEP_CONT')then
 
 		begin
-        
+
           v_filadd = '';
           v_inner='';
-          
+
           IF   p_administrador != 1   and  pxp.f_existe_parametro(p_tabla,'filtrar')  THEN
-          
-          
+
+
+          if (pxp.f_existe_parametro(p_tabla,'reparaciones')) then
+               if (v_parametros.reparaciones = 'si') then
+                    v_id_funcionario_solicitante = pxp.f_get_variable_global('funcionario_solicitante_gm');        	/**********************************************************************/
+
+                    select usu.id_usuario into v_id_usuario
+                    from orga.vfuncionario_persona per
+                    inner join segu.tusuario usu on usu.id_persona = per.id_persona
+                    where per.id_funcionario = v_id_funcionario_solicitante;
+                else
+                	v_id_usuario = p_id_usuario;
+                end if;
+             else
+               v_id_usuario = p_id_usuario;
+             end if;
+
+
               IF v_parametros.filtrar = 'grupo_ep'  THEN
-                  select 
+                  select
                   pxp.list(uge.id_grupo::text)
-                  into 
-                  v_filadd  
-                 from segu.tusuario_grupo_ep uge 
-                 where  uge.id_usuario = p_id_usuario;
-                  
+                  into
+                  v_filadd
+                 from segu.tusuario_grupo_ep uge
+                 where  uge.id_usuario = v_id_usuario;
+
                   v_inner =  'inner join param.tgrupo_ep gep on gep.estado_reg = ''activo'' and
-                                
+
                                      ((gep.id_uo = cec.id_uo  and gep.id_ep = cec.id_ep )
-                                   or 
+                                   or
                                      (gep.id_uo = cec.id_uo  and gep.id_ep is NULL )
                                    or
                                      (gep.id_uo is NULL and gep.id_ep = cec.id_ep )) and gep.id_grupo in ('||v_filadd||') ';
-                  		
-                 
-               END IF;    
-          
+
+
+               END IF;
+
           END IF;
-      
-        
+
+
 			--Sentencia de la consulta de conteo de registros
 			v_consulta:='select count(DISTINCT id_centro_costo)
 					    from pre.vpresupuesto_cc cec
                         inner join param.tdepto_uo_ep due on due.estado_reg = ''activo'' and
-                            
+
                                  ((due.id_uo = cec.id_uo  and due.id_ep = cec.id_ep )
-                               or 
+                               or
                                  (due.id_uo = cec.id_uo  and due.id_ep is NULL )
                                or
-                                 (due.id_uo is NULL and due.id_ep = cec.id_ep )) 
-                                 
-                                 
+                                 (due.id_uo is NULL and due.id_ep = cec.id_ep ))
+
+
                                  and due.id_depto = '||COALESCE(v_parametros.id_depto,0)||'
                          '||v_inner||'
 						 WHERE';
-			
-			--Definicion de la respuesta		    
+
+			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
-			
+
 			--Devuelve la respuesta
 			return v_consulta;
 
 		end;
 
-  /*********************************    
+  /*********************************
   #TRANSACCION: 'PM_CCPRO_SEL'
   #DESCRIPCION: Devuelve los Centros de costo por proyecto
   #AUTOR:       RCM
@@ -578,7 +610,7 @@ BEGIN
   ***********************************/
 
   elsif(p_transaccion='PM_CCPRO_SEL')then
-            
+
       begin
         --Sentencia de la consulta
       v_consulta:='select
@@ -591,17 +623,17 @@ BEGIN
                   inner join param.tprograma_proyecto_acttividad ppa
                   on ppa.id_prog_pory_acti = ep.id_prog_pory_acti
                   where ppa.id_proyecto = '||v_parametros.id_proyecto_ep;
-      
+
       --Definicion de la respuesta
       --v_consulta:=v_consulta||v_parametros.filtro;
       --v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
 
       --Devuelve la respuesta
       return v_consulta;
-            
+
     end;
 
-  /*********************************    
+  /*********************************
   #TRANSACCION: 'PM_CCPRO_CONT'
   #DESCRIPCION: Conteo de registros
   #AUTOR:       RCM
@@ -619,21 +651,104 @@ BEGIN
                   inner join param.tprograma_proyecto_acttividad ppa
                   on ppa.id_prog_pory_acti = ep.id_prog_pory_acti
                   where ppa.id_proyecto = '||v_parametros.id_proyecto_ep;
-      
-      --Definicion de la respuesta        
+
+      --Definicion de la respuesta
       --v_consulta:=v_consulta||v_parametros.filtro;
 
       --Devuelve la respuesta
       return v_consulta;
 
-    end;  
-    
-  else					     
-		raise exception 'Transaccion inexistente';					         
+    end;
+
+    /*********************************
+ 	#TRANSACCION:  'PM_COMBCC_SEL'
+ 	#DESCRIPCION:	Consulta de datos
+ 	#AUTOR:		maylee.perez
+ 	#FECHA:		29-11-2021 04:11:23
+	***********************************/
+
+	elsif(p_transaccion='PM_COMBCC_SEL')then
+
+    	begin
+
+          v_filadd = '';
+          v_inner='';
+
+
+    		--Sentencia de la consulta
+			v_consulta:=' select
+						  cec.id_centro_costo,
+                          cec.estado_reg,
+                          cec.id_ep,
+                          cec.id_gestion,
+                          cec.id_uo,
+                          cec.id_usuario_reg,
+                          cec.fecha_reg,
+                          cec.id_usuario_mod,
+                          cec.fecha_mod,
+                          cec.usr_reg,
+                          cec.usr_mod,
+                          cec.codigo_uo,
+                          cec.nombre_uo,
+                          cec.ep,
+                          cec.gestion,
+                          cec.codigo_cc,
+                          cec.nombre_programa,
+         				  cec.nombre_proyecto,
+         				  cec.nombre_actividad,
+         				  cec.nombre_financiador,
+         				  cec.nombre_regional,
+                          cec.movimiento_tipo_pres
+
+						from pre.vpresupuesto_cc cec
+                        inner join cd.tcuenta_doc_det cdet on cdet.id_cc = cec.id_centro_costo
+                        inner join cd.tcuenta_doc cdoc on cdoc.id_cuenta_doc_fk = cdet.id_cuenta_doc
+
+                         WHERE cec.estado_reg = ''activo'' and  ';
+
+			--Definicion de la respuesta
+			v_consulta:=v_consulta||v_parametros.filtro;
+			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
+			raise notice '%',v_consulta;
+			--Devuelve la respuesta
+			return v_consulta;
+
+		end;
+
+      /*********************************
+      #TRANSACCION:  'PM_COMBCC_CONT'
+      #DESCRIPCION:	Conteo de registros de la Consulta  de centro de costos
+      #AUTOR:		maylee.perez
+ 		#FECHA:		29-11-2021 04:11:23
+      ***********************************/
+
+      elsif(p_transaccion='PM_COMBCC_CONT')then
+
+          begin
+			--Sentencia de la consulta de conteo de registros
+			v_consulta:='select count(cec.id_centro_costo)
+					    from pre.vpresupuesto_cc cec
+                        inner join cd.tcuenta_doc_det cdet on cdet.id_cc = cec.id_centro_costo
+                        inner join cd.tcuenta_doc cdoc on cdoc.id_cuenta_doc_fk = cdet.id_cuenta_doc
+                        where  cec.estado_reg = ''activo'' and  ';
+
+			--Definicion de la respuesta
+			v_consulta:=v_consulta||v_parametros.filtro;
+
+			--Devuelve la respuesta
+			return v_consulta;
+
+		end;
+
+
+
+
+  else
+		raise exception 'Transaccion inexistente';
 	end if;
-					
+
 EXCEPTION
-					
+
 	WHEN OTHERS THEN
 			v_resp='';
 			v_resp = pxp.f_agrega_clave(v_resp,'mensaje',SQLERRM);
@@ -647,3 +762,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION param.f_centro_costo_sel (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;

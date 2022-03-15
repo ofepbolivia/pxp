@@ -70,6 +70,8 @@ Phx.vista.Archivo=Ext.extend(Phx.gridInterfaz,{
 
 
 		this.init();
+        this.store.baseParams.tabla =this.tabla_;
+        this.store.baseParams.id_tabla =this.id_;
 		this.load({params:{start:0, limit:this.tam_pag,tabla:this.tabla_,id_tabla:this.id_}})
 	    console.log('this',this);
     },

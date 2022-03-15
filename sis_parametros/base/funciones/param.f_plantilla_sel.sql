@@ -83,7 +83,16 @@ BEGIN
                             plt.sw_estacion,
                             plt.sw_punto_venta,
                             plt.sw_cod_no_iata,
-                            array_to_string(plt.cod_inter,'','',''null'')::varchar as cod_inter
+                            array_to_string(plt.cod_inter,'','',''null'')::varchar as cod_inter,
+
+                            plt.codigo,
+                            plt.letra_tipo_plantilla,
+                            plt.importe_iehd,
+                            plt.importe_ipj,
+                            plt.importe_tasas,
+                            plt.otro_no_sujeto_credito_fiscal,
+                            plt.importe_gift_card,
+                            plt.importe_compras_gravadas_tasa_cero 							
 
 						from param.tplantilla plt
 						inner join segu.tusuario usu1 on usu1.id_usuario = plt.id_usuario_reg
@@ -182,7 +191,16 @@ BEGIN
                             COALESCE(plt.plantilla_qr,''''),
                             plt.sw_estacion,
                             plt.sw_punto_venta,
-                            plt.sw_cod_no_iata
+                            plt.sw_cod_no_iata,
+
+                            plt.codigo,
+                            plt.letra_tipo_plantilla,
+                            plt.importe_iehd,
+                            plt.importe_ipj,
+                            plt.importe_tasas,
+                            plt.otro_no_sujeto_credito_fiscal,
+                            plt.importe_gift_card,
+                            plt.importe_compras_gravadas_tasa_cero							
 
 						from param.tplantilla plt
 						inner join segu.tusuario usu1 on usu1.id_usuario = plt.id_usuario_reg

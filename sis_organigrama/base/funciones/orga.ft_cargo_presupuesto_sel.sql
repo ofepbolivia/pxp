@@ -61,7 +61,10 @@ BEGIN
 						usu2.cuenta as usr_mod,
 						cc.codigo_cc,
                         carpre.id_ot,
-                        ot.desc_orden
+                        ot.desc_orden,
+                        cc.nombre_actividad,
+                        cp.codigo_categoria
+
 						from orga.tcargo_presupuesto carpre
                         inner join orga.tcargo tca on tca.id_cargo = carpre.id_cargo
                         INNER JOIN param.tgestion tg on tg.id_gestion = carpre.id_gestion
@@ -70,7 +73,11 @@ BEGIN
 						left join segu.tusuario usu2 on usu2.id_usuario = carpre.id_usuario_mod
 						left join conta.torden_trabajo ot on ot.id_orden_trabajo = carpre.id_ot
                         inner join param.vcentro_costo cc on cc.id_centro_costo = carpre.id_centro_costo
-				        where  ';
+
+                        left join pre.tpresupuesto pre on pre.id_centro_costo = carpre.id_centro_costo
+                        left join pre.vcategoria_programatica cp on cp.id_categoria_programatica = pre.id_categoria_prog
+
+                        where  ';
 
 			--Definicion de la respuesta
 			v_consulta:=v_consulta||v_parametros.filtro;
@@ -101,6 +108,10 @@ BEGIN
 						left join segu.tusuario usu2 on usu2.id_usuario = carpre.id_usuario_mod
 						left join conta.torden_trabajo ot on ot.id_orden_trabajo = carpre.id_ot
                         inner join param.vcentro_costo cc on cc.id_centro_costo = carpre.id_centro_costo
+
+                        left join pre.tpresupuesto pre on pre.id_centro_costo = carpre.id_centro_costo
+                        left join pre.vcategoria_programatica cp on cp.id_categoria_programatica = pre.id_categoria_prog
+
 					    where ';
 
 			--Definicion de la respuesta
@@ -132,3 +143,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.ft_cargo_presupuesto_sel (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;

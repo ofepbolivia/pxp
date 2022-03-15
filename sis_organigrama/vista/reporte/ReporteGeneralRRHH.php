@@ -19,7 +19,7 @@ header("content-type: text/javascript; charset=UTF-8");
         },
 
         iniciarEventos : function(){
-            this.Cmp.configuracion_reporte.on('select', function (cmb, rec, index) {
+            this.Cmp.configuracion_reporte.on('select', function (cmb, rec, index) { console.log('select', rec.data.tipo);
                 /*if(rec.data.tipo == 'programatica' || rec.data.tipo == 'aguinaldo'){
                     this.Cmp.oficina.setVisible(false);
                     this.Cmp.oficina.reset();
@@ -31,6 +31,16 @@ header("content-type: text/javascript; charset=UTF-8");
                 }else */
                 if(rec.data.tipo == 'documentos'){
                     this.Cmp.tipo_archivo.setVisible(true);
+                    this.Cmp.tipo_archivo.allowBlank = false;
+
+                    this.Cmp.oficina.setVisible(false);
+                    this.Cmp.oficina.reset();
+                    this.Cmp.oficina.modificado = true;
+                }else{
+                    this.Cmp.tipo_archivo.setVisible(false);
+                    this.Cmp.tipo_archivo.reset();
+                    this.Cmp.tipo_archivo.allowBlank = true;
+                    this.Cmp.tipo_archivo.modificado = true;
 
                     this.Cmp.oficina.setVisible(false);
                     this.Cmp.oficina.reset();
@@ -50,7 +60,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     mode : 'local',
                     store : new Ext.data.ArrayStore({
                         fields : ['tipo', 'valor'],
-                        data : [['documentos', 'Documentos RRHH']]
+                        data : [['documentos', 'Documentos RRHH'], ['informacion', 'Información Rapida RRHH']]
                     }),
                     anchor : '70%',
                     valueField : 'tipo',
@@ -157,7 +167,7 @@ header("content-type: text/javascript; charset=UTF-8");
         ],
         title : 'Reportes General RRHH',
         ActSave : '../../sis_organigrama/control/Reporte/reporteGeneralRRHH',
-        timeout : 1500000,
+        timeout : 3000000,
 
         topBar : true,
         botones : false,

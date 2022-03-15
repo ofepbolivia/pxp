@@ -54,7 +54,7 @@ header("content-type: text/javascript; charset=UTF-8");
             this.addButton('btnCuenta',
                 {
                     text: 'Cuenta Bancaria',
-                    grupo: [0,2],
+                    grupo: [0,1,2],
                     iconCls: 'blist',
                     disabled: true,
                     handler: this.onBtnCuenta,
@@ -80,6 +80,17 @@ header("content-type: text/javascript; charset=UTF-8");
                 grupo: [0,1,2]
             });
 
+            this.addButton('btnHerederos',
+                {
+                    text: 'Herederos',
+                    grupo: [0,1,2],
+                    iconCls: 'bmoney',
+                    disabled: true,
+                    handler: this.onBtnHerederos,
+                    tooltip: 'Herederos del Empleado'
+                }
+            );
+
             this.addButton('alta_baja', {
                 text: 'Altas y Bajas',
                 iconCls: 'bcargo',
@@ -98,10 +109,26 @@ header("content-type: text/javascript; charset=UTF-8");
         bactGroups:[0,1,2],
         bexcelGroups:[0,1,2],
         gruposBarraTareas: [
-            {name:  'activo', title: '<h1 style="text-align: center; color: green;">ACTIVOS</h1>',grupo: 0, height: 0} ,
-            {name: 'inactivo', title: '<h1 style="text-align: center; color: red;">INACTIVOS</h1>', grupo: 1, height: 1},
-            {name: 'sin_asignacion', title: '<h1 style="text-align: center; color: blue;">SIN ASIGNACIÓN</h1>', grupo: 2, height: 1}
+            {name:  'activo', title: '<h1 style="text-align: center; color: #00B167;">ACTIVOS</h1>',grupo: 0, height: 0} ,
+            {name: 'inactivo', title: '<h1 style="text-align: center; color: #FF8F85;">INACTIVOS</h1>', grupo: 1, height: 1},
+            {name: 'sin_asignacion', title: '<h1 style="text-align: center; color: #4682B4;">SIN ASIGNACIÓN</h1>', grupo: 2, height: 1}
+            //{name: 'subsidio', title: '<h1 style="text-align: center; color: #B066BB;">BENEF. SUBSIDIO</h1>', grupo: 2, height: 1}
         ],
+
+        onBtnHerederos: function(){
+            var rec = {maestro: this.getSelectedData()}
+
+            Phx.CP.loadWindows('../../../sis_organigrama/vista/herederos/Herederos.php',
+                'Herederos del Empleado',
+                {
+                    width:900,
+                    height:450
+                },
+                rec,
+                this.idContenedor,
+                'Herederos');
+        },
+
         actualizarSegunTab: function(name, indice){
             /*if(name == 'activo')
                 this.store.baseParams.estado_func = 'activo';
@@ -120,6 +147,7 @@ header("content-type: text/javascript; charset=UTF-8");
             this.getComponente('email_empresa').setVisible(false);
 
             this.getComponente('estado_reg').setVisible(false);
+            this.Cmp.tipo_reg.setValue('new');
 
         },
         onButtonEdit:function() {
@@ -132,6 +160,7 @@ header("content-type: text/javascript; charset=UTF-8");
             this.getComponente('email_empresa').setVisible(false);
             this.getComponente('estado_reg').setVisible(true);
             this.getComponente('id_persona').disable();
+            this.Cmp.tipo_reg.setValue('edit');
 
         },
 
@@ -398,7 +427,16 @@ header("content-type: text/javascript; charset=UTF-8");
                 form:true
 
             },
+            {
+                config:{
+                    labelSeparator:'',
+                    inputType:'hidden',
+                    name: 'tipo_reg'
+                },
+                type:'Field',
+                form:true
 
+            },
             {
                 config:{
                     name:'id_persona',
@@ -498,11 +536,57 @@ header("content-type: text/javascript; charset=UTF-8");
 
             {
                 config:{
+                    fieldLabel: "Tiempo Empresa",
+                    gwidth: 150,
+                    name: 'tiempo_empresa',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'TextField',
+                //filters:{pfiltro:'tca.nombre',type:'string'},
+                //bottom_filter : true,
+                id_grupo:1,
+                grid:true,
+                form:false
+            },
+
+            {
+                config:{
+                    fieldLabel: "Jubilado",
+                    gwidth: 70,
+                    name: 'jubilado',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'TextField',
+                //filters:{pfiltro:'tca.nombre',type:'string'},
+                //bottom_filter : true,
+                id_grupo:1,
+                grid:true,
+                form:false
+            },
+
+            {
+                config:{
                     name: 'fecha_asignacion',
-                    fieldLabel: 'Fecha Asignación',
+                    fieldLabel: 'Fecha Ultima Asignación',
                     allowBlank: true,
                     anchor: '80%',
-                    gwidth: 100,
+                    gwidth: 150,
                     renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
                 },
                 type:'DateField',
@@ -517,7 +601,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     fieldLabel: 'Fecha Finalización.',
                     allowBlank: true,
                     anchor: '80%',
-                    gwidth: 100,
+                    gwidth: 120,
                     renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
                 },
                 type:'DateField',
@@ -529,7 +613,7 @@ header("content-type: text/javascript; charset=UTF-8");
 
             {
                 config:{
-                    fieldLabel: "Oficina",
+                    fieldLabel: "Oficina (Item)",
                     gwidth: 200,
                     name: 'nombre_oficina',
                     allowBlank:true,
@@ -549,10 +633,9 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid:true,
                 form:false
             },
-
             {
                 config:{
-                    fieldLabel: "Lugar Oficina",
+                    fieldLabel: "Lugar Oficina (Item)",
                     gwidth: 200,
                     name: 'nombre_lugar_ofi',
                     allowBlank:true,
@@ -572,6 +655,72 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid:true,
                 form:false
             },
+            {
+                config:{
+                    fieldLabel: "Base Operativa",
+                    gwidth: 200,
+                    name: 'base_operativa',
+                    allowBlank:true,
+                    maxLength:100,
+                    minLength:1,
+                    anchor:'100%',
+                    disabled: true,
+                    style: 'color: blue; background-color: orange;',
+                    renderer: function (value, p, record){
+                        return String.format('<div style="color: green; font-weight: bold;">{0}</div>', value);
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'lug.nombre',type:'string'},
+                bottom_filter : true,
+                id_grupo:1,
+                grid:true,
+                form:false
+            },
+
+            {
+                config:{
+                    name: 'categoria',
+                    fieldLabel: 'Categoria Prog.',
+                    gwidth: 160,
+                    renderer:function (value, p, record){
+                        return String.format('{0}', "<div style='color: red'><b>"+value+"</b></div>");
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'cp.codigo_categoria',type:'string'},
+                grid:true,
+                form:false
+            },
+            {
+                config:{
+                    name: 'centro_costo',
+                    fieldLabel: 'Centro Costo',
+                    gwidth: 200,
+                    renderer:function (value, p, record){
+                        return String.format('{0}', "<div style='color: green'><b>"+value+"</b></div>");
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'vcc.codigo_tcc',type:'string'},
+                grid:true,
+                form:false
+            },
+
+            /*{
+                config:{
+                    name: 'nombre_unidad',
+                    fieldLabel: 'Departamento',
+                    gwidth: 160,
+                    renderer:function (value, p, record){
+                        return String.format('{0}', "<div style='color: green'><b>"+value+"</b></div>");
+                    }
+                },
+                type:'TextField',
+                filters:{pfiltro:'dep.nombre_unidad',type:'string'},
+                grid:true,
+                form:false
+            },*/
 
             {
                 config:{
@@ -1181,7 +1330,10 @@ header("content-type: text/javascript; charset=UTF-8");
                     anchor:'100%'
                 },
                 type:'NumberField',
-                filters:{type:'string'},
+                filters:{
+                    pfiltro: 'person.telefono1',
+                    type:'string'
+                },
                 id_grupo:4,
                 grid:true,
                 form:true
@@ -1198,7 +1350,10 @@ header("content-type: text/javascript; charset=UTF-8");
                     anchor:'100%'
                 },
                 type:'NumberField',
-                filters:{type:'string'},
+                filters:{
+                    pfiltro: 'person.celular1',
+                    type:'string'
+                },
                 id_grupo:4,
                 grid:true,
                 form:true
@@ -1235,7 +1390,10 @@ header("content-type: text/javascript; charset=UTF-8");
                     anchor:'100%'
                 },
                 type:'TextField',
-                filters:{type:'string'},
+                filters:{
+                    pfiltro: 'person.telefono2',
+                    type:'string'
+                },
                 id_grupo:4,
                 grid:true,
                 form:true
@@ -1251,7 +1409,10 @@ header("content-type: text/javascript; charset=UTF-8");
                     anchor:'100%'
                 },
                 type:'TextField',
-                filters:{type:'string'},
+                filters:{
+                    pfiltro: 'person.celular2',
+                    type: 'string'
+                },
                 id_grupo:4,
                 grid:true,
                 form:true
@@ -1267,7 +1428,10 @@ header("content-type: text/javascript; charset=UTF-8");
                     anchor:'100%'
                 },
                 type:'TextArea',
-                filters:{type:'string'},
+                filters:{
+                    pfiltro: 'PERSON2.direccion',
+                    type:'string'
+                },
                 id_grupo:4,
                 grid:true,
                 form:true
@@ -1433,6 +1597,11 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:'id_tipo_doc_identificacion', type: 'numeric'},
             {name:'id_especialidad_nivel', type: 'numeric'},
             {name:'desc_titulo', type: 'string'},
+            {name:'base_operativa', type: 'string'},
+            {name:'centro_costo', type: 'string'},
+            {name:'categoria', type: 'string'},
+            {name:'tiempo_empresa', type: 'string'},
+            {name:'jubilado', type: 'string'}
 
         ],
         sortInfo:{
@@ -1485,12 +1654,14 @@ header("content-type: text/javascript; charset=UTF-8");
             this.getBoton('btnCuenta').enable();
             this.getBoton('btnFunEspecialidad').enable();
             this.getBoton('archivo').enable();
+            this.getBoton('btnHerederos').enable();
             Phx.vista.funcionario.superclass.preparaMenu.call(this);
         },
         liberaMenu:function() {
             this.getBoton('btnCuenta').disable();
             this.getBoton('btnFunEspecialidad').disable();
             this.getBoton('archivo').disable();
+            this.getBoton('btnHerederos').disable();
             Phx.vista.funcionario.superclass.liberaMenu.call(this);
         },
 

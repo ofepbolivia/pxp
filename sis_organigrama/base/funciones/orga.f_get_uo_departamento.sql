@@ -13,7 +13,7 @@ DECLARE
     v_id_uo					integer;
     v_gerencia			varchar;
     v_id_uo_hijo		integer;
-    v_nivel				integer;
+    v_nivel				numeric;
 BEGIN
   	v_nombre_funcion = 'orga.f_get_uo_departamento';
     if (par_id_uo is not null) then
@@ -26,7 +26,7 @@ BEGIN
         	on ni.id_nivel_organizacional = uo.id_nivel_organizacional
         where euo.id_uo_hijo = par_id_uo;
 
-        if (v_nivel <= 4) then
+        if (v_nivel <= 8) then -- 4 v_nivel <= 7
         	return par_id_uo;
         else
         	if (v_id_uo = v_id_uo_hijo) then

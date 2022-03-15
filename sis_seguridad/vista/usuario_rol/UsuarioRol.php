@@ -10,7 +10,7 @@
 header("content-type: text/javascript; charset=UTF-8");
 ?>
 <script>
-
+var t_estado = 'activo';
 Phx.vista.usuario_rol=function(config){
 
 var ds_rol =new Ext.data.JsonStore({
@@ -27,7 +27,7 @@ var ds_rol =new Ext.data.JsonStore({
 				// turn on remote sorting
 				remoteSort: true,
 				baseParams:{par_filtro:'rol'}
-				
+
 			});
 
 
@@ -44,8 +44,8 @@ var FormatoVista=function (value,p,record){return value?value.dateFormat('d/m/Y'
 
 		},
 		type:'Field',
-		form:true 
-		
+		form:true
+
 	},{
 		//configuraci�n del componente
 		config:{
@@ -55,8 +55,8 @@ var FormatoVista=function (value,p,record){return value?value.dateFormat('d/m/Y'
 
 		},
 		type:'Field',
-		form:true 
-		
+		form:true
+
 	},{
 			config:{
 				name:'id_rol',
@@ -109,10 +109,49 @@ var FormatoVista=function (value,p,record){return value?value.dateFormat('d/m/Y'
 		filters:{type:'string'},
 		grid:true,
 		form:false
-	},		
+	},
 	{
 		config:{
-				fieldLabel: "fecha_reg",
+				fieldLabel: "Fecha Reg Completa",
+				gwidth: 130,
+				name:'fecha_reg_hora',
+				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
+			},
+			type:'DateField',
+			filters:{type:'date'},
+			grid:true,
+			form:false
+	},
+	{
+			config: {
+					name: 'estado_reg',
+					fieldLabel: 'Estado Reg.',
+					allowBlank: false,
+					anchor: '100%',
+					gwidth: 100
+			},
+			type: 'TextField',
+			id_grupo: 0,
+			grid: true,
+			form: false
+	},
+	{
+			config:{
+					name: 'usr_reg',
+					fieldLabel: 'Creado por',
+					allowBlank: true,
+					anchor: '80%',
+					gwidth: 100
+			},
+			type:'NumberField',
+			filters:{pfiltro:'usu1.cuenta',type:'string'},
+			id_grupo:1,
+			grid:true,
+			form:false
+	},
+	{
+		config:{
+				fieldLabel: "Fecha Reg",
 				gwidth: 110,
 				name:'fecha_reg',
 				renderer:FormatoVista
@@ -121,16 +160,44 @@ var FormatoVista=function (value,p,record){return value?value.dateFormat('d/m/Y'
 			filters:{type:'date'},
 			grid:true,
 			form:false
-	}
+	},
+	{
+			config:{
+					name: 'usr_mod',
+					fieldLabel: 'Modificado por',
+					allowBlank: true,
+					anchor: '80%',
+					gwidth: 100
+			},
+			type:'NumberField',
+			filters:{pfiltro:'usu2.cuenta',type:'string'},
+			id_grupo:1,
+			grid:true,
+			form:false
+	},
+	{
+			config:{
+					name: 'fecha_mod',
+					fieldLabel: 'Fecha Modif.',
+					allowBlank: true,
+					anchor: '100%',
+					gwidth: 120,
+					format: 'd/m/Y',
+					renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
+			},
+			type:'DateField',
+			filters:{pfiltro:'USUARI.fecha_mod',type:'date'},
+			id_grupo:1,
+			grid:true,
+			form:false
+	},
 	];
 
 	Phx.vista.usuario_rol.superclass.constructor.call(this,config);
 	this.init();
-	
-	this.grid.getTopToolbar().disable();
-	this.grid.getBottomToolbar().disable();
 
-	
+	// this.grid.getTopToolbar().disable();
+	// this.grid.getBottomToolbar().disable();
 
 }
 
@@ -146,7 +213,11 @@ Ext.extend(Phx.vista.usuario_rol,Phx.gridInterfaz,{
 	'rol',
 	'descripcion',
 	{name:'fecha_reg',type: 'date', dateFormat: 'Y-m-d'},
-	'nombre'],
+	{name:'usr_reg', type: 'string'},
+	{name:'usr_mod', type: 'string'},
+	{name:'fecha_mod', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
+	{name:'fecha_reg_hora', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
+	'nombre','estado_reg'],
 	sortInfo:{
 		field: 'rol',
 		direction: 'ASC'
@@ -160,17 +231,31 @@ Ext.extend(Phx.vista.usuario_rol,Phx.gridInterfaz,{
 		Phx.vista.usuario_rol.superclass.loadValoresIniciales.call(this);
 	    this.getComponente('id_usuario').setValue(this.maestro.id_usuario);
 	},
-	
-	onReloadPage:function(m){
+
+	onReloadPage:function(m){		
 		this.maestro=m;
-		this.store.baseParams={id_usuario:this.maestro.id_usuario};
+		this.store.baseParams={id_usuario:this.maestro.id_usuario,tipo_estado:t_estado};
 		this.load({params:{start:0, limit:50}})
-		
+
 	},
 	reload:function(p){
 	    Phx.CP.getPagina(this.idContenedorPadre).reload()
-	}
+	},
+	gruposBarraTareas:[
+		{name:  'activo', title: '<h1 style="text-align: center; color: #00B167;">ACTIVOS</h1>',grupo: 0, height: 0} ,
+		{name: 'inactivo', title: '<h1 style="text-align: center; color: #FF8F85;">INACTIVOS</h1>', grupo: 1, height: 1},
+		],
+	actualizarSegunTab: function(name, indice){
 
-	
+		if (this.maestro!=undefined){
+				t_estado  = name;
+				this.store.baseParams={id_usuario:this.maestro.id_usuario,tipo_estado:t_estado};
+				this.load({params:{start:0, limit:this.tam_pag}});
+	    }
+		},
+    bnewGroups: [0],
+    bdelGroups:  [0],
+    bactGroups:  [0,1],
+    bexcelGroups: [0,1],
 })
 </script>

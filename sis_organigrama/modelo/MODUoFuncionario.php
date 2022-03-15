@@ -47,6 +47,14 @@ class MODUoFuncionario extends MODbase{
         $this->captura('certificacion_presupuestaria','varchar');
         $this->captura('nombre_escala','varchar');
         $this->captura('haber_basico','numeric');
+        $this->captura('nro_contrato','varchar');
+        $this->captura('fecha_contrato','date');
+
+        $this->captura('centro_costo','varchar');
+        $this->captura('categoria','varchar');
+
+        $this->captura('usr_reg','varchar');
+        $this->captura('usr_mod','varchar');
 
         //Ejecuta la funcion
         $this->armarConsulta();
@@ -77,6 +85,8 @@ class MODUoFuncionario extends MODbase{
         $this->setParametro('certificacion_presupuestaria','certificacion_presupuestaria','varchar');
         $this->setParametro('codigo_ruta','codigo_ruta','varchar');
         $this->setParametro('estado_funcional','estado_funcional','varchar');
+        $this->setParametro('nro_contrato','nro_contrato','varchar');
+        $this->setParametro('fecha_contrato','fecha_contrato','date');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -104,6 +114,10 @@ class MODUoFuncionario extends MODbase{
         $this->setParametro('certificacion_presupuestaria','certificacion_presupuestaria','varchar');
         $this->setParametro('codigo_ruta','codigo_ruta','varchar');
         $this->setParametro('estado_funcional','estado_funcional','varchar');
+        $this->setParametro('tipo','tipo','varchar');
+        $this->setParametro('nro_contrato','nro_contrato','varchar');
+        $this->setParametro('fecha_contrato','fecha_contrato','date');
+
 
 
 
@@ -151,8 +165,8 @@ class MODUoFuncionario extends MODbase{
         $this->captura('fecha_reg','timestamp');
         $this->captura('id_usuario_mod','integer');
         $this->captura('id_usuario_reg','integer');
-        $this->captura('USUREG','text');
-        $this->captura('USUMOD','text');
+        $this->captura('usr_reg','varchar');
+        $this->captura('usr_mod','varchar');
         $this->captura('id_cargo','integer');
         $this->captura('desc_cargo','text');
         $this->captura('observaciones_finalizacion','varchar');
@@ -162,6 +176,9 @@ class MODUoFuncionario extends MODbase{
         $this->captura('haber_basico','numeric');
         $this->captura('tipo_contrato','varchar');
 
+        $this->captura('centro_costo','varchar');
+        $this->captura('categoria','varchar');
+
         //Ejecuta la funcion
         $this->armarConsulta();
 
@@ -170,6 +187,47 @@ class MODUoFuncionario extends MODbase{
         return $this->respuesta;
 
     }
+
+    /****************************************Reporte Modelo Contrato RRHH(franklin.espinoza) 14/07/2021**************************************/
+    function reporteModeloContrato(){
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento='orga.ft_uo_funcionario_sel';// nombre procedimiento almacenado
+        $this->transaccion='RH_CONTRATO_RRHH_SEL';//nombre de la transaccion
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+
+        $this->setParametro('id_uo_funcionario','id_uo_funcionario','integer');
+
+        //Definicion de la lista del resultado del query
+        $this->captura('contrato','text');
+        $this->captura('anexo','text');
+        //Ejecuta la funcion
+        $this->armarConsulta();//var_dump($this->consulta);exit;
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+
+    }
+    /****************************************Reporte Modelo Contrato RRHH(franklin.espinoza) 14/07/2021**************************************/
+
+    /*****************************Recuperar el correlativo de contrato RRHH(franklin.espinoza) 14/07/2021*****************************/
+    function recuperarNumeroContrato(){
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento='orga.ft_uo_funcionario_ime';// nombre procedimiento almacenado
+        $this->transaccion='RH_NUM_CONTRATO_GET';//nombre de la transaccion
+        $this->tipo_procedimiento='IME';//tipo de transaccion
+
+        $this->setParametro('id_uo_funcionario','id_uo_funcionario','integer');
+        $this->setParametro('momento','momento','varchar');
+
+        //Definicion de la lista del resultado del query
+        $this->captura('nro_contrato','varchar');
+
+        //Ejecuta la funcion
+        $this->armarConsulta();
+        //var_dump($this->consulta);exit;
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
+    /*****************************Recuperar el correlativo de contrato RRHH(franklin.espinoza) 14/07/2021*****************************/
 
 }
 ?>

@@ -56,6 +56,29 @@ Phx.vista.EscalaSalarial=Ext.extend(Phx.gridInterfaz,{
             form:true,
             bottom_filter: true
         },*/
+
+        {
+            config:{
+                name: 'tipo',
+                fieldLabel: 'Tipo',
+                allowBlank: false,
+                emptyText:'Tipo...',
+                typeAhead: true,
+                triggerAction: 'all',
+                lazyRender:true,
+                mode: 'local',
+                gwidth: 100,
+                store:['planta','eventual']
+            },
+            type:'ComboBox',
+            filters:{
+                type: 'list',
+                options: ['si','no'],
+            },
+            id_grupo:1,
+            grid:true,
+            form:true
+        },
 		{
 			config:{
 				name: 'codigo',
@@ -118,7 +141,8 @@ Phx.vista.EscalaSalarial=Ext.extend(Phx.gridInterfaz,{
 				filters:{pfiltro:'escsal.haber_basico',type:'numeric'},
 				id_grupo:1,
 				grid:true,
-				form:true
+				form:true,
+                bottom_filter: true
 		},
 		
 		{
@@ -142,7 +166,7 @@ Phx.vista.EscalaSalarial=Ext.extend(Phx.gridInterfaz,{
 				id_grupo:1,
 				grid:true,
 				form:true
-		},		
+		},
 		{
 			config:{
 				name: 'fecha_ini',
@@ -173,6 +197,7 @@ Phx.vista.EscalaSalarial=Ext.extend(Phx.gridInterfaz,{
 				grid:true,
 				form:false
 		},
+
 		{
 			config:{
 				name: 'estado_reg',
@@ -278,14 +303,17 @@ Phx.vista.EscalaSalarial=Ext.extend(Phx.gridInterfaz,{
 		{name:'fecha_mod', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
 		{name:'usr_reg', type: 'string'},
 		{name:'usr_mod', type: 'string'},
-		
+		{name:'tipo', type: 'string'}
+
 	],
 	sortInfo:{
 		field: 'id_escala_salarial',
 		direction: 'ASC'
 	},
-	bdel:true,
-	bsave:true,
+	bdel:false,
+	bedit:true,
+	bsave:false,
+    bnew:true,
 	onReloadPage:function(m){
 			this.maestro=m;			
 			this.getBoton('act').enable();

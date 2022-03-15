@@ -65,7 +65,7 @@ Phx.vista.Institucion=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				width: '100%',
 				gwidth: 100,
-				maxLength:10
+				maxLength:20
 			},
 			type:'NumberField',
 			filters:{pfiltro:'instit.doc_id',type:'string'},

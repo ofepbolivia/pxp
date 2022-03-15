@@ -29,6 +29,7 @@ class MODReporte extends MODbase{
         $this->captura('lugar','varchar');
         $this->captura('codigo','varchar');
         $this->captura('email_empresa','varchar');
+        $this->captura('estado_fun','varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -58,6 +59,7 @@ class MODReporte extends MODbase{
         $this->captura('nom_cargo','varchar');
         $this->captura('nom_oficina','varchar');
         $this->captura('fecha_contrato','date');
+        $this->captura('email_empresa','varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -86,6 +88,10 @@ class MODReporte extends MODbase{
         $this->captura('cargo','varchar');
         $this->captura('fecha_ingreso','date');
         $this->captura('documento','json');
+        
+        $this->captura('lugar','varchar');
+        $this->captura('codigo','varchar');
+        $this->captura('fecha_nacimiento','date');
 
         //Ejecuta la instruccion
         $this->armarConsulta();
@@ -108,6 +114,51 @@ class MODReporte extends MODbase{
         $this->setCount(false);
         //Definicion de la lista del resultado del query
         $this->captura('headers','text');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        //echo($this->consulta);exit;
+        $this->ejecutarConsulta();
+
+        //Devuelve la respuesta
+        return $this->respuesta;
+    }
+
+    function reporteInformacionRapida(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='orga.ft_reporte_sel';
+        $this->transaccion='ORGA_INF_RAPIDA_SEL';
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+
+        $this->setParametro('configuracion_reporte','configuracion_reporte','varchar');
+
+        $this->setCount(false);
+        //Definicion de la lista del resultado del query
+        $this->captura('id_funcionario','integer');
+        $this->captura('funcionario','varchar');
+        $this->captura('ci','varchar');
+        $this->captura('fecha_nacimiento','date');
+        $this->captura('cargo','varchar');
+        $this->captura('fecha_ingreso','date');
+        $this->captura('telefonos','varchar');
+        $this->captura('profesion','json');
+        $this->captura('contrato','json');
+        $this->captura('afp','varchar');
+        $this->captura('institucion','varchar');
+        $this->captura('apellido_paterno','varchar');
+        $this->captura('apellido_materno','varchar');
+        $this->captura('nombre','varchar');
+        $this->captura('telefono_oficina','varchar');
+        $this->captura('correo_institucional','varchar');
+        $this->captura('correo_personal','varchar');
+
+        $this->captura('gerencia','varchar');
+        $this->captura('nombre_oficina','varchar');
+        $this->captura('nombre_lugar','varchar');
+        $this->captura('genero','varchar');
+        $this->captura('haber_basico','numeric');
+        $this->captura('licencia','varchar');
+        $this->captura('nro_cuenta','varchar');
 
         //Ejecuta la instruccion
         $this->armarConsulta();

@@ -104,7 +104,8 @@ Phx.vista.CatalogoTipo=Ext.extend(Phx.gridInterfaz,{
 			},
 			
 			grid:true,
-			form:true
+			form:true,
+			bottom_filter:true
 	},
 	{
 			config:{
@@ -150,7 +151,8 @@ Phx.vista.CatalogoTipo=Ext.extend(Phx.gridInterfaz,{
 			},
 			
 			grid:true,
-			form:true
+			form:true,
+			bottom_filter:true
 	},
 		{
 			config:{
@@ -166,7 +168,8 @@ Phx.vista.CatalogoTipo=Ext.extend(Phx.gridInterfaz,{
 			filters:{pfiltro:'pacati.nombre',type:'string'},
 			id_grupo:1,
 			grid:true,
-			form:true
+			form:true,
+			bottom_filter:true
 		},
 		{
 			config:{
@@ -204,14 +207,15 @@ Phx.vista.CatalogoTipo=Ext.extend(Phx.gridInterfaz,{
 				fieldLabel: 'Creado por',
 				allowBlank: true,
 				anchor: '80%',
-				gwidth: 100,
+				gwidth: 120,
 				maxLength:4
 			},
 			type:'NumberField',
 			filters:{pfiltro:'usu1.cuenta',type:'string'},
 			id_grupo:1,
 			grid:true,
-			form:false
+			form:false,
+			bottom_filter:true
 		},
 		{
 			config:{
@@ -253,10 +257,10 @@ Phx.vista.CatalogoTipo=Ext.extend(Phx.gridInterfaz,{
 		{name:'id_catalogo_tipo', type: 'numeric'},
 		{name:'nombre', type: 'string'},
 		{name:'estado_reg', type: 'string'},
-		{name:'fecha_reg', type: 'date', dateFormat:'Y-m-d H:i:s'},
+		{name:'fecha_reg', type: 'date', dateFormat:'Y-m-d H:i:s.u'},
 		{name:'id_usuario_reg', type: 'numeric'},
 		{name:'id_usuario_mod', type: 'numeric'},
-		{name:'fecha_mod', type: 'date', dateFormat:'Y-m-d H:i:s'},
+		{name:'fecha_mod', type: 'date', dateFormat:'Y-m-d H:i:s.u'},
 		{name:'usr_reg', type: 'string'},
 		{name:'usr_mod', type: 'string'},
 		{name:'id_subsistema', type: 'numeric'},

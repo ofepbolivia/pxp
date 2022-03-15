@@ -6,19 +6,19 @@ CREATE OR REPLACE FUNCTION orga.ft_uo_funcionario_ime (
 )
 RETURNS varchar AS
 $body$
-  /**************************************************************************
-   FUNCION: 		orga.ft_uofunc_ime
-   DESCRIPCIÓN:   modificaciones de funciones
-   AUTOR: 	    KPLIAN (mzm)
-   FECHA:
-   COMENTARIOS:
-  ***************************************************************************
-   HISTORIA DE MODIFICACIONES:
+/**************************************************************************
+     FUNCION: 		orga.ft_uofunc_ime
+     DESCRIPCIÓN:   modificaciones de funciones
+     AUTOR: 	    KPLIAN (mzm)
+     FECHA:
+     COMENTARIOS:
+    ***************************************************************************
+     HISTORIA DE MODIFICACIONES:
 
-   DESCRIPCION:
-   AUTOR:
-   FECHA:		03-06-2011
-   ***************************************************************************/
+     DESCRIPCION:
+     AUTOR:
+     FECHA:		03-06-2011
+     ***************************************************************************/
   DECLARE
 
 
@@ -41,6 +41,10 @@ $body$
 
 	v_contador				integer = 0;
 	v_tipo            varchar;
+
+	v_numero_contrato       varchar;
+    v_nro_documento_asignacion  varchar;
+    v_id_oficina				integer;
   BEGIN
 
     v_nombre_funcion:='orga.ft_uo_funcionario_ime';
@@ -128,16 +132,34 @@ $body$
           to_char(v_data_func.fecha_ini,'dd/mm/yyyy'), to_char(v_data_func.fecha_fin,'dd/mm/yyyy');
         end if;
 
-        INSERT INTO orga.tuo_funcionario
-        (	id_uo, 						id_funcionario, 						fecha_asignacion,
-           fecha_finalizacion,			id_cargo,								observaciones_finalizacion,
-           nro_documento_asignacion,	fecha_documento_asignacion,				id_usuario_reg,
-           tipo, certificacion_presupuestaria, codigo_ruta, estado_funcional)
-        values(		v_parametros.id_uo, 		v_parametros.id_funcionario,			v_parametros.fecha_asignacion,
-                   v_parametros.fecha_finalizacion,v_parametros.id_cargo,				v_parametros.observaciones_finalizacion,
-                   v_parametros.nro_documento_asignacion,v_parametros.fecha_documento_asignacion,par_id_usuario,
-                   v_parametros.tipo, v_parametros.certificacion_presupuestaria, v_parametros.codigo_ruta, v_parametros.estado_funcional)
-        RETURNING id_uo_funcionario INTO v_id_uo_funcionario;
+		if v_parametros.tipo = 'oficial' then
+          INSERT INTO orga.tuo_funcionario
+          (	id_uo, 						id_funcionario, 						fecha_asignacion,
+             fecha_finalizacion,			id_cargo,								observaciones_finalizacion,
+             nro_documento_asignacion,	fecha_documento_asignacion,				id_usuario_reg,
+             tipo, certificacion_presupuestaria, codigo_ruta, estado_funcional, nro_contrato, fecha_contrato)
+          values(		v_parametros.id_uo, 		v_parametros.id_funcionario,			v_parametros.fecha_asignacion,
+                     v_parametros.fecha_finalizacion,v_parametros.id_cargo,				v_parametros.observaciones_finalizacion,
+                     v_parametros.nro_documento_asignacion,v_parametros.fecha_documento_asignacion,par_id_usuario,
+                     v_parametros.tipo, v_parametros.certificacion_presupuestaria, v_parametros.codigo_ruta, v_parametros.estado_funcional,v_parametros.nro_contrato, v_parametros.fecha_contrato)
+          RETURNING id_uo_funcionario INTO v_id_uo_funcionario;
+        else
+        	INSERT INTO orga.tuo_funcionario
+          	(	id_uo, 						id_funcionario, 						fecha_asignacion,
+             fecha_finalizacion,			id_cargo,								observaciones_finalizacion,
+             nro_documento_asignacion,	fecha_documento_asignacion,				id_usuario_reg,
+             tipo, certificacion_presupuestaria, codigo_ruta, estado_funcional)
+          	values(		v_parametros.id_uo, 		v_parametros.id_funcionario,			v_parametros.fecha_asignacion,
+                     v_parametros.fecha_finalizacion,v_parametros.id_cargo,				v_parametros.observaciones_finalizacion,
+                     v_parametros.nro_documento_asignacion,v_parametros.fecha_documento_asignacion,par_id_usuario,
+                     v_parametros.tipo, v_parametros.certificacion_presupuestaria, v_parametros.codigo_ruta, v_parametros.estado_funcional)
+          	RETURNING id_uo_funcionario INTO v_id_uo_funcionario;
+        end if;
+
+        select car.id_oficina
+        into v_id_oficina
+        from orga.tcargo car
+        where car.id_cargo = v_parametros.id_cargo;
 
 
         --10-04-2012: sincronizacion de UO entre BD
@@ -149,6 +171,7 @@ $body$
 
         v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Asignacion empleado-uo registrada con exito: Funcionario ('|| (select desc_funcionario1 from orga.vfuncionario where id_funcionario=v_parametros.id_funcionario) || ') - UO'|| (select nombre_unidad from orga.tuo where id_uo=v_parametros.id_uo));
         v_resp = pxp.f_agrega_clave(v_resp,'id_uo',v_id_uo::varchar);
+        v_resp = pxp.f_agrega_clave(v_resp,'id_oficina',v_id_oficina::varchar);
       END;
     /*******************************
     #TRANSACCION:  RH_UOFUNC_MOD
@@ -174,13 +197,13 @@ $body$
 
 
         --verficar que el funcionario no este activo en dos unidades simultaneamente
-        --raise exception '%    %',v_parametros.id_funcionario,v_parametros.id_uo;
-        /*if ( ((select count(id_funcionario) from
+        --raise exception '%, %, %',v_parametros.id_funcionario,v_parametros.id_uo, v_parametros.fecha_asignacion;
+        if ( ((select count(id_funcionario) from
           orga.tuo_funcionario  a
         where a.id_funcionario=v_parametros.id_funcionario
               and a.estado_reg = 'activo' and
               a.fecha_finalizacion > v_parametros.fecha_asignacion
-              and a.id_uo != v_parametros.id_uo))>0) then
+              and a.id_uo != v_parametros.id_uo and a.tipo = 'oficial'))>0) then
 
           select tuo.tipo
           into v_tipo
@@ -190,7 +213,7 @@ $body$
           if v_tipo = 'oficial' then
 			      raise exception 'El Funcionario se encuentra en otro cargo vigente primero inactive su asignacion actual';
           end if;
-        end if;*/
+        end if;
 
 
 
@@ -200,19 +223,38 @@ $body$
         if (v_parametros.fecha_finalizacion is not null and v_parametros.fecha_finalizacion <= v_parametros.fecha_asignacion)then
           raise exception 'La fecha de finalización no puede ser menor o igual a la fecha de asignación';
         end if;
-
-        update orga.tuo_funcionario
-        set
-          observaciones_finalizacion = v_parametros.observaciones_finalizacion,
-          nro_documento_asignacion = v_parametros.nro_documento_asignacion,
-          fecha_documento_asignacion = v_parametros.fecha_documento_asignacion,
-          fecha_finalizacion = v_parametros.fecha_finalizacion,
-          certificacion_presupuestaria = v_parametros.certificacion_presupuestaria,
-          codigo_ruta = v_parametros.codigo_ruta,
-          estado_funcional = v_parametros.estado_funcional,
-          fecha_asignacion = v_parametros.fecha_asignacion
-        where id_uo=v_parametros.id_uo
-              and id_uo_funcionario=v_parametros.id_uo_funcionario;
+		if v_parametros.tipo = 'oficial' then
+          update orga.tuo_funcionario
+          set
+            observaciones_finalizacion = v_parametros.observaciones_finalizacion,
+            nro_documento_asignacion = v_parametros.nro_documento_asignacion,
+            fecha_documento_asignacion = v_parametros.fecha_documento_asignacion,
+            fecha_finalizacion = v_parametros.fecha_finalizacion,
+            certificacion_presupuestaria = v_parametros.certificacion_presupuestaria,
+            codigo_ruta = v_parametros.codigo_ruta,
+            estado_funcional = v_parametros.estado_funcional,
+            fecha_asignacion = v_parametros.fecha_asignacion,
+            id_cargo = v_parametros.id_cargo,
+            id_usuario_mod = par_id_usuario,
+            fecha_mod = now(),
+            nro_contrato = v_parametros.nro_contrato,
+            fecha_contrato = v_parametros.fecha_contrato
+          where id_uo=v_parametros.id_uo and id_uo_funcionario=v_parametros.id_uo_funcionario;
+        else
+        	update orga.tuo_funcionario set
+              observaciones_finalizacion = v_parametros.observaciones_finalizacion,
+              nro_documento_asignacion = v_parametros.nro_documento_asignacion,
+              fecha_documento_asignacion = v_parametros.fecha_documento_asignacion,
+              fecha_finalizacion = v_parametros.fecha_finalizacion,
+              certificacion_presupuestaria = v_parametros.certificacion_presupuestaria,
+              codigo_ruta = v_parametros.codigo_ruta,
+              estado_funcional = v_parametros.estado_funcional,
+              fecha_asignacion = v_parametros.fecha_asignacion,
+              id_cargo = v_parametros.id_cargo,
+              id_usuario_mod = par_id_usuario,
+              fecha_mod = now()
+          where id_uo=v_parametros.id_uo and id_uo_funcionario=v_parametros.id_uo_funcionario;
+        end if;
 
         --10-04-2012: sincronizacion de UO entre BD
         /*                v_respuesta_sinc:=orga.f_sincroniza_uo_empleado_entre_bd(v_parametros.id_uo_funcionario,'10.172.0.13','5432','db_link','db_link','dbendesis' ,'UPDATE');
@@ -221,8 +263,14 @@ $body$
                           raise exception 'Sincronizacion de UO en BD externa no realizada%',v_respuesta_sinc;
                         end if;*/
 
+		select car.id_oficina
+        into v_id_oficina
+        from orga.tcargo car
+        where car.id_cargo = v_parametros.id_cargo;
+
         v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Modificacion a asignacion empleado-uo modificada con exito '||v_parametros.id_uo_funcionario||': Funcionario ('|| (select desc_funcionario1 from orga.vfuncionario where id_funcionario=v_parametros.id_funcionario) || ') - UO'|| (select nombre_unidad from orga.tuo where id_uo=v_parametros.id_uo));
         v_resp = pxp.f_agrega_clave(v_resp,'id_uo',v_parametros.id_uo::varchar);
+        v_resp = pxp.f_agrega_clave(v_resp,'id_oficina',v_id_oficina::varchar);
       END;
 
     /*******************************
@@ -257,7 +305,44 @@ $body$
         v_resp = pxp.f_agrega_clave(v_resp,'id_uo',v_id_uo::varchar);
 
       END;
+    /*******************************
+     #TRANSACCION:  RH_NUM_CONTRATO_GET
+     #DESCRIPCION:	Regupera el numero de contrato o genera uno nuevo
+     #AUTOR:	    (franklin.espinoza)
+     #FECHA:		14/07/2021
+    ***********************************/
+    elsif(par_transaccion='RH_NUM_CONTRATO_GET')then
+      BEGIN
 
+        select  cor.numero_contrato
+        into v_numero_contrato
+        from orga.tcorrelativo_contrato cor
+        order by id_correlativo_contrato desc
+        limit 1;
+
+        select tuo.nro_contrato
+        into v_nro_documento_asignacion
+        from orga.tuo_funcionario tuo
+        where tuo.nro_contrato = v_numero_contrato;
+
+        if v_parametros.momento in ('new','edit')  and v_nro_documento_asignacion is not null then
+            v_numero_contrato = param.f_obtener_correlativo(
+                                    'CONTRATO',
+                                    null,
+                                    null,
+                                    null,
+                                    par_id_usuario,
+                                    'ORGA',
+                                    null,0,0,'orga.tuo_funcionario'
+                                );
+            INSERT INTO orga.tcorrelativo_contrato  (id_usuario_reg, numero_contrato) values (par_id_usuario, v_numero_contrato);
+        end if;
+
+
+        v_resp = pxp.f_agrega_clave(v_resp,'mensaje','numero contrato recuperado con exito.');
+        v_resp = pxp.f_agrega_clave(v_resp,'v_numero_contrato',v_numero_contrato::varchar);
+
+      END;
 
     else
 
@@ -283,3 +368,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.ft_uo_funcionario_ime (par_administrador integer, par_id_usuario integer, par_tabla varchar, par_transaccion varchar)
+  OWNER TO postgres;

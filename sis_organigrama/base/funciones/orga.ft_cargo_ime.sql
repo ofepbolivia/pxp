@@ -4,21 +4,21 @@ CREATE OR REPLACE FUNCTION orga.ft_cargo_ime (
   p_tabla varchar,
   p_transaccion varchar
 )
-  RETURNS varchar AS
-  $body$
+RETURNS varchar AS
+$body$
 /**************************************************************************
  SISTEMA:		Organigrama
  FUNCION: 		orga.ft_cargo_ime
  DESCRIPCION:   Funcion que gestiona las operaciones basicas (inserciones, modificaciones, eliminaciones de la tabla 'orga.tcargo'
  AUTOR: 		 (admin)
  FECHA:	        14-01-2014 19:16:06
- COMENTARIOS:	
+ COMENTARIOS:
 ***************************************************************************
  HISTORIAL DE MODIFICACIONES:
 
- DESCRIPCION:	
- AUTOR:			
- FECHA:		
+ DESCRIPCION:
+ AUTOR:
+ FECHA:
 ***************************************************************************/
 
 DECLARE
@@ -41,36 +41,70 @@ DECLARE
 
   v_funcionarios			record;
   v_contador				integer = 1;
+
+  v_id_cargo_presupuesto	integer;
+  v_id_uo					integer;
+  v_gestion					integer;
+
+  v_contrato				varchar;
+  v_id_uo_funcionario		integer;
+
 BEGIN
 
     v_nombre_funcion = 'orga.ft_cargo_ime';
     v_parametros = pxp.f_get_record(p_tabla);
 
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'OR_CARGO_INS'
  	#DESCRIPCION:	Insercion de registros
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		14-01-2014 19:16:06
 	***********************************/
 
 	if(p_transaccion='OR_CARGO_INS')then
-					
+
         begin
         	select id_lugar into v_id_lugar
         	from orga.toficina
         	where id_oficina = v_parametros.id_oficina;
-        	
+
           --(franklin.espinoza) se obtiene el nombre para el item
         	select tc.nombre into v_nombre_cargo
             from orga.ttemporal_cargo tc
             where tc.id_temporal_cargo = v_parametros.id_temporal_cargo;
-        	
-        	
+
+            select cont.codigo
+            into v_contrato
+            from orga.ttipo_contrato cont
+            where cont.id_tipo_contrato = v_parametros.id_tipo_contrato;
+
+			if v_contrato = 'PLA' then
+            	select tca.codigo, tca.id_cargo, tca.nombre
+                into v_cargo
+                from orga.tcargo tca
+                where tca.codigo = v_parametros.codigo::varchar and coalesce(tca.fecha_fin,'31/12/9999'::date) >= current_date and tca.estado_reg = 'activo';
+
+                if v_cargo.codigo is not null or v_cargo.codigo != '' then
+                	raise 'Estimado Usuario: El item % actualmente sigue vigente, bajo la denominación %.', v_cargo.codigo, v_cargo.nombre;
+                end if;
+
+                select tu.id_funcionario, vf.desc_funcionario2 funcionario
+                into v_asignacion
+                from orga.tuo_funcionario tu
+                inner join orga.vfuncionario vf on vf.id_funcionario = tu.id_funcionario
+                where tu.id_cargo = v_cargo.id_cargo and coalesce(tu.fecha_finalizacion,'31/12/9999'::date) >= current_date and tu.estado_reg = 'activo' and tu.tipo = 'oficial';
+
+                if v_asignacion.id_funcionario is not null then
+                	raise 'Estimado Usuario: El item %, actualmente esta asignado al funcionario %', v_cargo.codigo, v_asignacion.funcionario;
+                end if;
+
+            end if;
+
         	--Sentencia de la insercion
         	insert into orga.tcargo(
 			id_tipo_contrato,
 			id_lugar,
-			id_uo,			
+			id_uo,
 			id_escala_salarial,
 			codigo,
 			nombre,
@@ -86,7 +120,7 @@ BEGIN
           	) values(
 			v_parametros.id_tipo_contrato,
 			v_id_lugar,
-			v_parametros.id_uo,			
+			v_parametros.id_uo,
 			v_parametros.id_escala_salarial,
 			v_parametros.codigo,
 			v_nombre_cargo,
@@ -100,9 +134,41 @@ BEGIN
 			v_parametros.id_oficina,
 			v_parametros.id_temporal_cargo
 			)RETURNING id_cargo into v_id_cargo;
-			
+
+			--/**************************************************PRESUPUESTO**************************************************/
+        	insert into orga.tcargo_presupuesto(
+              id_cargo,
+              id_gestion,
+              id_centro_costo,
+              id_ot,
+              porcentaje,
+              fecha_ini,
+              fecha_fin,
+              estado_reg,
+              id_usuario_reg,
+              fecha_reg,
+              fecha_mod,
+              id_usuario_mod
+
+
+          	) values(
+              v_id_cargo,
+              v_parametros.id_gestion,
+              v_parametros.id_centro_costo,
+              v_parametros.id_ot,
+              v_parametros.porcentaje,
+              v_parametros.fecha_ini_cc,
+              v_parametros.fecha_fin_cc,
+              'activo',
+              p_id_usuario,
+              now(),
+              null,
+              null
+			)RETURNING id_cargo_presupuesto into v_id_cargo_presupuesto;
+			--/**************************************************PRESUPUESTO**************************************************/
+
 			--Definicion de la respuesta
-			v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Cargo almacenado(a) con exito (id_cargo'||v_id_cargo||')'); 
+			v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Cargo almacenado(a) con exito (id_cargo'||v_id_cargo||')');
             v_resp = pxp.f_agrega_clave(v_resp,'id_cargo',v_id_cargo::varchar);
 
             --Devuelve la respuesta
@@ -110,18 +176,18 @@ BEGIN
 
 		end;
 
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'OR_CARGO_MOD'
  	#DESCRIPCION:	Modificacion de registros
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		14-01-2014 19:16:06
 	***********************************/
 
 	elsif(p_transaccion='OR_CARGO_MOD')then
 
 		begin
-		
-        	
+
+
         	select id_lugar into v_id_lugar
         	from orga.toficina
         	where id_oficina = v_parametros.id_oficina;
@@ -244,8 +310,28 @@ BEGIN
                 );
 
             end if;*/
+
+            if v_parametros.fecha_fin is not null then
+              select tuo.id_uo_funcionario, vf.desc_funcionario2 funcionario
+              into v_funcionarios
+              from orga.tuo_funcionario tuo
+              inner join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
+              where tuo.id_cargo = v_parametros.id_cargo and tuo.tipo = 'oficial' and tuo.estado_reg = 'activo' and coalesce(tuo.fecha_finalizacion, '31/12/9999'::date) > v_parametros.fecha_fin;
+
+              if v_funcionarios is not null then
+              	raise 'Estimado Usuario: <br> Tiene asignación activa el funcionario <b>%</b> para este item, primero finalize la asignación y despues complete la información del campo Fecha Fin.', v_funcionarios.funcionario;
+              end if;
+            end if;
+
+            --(franklin.espinoza) se obtiene el nombre para el item
+        	select tc.nombre into v_nombre_cargo
+            from orga.ttemporal_cargo tc
+            where tc.id_temporal_cargo = v_parametros.id_temporal_cargo;
+
 			--Sentencia de la modificacion
 			update orga.tcargo set
+			id_temporal_cargo = v_parametros.id_temporal_cargo,
+            nombre = v_nombre_cargo,
 			id_lugar = v_id_lugar,
 			codigo = v_parametros.codigo,
 			fecha_ini = v_parametros.fecha_ini,
@@ -254,31 +340,41 @@ BEGIN
 			id_usuario_mod = p_id_usuario,
 			id_oficina = v_parametros.id_oficina,
       id_escala_salarial = v_parametros.id_escala_salarial/*,
+      id_tipo_contrato = v_parametros.id_tipo_contrato,
       estado_reg = 'inactivo'*/
 			where id_cargo=v_parametros.id_cargo;
-               
+
+			/*update  orga.tcargo_presupuesto set
+              id_centro_costo = v_parametros.id_centro_costo,
+              id_ot = v_parametros.id_ot,
+              --porcentaje = v_parametros.porcentaje,
+              --fecha_ini = v_parametros.fecha_ini_cc,
+              fecha_fin = v_parametros.fecha_fin_cc,
+              id_usuario_mod = p_id_usuario,
+              fecha_mod = now()
+            where id_cargo=v_parametros.id_cargo;*/
 			--Definicion de la respuesta
-            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Cargo modificado(a)'); 
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Cargo modificado(a)');
             v_resp = pxp.f_agrega_clave(v_resp,'id_cargo',v_parametros.id_cargo::varchar);
-               
+
             --Devuelve la respuesta
             return v_resp;
-            
+
 		end;
 
-	/*********************************    
+	/*********************************
  	#TRANSACCION:  'OR_CARGO_ELI'
  	#DESCRIPCION:	Eliminacion de registros
- 	#AUTOR:		admin	
+ 	#AUTOR:		admin
  	#FECHA:		14-01-2014 19:16:06
 	***********************************/
 
 	elsif(p_transaccion='OR_CARGO_ELI')then
 
 		begin
-		
+
 			if (exists (select 1 from orga.tuo_funcionario
-						where estado_reg = 'activo' and (fecha_finalizacion > now()::date or fecha_finalizacion is null) 
+						where estado_reg = 'activo' and (fecha_finalizacion > now()::date or fecha_finalizacion is null)
 							and id_cargo = v_parametros.id_cargo))then
 				raise exception 'No es posible eliminar un cargo asignado a un empleado';
 			end if;
@@ -286,11 +382,11 @@ BEGIN
 			update orga.tcargo
 			set estado_reg = 'inactivo'
             where id_cargo=v_parametros.id_cargo;
-               
+
             --Definicion de la respuesta
-            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Cargo eliminado(a)'); 
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Cargo eliminado(a)');
             v_resp = pxp.f_agrega_clave(v_resp,'id_cargo',v_parametros.id_cargo::varchar);
-              
+
             --Devuelve la respuesta
             return v_resp;
 
@@ -378,11 +474,11 @@ BEGIN
                                   inner join orga.ttipo_contrato tipcon on tipcon.id_tipo_contrato = cargo.id_tipo_contrato
                                   inner join orga.tescala_salarial escsal on escsal.id_escala_salarial = cargo.id_escala_salarial
                                   LEFT join orga.toficina ofi on ofi.id_oficina = cargo.id_oficina
-                                  left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = 19
+                                  left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = 20
                                   LEFT join orga.tuo_funcionario tuo on tuo.id_cargo = cargo.id_cargo and (tuo.fecha_finalizacion is null or current_date <= tuo.fecha_finalizacion)
                                   LEFT join orga.vfuncionario vf on vf.id_funcionario = tuo.id_funcionario
-                                  where cargo.estado_reg = 'activo' and tipcon.codigo != 'PCP' and
-                                  (tcp.id_cargo_presupuesto is null and tcp.id_ot is null and tuo.id_uo_funcionario is null) loop
+                                  where cargo.estado_reg = 'activo' and tipcon.codigo != 'PCP' and tuo.estado_reg = 'activo' and tuo.tipo = 'oficial'
+                                  /*and (tcp.id_cargo_presupuesto is null and tcp.id_ot is null and tuo.id_uo_funcionario is null)*/ loop
 
                 select
                   tcp.id_cargo,
@@ -394,7 +490,7 @@ BEGIN
                   tcp.id_ot
               	into v_presupuesto
                 from orga.tcargo_presupuesto tcp
-                where tcp.id_cargo = v_funcionarios.identificador and tcp.id_gestion = 17 and (tcp.fecha_fin is null or tcp.fecha_fin between '01/01/2019'::date and '31/12/2019'::date);
+                where tcp.id_cargo = v_funcionarios.identificador and tcp.id_gestion = 20 and (tcp.fecha_fin is null or tcp.fecha_fin between '01/01/2021'::date and '31/12/2021'::date);
 
 
 
@@ -413,7 +509,7 @@ BEGIN
                 IF v_id_presupuesto IS NULL THEN
       				    CONTINUE;
                 END IF;
-                /*insert into orga.tcargo_presupuesto(
+                insert into orga.tcargo_presupuesto(
                   id_cargo,
                   id_gestion,
                   id_centro_costo,
@@ -431,15 +527,15 @@ BEGIN
                   v_id_gestion,
                   v_id_presupuesto,
                   v_presupuesto.porcentaje,
-                  '01/01/2020'::date,
+                  '01/01/2022'::date,
                   'activo',
                   p_id_usuario,
                   now(),
                   null,
                   null,
                   v_presupuesto.id_ot,
-                  '31/12/2020'::date
-                );*/
+                  '31/12/2022'::date
+                );
             end loop;
 
             --Definicion de la respuesta
@@ -450,21 +546,64 @@ BEGIN
             return v_resp;
 
 		end;
+	/*********************************
+ 	#TRANSACCION:  'OR_LOAD_CAR_PRE'
+ 	#DESCRIPCION:	Cargar el presupuesto  para una UO
+ 	#AUTOR:		franklin.espinoza
+ 	#FECHA:		05-08-2021 19:16:06
+	***********************************/
+	elsif(p_transaccion='OR_LOAD_CAR_PRE')then
+		begin
+
+			v_id_uo = orga.f_get_presupuesto_uo(v_parametros.id_uo);
+            v_gestion = date_part('year', current_date);
+
+            select tg.id_gestion
+            into v_id_gestion
+            from param.tgestion tg
+            where tg.gestion = v_gestion;
+
+			select  vcc.id_centro_costo,
+            		(vcc.codigo_tcc || ' - ' ||vcc.descripcion_tcc ||' '|| vcc.gestion)::varchar AS desc_tcc,
+            		(cp.codigo_categoria||' [ '||cp.descripcion||' ]')::varchar codigo_categoria,
+                    vcc.id_uo
+            into v_presupuesto
+            from param.vcentro_costo vcc
+            inner join pre.tpresupuesto pre on pre.id_centro_costo = vcc.id_centro_costo
+            inner join pre.vcategoria_programatica cp on cp.id_categoria_programatica = pre.id_categoria_prog
+			where vcc.gestion = v_gestion and vcc.id_uo = v_id_uo;
+
+            --raise 'desc_tcc: %, codigo_categoria: %',v_presupuesto.desc_tcc ,v_presupuesto.codigo_categoria;
+
+            --Definicion de la respuesta
+            v_resp = pxp.f_agrega_clave(v_resp,'mensaje','load parametros exitosamente');
+            v_resp = pxp.f_agrega_clave(v_resp,'id_centro_costo',v_presupuesto.id_centro_costo::varchar);
+            v_resp = pxp.f_agrega_clave(v_resp,'desc_tcc',v_presupuesto.desc_tcc::varchar);
+            v_resp = pxp.f_agrega_clave(v_resp,'codigo_categoria',v_presupuesto.codigo_categoria::varchar);
+            v_resp = pxp.f_agrega_clave(v_resp,'id_gestion',v_id_gestion::varchar);
+            v_resp = pxp.f_agrega_clave(v_resp,'gestion',v_gestion::varchar);
+            v_resp = pxp.f_agrega_clave(v_resp,'id_uo',v_presupuesto.id_uo::varchar);
+
+
+            --Devuelve la respuesta
+            return v_resp;
+		end;
+
 	else
-     
+
     	raise exception 'Transaccion inexistente: %',p_transaccion;
 
 	end if;
 
 EXCEPTION
-				
+
 	WHEN OTHERS THEN
 		v_resp='';
 		v_resp = pxp.f_agrega_clave(v_resp,'mensaje',SQLERRM);
 		v_resp = pxp.f_agrega_clave(v_resp,'codigo_error',SQLSTATE);
 		v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
 		raise exception '%',v_resp;
-				        
+
 END;
 $body$
 LANGUAGE 'plpgsql'
@@ -472,3 +611,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.ft_cargo_ime (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;

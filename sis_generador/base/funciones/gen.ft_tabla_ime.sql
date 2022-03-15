@@ -21,7 +21,16 @@ DECLARE
     v_tabla_antigua     varchar;
     v_esquema           varchar;
 
-
+    --(franklin.espinoza)insertar data en tablas parametricas
+    v_record_json			jsonb;
+    v_query_insert			text = '';
+    v_array_columns			varchar[];
+    v_name_type 			varchar[];
+    v_column				varchar;
+	  v_contador				integer = 1;
+    v_data					text;
+    v_length				integer;
+    v_id_usuario    integer;
 /*
 
  id_proyecto
@@ -173,12 +182,104 @@ BEGIN
               
                return v_resp;
          END;
-         
-     else
+
+    /*********************************
+ 	#TRANSACCION:  'GEN_DATA_TABLE_INS'
+ 	#DESCRIPCION:	Inserta data en una tabla especifica
+ 	#AUTOR:		franklin.espinoza
+ 	#FECHA:		27-07-2020 18:32:59
+	***********************************/
+    elsif(p_transaccion='GEN_DATA_TABLE_INS')then
+
+      BEGIN
+            v_array_columns = string_to_array(v_parametros.columns,',');
+            v_length =  array_length(v_array_columns,1);
+
+
+			if 'truncate' = v_parametros.action or 'insert' = v_parametros.action then
+
+            	if 'truncate' = v_parametros.action then
+                	execute ('TRUNCATE TABLE '||v_parametros.tabla||' RESTART IDENTITY');
+                end if;
+
+                for v_record_json in SELECT * FROM jsonb_array_elements(v_parametros.registros)  loop
+
+                    v_query_insert = 'insert into '||v_parametros.tabla||'(id_usuario_reg,';
+                    v_contador = 1;
+                    foreach v_column in array v_array_columns loop
+                        v_name_type = string_to_array(v_column,':');--raise 'v_name_type: :%',v_name_type;
+
+                        if v_contador = v_length then
+                            v_query_insert = v_query_insert||v_name_type[1];
+                            v_contador = 1;
+                        else
+                            v_query_insert = v_query_insert||v_name_type[1]||',';
+                        end if;
+                        v_contador = v_contador + 1;
+                    end loop;
+
+                    v_query_insert = v_query_insert||') values('||p_id_usuario||',';
+                    v_contador = 1;
+                    foreach v_column in array v_array_columns loop
+                        v_name_type = string_to_array(v_column,':');
+                        v_data = v_record_json->>v_name_type[1];
+                        if v_contador = v_length then
+                            if '' = v_data then
+                                v_query_insert = v_query_insert||'null::'||v_name_type[2];
+                            else
+                                v_query_insert = v_query_insert||''''||v_data||'''::'||v_name_type[2];
+                            end if;
+                            v_contador = 1;
+                        else
+                            if '' = v_data then
+                                v_query_insert = v_query_insert||'null::'||v_name_type[2]||',';
+                            else
+                                v_query_insert = v_query_insert||''''||v_data||'''::'||v_name_type[2]||',';
+                            end if;
+                        end if;
+                        v_contador = v_contador + 1;
+                    end loop;
+                    v_query_insert = v_query_insert||')';
+
+                   execute(v_query_insert);
+                end loop;
+
+            elsif 'update' = v_parametros.action then
+
+            	for v_record_json in SELECT * FROM jsonb_array_elements(v_parametros.registros)  loop
+
+                    if 'sigep.tobjeto_gasto' = v_parametros.tabla then
+
+                    	select tpi.id_partida_dos
+                        into v_identificador
+                        from pre.tpartida_ids tpi
+                        where tpi.id_partida_uno = (v_record_json->>'id_partida')::integer;
+
+                    end if;
+
+                    if v_identificador is not null then
+                        v_query_insert = 'update '||v_parametros.tabla||' set ';
+                        v_query_insert = v_query_insert||'id_partida='||v_identificador;
+                        v_query_insert = v_query_insert||'where id_objeto='||(v_record_json->>'id_objeto')||' and objeto='''||(v_record_json->>'objeto')||'''';
+
+                    	execute(v_query_insert);
+                    end if;
+
+                end loop;
+            end if;
+
+
+        	v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Registros Insertados Correctamente en la tabla');
+       		--v_resp = pxp.f_agrega_clave(v_resp,'id_tabla',v_parametros.id_tabla::varchar);
+
+       		return v_resp;
+        END;
+
+    else
      
          raise exception 'Transacción inexistente: %',p_transaccion;
 
-     end if;
+    end if;
 
 EXCEPTION
 

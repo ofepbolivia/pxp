@@ -2,8 +2,8 @@
 /**
 *@package pXP
 *@file gen-VariableGlobal.php
-*@author  (admin)
-*@date 24-01-2020 19:50:15
+*@author  (ismael.valdivia)
+*@date 12-05-2021 12:56:39
 *@description Archivo con la interfaz de usuario que permite la ejecucion de todas las funcionalidades del sistema
 */
 
@@ -17,9 +17,30 @@ Phx.vista.VariableGlobal=Ext.extend(Phx.gridInterfaz,{
     	//llama al constructor de la clase padre
 		Phx.vista.VariableGlobal.superclass.constructor.call(this,config);
 		this.init();
-		this.load({params:{start:0, limit:this.tam_pag}})
+		this.load({params:{start:0, limit:this.tam_pag}});
+
+    this.bbar.el.dom.style.background='linear-gradient(45deg, #a7cfdf 0%,#a7cfdf 100%,#23538a 100%)';
+    this.tbar.el.dom.style.background='linear-gradient(45deg, #a7cfdf 0%,#a7cfdf 100%,#23538a 100%)';
+    this.grid.body.dom.firstChild.firstChild.lastChild.style.background='linear-gradient(to bottom, rgba(254,255,232,1) 0%,rgba(214,219,191,1) 100%)';
+    this.grid.body.dom.firstChild.firstChild.firstChild.firstChild.style.background='linear-gradient(to bottom, rgba(242,246,248,1) 0%,rgba(216,225,231,1) 50%,rgba(181,198,208,1) 51%,rgba(224,239,249,1) 100%)'
+
+
+
 	},
-			
+
+  onButtonEdit:function () {
+    Phx.vista.VariableGlobal.superclass.onButtonEdit.call(this);
+    this.window.items.items[0].body.dom.style.background = 'linear-gradient(45deg, #a7cfdf 0%,#a7cfdf 100%,#23538a 100%)';
+
+  },
+
+  onButtonNew:function () {
+    Phx.vista.VariableGlobal.superclass.onButtonNew.call(this);
+    this.window.items.items[0].body.dom.style.background = 'linear-gradient(45deg, #a7cfdf 0%,#a7cfdf 100%,#23538a 100%)';
+
+  },
+
+
 	Atributos:[
 		{
 			//configuracion del componente
@@ -29,56 +50,55 @@ Phx.vista.VariableGlobal=Ext.extend(Phx.gridInterfaz,{
 					name: 'id_variable_global'
 			},
 			type:'Field',
-			form:true 
+			form:true
 		},
 		{
 			config:{
 				name: 'variable',
-				fieldLabel: 'variable',
+				fieldLabel: 'Nombre Variable',
 				allowBlank: false,
 				anchor: '80%',
 				gwidth: 300,
-				maxLength:50
 			},
 				type:'TextField',
-				filters:{pfiltro:'varg.variable',type:'string'},
+				filters:{pfiltro:'varglo.variable',type:'string'},
 				id_grupo:1,
 				grid:true,
-				form:true
+				form:true,
+        bottom_filter: true
 		},
 		{
 			config:{
 				name: 'valor',
-				fieldLabel: 'valor',
+				fieldLabel: 'Valor',
 				allowBlank: false,
 				anchor: '80%',
 				gwidth: 300,
-				maxLength:200
 			},
 				type:'TextField',
-				filters:{pfiltro:'varg.valor',type:'string'},
+				filters:{pfiltro:'varglo.valor',type:'string'},
 				id_grupo:1,
 				grid:true,
-				form:true
+				form:true,
+        bottom_filter: true
 		},
 		{
 			config:{
 				name: 'descripcion',
-				fieldLabel: 'descripcion',
+				fieldLabel: 'Descripción',
 				allowBlank: true,
 				anchor: '80%',
-				gwidth: 800,
-				maxLength:200
+				gwidth: 600,
 			},
 				type:'TextField',
-				filters:{pfiltro:'varg.descripcion',type:'string'},
+				filters:{pfiltro:'varglo.descripcion',type:'string'},
 				id_grupo:1,
 				grid:true,
 				form:true
 		}
 	],
-	tam_pag:50,	
-	title:'Variable Gobal',
+	tam_pag:50,
+	title:'Variables Globales',
 	ActSave:'../../sis_parametros/control/VariableGlobal/insertarVariableGlobal',
 	ActDel:'../../sis_parametros/control/VariableGlobal/eliminarVariableGlobal',
 	ActList:'../../sis_parametros/control/VariableGlobal/listarVariableGlobal',
@@ -88,15 +108,15 @@ Phx.vista.VariableGlobal=Ext.extend(Phx.gridInterfaz,{
 		{name:'variable', type: 'string'},
 		{name:'valor', type: 'string'},
 		{name:'descripcion', type: 'string'},
+
 	],
 	sortInfo:{
 		field: 'id_variable_global',
 		direction: 'ASC'
 	},
 	bdel:true,
-	bsave:true
+	bsave:true,
+  btest:false
 	}
 )
 </script>
-		
-		

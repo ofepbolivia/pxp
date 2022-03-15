@@ -2168,3 +2168,308 @@ ALTER TABLE param.tconcepto_ingas
 ALTER TABLE param.tconcepto_ingas
     ADD COLUMN excento VARCHAR(2);
 /***********************************F-SCP-IRVA-PARAM-0-06/11/2019*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-20/02/2020*****************************************/
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN num_proveedor INTEGER;
+
+COMMENT ON COLUMN param.tproveedor.num_proveedor
+IS 'numero del proveedor';
+
+
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN condicion VARCHAR(50);
+
+COMMENT ON COLUMN param.tproveedor.condicion
+IS 'condicion frente al iva';
+
+
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN actividad VARCHAR(30);
+
+COMMENT ON COLUMN param.tproveedor.actividad
+IS 'actividad si es administrativo u operativo';
+
+
+ALTER TABLE param.tinstitucion
+  ADD COLUMN codigo_telf_institucion VARCHAR(30);
+
+COMMENT ON COLUMN param.tinstitucion.codigo_telf_institucion
+IS 'codigo, pre fijo del numero de telefono';
+
+
+/***********************************F-SCP-MAY-PARAM-0-20/02/2020*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-09/03/2020*****************************************/
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN id_lugar_departamento INTEGER;
+
+COMMENT ON COLUMN param.tproveedor.id_lugar_departamento
+IS 'id_lugar para el departamento';
+
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN id_lugar_ciudad INTEGER;
+
+COMMENT ON COLUMN param.tproveedor.id_lugar_ciudad
+IS 'id_lugar para la ciudad';
+
+/***********************************F-SCP-MAY-PARAM-0-09/03/2020*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-24/03/2020*****************************************/
+
+ALTER TABLE param.tplantilla
+  ADD COLUMN codigo VARCHAR(50);
+
+COMMENT ON COLUMN param.tplantilla.codigo
+IS 'codigo del tipo de documento';
+
+
+ALTER TABLE param.tplantilla
+  ADD COLUMN letra_tipo_plantilla VARCHAR(30);
+
+COMMENT ON COLUMN param.tplantilla.letra_tipo_plantilla
+IS 'letra de un tipo de documento';
+
+/***********************************F-SCP-MAY-PARAM-0-24/03/2020*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-27/03/2020*****************************************/
+
+/*ALTER TABLE param.tproveedor
+  ALTER COLUMN num_proveedor TYPE VARCHAR(50);*/
+
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN id_proveedor_alkym INTEGER;
+
+COMMENT ON COLUMN param.tproveedor.id_proveedor_alkym
+IS 'identificador de proveedor en alkym';
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN id_moneda INTEGER;
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN dnrp VARCHAR(800);
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN ingreso_bruto NUMERIC(18,2);
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN tipo_habilitacion VARCHAR(30);
+
+COMMENT ON COLUMN param.tproveedor.tipo_habilitacion
+IS 'si / no';
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN motivo_habilitacion VARCHAR(300);
+
+CREATE TABLE param.tproveedor_contacto (
+  id_proveedor_contacto SERIAL NOT NULL,
+  id_proveedor INTEGER,
+  nombre_contacto VARCHAR(350),
+  telefono VARCHAR(50),
+  fax VARCHAR(150),
+  area VARCHAR(300),
+  email VARCHAR(200),
+  PRIMARY KEY(id_proveedor_contacto)
+) INHERITS (pxp.tbase)
+WITH (oids = false);
+
+ALTER TABLE param.tproveedor_contacto
+  OWNER TO postgres;
+
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN codigo_alkym VARCHAR(50);
+
+COMMENT ON COLUMN param.tproveedor.codigo_alkym
+IS 'codigo proveedor alkym';
+
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN ccorreo VARCHAR(200);
+
+
+
+
+ALTER TABLE param.tproveedor_contacto
+  ADD COLUMN id_proveedor_contacto_alkym INTEGER;
+
+COMMENT ON COLUMN param.tproveedor_contacto.id_proveedor_contacto_alkym
+IS 'id_proveedor_contacto del sistema alkym';
+
+
+ALTER TABLE param.tproveedor_contacto
+  ADD COLUMN ci VARCHAR(100);
+
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN codigo_externo VARCHAR(100);
+
+ALTER TABLE param.tproveedor
+  ADD COLUMN codigo_fabricante VARCHAR(100);
+
+
+
+/***********************************F-SCP-MAY-PARAM-0-27/03/2020*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-05/05/2020*****************************************/
+
+ALTER TABLE param.tproveedor
+  ALTER COLUMN num_proveedor TYPE VARCHAR(50);
+
+/***********************************F-SCP-MAY-PARAM-0-05/05/2020*****************************************/
+
+/***********************************I-SCP-MAY-PARAM-0-08/09/2020*****************************************/
+CREATE TABLE param.tdepto_moneda (
+  id_depto_moneda SERIAL,
+  id_depto INTEGER,
+  id_moneda INTEGER,
+  CONSTRAINT tdepto_moneda_pkey PRIMARY KEY(id_depto_moneda)
+) INHERITS (pxp.tbase)
+WITH (oids = false);
+
+ALTER TABLE param.tdepto_moneda
+  OWNER TO postgres;
+/***********************************F-SCP-MAY-PARAM-0-08/09/2020*****************************************/
+/***********************************I-SCP-MAY-PARAM-0-16/10/2020*****************************************/
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN regionales VARCHAR(200) [];
+
+COMMENT ON COLUMN param.tconcepto_ingas.regionales
+IS 'Campo para mostrar conceptos por regionales';
+/***********************************F-SCP-MAY-PARAM-0-16/10/2020*****************************************/
+/***********************************I-SCP-IRVA-PARAM-0-30/10/2020*****************************************/
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN nivel_permiso VARCHAR(200) [];
+
+COMMENT ON COLUMN param.tconcepto_ingas.nivel_permiso
+IS 'Campo para poner el nivel del permiso ejemplo ATO, CTO, CARGA';
+/***********************************F-SCP-IRVA-PARAM-0-30/10/2020*****************************************/
+
+/***********************************I-SCP-FEA-PARAM-0-30/10/2020*****************************************/
+ALTER TABLE param.tproveedor
+  ADD COLUMN razon_social_sigep VARCHAR(150);
+
+COMMENT ON COLUMN param.tproveedor.razon_social_sigep
+IS 'Rotulo que se recupera del sigep por servicio.';
+
+/***********************************F-SCP-FEA-PARAM-0-30/10/2020*****************************************/
+
+/***********************************I-SCP-IRVA-PARAM-0-18/12/2020****************************************/
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN contabilizable VARCHAR(5);
+
+COMMENT ON COLUMN param.tconcepto_ingas.contabilizable
+IS 'Diferenciar los conceptos contabilizables';
+
+
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN boleto_asociado VARCHAR(5);
+
+COMMENT ON COLUMN param.tconcepto_ingas.boleto_asociado
+IS 'Campo para saber si el concepto debe estar asociado al boleto';
+
+/***********************************F-SCP-IRVA-PARAM-0-18/12/2020****************************************/
+/***********************************I-SCP-IRVA-PARAM-0-21/12/2020****************************************/
+ALTER TABLE param.tconcepto_ingas
+ADD COLUMN agrupador VARCHAR(200);
+
+COMMENT ON COLUMN param.tconcepto_ingas.agrupador
+IS 'Campo para identificar la agrupacion de los conceptos';
+/***********************************F-SCP-IRVA-PARAM-0-21/12/2020****************************************/
+
+/***********************************I-SCP-BVP-PARAM-0-13/01/2021****************************************/
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN comision VARCHAR(2);
+
+ALTER TABLE param.tconcepto_ingas
+  ALTER COLUMN comision SET DEFAULT 'no';
+
+COMMENT ON COLUMN param.tconcepto_ingas.comision
+IS 'casilla comision caso ''si'' se descuenta al total factura formas de pago en el sistema de ventas facturacion';
+/***********************************F-SCP-BVP-PARAM-0-13/01/2021****************************************/
+
+/***********************************I-SCP-BVP-PARAM-0-09/02/2021****************************************/
+ALTER TABLE param.tentidad
+  ADD COLUMN cod_iata_linea_aerea VARCHAR(5);
+
+COMMENT ON COLUMN param.tentidad.cod_iata_linea_aerea
+IS 'Código asignado por IATA a la Aerolínea.';
+/***********************************F-SCP-BVP-PARAM-0-09/02/2021****************************************/
+/***********************************I-SCP-BVP-PARAM-0-10/03/2021****************************************/
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN id_concepto_ingas_fk INTEGER;
+/***********************************F-SCP-BVP-PARAM-0-10/03/2021****************************************/
+
+/***********************************I-SCP-IRVA-PARAM-0-07/05/2021****************************************/
+ALTER TABLE param.tconcepto_ingas
+  ADD COLUMN listado VARCHAR(100);
+
+COMMENT ON COLUMN param.tconcepto_ingas.listado
+IS 'Campo donde se filtrara que conceptos se mostraran en ciertos sistemas';
+
+
+ALTER TABLE param.tconcepto_ingas
+  ALTER COLUMN movimiento SET NOT NULL;
+/***********************************F-SCP-IRVA-PARAM-0-07/05/2021****************************************/
+
+/************I-SCP-FFP-PARAM-0-05/05/2021**************/
+
+alter table param.tconcepto_ingas
+add tipo_descuento varchar(255);
+
+/************F-SCP-FFP-PARAM-0-05/05/2021**************/
+
+/************I-SCP-FEA-PARAM-0-29/07/2021**************/
+
+ALTER TABLE param.tdocumento
+      ALTER COLUMN codigo TYPE VARCHAR(20);
+
+/************F-SCP-FEA-PARAM-0-29/07/2021**************/
+
+/***********************************I-SCP-MAY-PARAM-0-25/08/2021*****************************************/
+ALTER TABLE param.tproveedor_cta_bancaria
+  ADD COLUMN observaciones VARCHAR;
+/***********************************F-SCP-MAY-PARAM-0-25/08/2021*****************************************/
+/***********************************I-SCP-BVP-PARAM-0-03/01/2022*****************************************/
+ALTER TABLE param.tplantilla
+  ADD COLUMN importe_iehd VARCHAR(3) DEFAULT 'no' NOT NULL;
+
+COMMENT ON COLUMN param.tplantilla.importe_iehd
+IS 'Importe correspondiente al IEHD. Caso contrario registrar cero (0).';
+
+ALTER TABLE param.tplantilla
+  ADD COLUMN importe_ipj VARCHAR(3) DEFAULT 'no' NOT NULL;
+
+COMMENT ON COLUMN param.tplantilla.importe_ipj
+IS 'Importe correspondiente al IPJ. Caso contrario registrar cero (0).';
+
+ALTER TABLE param.tplantilla
+  ADD COLUMN importe_tasas VARCHAR(3) DEFAULT 'no' NOT NULL;
+
+COMMENT ON COLUMN param.tplantilla.importe_tasas
+IS 'Importe correspondiente a Tasas. Caso contrario registrar cero (0).';
+
+ALTER TABLE param.tplantilla
+  ADD COLUMN otro_no_sujeto_credito_fiscal VARCHAR(3) DEFAULT 'no' NOT NULL;
+
+COMMENT ON COLUMN param.tplantilla.otro_no_sujeto_credito_fiscal
+IS 'Importe correspondiente a otros conceptos no sujetos al IVA. Caso contrario registrar cero (0).';
+
+ALTER TABLE param.tplantilla
+  ADD COLUMN importe_gift_card VARCHAR(3) DEFAULT 'no' NOT NULL;
+
+COMMENT ON COLUMN param.tplantilla.importe_gift_card
+IS 'Importe de la GIFT CARD, caso contrario registrar cero(0).';
+
+ALTER TABLE param.tplantilla
+  ADD COLUMN importe_compras_gravadas_tasa_cero VARCHAR(3) DEFAULT 'no' NOT NULL;
+
+COMMENT ON COLUMN param.tplantilla.importe_compras_gravadas_tasa_cero
+IS 'Importe compras gravadas a tasa cero(0).';
+/***********************************F-SCP-BVP-PARAM-0-03/01/2022*****************************************/

@@ -90,7 +90,13 @@ DECLARE
      v_res_validacion	text;
      v_valid_campos		boolean;
      v_documentos		record;
-   
+
+    -- agergado breydi vasquez 04/03/2020
+	v_procesos			record;
+    v_record_mail		record;    
+    v_id_alarma			integer;
+    v_descripcion		varchar;
+    v_index				integer;   
 
 BEGIN
 	
@@ -1256,7 +1262,95 @@ BEGIN
              return v_resp;
 
 		end;    
-   
+
+	/*********************************    
+ 	#TRANSACCION:  'WF_FLJAPRCS_IME'
+ 	#DESCRIPCION:	Control de tiempo de estado del proceso, se ejecuta notificacion o ejecution de una funcion para pasar al siguiente
+    "				estado de manera aumotomatica.
+ 	#AUTOR:		breydi vasquez
+ 	#FECHA:		26-03-2020
+	***********************************/
+
+	elsif(p_transaccion='WF_FLJAPRCS_IME')then
+
+		begin
+			--Sentencia captura de procesos
+            for v_procesos in ( select pw.id_proceso_wf,
+                                       ew.id_estado_wf,
+                                       te.codigo,
+                                       pw.nro_tramite,
+                                       ew.fecha_reg,
+									   te.tipo_accion,
+                                       te.funcion_cambio_estado,
+                                       te.id_funcionario_cc,
+                                       te.codigo,
+                                       ew.codigo_wf_control as control
+                                    from wf.tproceso_wf pw
+                                    inner join wf.testado_wf ew  on ew.id_proceso_wf = pw.id_proceso_wf and ew.estado_reg = 'activo'
+                                    inner join wf.ttipo_estado te on ew.id_tipo_estado = te.id_tipo_estado
+                                    where te.control_tiempo = 'si'
+                                    and te.tiempo_estado is not null                                    
+                                    and ew.fecha_reg > '01/01/2020'::date
+                                    and  (case when (ew.fecha_reg + te.tiempo_estado) > now()::TIMESTAMP then
+                                        'si'
+                                      else 
+                                        'no'
+                                      end ) = 'no' )
+            	loop
+				
+
+	                if v_procesos.tipo_accion = 'Notificacion' then
+                    	-- captura funcionarios para enviar correo
+                         
+                        if v_procesos.control is null and v_procesos.id_funcionario_cc is not null then 
+                           FOR v_index IN 1..array_length(v_procesos.id_funcionario_cc, 1)                        
+                              
+                               loop
+                                    select id_funcionario, desc_funcionario1                  
+                                     into v_record_mail
+                                    from orga.vfuncionario_persona
+                                    where id_funcionario = v_procesos.id_funcionario_cc[v_index];                             
+    								 
+                                   v_descripcion = '<font color="#000080" style="font-family: verdana; font-size: small;">Estimad@ '|| v_record_mail.desc_funcionario1||'</font><p class="MsoNormal"><font face="verdana" size="2"><span style="color: rgb(0, 0, 128); text-align: justify;">Por medio el presente, se comunica que el tramite: '||v_procesos.nro_tramite||' a concluido su tiempo en el estado '||v_procesos.codigo||'</span></font></p><p class="MsoNormal"><font face="verdana" size="2"><span style="color: rgb(0, 0, 128); text-align: justify;">Favor tomar nota.&nbsp;</span></font></p><p class="MsoNormal"><font color="#000080" face="verdana" size="2"><o:p>&nbsp;</o:p>Atte.</font></p><p class="MsoNormal"><font color="#000080" face="verdana" size="2">SISTEMA ERP BOA.</font></p>';
+
+                                   v_id_alarma :=  param.f_inserta_alarma(
+                                                        v_record_mail.id_funcionario,
+                                                        v_descripcion,    --descripcion alarmma
+                                                        '',--acceso directo
+                                                        now()::date,
+                                                        'notificacion',
+                                                        '',
+                                                        1,
+                                                        '',
+                                                        'Notificacion',--titulo
+                                                        '',
+                                                        NULL::integer,
+                                                        'Proceso finalizo su tiempo de estado'                                                  
+                                                           );                                                            
+                               end loop;                      
+                               
+							-- acualizar el codigo de estado wf para que se envie solo una vez el correo                              
+                            update wf.testado_wf set
+                            codigo_wf_control = 'enviado'
+                            where id_estado_wf  = v_procesos.id_estado_wf;                              
+                                                                          
+						  end if;
+                         
+                    else
+                    	--Ejecuta la funcion de cambio de estado con los datos del estado actual en que se ecuentra
+                          IF  v_procesos.funcion_cambio_estado is not NULL THEN
+                              EXECUTE ( 'select ' || v_procesos.funcion_cambio_estado ||'('||p_id_usuario::varchar||','|| v_procesos.id_proceso_wf::varchar||','|| v_procesos.id_estado_wf::varchar||''||')');
+                          END IF;                        
+                    end if;
+                             
+                end loop;
+                                  
+			--Definicion de la respuesta
+ 			v_resp = pxp.f_agrega_clave(v_resp,'mensaje','Proceso ejecutado con exito');
+            --Devuelve la respuesta
+            return v_resp;
+
+		end;   
     
     else
      

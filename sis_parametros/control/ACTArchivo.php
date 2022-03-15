@@ -148,7 +148,18 @@ class ACTArchivo extends ACTbase{
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
 
-			
+    function getTypeFile(){
+        $this->objFunc=$this->create('MODArchivo');
+        $this->res=$this->objFunc->getTypeFile($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+    function getFiles(){
+        $this->objFunc=$this->create('MODArchivo');
+        $this->res=$this->objFunc->getFiles($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
+
 }
 
 ?>

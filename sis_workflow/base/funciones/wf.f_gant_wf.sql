@@ -88,7 +88,7 @@ BEGIN
 	    FROM wf.tproceso_wf pwf
 	    inner join wf.testado_wf ewf on ewf.id_estado_wf = pwf.id_estado_wf_prev
 	    WHERE pwf.id_proceso_wf = p_id_proceso_wf
-	
+
 	    UNION
 	    SELECT
 	    pwf2.id_estado_wf_prev,
@@ -114,7 +114,7 @@ BEGIN
 
    -- 1) Crea una tabla temporal con los datos que se utilizaran
 
-      CREATE TEMPORARY TABLE temp_gant_wf (
+      CREATE TEMP TABLE temp_gant_wf (
                                       id serial,
                                       id_proceso_wf integer,
                                       id_estado_wf integer,
@@ -149,8 +149,13 @@ BEGIN
          v_orden = 'defecto';
       end if;
 
+
       IF v_orden = 'defecto' then
         IF not ( wf.f_gant_wf_recursiva(v_id_proceso_wf_prev,NULL ,p_id_usuario, NULL, NULL)) THEN
+           raise exception 'Error al recuperar los datos del diagrama gant';
+        END IF;
+      ELSIF v_orden = 'grilla' THEN
+      	IF not ( wf.f_gant_wf_recursiva_grilla(v_id_proceso_wf_prev,NULL ,p_id_usuario, NULL, NULL)) THEN
            raise exception 'Error al recuperar los datos del diagrama gant';
         END IF;
       ELSE
@@ -162,7 +167,7 @@ BEGIN
 
        raise notice 'consulta tabla temporal';
 
-
+		if (v_orden != 'grilla') then
 
              FOR v_registros in (SELECT
                                   id ,
@@ -189,7 +194,11 @@ BEGIN
                                   id_anterior,
                                   etapa,
                                   estado_reg,
-                                  disparador
+                                  disparador,
+                                  ''::varchar,
+                                  ''::varchar,
+                                  ''::varchar,
+                                  ''::varchar
                                 FROM temp_gant_wf
                                 order by id) LOOP
 
@@ -216,6 +225,92 @@ BEGIN
                 --end if;
 
              END LOOP;
+        else
+        	FOR v_registros in (SELECT
+                                  temporal.id ,
+                                  temporal.id_proceso_wf ,
+                                  temporal.id_estado_wf ,
+                                  temporal.tipo ,
+                                  temporal.nombre ,
+                                  temporal.fecha_ini ,
+                                  COALESCE(temporal.fecha_fin,temporal.fecha_ini) ,
+                                  temporal.descripcion ,
+                                  temporal.id_siguiente ,
+                                  temporal.tramite ,
+                                  temporal.codigo ,
+                                  COALESCE(temporal.id_funcionario,0) ,
+
+                                  (CASE
+                                  		WHEN (temporal.id_funcionario is null) then
+                                        	usu.desc_persona::text
+                                        ELSE
+                                        	 temporal.funcionario
+                                  END)::text as funcionario,
+                                  COALESCE(temporal.id_usuario,0),
+                                  temporal.cuenta ,
+                                  COALESCE(temporal.id_depto,0),
+                                  temporal.depto,
+                                  COALESCE(temporal.nombre_usuario_ai,''),
+                                  temporal.arbol,
+                                  temporal.id_padre,
+                                  temporal.id_obs,
+                                  temporal.id_anterior,
+                                  temporal.etapa,
+                                  temporal.estado_reg,
+                                  temporal.disparador,
+                                  tp.nombre::varchar as nombre_proceso,
+
+                                  (CASE
+                                      WHEN (temporal.etapa != '' and temporal.etapa is not null) THEN
+                                        temporal.etapa || ' [' || temporal.nombre || '] (por: ' || (CASE
+                                                                                                      WHEN (temporal.id_funcionario is null) then usu.desc_persona::text
+                                                                                                      ELSE temporal.funcionario
+                                                                                                    END)::text ||')'::VARCHAR
+                                      ELSE
+                                        temporal.nombre || ' (por: ' || (CASE
+                                                                                                      WHEN (temporal.id_funcionario is null) then usu.desc_persona::text
+                                                                                                      ELSE temporal.funcionario
+                                                                                                    END)::text ||')'::VARCHAR
+                                    END)::VARCHAR as etapa_consulta,
+                                 (CASE
+                                 	WHEN (COALESCE((temporal.fecha_fin::date-temporal.fecha_ini::date),0) = 1) THEN
+                                    	(COALESCE((temporal.fecha_fin::date-temporal.fecha_ini::date),0) || ' día')
+                                    ELSE
+                                    	(COALESCE((temporal.fecha_fin::date-temporal.fecha_ini::date),0) || ' días')
+                                 END)::VARCHAR as duracion_consulta,
+                                usu.desc_persona::varchar as desc_usuario
+                                FROM temp_gant_wf temporal
+                                inner join wf.tproceso_wf pwf on pwf.id_proceso_wf = temporal.id_proceso_wf
+                                inner join wf.ttipo_proceso tp on tp.id_tipo_proceso = pwf.id_tipo_proceso
+                                inner join segu.vusuario usu on usu.id_usuario = temporal.id_usuario
+                                where temporal.id_estado_wf is not null
+                                order by temporal.id_estado_wf) LOOP
+
+                SELECT top.tipo_obligacion
+                into v_proceso
+	    		FROM tes.tobligacion_pago top
+	   			WHERE top.id_proceso_wf = p_id_proceso_wf;
+
+                select tes.codigo
+                into v_estado
+                from wf.testado_wf tew
+                inner join wf.ttipo_estado tes on tes.id_tipo_estado = tew.id_tipo_estado
+                where tew.id_estado_wf = v_registros.id_estado_wf;
+
+                /*raise notice 'v_proceso %, %, %, %, %', v_proceso, v_registros.id_estado_wf,v_estado, v_registros.id_proceso_wf,v_registros.id;
+                if v_proceso = 'pbr' then
+                	if v_estado = 'registrado' or v_estado = 'vbpoa' or v_estado = 'suppresu' or v_estado = 'vbpresupuestos' then
+                    	CONTINUE;
+                    else
+                    	RETURN NEXT v_registros;
+                    end if;
+                else*/
+                	RETURN NEXT v_registros;
+                --end if;
+
+             END LOOP;
+
+        end if;
   --end if;
 
 END IF;
@@ -236,3 +331,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100 ROWS 1000;
+
+ALTER FUNCTION wf.f_gant_wf (p_administrador integer, p_id_usuario integer, p_tabla varchar, p_transaccion varchar)
+  OWNER TO postgres;

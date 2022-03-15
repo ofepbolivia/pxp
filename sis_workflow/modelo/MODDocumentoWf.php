@@ -498,6 +498,61 @@ class MODDocumentoWf extends MODbase{
         //Devuelve la respuesta
         return $this->respuesta;
     }
+
+    function  insertarRegistroOpenDoc(){
+		//Definicion de variables para ejecucion del procedimiento
+		$this->procedimiento='wf.ft_documento_wf_ime';
+		$this->transaccion='WF_INSREGOD_IME';
+		$this->tipo_procedimiento='IME';
+
+		//Define los parametros para la funcion
+		$this->setParametro('id_proceso_wf','id_proceso_wf','int4');
+		$this->setParametro('id_tipo_documento','id_tipo_documento','int4');
+		$this->setParametro('id_documento_wf','id_documento_wf','int4');
+		$this->setParametro('id_documento_historico_wf','id_documento_historico_wf','int4');
+		$this->setParametro('historico','historico','varchar');
+		$this->setParametro('url','url','varchar');
+		$this->setParametro('extension','extension','varchar');
+		$this->setParametro('action','action','varchar');
+
+		//Ejecuta la instruccion
+		$this->armarConsulta();
+		$this->ejecutarConsulta();
+
+		//Devuelve la respuesta
+		return $this->respuesta;
+	}
+
+	function listarDocumentsOpens(){
+		//Definicion de variables para ejecucion del procedimiento
+		$this->procedimiento='wf.ft_documento_wf_sel';
+		$this->transaccion='WF_HISDOCOP_SEL';
+		$this->tipo_procedimiento='SEL';
+
+		//Define los parametros para la funcion
+		$this->captura('id_documento_abierto','int4');
+		$this->captura('id_documento_wf','int4');
+		$this->captura('id_documento_historico_wf','int4');
+		$this->captura('historico','varchar');
+		$this->captura('url','varchar');
+		$this->captura('extension','varchar');
+		$this->captura('action','varchar');
+		$this->captura('fecha_reg','timestamp');
+		$this->captura('id_usuario_reg','int4');
+		$this->captura('usr_reg','varchar');
+		$this->captura('usr_mod','varchar');
+		$this->captura('descripcion_cargo','varchar');
+		$this->captura('desc_funcionario2','text');
+		$this->captura('desc_uo','text');
+		$this->captura('id_proceso_wf','int4');
+		//Ejecuta la instruccion
+		$this->armarConsulta();
+		//echo($this->consulta);exit;
+		$this->ejecutarConsulta();
+
+		//Devuelve la respuesta
+		return $this->respuesta;
+	}
 			
 }
 ?>

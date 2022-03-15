@@ -15,9 +15,9 @@ Phx.vista.TipoEstado=Ext.extend(Phx.gridInterfaz,{
 	constructor:function(config){
 		this.maestro=config.maestro;
     	//llama al constructor de la clase padre
-		Phx.vista.TipoEstado.superclass.constructor.call(this,config);
+		Phx.vista.TipoEstado.superclass.constructor.call(this,config);        
 		this.init();
-		this.bloquearMenus();
+		this.bloquearMenus();        
 		
 		this.addButton('btnPlaMen',
             {
@@ -691,7 +691,150 @@ Phx.vista.TipoEstado=Ext.extend(Phx.gridInterfaz,{
             grid:true,
             form:true
         },
-		
+        //ini breydi vasquez (25/03/2020)
+        {
+            config:{
+                name: 'control_tiempo',
+                fieldLabel: 'Controlar Tiempo Estado',
+                qtip:'Este campo habilita el combo de tiempos de estado',
+                allowBlank: true,
+                anchor: '40%',
+                gwidth: 50,
+                maxLength:2,
+                emptyText:'si/no...',        
+                typeAhead: true,
+                triggerAction: 'all',
+                lazyRender:true,
+                mode: 'local',
+                valueField: 'inicio',                   
+                store:['si','no'],
+                valorInicial: 'no'
+            },
+            type:'ComboBox',
+            id_grupo:1,
+            filters:{   
+                         type: 'list',
+                         pfiltro:'tipes.control_tiempo',
+                         options: ['si','no'],  
+                    },
+            grid:true,
+            form:true
+        },
+		{
+			config:{
+				name: 'tiempo_estado',
+				fieldLabel: 'Tiempo limite por Estado',
+				qtip: 'Tiempo que estara el tramite en un estado. Una vez superado, automaticamente pasara al siguiente estado segun su flujo.',
+				allowBlank: true,
+				anchor: '40%',
+				gwidth: 50,				
+				emptyText:'Tiempo...',       			
+       			typeAhead: true,
+       		    triggerAction: 'all',
+       		    lazyRender:true,
+       		    mode: 'local',
+       		    valueField: 'tiempo_estado',                 
+                store:['00:00:00','01:00:00', '02:00:00', '03:00:00', '04:00:00', '05:00:00', '06:00:00', '07:00:00', '08:00:00', '09:00:00', '10:00:00', '11:00:00',
+                    '12:00:00', '13:00:00', '14:00:00', '15:00:00', '16:00:00', '17:00:00', '18:00:00', '19:00:00', '20:00:00', '21:00:00', '21:00:00',
+                    '23:00:00', '24:00:00', '48:00:00', '72:00:00'
+                ]												
+       		    //store:['1H', '2H', '3H', '4H', '5H', '6H', '7H', '8H', '9H', '10H', '11H', '12H'],
+			},
+			type:'ComboBox',			
+			id_grupo:1,
+			grid:true,
+			form:true
+		},
+        {
+            config:{
+                name: 'tipo_accion',
+                fieldLabel: 'Tiempo Concluido, accion a ejecutar.',
+                qtip:'Este campo habilita el combo de correos o el de funcion de accion.',
+                allowBlank: true,
+                anchor: '40%',
+                gwidth: 50,                
+                emptyText:'tipo accion...',        
+                typeAhead: true,
+                triggerAction: 'all',
+                lazyRender:true,
+                mode: 'local',
+                valueField: 'inicio',                   
+                store:['Cambio Estado', 'Notificacion']                
+            },
+            type:'ComboBox',
+            id_grupo:1,
+            filters:{   
+                         type: 'list',
+                         pfiltro:'tipes.tipo_accion',
+                         options: ['Cambio Estado','Notificacion'],  
+                    },
+            grid:true,
+            form:true
+        },          
+        {
+            config:{
+                name: 'funcion_cambio_estado',
+                fieldLabel: 'Funcion cambio estado',
+                qtip:'Esta funcion se ejecuta cuando llega a su tiempo limite y es de tipo cambio de estado automatico.',
+                allowBlank: true,
+                anchor: '80%',
+                gwidth: 100,
+                maxLength:255
+            },
+            type:'TextField',
+            filters:{pfiltro:'tipes.funcion_inicial',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:true
+        },        
+        {
+			config: {
+				name: 'id_funcionario_cc',
+				fieldLabel: 'Notificacion Funcionario',
+				allowBlank: true,
+				emptyText: 'Elija una opción...',                        
+				store: new Ext.data.JsonStore({
+					url: '../../sis_organigrama/control/Funcionario/listarFuncionarioCargo',
+					id: 'id_funcionario',
+					root: 'datos',
+					sortInfo: {
+						field: 'desc_funcionario1',
+						direction: 'ASC'
+					},
+					totalProperty: 'total',
+					fields: ['id_funcionario','desc_funcionario1','email_empresa'],
+					remoteSort: true,
+					baseParams: {par_filtro: 'FUNCAR.desc_funcionario1'}
+				}),
+				valueField: 'id_funcionario',
+				displayField: 'desc_funcionario1',
+				gdisplayField: 'desc_funcionario1',
+				tpl:'<tpl for="."><div class="x-combo-list-item"><div class="awesomecombo-item {checked}"><p><b>{desc_funcionario1}</b></p></div><p><b>Email: </b> <span style="color: green;">{email_empresa}</span></p></div></tpl>',
+				hiddenName: 'id_funcionario',
+				forceSelection:true,
+				typeAhead: true,
+				triggerAction: 'all',
+				lazyRender:true,
+				mode:'remote',
+				pageSize:10,
+				queryDelay:1000,                        
+				gwidth:260,
+				width:425,
+				minChars:2,
+				anchor:'80%',
+				listWidth:'350',				
+				enableMultiSelect:true,
+				renderer:function(value, p, record){                                        						
+					return '<div><p><b>'+(record.data['email_cc']!=null)?record.data['email_cc']:''+'</b></p>'+
+                                '<p><p></div>';
+				}
+			},
+			type: 'AwesomeCombo',                    
+			id_grupo:0,
+			grid: true,
+			form: true
+        },                      		
+        //fin
 		{
 			config:{
 				name: 'estado_reg',
@@ -799,7 +942,8 @@ Phx.vista.TipoEstado=Ext.extend(Phx.gridInterfaz,{
 		'alerta','pedir_obs', 'codigo_estado','obs','depto_asignacion','fin','nombre_depto_func_list',
 		'plantilla_mensaje_asunto','plantilla_mensaje','cargo_depto','funcion_inicial','funcion_regreso',
 		'mobile','acceso_directo_alerta', 'nombre_clase_alerta', 'tipo_noti', 
-        'titulo_alerta', 'parametros_ad','id_roles','admite_obs','etapa','grupo_doc','icono'
+        'titulo_alerta', 'parametros_ad','id_roles','admite_obs','etapa','grupo_doc','icono',
+        'control_tiempo','tiempo_estado','tipo_accion','funcion_cambio_estado','id_funcionario_cc','email_cc'
 		
 	],
 	sortInfo:{
@@ -817,6 +961,123 @@ Phx.vista.TipoEstado=Ext.extend(Phx.gridInterfaz,{
 		Phx.vista.TipoEstado.superclass.loadValoresIniciales.call(this);
 		this.getComponente('id_tipo_proceso').setValue(this.maestro.id_tipo_proceso);		
 	},
+
+    /* ini: agregado breydi vasquez 25/03/2020
+        desc: para controlar por tiempos los procesos que esten en un estado
+    */
+	onButtonNew:function(){	 
+      this.Cmp.tiempo_estado.hide();              
+      this.Cmp.tipo_accion.hide(); 
+      this.Cmp.funcion_cambio_estado.hide();
+      this.Cmp.id_funcionario_cc.hide();
+
+      this.Cmp.control_tiempo.on('select', function(c, r, n){                            
+        if(c.value == 'si'){
+            this.Cmp.tiempo_estado.show();
+            this.Cmp.tiempo_estado.allowBlank=false;
+            this.Cmp.tipo_accion.show();
+            this.Cmp.tipo_accion.allowBlank=false;
+        }else{            
+            this.Cmp.tiempo_estado.reset();
+            this.Cmp.tiempo_estado.modificado = true;
+            this.Cmp.tiempo_estado.hide();  
+            this.Cmp.tiempo_estado.allowBlank=true;
+
+            this.Cmp.tipo_accion.reset();
+            this.Cmp.tipo_accion.modificado = true;
+            this.Cmp.tipo_accion.hide();  
+            this.Cmp.tipo_accion.allowBlank=true;
+
+            this.Cmp.funcion_cambio_estado.reset();
+            this.Cmp.funcion_cambio_estado.modificado = true;
+            this.Cmp.funcion_cambio_estado.hide();  
+            this.Cmp.funcion_cambio_estado.allowBlank=true;
+            this.Cmp.id_funcionario_cc.reset();
+            this.Cmp.id_funcionario_cc.modificado = true;
+            this.Cmp.id_funcionario_cc.hide();  
+            this.Cmp.id_funcionario_cc.allowBlank=true;            
+        }
+      },this);         
+
+      this.Cmp.tipo_accion.on('select', function(c, r, n) {
+            if (c.value == 'Cambio Estado') {
+                this.Cmp.funcion_cambio_estado.show();
+                this.Cmp.funcion_cambio_estado.allowBlank=false;
+                this.Cmp.id_funcionario_cc.reset();
+                this.Cmp.id_funcionario_cc.modificado = true;
+                this.Cmp.id_funcionario_cc.hide();  
+                this.Cmp.id_funcionario_cc.allowBlank=true;
+            }else if (c.value == 'Notificacion') {
+                this.Cmp.id_funcionario_cc.show();
+                this.Cmp.id_funcionario_cc.allowBlank=false;
+                this.Cmp.funcion_cambio_estado.reset();
+                this.Cmp.funcion_cambio_estado.modificado = true;
+                this.Cmp.funcion_cambio_estado.hide();  
+                this.Cmp.funcion_cambio_estado.allowBlank=true;                
+            }
+
+      }, this);
+	  Phx.vista.TipoEstado.superclass.onButtonNew.call(this);	  	      
+      this.getComponente('control_tiempo').setValue('no');
+	},  
+
+    onButtonEdit:function(){
+        this.Cmp.control_tiempo.on('select', function(c, r, n){                            
+            if(c.value == 'si'){
+                this.Cmp.tiempo_estado.show();
+                this.Cmp.tiempo_estado.allowBlank=false;            
+                this.Cmp.tipo_accion.show();
+                this.Cmp.tipo_accion.allowBlank=false; 
+            }else{            
+                this.Cmp.tiempo_estado.hide();  
+                this.Cmp.tiempo_estado.allowBlank=true;
+                this.Cmp.tipo_accion.hide();  
+                this.Cmp.tipo_accion.allowBlank=true;
+                this.Cmp.funcion_cambio_estado.hide();  
+                this.Cmp.funcion_cambio_estado.allowBlank=true;
+                this.Cmp.id_funcionario_cc.hide();  
+                this.Cmp.id_funcionario_cc.allowBlank=true;                                
+            }
+        },this);  
+
+        this.Cmp.tipo_accion.on('select', function(c, r, n) {            
+            
+            if (c.value == 'Cambio Estado') {                
+                this.Cmp.funcion_cambio_estado.show();
+                this.Cmp.funcion_cambio_estado.allowBlank=false;
+                this.Cmp.id_funcionario_cc.hide();  
+                this.Cmp.id_funcionario_cc.allowBlank=true;
+            }else if (c.value == 'Notificacion') {                
+                this.Cmp.id_funcionario_cc.show();
+                this.Cmp.id_funcionario_cc.allowBlank=false;                
+                this.Cmp.funcion_cambio_estado.hide();  
+                this.Cmp.funcion_cambio_estado.allowBlank=true;                
+            }
+        }, this);
+      
+        Phx.vista.TipoEstado.superclass.onButtonEdit.call(this);	  	      
+        var d = this.getComponente('control_tiempo');        
+        var t = this.getComponente('tipo_accion');         
+        
+        if (d.value == 'si'){        
+            this.Cmp.tiempo_estado.show(); 
+            this.Cmp.tipo_accion.show();
+            if (t.value == 'Notificacion') {
+                this.Cmp.id_funcionario_cc.show(); 
+                this.Cmp.funcion_cambio_estado.hide();             
+            }else{                
+                this.Cmp.funcion_cambio_estado.show(); 
+                this.Cmp.id_funcionario_cc.hide(); 
+            }
+        }else{
+            this.Cmp.tiempo_estado.hide(); 
+            this.Cmp.tipo_accion.hide();
+            this.Cmp.id_funcionario_cc.hide(); 
+            this.Cmp.funcion_cambio_estado.hide();                        
+        }
+
+    },
+    // fin
 	tabsouth:[
 	     {
 	          url:'../../../sis_workflow/vista/estructura_estado/EstructuraEstadoHijo.php',

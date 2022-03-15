@@ -76,7 +76,7 @@ BEGIN
 
     v_nombre_funcion = 'orga.f_listar_arbol_uo';
 
-    for v_id_uo in select unnest(string_to_array(9419||','||rtrim(orga.f_get_arbol_uo(9419),','), ',')) as id_unida_o  loop
+    for v_id_uo in select unnest(string_to_array(10113||','||rtrim(orga.f_get_arbol_uo(10113),','), ',')) as id_unida_o  loop
 	  v_niveles = string_to_array(orga.f_get_arbol_padre_uo(v_id_uo),',');
       --nivel 1
       select coalesce(ps_codigo,''), coalesce(ps_nombre,'')

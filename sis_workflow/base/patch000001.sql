@@ -1954,3 +1954,97 @@ IS 'Tipo de dato por defecto para el valor del tipo de propiedad';
 
 
 /*****************************F-SCP-AKFG-WF-0-21/11/2019*************/
+
+/*****************************I-SCP-BVP-WF-0-28/02/2020*************/
+CREATE TABLE wf.tdocumento_abierto (
+  id_documento_abierto SERIAL,
+  id_proceso_wf INTEGER,
+  id_tipo_documento INTEGER,
+  id_documento_wf INTEGER,
+  id_documento_historico_wf INTEGER,
+  historico VARCHAR(50) DEFAULT 'no'::character varying,
+  url VARCHAR,
+  extension VARCHAR(20),
+  action VARCHAR,
+  id_uo_funcionario INTEGER,
+  id_uo INTEGER,
+  CONSTRAINT tdocuments_open_pkey PRIMARY KEY(id_documento_abierto)
+) INHERITS (pxp.tbase)
+WITH (oids = false);
+
+ALTER TABLE wf.tdocumento_abierto
+  ALTER COLUMN id_proceso_wf SET STATISTICS 0;
+
+COMMENT ON TABLE wf.tdocumento_abierto
+IS 'Almacena informacion de los usuario que abrieron un documento escaneado o generado.';
+
+COMMENT ON COLUMN wf.tdocumento_abierto.historico
+IS 'Campo que diferencia si el documento es un historico de documentos, o es el documento oficial.';
+
+ALTER TABLE wf.tdocumento_abierto
+  OWNER TO postgres;
+/*****************************F-SCP-BVP-WF-0-28/02/2020*************/
+
+/*****************************I-SCP-BVP-WF-0-24/03/2020*************/
+
+ALTER TABLE wf.tobs
+  ADD COLUMN id_funcionario_cc INTEGER[];
+
+COMMENT ON COLUMN wf.tobs.id_funcionario_cc
+IS 'Correo funcionarios en copia para correos.';
+
+ALTER TABLE wf.tobs
+  ADD COLUMN tipo VARCHAR;
+
+COMMENT ON COLUMN wf.tobs.tipo
+IS 'Tipo de observacion.';
+  
+/*****************************F-SCP-BVP-WF-0-24/03/2020*************/
+
+/*****************************I-SCP-BVP-WF-0-03/04/2020*************/
+ALTER TABLE wf.ttipo_estado
+  ADD COLUMN control_tiempo VARCHAR(2);
+
+COMMENT ON COLUMN wf.ttipo_estado.control_tiempo
+IS 'Control para verficar si se controlara los procesos en estados por tiempo.';
+
+  
+ALTER TABLE wf.ttipo_estado
+  ADD COLUMN tiempo_estado INTERVAL;
+  
+COMMENT ON COLUMN wf.ttipo_estado.tiempo_estado
+IS 'Tiempo que estara el proceso en un estado.';
+
+ALTER TABLE wf.ttipo_estado
+  ADD COLUMN tipo_accion VARCHAR;
+
+COMMENT ON COLUMN wf.ttipo_estado.tipo_accion
+IS 'Tipo de accion a ejecutar cuando el tiempo del proceso concluya.';
+
+ALTER TABLE wf.ttipo_estado
+  ADD COLUMN funcion_cambio_estado VARCHAR;
+
+COMMENT ON COLUMN wf.ttipo_estado.funcion_cambio_estado
+IS 'Funcion a ejecutar si el tipo de accion es cambio automatico de estado.';
+
+ALTER TABLE wf.ttipo_estado
+  ADD COLUMN id_funcionario_cc integer[];
+
+ COMMENT ON COLUMN wf.ttipo_estado.id_funcionario_cc
+IS 'Lista de funcionarios a los que se enviara un correo de notificacion, de los procesos que concluyeron su tiempo limite.';
+
+ALTER TABLE wf.testado_wf
+  ADD COLUMN codigo VARCHAR;
+
+COMMENT ON COLUMN wf.testado_wf.codigo
+IS 'Codigo de evaluacion para controles.';
+
+/*****************************F-SCP-BVP-WF-0-03/04/2020*************/
+
+/*****************************I-SCP-BVP-WF-0-15/04/2020*************/
+ALTER TABLE wf.testado_wf
+  RENAME COLUMN codigo TO codigo_wf_control;
+
+COMMENT ON COLUMN wf.testado_wf.codigo_wf_control
+IS 'Codigo_wf de evaluacion para controles.';
+/*****************************F-SCP-BVP-WF-0-15/04/2020*************/

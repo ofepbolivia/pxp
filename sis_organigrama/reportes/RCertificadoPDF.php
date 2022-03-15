@@ -13,17 +13,26 @@ class RCertificadoPDF extends  ReportePDF{
             $tipo = 'de la interesada';
         }
 
-        $fecha = $this->datos[0]['fecha_solicitud'];        
-        
-        if ($fecha >= '2019-12-18'){
-            $firma_gerente = '/../media/firma_eduardo_degadillo_poepsel.png';
-            $w = 200;
-            $h = 120;
-            $cargo = 'Gerente Administrativo Financiero';  
-            $jefe = $this->datos[0]['nuevo_jefe']; 
-            $gen_gerente = 'El suscrito';                     
-            $siglas = 'JDP';
-            $firma_responsable = $this->datos[0]['nuevo_jefe'];
+        $fecha = $this->datos[0]['fecha_solicitud'];
+
+        if ($fecha > '2020-12-04'){
+          $firma_gerente = '/../media/firma.png';
+          $cargo = 'Jefe Departamento Talento Humano';
+          $w = 160;
+          $h = 120;
+          $jefe = $this->datos[0]['jefa_recursos'];
+          $gen_gerente = 'La suscrita';
+          $siglas = 'GAG';
+          $firma_responsable = $this->datos[0]['jefa_recursos'];
+        }else if ($fecha >= '2019-12-18' and $fecha <= '2020-12-04') {
+          $firma_gerente = '../../../sis_organigrama/media/firma_eduardo_degadillo_poepsel.png';
+          $w = 300;
+          $h = 140;
+          $cargo = 'Gerente Administrativo Financiero';
+          $jefe = $datos['nuevo_jefe'];
+          $gen_gerente = 'El suscrito';
+          $siglas = 'JDP';
+          $firma_responsable = $datos['nuevo_jefe'];
         }else{
             $firma_gerente = '/../media/firma.png';
             $cargo = 'Jefe de Recursos Humanos';
@@ -45,16 +54,20 @@ class RCertificadoPDF extends  ReportePDF{
     }
     public function Footer()
     {
-        $fecha_f= $this->datos[0]['fecha_solicitud'];        
-        if ($fecha_f >= '2019-12-18'){
+        $fecha_f= $this->datos[0]['fecha_solicitud'];
+        if ($fecha_f > '2020-12-04'){
+          $firma_gerente_f = '/../media/firma.png';
+          $siglas = 'GAG';
+          $firma_responsable_f = $this->datos[0]['nuevo_jefe'];
+        }else if ($fecha_f >= '2019-12-18' and $fecha_f <= '2020-12-04') {
             $firma_gerente_f = '/../media/firma_eduardo_degadillo_poepsel.png';
             $siglas = 'JDP';
             $firma_responsable_f = $this->datos[0]['nuevo_jefe'];
         }else{
             $firma_gerente_f = '/../media/firma.png';
-            $siglas = 'GAG';        
+            $siglas = 'GAG';
             $firma_responsable_f = $this->datos[0]['nuevo_jefe'];
-        }                
+        }
         $this->SetY(-15);
         $this->SetFont('helvetica', 'I', 6);
         $this->Cell(0, 0, $siglas.'/'.$this->datos[0]['iniciales'], 0, 1, 'L');
@@ -76,7 +89,7 @@ class RCertificadoPDF extends  ReportePDF{
 
     }
     function setDatos($datos) {
-        $this->datos = $datos;        
+        $this->datos = $datos;
     }
     function reporteGeneral(){
         if ($this->datos[0]['genero'] == 'Sr'){
@@ -94,8 +107,13 @@ class RCertificadoPDF extends  ReportePDF{
         $this->writeHTML($html);
         $this->ln(8);
         $this->SetFont('', '', 13);
+        $item = '';
+
+        if (intval($this->datos[0]['nro_item']) > 0 ){
+          $item = ' con Nº de ítem '.$this->datos[0]['nro_item'];
+        }
         $cuerpo = '<p style="font-family:Century Gothic, serif; font-style:italic;text-align: justify">Que, de la revisión de la carpeta que cursa en el Departamento de Recursos Humanos, se evidencia que '.$gen.' <b>'.$this->datos[0]['genero'].'. '.$this->datos[0]['nombre_funcionario'].'</b> con C.I. '.$this->datos[0]['ci'].' '.$this->datos[0]['expedicion'].', ingresó a la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA"
-         el '.$this->fechaLiteral($this->datos[0]['fecha_contrato']).', y actualmente ejerce el cargo de <b>'.$this->datos[0]['nombre_cargo'].' con Nº de ítem '.$this->datos[0]['nro_item'].'</b>, dependiente de la '.$this->datos[0]['nombre_unidad'].', con una remuneración mensual de Bs. '.number_format($this->datos[0]['haber_basico'],2,",",".") .'.- ('.$this->datos[0]['haber_literal'].' Bolivianos). </p><br>';
+         el '.$this->fechaLiteral($this->datos[0]['fecha_contrato']).', y actualmente ejerce el cargo de <b>'.$this->datos[0]['nombre_cargo'].$item.'</b>, dependiente de la '.$this->datos[0]['nombre_unidad'].', con una remuneración mensual de Bs. '.number_format($this->datos[0]['haber_basico'],2,",",".") .'.- ('.$this->datos[0]['haber_literal'].' Bolivianos). </p><br>';
         $this->writeHTML($cuerpo);
         $viaticos='<p style="font-family:Century Gothic, serif; font-style:italic;text-align: justify">Asimismo a solicitud expresa se informa que '.$gen.' '.$tra.' ha percibido en los últimos tres meses por concepto de viáticos un promedio mensual de '.number_format($this->datos[0]['importe_viatico'],2,",",".").'.- ('.$this->datos[0]['literal_importe_viatico'].' Bolivianos) aclarándose que el <b>Viático</b> es la suma que reconoce la empresa a la persona comisionada, <b>para cubrir gastos del viaje.</b></p><br>';
         if (($this->datos[0]['tipo_certificado'] =='Con viáticos de los últimos tres meses')||

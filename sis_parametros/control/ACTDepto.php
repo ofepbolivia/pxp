@@ -112,7 +112,9 @@ class ACTDepto extends ACTbase
             //18-07-2019 se realiza distinto listado de depto para los de FONDO EN AVANCE
             //$this->objParam->addFiltro('(' . $this->objParam->getParametro('id_lugar') . "::integer =ANY(DEPPTO.id_lugares))");
             //19-09-2019 vuelve el mismo filtro porque hay otro function para Fondos en Avance y se necesita filtrar por los dos departamentos su dep donde esta y de cochabamba-a peticion de Roberto Villa
-            $this->objParam->addFiltro( '('.$this->objParam->getParametro('id_lugar')."::integer =ANY(DEPPTO.id_lugares) or  prioridad = 1)");
+            //$this->objParam->addFiltro( '('.$this->objParam->getParametro('id_lugar')."::integer =ANY(DEPPTO.id_lugares) or  prioridad = 1)");
+            //27-11-2020 (may) modificacion porque en adq se mostrara solo el depto correspondiente del funcionario
+            $this->objParam->addFiltro('(' . $this->objParam->getParametro('id_lugar') . "::integer =ANY(DEPPTO.id_lugares))");
 
         }
 
@@ -218,6 +220,12 @@ class ACTDepto extends ACTbase
 
         }
 
+        if( $this->objParam->getParametro('bandeja') == 'integracion' ){
+            $this->objParam->addFiltro('DEPPTO.prioridad in (1,3)');
+        }else{
+            $this->objParam->addFiltro('DEPPTO.prioridad = 3');
+        }
+
 
             if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {
                 $this->objReporte = new Reporte($this->objParam, $this);
@@ -230,6 +238,41 @@ class ACTDepto extends ACTbase
             }
 
             $this->res->imprimirRespuesta($this->res->generarJson());
+
+    }
+
+    // 04-02-2021 (may) Listado Depto para obligaciones de Pago
+    function listarDeptoFiltradoXUsuarioOP()
+    {
+
+        // parametros de ordenacion por defecto
+        $this->objParam->defecto('ordenacion', 'depto');
+        $this->objParam->defecto('dir_ordenacion', 'asc');
+
+        if ($this->objParam->getParametro('id_lugar') != '') {
+
+            //solo se modifica esta condicion con la prioridad 1 , para que de opcion de que elijan el depto
+            $this->objParam->addFiltro( '('.$this->objParam->getParametro('id_lugar')."::integer =ANY(DEPPTO.id_lugares) or  prioridad = 1)");
+
+        }
+
+        if ($this->objParam->getParametro('modulo') != '') {
+            $this->objParam->addFiltro("DEPPTO.modulo = ''" . $this->objParam->getParametro('modulo') . "''");
+        }
+
+
+        if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {
+            $this->objReporte = new Reporte($this->objParam, $this);
+            $this->res = $this->objReporte->generarReporteListado('MODDepto', 'listarDeptoFiltradoXUsuario');
+        } else {
+            $this->objFunSeguridad = $this->create('MODDepto');
+            //ejecuta el metodo de lista personas a travez de la intefaz objetoFunSeguridad
+            $this->res = $this->objFunSeguridad->listarDeptoFiltradoXUsuario($this->objParam);
+
+        }
+
+        $this->res->imprimirRespuesta($this->res->generarJson());
+
 
     }
 

@@ -102,9 +102,9 @@ foreach ($res2->datos as $d){
 				throw new phpmailerException("Email address " . $d['email_empresa'] . " is invalid -- aborting!");
 			}
 
-			if (!$correo->validateEmail($d['email_empresa'])) {
+			/*if (!$correo->validateEmail($d['email_empresa'])) {
 				throw new phpmailerException("Domain Email address " . $d['email_empresa'] . " is invalid -- aborting!");
-			}
+			}*/
 
 
 
@@ -137,9 +137,9 @@ foreach ($res2->datos as $d){
 				if (!PHPMailer::validateAddress($value)) {
 					throw new phpmailerException("Email address " . $value . " is invalid -- aborting!");
 				}
-				if (!$correo->validateEmail($value)) {
+				/*if (!$correo->validateEmail($value)) {
 					throw new phpmailerException("Domain Email address " . $value . " is invalid -- aborting!");
-				}
+				}*/
 			}
 
 		}

@@ -16,7 +16,8 @@ class ACTEvaluacionDesempenio extends ACTbase{
 		$this->objParam->defecto('ordenacion','id_evaluacion_desempenio');
         $this->objParam->defecto('dir_ordenacion','asc');
         if ($this->objParam->getParametro('id_gerencia') != ''){
-            $this->objParam->addFiltro("ger.id_uo = ".$this->objParam->getParametro('id_gerencia')."and evd.gestion = ".$this->objParam->getParametro('id_gestion'));
+            // $this->objParam->addFiltro("ger.id_uo = ".$this->objParam->getParametro('id_gerencia')."and evd.gestion = ".$this->objParam->getParametro('id_gestion'));
+            $this->objParam->addFiltro(" evd.gestion = ".$this->objParam->getParametro('id_gestion'));
         }
         if ($this->objParam->getParametro('pes_estado') == '0_70'){
             $this->objParam->addFiltro("evd.nota >= 0 and evd.nota <= 70");
@@ -25,7 +26,8 @@ class ACTEvaluacionDesempenio extends ACTbase{
         }elseif ($this->objParam->getParametro('pes_estado') == '81_90'){
             $this->objParam->addFiltro("evd.nota >= 81 and evd.nota <= 90");
         }elseif ($this->objParam->getParametro('pes_estado') == 'glu'){
-        	$this->objParam->addFiltro("ger.id_uo = ".$this->objParam->getParametro('id_gerencia')."and evd.gestion = ".$this->objParam->getParametro('id_gestion'));
+        	// $this->objParam->addFiltro("ger.id_uo = ".$this->objParam->getParametro('id_gerencia')."and evd.gestion = ".$this->objParam->getParametro('id_gestion'));
+          $this->objParam->addFiltro(" evd.gestion = ".$this->objParam->getParametro('id_gestion'));
         }
         else{
             $this->objParam->addFiltro("evd.nota >= 91 and evd.nota <= 100");
@@ -37,12 +39,12 @@ class ACTEvaluacionDesempenio extends ACTbase{
 			$this->res = $this->objReporte->generarReporteListado('MODEvaluacionDesempenio','listarEvaluacionDesempenio');
 		} else{
 			$this->objFunc=$this->create('MODEvaluacionDesempenio');
-			
+
 			$this->res=$this->objFunc->listarEvaluacionDesempenio($this->objParam);
 		}
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
-				
+
 	function insertarEvaluacionDesempenio(){
        // var_dump($this->objParam->getParametro('id_funcionario'));exit;
         $data = array(  "gestion" => $this->objParam->getParametro('gestion'),
@@ -79,15 +81,15 @@ class ACTEvaluacionDesempenio extends ACTbase{
         $this->objParam->addParametro('codigo', $respuesta["codigo"]);
         $this->objFunc=$this->create('MODEvaluacionDesempenio');
 		if($this->objParam->insertar('id_evaluacion_desempenio')){
-			$this->res=$this->objFunc->insertarEvaluacionDesempenio($this->objParam);			
-		} else{			
+			$this->res=$this->objFunc->insertarEvaluacionDesempenio($this->objParam);
+		} else{
 			$this->res=$this->objFunc->modificarEvaluacionDesempenio($this->objParam);
 		}
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
-						
+
 	function eliminarEvaluacionDesempenio(){
-			$this->objFunc=$this->create('MODEvaluacionDesempenio');	
+			$this->objFunc=$this->create('MODEvaluacionDesempenio');
 		$this->res=$this->objFunc->eliminarEvaluacionDesempenio($this->objParam);
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
@@ -100,7 +102,7 @@ class ACTEvaluacionDesempenio extends ACTbase{
     function ReporteEvaluacioDesempenio (){
         $this->objFunc=$this->create('MODEvaluacionDesempenio');
         $this->res=$this->objFunc->listarEvaluacion($this->objParam);
-       
+
         //obtener titulo del reporte
         $titulo = 'Memo';
         //Genera el nombre del archivo (aleatorio + titulo)

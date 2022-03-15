@@ -713,3 +713,241 @@ AS
         uof.tipo::text = 'oficial'::text AND
         uof.fecha_asignacion = maxf.fecha_asinacion_max;
 /************************************F-DEP-BVP-ORGA-0-26/1/2019*************************************************/
+
+/************************************I-DEP-MAY-ORGA-0-20/01/2021*************************************************/
+  CREATE OR REPLACE VIEW orga.vfuncionario_cargo_v2(
+    id_uo_funcionario,
+    id_funcionario,
+    desc_funcionario1,
+    desc_funcionario2,
+    id_uo,
+    nombre_cargo,
+    fecha_asignacion,
+    fecha_finalizacion,
+    num_doc,
+    ci,
+    codigo,
+    email_empresa,
+    estado_reg_fun,
+    estado_reg_asi,
+    id_cargo,
+    descripcion_cargo,
+    cargo_codigo,
+    nombre_unidad,
+    tipo_funcionario)
+AS
+  SELECT uof.id_uo_funcionario,
+         funcio.id_funcionario,
+         person.nombre_completo1 AS desc_funcionario1,
+         person.nombre_completo2 AS desc_funcionario2,
+         uo.id_uo,
+         uo.nombre_cargo,
+         uof.fecha_asignacion,
+         uof.fecha_finalizacion,
+         person.num_documento AS num_doc,
+         person.ci,
+         funcio.codigo,
+         funcio.email_empresa,
+         funcio.estado_reg AS estado_reg_fun,
+         uof.estado_reg AS estado_reg_asi,
+         car.id_cargo,
+         car.nombre AS descripcion_cargo,
+         car.codigo AS cargo_codigo,
+         uo.nombre_unidad,
+         uof.tipo AS tipo_funcionario
+  FROM orga.tfuncionario funcio
+       JOIN segu.vpersona person ON funcio.id_persona = person.id_persona
+       JOIN orga.tuo_funcionario uof ON uof.id_funcionario =
+         funcio.id_funcionario
+       JOIN orga.tuo uo ON uo.id_uo = uof.id_uo
+       JOIN orga.tcargo car ON car.id_cargo = uof.id_cargo
+  WHERE uof.estado_reg::text = 'activo'::text;
+
+/************************************F-DEP-MAY-ORGA-0-20/01/2021*************************************************/
+
+/************************************I-DEP-MAY-ORGA-0-30/04/2021*************************************************/
+CREATE VIEW orga.vfuncionario_cargo_lugar_todos (
+    id_uo_funcionario,
+    id_funcionario,
+    desc_funcionario1,
+    desc_funcionario2,
+    id_uo,
+    nombre_cargo,
+    fecha_asignacion,
+    fecha_finalizacion,
+    num_doc,
+    ci,
+    codigo,
+    email_empresa,
+    estado_reg_fun,
+    estado_reg_asi,
+    id_cargo,
+    descripcion_cargo,
+    cargo_codigo,
+    nombre_unidad,
+    lugar_nombre,
+    id_lugar,
+    id_oficina,
+    oficina_nombre,
+    oficina_direccion)
+AS
+SELECT uof.id_uo_funcionario,
+    funcio.id_funcionario,
+    person.nombre_completo1 AS desc_funcionario1,
+    person.nombre_completo2 AS desc_funcionario2,
+    uo.id_uo,
+    uo.nombre_cargo,
+    uof.fecha_asignacion,
+    uof.fecha_finalizacion,
+    person.num_documento AS num_doc,
+    person.ci,
+    funcio.codigo,
+    funcio.email_empresa,
+    funcio.estado_reg AS estado_reg_fun,
+    uof.estado_reg AS estado_reg_asi,
+    car.id_cargo,
+    car.nombre AS descripcion_cargo,
+    car.codigo AS cargo_codigo,
+    uo.nombre_unidad,
+    lu.nombre AS lugar_nombre,
+    lu.id_lugar,
+    of.id_oficina,
+    of.nombre AS oficina_nombre,
+    of.direccion AS oficina_direccion
+FROM orga.tfuncionario funcio
+     JOIN segu.vpersona person ON funcio.id_persona = person.id_persona
+     JOIN orga.tuo_funcionario uof ON uof.id_funcionario =
+         funcio.id_funcionario AND uof.tipo::text = 'oficial'::text
+     JOIN orga.tuo uo ON uo.id_uo = uof.id_uo
+     JOIN orga.tcargo car ON car.id_cargo = uof.id_cargo
+     JOIN orga.toficina of ON of.id_oficina = car.id_oficina
+     JOIN param.tlugar lu ON lu.id_lugar = of.id_lugar
+WHERE car.estado_reg::text = 'activo'::text AND uof.estado_reg::text =
+    'activo'::text AND uof.estado_funcional::text = 'activo'::text
+ORDER BY uof.fecha_reg DESC;
+
+ALTER VIEW orga.vfuncionario_cargo_lugar_todos
+  OWNER TO postgres;
+/************************************F-DEP-MAY-ORGA-0-30/04/2021*************************************************/
+
+/************************************I-DEP-MAY-ORGA-0-19/05/2021*************************************************/
+DROP VIEW orga.vfuncionario_cargo_lugar_todos;
+
+CREATE VIEW orga.vfuncionario_cargo_lugar_todos (
+    id_uo_funcionario,
+    id_funcionario,
+    desc_funcionario1,
+    desc_funcionario2,
+    id_uo,
+    nombre_cargo,
+    fecha_asignacion,
+    fecha_finalizacion,
+    num_doc,
+    ci,
+    codigo,
+    email_empresa,
+    estado_reg_fun,
+    estado_reg_asi,
+    id_cargo,
+    descripcion_cargo,
+    cargo_codigo,
+    nombre_unidad,
+    lugar_nombre,
+    id_lugar,
+    id_oficina,
+    oficina_nombre,
+    oficina_direccion)
+AS
+SELECT uof.id_uo_funcionario,
+    funcio.id_funcionario,
+    person.nombre_completo1 AS desc_funcionario1,
+    person.nombre_completo2 AS desc_funcionario2,
+    uo.id_uo,
+    uo.nombre_cargo,
+    uof.fecha_asignacion,
+    uof.fecha_finalizacion,
+    person.num_documento AS num_doc,
+    person.ci,
+    funcio.codigo,
+    funcio.email_empresa,
+    funcio.estado_reg AS estado_reg_fun,
+    uof.estado_reg AS estado_reg_asi,
+    car.id_cargo,
+    car.nombre AS descripcion_cargo,
+    car.codigo AS cargo_codigo,
+    uo.nombre_unidad,
+    lu.nombre AS lugar_nombre,
+    lu.id_lugar,
+    of.id_oficina,
+    of.nombre AS oficina_nombre,
+    of.direccion AS oficina_direccion
+FROM orga.tfuncionario funcio
+     JOIN segu.vpersona person ON funcio.id_persona = person.id_persona
+     JOIN orga.tuo_funcionario uof ON uof.id_funcionario =
+         funcio.id_funcionario AND uof.tipo::text = 'oficial'::text
+     JOIN orga.tuo uo ON uo.id_uo = uof.id_uo
+     JOIN orga.tcargo car ON car.id_cargo = uof.id_cargo
+     JOIN orga.toficina of ON of.id_oficina = car.id_oficina
+     JOIN param.tlugar lu ON lu.id_lugar = of.id_lugar
+WHERE uof.estado_reg::text = 'activo'::text
+ORDER BY uof.fecha_reg DESC;
+
+ALTER VIEW orga.vfuncionario_cargo_lugar_todos
+  OWNER TO postgres;
+/************************************F-DEP-MAY-ORGA-0-19/05/2021*************************************************/
+
+/************************************I-DEP-FEA-ORGA-0-22/07/2021*************************************************/
+CREATE VIEW orga.vplantilla_contrato_rrhh (
+    id_uo_funcionario,
+    id_funcionario,
+    id_uo,
+    id_cargo,
+    numero_contrato,
+    empleado,
+    ci,
+    expedicion,
+    cargo,
+    fecha_inicio,
+    fecha_fin,
+    haber_basico,
+    haber_basico_literal,
+    ciudad,
+    item,
+    herederos,
+    periodo,
+    nombre_representante,
+    cargo_representante,
+    numero_resolucion,
+    fecha_resolucion)
+AS
+SELECT uofun.id_uo_funcionario,
+    uofun.id_funcionario,
+    uofun.id_uo,
+    uofun.id_cargo,
+    uofun.nro_documento_asignacion AS numero_contrato,
+    initcap(fun.desc_funcionario1)::character varying AS empleado,
+    fun.ci,
+    per.expedicion,
+    car.nombre AS cargo,
+    pxp.f_fecha_literal(uofun.fecha_asignacion) AS fecha_inicio,
+    pxp.f_fecha_literal(COALESCE(uofun.fecha_finalizacion, '9999-12-31'::date)) AS fecha_fin,
+    to_char(esc.haber_basico, '99,999.99'::text) AS haber_basico,
+    pxp.f_convertir_num_a_letra(esc.haber_basico) AS haber_basico_literal,
+    lug.nombre AS ciudad,
+    car.codigo AS item,
+    orga.f_get_herederos(uofun.id_funcionario) AS herederos,
+    pxp.f_obtener_literal_periodo(date_part('month'::text, uofun.fecha_asignacion)::integer, NULL::integer) AS periodo,
+    orga.f_get_representante_legal(uofun.fecha_asignacion, 'nombre_representante'::character varying) AS nombre_representante,
+    orga.f_get_representante_legal(uofun.fecha_asignacion, 'cargo_representante'::character varying) AS cargo_representante,
+    orga.f_get_representante_legal(uofun.fecha_asignacion, 'numero_resolucion'::character varying) AS numero_resolucion,
+    orga.f_get_representante_legal(uofun.fecha_asignacion, 'fecha_resolucion'::character varying) AS fecha_resolucion
+FROM orga.tuo_funcionario uofun
+     JOIN orga.tuo uo ON uo.id_uo = uofun.id_uo
+     JOIN orga.vfuncionario fun ON fun.id_funcionario = uofun.id_funcionario AND COALESCE(uofun.fecha_finalizacion, '9999-12-31'::date) >= CURRENT_DATE
+     JOIN segu.tpersona per ON per.id_persona = fun.id_persona
+     JOIN orga.tcargo car ON car.id_cargo = uofun.id_cargo
+     JOIN param.tlugar lug ON lug.id_lugar = car.id_lugar
+     JOIN orga.tescala_salarial esc ON esc.id_escala_salarial = car.id_escala_salarial;
+
+ALTER VIEW orga.vplantilla_contrato_rrhh OWNER TO postgres;
+/************************************F-DEP-FEA-ORGA-0-22/07/2021*************************************************/

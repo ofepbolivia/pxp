@@ -63,7 +63,9 @@ BEGIN
 						usu1.cuenta as usr_reg,
 						usu2.cuenta as usr_mod,
                         pctaban.estado_cta,
-                        pctaban.prioridad
+                        pctaban.prioridad,
+                        pctaban.observaciones
+                        
 						from param.tproveedor_cta_bancaria pctaban
                         left join param.tinstitucion instben on instben.id_institucion=pctaban.id_banco_beneficiario
 						inner join segu.tusuario usu1 on usu1.id_usuario = pctaban.id_usuario_reg

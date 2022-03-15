@@ -23,6 +23,12 @@ class MODFuncionario extends MODbase{
         $this->setParametro('fecha','fecha','date');
         $this->setParametro('id_uo','id_uo','integer');
         $this->setParametro('estado_func','estado_func','varchar');
+
+        $this->setParametro('id_funcionario','id_funcionario','integer');
+        /*Bandera para interfaz externa*/
+        $this->setParametro('boa_file','boa_file','varchar');
+
+
         //Definicion de la lista del resultado del query
 
         //defino varialbes que se captran como retornod e la funcion
@@ -60,6 +66,7 @@ class MODFuncionario extends MODbase{
         $this->captura('id_biometrico','int4');
         $this->captura('nombre_archivo','varchar');
         $this->captura('extension','varchar');
+        $this->captura('folder','varchar');
         $this->captura('telefono2','varchar');
         $this->captura('celular2','varchar');
         $this->captura('nombre','varchar');
@@ -78,8 +85,14 @@ class MODFuncionario extends MODbase{
         $this->captura('id_tipo_doc_identificacion','integer');
         $this->captura('id_especialidad_nivel','integer');
         $this->captura('desc_titulo','varchar');
+        $this->captura('base_operativa','varchar');
 
 
+        $this->captura('centro_costo','varchar');
+        $this->captura('categoria','varchar');
+
+        $this->captura('tiempo_empresa','varchar');
+        $this->captura('jubilado','varchar');
         //Ejecuta la funcion
         $this->armarConsulta();
         //echo $this->getConsulta(); exit;
@@ -659,6 +672,65 @@ class MODFuncionario extends MODbase{
         return $this->respuesta;
     }
 
+    //{"franklin.espinoza":"11/08/2020", "descripcion":"Verifica y Replica Fin Contrato de todos los funcionarios que finzalizaron su contrato en el dia"}
+    function verificaReplicaFinContrato(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='orga.ft_funcionario_ime';
+        $this->transaccion='RH_TRI_FIN_CONT_IME';
+        $this->tipo_procedimiento='IME';
+
+        //Define los parametros para la funcion
+        //$this->setParametro('id_funcionario','id_funcionario','integer');
+
+        $this->captura('replicacion','varchar');
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
+
+    function modificarFuncionarioREST(){
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento='orga.ft_funcionario_ime';// nombre procedimiento almacenado
+        $this->transaccion='RH_MOD_FUNC_REST';//nombre de la transaccion
+        $this->tipo_procedimiento='IME';//tipo de transaccion
+
+        //Define los parametros para la funcion
+
+        $this->setParametro('idFuncionario','idFuncionario','integer');
+        $this->setParametro('CI','CI','varchar');
+        $this->setParametro('Expedito','Expedito','varchar');
+        $this->setParametro('TelefonoFijo','TelefonoFijo','varchar');
+        $this->setParametro('TelefonoCelular','TelefonoCelular','varchar');
+        $this->setParametro('Email','Email','varchar');
+        $this->setParametro('FechaNacimiento','FechaNacimiento','date');
+        $this->setParametro('Genero','Genero','varchar');
+        $this->setParametro('Direccion','Direccion','varchar');
+        $this->setParametro('Zona','Zona','varchar');
+        $this->setParametro('Numero','Numero','varchar');
+        $this->setParametro('Ciudad','Ciudad','varchar');
+        $this->setParametro('EstadoCivil','EstadoCivil','varchar');
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
+
+    function updateFechaIngreso(){
+        //Definicion de variables para ejecucion del procedimientp
+        $this->procedimiento='orga.ft_funcionario_ime';
+        $this->transaccion='RH_UPD_FECHA_ING_IME';
+        $this->tipo_procedimiento='IME';
+
+
+        //Ejecuta la instruccion
+        $this->armarConsulta();
+
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
+
 }
 ?>
-

@@ -115,7 +115,75 @@ var FormatoVista=function (value,p,record){return value?value.dateFormat('d/m/Y'
 
 			grid:true,
 			form:true
-	}
+	},
+	{
+		config:{
+				fieldLabel: "Fecha Reg Completa",
+				gwidth: 130,
+				name:'fecha_reg_hora',
+				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
+			},
+			type:'DateField',
+			filters:{type:'date'},
+			grid:true,
+			form:false
+	},
+	{
+			config:{
+					name: 'usr_reg',
+					fieldLabel: 'Creado por',
+					allowBlank: true,
+					anchor: '80%',
+					gwidth: 100
+			},
+			type:'NumberField',
+			filters:{pfiltro:'usu1.cuenta',type:'string'},
+			id_grupo:1,
+			grid:true,
+			form:false
+	},
+	{
+		config:{
+				fieldLabel: "Fecha Reg",
+				gwidth: 110,
+				name:'fecha_reg',
+				renderer:FormatoVista
+			},
+			type:'DateField',
+			filters:{type:'date'},
+			grid:true,
+			form:false
+	},
+	{
+			config:{
+					name: 'usr_mod',
+					fieldLabel: 'Modificado por',
+					allowBlank: true,
+					anchor: '80%',
+					gwidth: 100
+			},
+			type:'NumberField',
+			filters:{pfiltro:'usu2.cuenta',type:'string'},
+			id_grupo:1,
+			grid:true,
+			form:false
+	},
+	{
+			config:{
+					name: 'fecha_mod',
+					fieldLabel: 'Fecha Modif.',
+					allowBlank: true,
+					anchor: '100%',
+					gwidth: 120,
+					format: 'd/m/Y',
+					renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
+			},
+			type:'DateField',
+			filters:{pfiltro:'USUARI.fecha_mod',type:'date'},
+			id_grupo:1,
+			grid:true,
+			form:false
+	},
 	];
 
 	Phx.vista.rol.superclass.constructor.call(this,config);
@@ -148,6 +216,12 @@ Ext.extend(Phx.vista.rol,Phx.gridInterfaz,{
 	{name:'descripcion', type: 'string'},
 	{name:'id_subsistema'},
 	{name:'desc_subsis', type: 'string'},
+	{name:'fecha_reg',type: 'date', dateFormat: 'Y-m-d'},
+	{name:'usr_reg', type: 'string'},
+	{name:'usr_mod', type: 'string'},
+	{name:'fecha_mod', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
+	{name:'fecha_reg_hora', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
+
 		],
 	sortInfo:{
 		field: 'rol',

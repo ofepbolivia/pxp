@@ -136,6 +136,7 @@ BEGIN
             elsif v_parametros.tipo='institucion' then
                 v_where:= 'provee.id_persona is null';
             end if;
+
     		--Sentencia de la consulta
 			v_consulta:='select
 						provee.id_proveedor,
@@ -172,13 +173,66 @@ BEGIN
                         provee.id_proceso_wf,
                         provee.id_estado_wf,
                         provee.nro_tramite,
-                        provee.estado
+                        provee.estado,
+
+                        provee.condicion,
+                		provee.actividad,
+                		provee.num_proveedor,
+
+                        person.nombre as nombre_persona,
+                        person.ap_paterno as apellido_paterno,
+                        person.ap_materno as apellido_materno,
+                        per.codigo_telf,
+                        instit.codigo_telf_institucion,
+
+                        provee.id_lugar_departamento as id_lugar_fk,
+                        provee.id_lugar_ciudad as id_lugar_fk2,
+
+                        provee.id_moneda,
+                        mon.moneda,
+                        provee.dnrp,
+                        provee.ingreso_bruto,
+                        provee.tipo_habilitacion,
+                        provee.motivo_habilitacion,
+                        provee.codigo_alkym,
+                        provee.ccorreo,
+
+                        provee.codigo_externo,
+                        provee.codigo_fabricante,
+
+                        per.fax as fax_persona,
+                        per.pag_web as pag_web_persona,
+                        per.observaciones as observaciones_persona,
+
+                        provee.id_proveedor_alkym,
+
+                        per.telefono1,
+                        per.direccion,
+                        per.correo,
+                        instit.direccion as direccion_institucion,
+                        instit.email1 as email1_institucion,
+                        instit.email2 as email2_institucion,
+                        instit.telefono1 as telefono1_institucion,
+                        instit.fax,
+                        instit.pag_web,
+                        instit.observaciones::varchar,
+                        lugdepto.nombre as lugar_depto,
+                        lugciudad.nombre as lugar_ciudad,
+                        provee.id_beneficiario,
+						provee.razon_social_sigep,
+                        person1.ci as ci_usr_reg
+
                         from param.tproveedor provee
 						inner join segu.tusuario usu1 on usu1.id_usuario = provee.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = provee.id_usuario_mod
                         left join segu.vpersona2 person on person.id_persona=provee.id_persona
+                        left join segu.tpersona per on per.id_persona = person.id_persona
                         left join param.tinstitucion instit on instit.id_institucion=provee.id_institucion
                         left join param.tlugar lug on lug.id_lugar = provee.id_lugar
+                        left join param.tlugar lugdepto on lugdepto.id_lugar = provee.id_lugar_departamento
+                        left join param.tlugar lugciudad on lugciudad.id_lugar = provee.id_lugar_ciudad
+                        left join param.tmoneda mon on mon.id_moneda = provee.id_moneda
+                        left join segu.vpersona2 person1 on person1.id_persona=usu1.id_persona
 				        where '||v_where||' and ';
 
 			--Definicion de la respuesta
@@ -207,13 +261,17 @@ BEGIN
                 v_where:= 'provee.id_persona is null';
             end if;
 			--Sentencia de la consulta de conteo de registros
-			v_consulta:='select count(id_proveedor)
+			v_consulta:='select count(provee.id_proveedor)
 					    from param.tproveedor provee
 						inner join segu.tusuario usu1 on usu1.id_usuario = provee.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = provee.id_usuario_mod
                         left join segu.vpersona2 person on person.id_persona=provee.id_persona
                         left join param.tinstitucion instit on instit.id_institucion=provee.id_institucion
                         left join param.tlugar lug on lug.id_lugar = provee.id_lugar
+                        left join param.tlugar lugdepto on lugdepto.id_lugar = provee.id_lugar_departamento
+                        left join param.tlugar lugciudad on lugciudad.id_lugar = provee.id_lugar_ciudad
+                        left join param.tmoneda mon on mon.id_moneda = provee.id_moneda
+                        left join segu.vpersona2 person1 on person1.id_persona=usu1.id_persona
 				        where '||v_where||' and ';
 
 			--Definicion de la respuesta
@@ -240,27 +298,29 @@ BEGIN
 
       	--Sentencia de la consulta
      	 v_consulta:='select
-            			id_proveedor,
-                        id_persona,
-                        codigo,
-                        numero_sigma,
-                        tipo,
-                        id_institucion,
-                        desc_proveedor,
-                        nit,
-                        id_lugar,
-                        lugar,
-                        pais,
-                        rotulo_comercial,
-                        (COALESCE(email,''''))::varchar as email
-            from param.vproveedor provee
+            			provee.id_proveedor,
+                        provee.id_persona,
+                        provee.codigo,
+                        provee.numero_sigma,
+                        provee.tipo,
+                        provee.id_institucion,
+                        provee.desc_proveedor,
+                        provee.nit,
+                        provee.id_lugar,
+                        provee.lugar,
+                        provee.pais,
+                        provee.rotulo_comercial,
+                        (COALESCE(provee.email,''''))::varchar as email,
+                        provee.num_proveedor,
+                        provee.condicion
+            from param.vproveedor2 provee
             where  ';
 
             if pxp.f_existe_parametro(p_tabla,'id_lugar') then
       			v_ids = param.f_get_id_lugares(v_parametros.id_lugar);
       			v_consulta = v_consulta || 'provee.id_lugar in ('||v_ids||') and ';
       		end if;
-
+--raise exception 'llega %',v_parametros.filtro;
       --Definicion de la respuesta
       v_consulta:=v_consulta||v_parametros.filtro;
       v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
@@ -281,8 +341,8 @@ BEGIN
 
     begin
       --Sentencia de la consulta de conteo de registros
-      v_consulta:='select count(id_proveedor)
-              from param.vproveedor provee
+      v_consulta:='select count(provee.id_proveedor)
+              from param.vproveedor2 provee
               where ';
 
 			if pxp.f_existe_parametro(p_tabla,'id_lugar') then
@@ -576,4 +636,5 @@ $body$
 LANGUAGE 'plpgsql'
 VOLATILE
 CALLED ON NULL INPUT
+SECURITY INVOKER
 COST 100;

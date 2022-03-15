@@ -339,6 +339,34 @@ Phx.vista.EstructuraUo=function(config){
                id_grupo:0,
                form:true
            },
+           {
+               config:{
+                   fieldLabel: "Centro Costo",
+                   gwidth: 120,
+                   name: 'desc_tcc',
+                   allowBlank:true,
+                   anchor:'100%',
+                   disabled : true,
+                   style : {fontWeight : 'bolder', color : 'red'}
+               },
+               type:'TextField',
+               id_grupo:2,
+               form:true
+           },
+           {
+               config:{
+                   fieldLabel: "Categoria",
+                   gwidth: 120,
+                   name: 'codigo_categoria',
+                   allowBlank:true,
+                   anchor:'100%',
+                   disabled : true,
+                   style : {fontWeight : 'bolder', color : 'red'}
+               },
+               type:'TextField',
+               id_grupo:2,
+               form:true
+           }
 		];
 		
 		Phx.vista.EstructuraUo.superclass.constructor.call(this,config);
@@ -360,7 +388,16 @@ Phx.vista.EstructuraUo=function(config){
 				handler: this.onBtnCargos,
 				tooltip: '<b>Cargos</b><br/>Listado de cargos por unidad organizacional'
 			}
-		);	
+		);
+
+        this.addButton('btnAnexo',	{
+                text: 'Contrato Anexo',
+                iconCls: 'bmoney',
+                disabled: false,
+                handler: this.onBtnContratoAnexo,
+                tooltip: '<b>Anexo</b><br/>Listado de Anexos por UO.'
+            }
+        );
 		
 		//coloca elementos en la barra de herramientas
 		this.tbar.add('->');
@@ -428,18 +465,36 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 		},
 
         onNodeDrop : function(o) {
-            this.ddParams = {
-                tipo_nodo : o.dropNode.attributes.tipo_nodo
-            };
-            this.idTargetDD = 'id_uo';
-            if (o.dropNode.attributes.tipo_nodo == 'raiz' || o.dropNode.attributes.tipo_nodo == 'hijo') {
-                this.idNodoDD = 'id_uo';
-                this.idOldParentDD = 'id_uo_padre';
-            } else if(o.dropNode.attributes.tipo_nodo == 'item') {
-                this.idNodoDD = 'id_item';
-                this.idOldParentDD = 'id_p';
-            }
-            Phx.vista.EstructuraUo.superclass.onNodeDrop.call(this, o);
+
+            Ext.Msg.show({
+                title: 'ORGANIGRAMA ERP',
+                msg: '<b style="color: red;">Esta segur@ de realizar el Cambio de Unidad Organizacional.</b>',
+                fn: function (btn){
+                    if(btn == 'ok'){
+                        this.ddParams = {
+                            tipo_nodo : o.dropNode.attributes.tipo_nodo
+                        };
+                        this.idTargetDD = 'id_uo';
+                        if (o.dropNode.attributes.tipo_nodo == 'raiz' || o.dropNode.attributes.tipo_nodo == 'hijo') {
+                            this.idNodoDD = 'id_uo';
+                            this.idOldParentDD = 'id_uo_padre';
+                        } else if(o.dropNode.attributes.tipo_nodo == 'item') {
+                            this.idNodoDD = 'id_item';
+                            this.idOldParentDD = 'id_p';
+                        }
+
+                        Phx.vista.EstructuraUo.superclass.onNodeDrop.call(this, o);
+                    }
+                },
+                buttons: Ext.Msg.OKCANCEL,
+                width: 350,
+                maxWidth:500,
+                icon: Ext.Msg.WARNING,
+                scope:this
+            });
+
+
+
         },
 		onButtonAct:function(){
 			
@@ -491,8 +546,22 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 				    'Cargo'
 			);
 		},
-	
-		
+
+        onBtnContratoAnexo: function(){
+            var node = this.sm.getSelectedNode();
+            var data = node.attributes; console.log('node', data);
+            Phx.CP.loadWindows('../../../sis_organigrama/vista/uo_contrato_anexo/UoContratoAnexo.php',
+                'UO Anexos',
+                {
+                    width:1000,
+                    height:600
+                },
+                data,
+                this.idContenedor,
+                'UoContratoAnexo'
+            );
+        },
+    
 		//sobrecarga prepara menu
 		preparaMenu:function(n) {
 		    this.getBoton('btnCargo').enable();
@@ -504,7 +573,22 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 		},
 		/*Sobre carga boton new */
 		onButtonNew:function(){
-			var nodo = this.sm.getSelectedNode();			
+			var nodo = this.sm.getSelectedNode();
+
+            Ext.Ajax.request({
+                url:'../../sis_organigrama/control/Cargo/loadCargoPresupuesto',
+                params:{
+                    id_uo : nodo.id
+                },
+                success:function(resp){
+                    var reg =  (Ext.decode(Ext.util.Format.trim(resp.responseText))).ROOT.datos;
+                    this.Cmp.desc_tcc.setValue(reg.desc_tcc);
+                    this.Cmp.codigo_categoria.setValue(reg.codigo_categoria);
+                },
+                failure: this.conexionFailure,
+                timeout:this.timeout,
+                scope:this
+            });
 			Phx.vista.EstructuraUo.superclass.onButtonNew.call(this);			
 			//this.getComponente('id_uo_padre').setValue('');
 			//this.getComponente('nivel').setValue((nodo.attributes.nivel*1)+1);
@@ -514,7 +598,7 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 		onButtonEdit:function(){
 	
 			var nodo = this.sm.getSelectedNode();			
-						
+			console.log('onButtonEdit',nodo);
 			//this.getComponente('nivel').setValue((nodo.attributes.nivel*1)+1);
 			
 			/*if(nodo.attributes.tipo_dato=='interface'){		
@@ -533,6 +617,21 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 				this.getComponente('icono').disable();
 				this.getComponente('clase_vista').disable();
 			}	*/
+
+            Ext.Ajax.request({
+                url:'../../sis_organigrama/control/Cargo/loadCargoPresupuesto',
+                params:{
+                    id_uo : nodo.id
+                },
+                success:function(resp){
+                    var reg =  (Ext.decode(Ext.util.Format.trim(resp.responseText))).ROOT.datos;
+                    this.Cmp.desc_tcc.setValue(reg.desc_tcc);
+                    this.Cmp.codigo_categoria.setValue(reg.codigo_categoria);
+                },
+                failure: this.conexionFailure,
+                timeout:this.timeout,
+                scope:this
+            });
 			Phx.vista.EstructuraUo.superclass.onButtonEdit.call(this);
 		},
 		
@@ -565,9 +664,9 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
 	/*
 	 * south:{ url:'../../sis_legal/vista/representante/representante.php',
 	 * title:'Representante', height:200 },
-	 */	
-		
-     
+	 */
+
+
 	tabsouth:[
             {
 			  url:'../../../sis_organigrama/vista/uo_funcionario/UOFuncionario.php',
@@ -627,6 +726,19 @@ Ext.extend(Phx.vista.EstructuraUo,Phx.arbInterfaz,{
                                 autoHeight: true,
                                 items: [],
                                 id_grupo: 1
+                            }
+                        ],
+                        columnWidth: .5
+                    },
+                    {
+                        bodyStyle: 'padding-right:10px;',
+                        items: [
+                            {
+                                xtype: 'fieldset',
+                                title: '<b style="color: green;">DATOS PRESUPUESTO<b>',
+                                autoHeight: true,
+                                items: [],
+                                id_grupo: 2
                             }
                         ],
                         columnWidth: .5

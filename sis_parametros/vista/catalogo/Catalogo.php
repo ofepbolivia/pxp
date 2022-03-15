@@ -87,11 +87,12 @@ Phx.vista.Catalogo=Ext.extend(Phx.gridInterfaz,{
             type:'ComboBox',
             id_grupo:0,
             filters:{
-                   pfiltro:'nombre',
+                   pfiltro:'sis.nombre',
                    type:'string'
             },
             grid:true,
-            form:true
+            form:true,
+			bottom_filter:true
         },
 		{
 			config: {
@@ -114,7 +115,7 @@ Phx.vista.Catalogo=Ext.extend(Phx.gridInterfaz,{
 					// turn on remote sorting
 					remoteSort: true,
 					baseParams: {
-						par_filtro: 'nombre'
+						par_filtro: 'pacati.nombre'
 					}
 				}),
 				valueField: 'id_catalogo_tipo',
@@ -134,11 +135,12 @@ Phx.vista.Catalogo=Ext.extend(Phx.gridInterfaz,{
 			type: 'ComboBox',
 			id_grupo: 1,
 			filters: {
-				pfiltro: 'nombre',
+				pfiltro: 'cattip.nombre',
 				type: 'string'
 			},
 			grid: true,
-			form: true
+			form: true,
+			bottom_filter:true
 		},
 		
 		{
@@ -154,7 +156,8 @@ Phx.vista.Catalogo=Ext.extend(Phx.gridInterfaz,{
             filters:{pfiltro:'cat.codigo',type:'string'},
             id_grupo:1,
             grid:true,
-            form:true
+            form:true,
+			bottom_filter:true
         },
 		{
 			config:{
@@ -169,7 +172,8 @@ Phx.vista.Catalogo=Ext.extend(Phx.gridInterfaz,{
 			filters:{pfiltro:'cat.descripcion',type:'string'},
 			id_grupo:1,
 			grid:true,
-			form:true
+			form:true,
+			bottom_filter:true
 		},		
 		{
 			config:{
@@ -184,7 +188,8 @@ Phx.vista.Catalogo=Ext.extend(Phx.gridInterfaz,{
 			filters:{pfiltro:'usu1.cuenta',type:'string'},
 			id_grupo:1,
 			grid:true,
-			form:false
+			form:false,
+			bottom_filter:true
 		},
 		{
 			config:{
@@ -192,7 +197,7 @@ Phx.vista.Catalogo=Ext.extend(Phx.gridInterfaz,{
 				fieldLabel: 'Fecha creación',
 				allowBlank: true,
 				anchor: '80%',
-				gwidth: 100,
+				gwidth: 120,
 				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y h:i:s'):''}
 			},
 			type:'DateField',
@@ -246,9 +251,9 @@ Phx.vista.Catalogo=Ext.extend(Phx.gridInterfaz,{
 		{name:'descripcion', type: 'string'},
 		{name:'codigo', type: 'string'},
 		{name:'id_usuario_reg', type: 'numeric'},
-		{name:'fecha_reg', type: 'date', dateFormat:'Y-m-d H:i:s'},
+		{name:'fecha_reg', type: 'date', dateFormat:'Y-m-d H:i:s.u'},
 		{name:'id_usuario_mod', type: 'numeric'},
-		{name:'fecha_mod', type: 'date', dateFormat:'Y-m-d H:i:s'},
+		{name:'fecha_mod', type: 'date', dateFormat:'Y-m-d H:i:s.u'},
 		{name:'usr_reg', type: 'string'},
 		{name:'usr_mod', type: 'string'},
 		{name:'desc_catalogo_tipo', type: 'string'}

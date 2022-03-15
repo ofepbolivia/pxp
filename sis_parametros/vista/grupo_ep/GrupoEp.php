@@ -83,6 +83,22 @@ Phx.vista.GrupoEp=Ext.extend(Phx.gridInterfaz,{
                 form:true
         },
         {
+            config: {
+                name: 'estado_reg_uo',
+                fieldLabel: 'Estado Unidad',
+                allowBlank: true,
+                anchor: '30%',
+                gwidth: 80,
+                maxLength: 100
+
+            },
+            type: 'TextField',
+            filters: {pfiltro: 'estado_reg_uo', type: 'string'},
+            id_grupo: 1,
+            grid: true,
+            form: false
+        },
+        {
             config:{
                 name: 'estado_reg',
                 fieldLabel: 'Estado Reg.',
@@ -94,7 +110,7 @@ Phx.vista.GrupoEp=Ext.extend(Phx.gridInterfaz,{
             type:'TextField',
             filters:{pfiltro:'gqp.estado_reg',type:'string'},
             id_grupo:1,
-            grid:true,
+            grid:false,
             form:false
         },
 		{
@@ -176,7 +192,8 @@ Phx.vista.GrupoEp=Ext.extend(Phx.gridInterfaz,{
 		{name:'fecha_mod', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
 		{name:'id_usuario_mod', type: 'numeric'},
 		{name:'usr_reg', type: 'string'},
-		{name:'usr_mod', type: 'string'},'ep','desc_uo','id_uo'
+		{name:'usr_mod', type: 'string'},'ep','desc_uo','id_uo',
+        'estado_reg_uo'
 	],
 	sortInfo:{
 		field: 'id_grupo_ep',

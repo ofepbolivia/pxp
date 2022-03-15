@@ -281,6 +281,52 @@ class MODPersona extends MODbase{
         return $this->respuesta;
 
     }
+    function listarPersonaV2(){
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento='segu.ft_persona_sel';// nombre procedimiento almacenado
+        $this->transaccion='SEG_PERSONV2_SEL';//nombre de la transaccion
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+
+        //defino varialbes que se captran como retornod e la funcion
+        $this->captura('id_persona','integer');
+        $this->captura('ap_materno','varchar');
+        $this->captura('ap_paterno','varchar');
+        $this->captura('nombre','varchar');
+        $this->captura('nombre_completo1','text');
+        $this->captura('nombre_completo2','text');
+        $this->captura('ci','varchar');
+        $this->captura('correo','varchar');
+        $this->captura('celular1','varchar');
+        $this->captura('num_documento','integer');
+        $this->captura('telefono1','varchar');
+        $this->captura('telefono2','varchar');
+        $this->captura('celular2','varchar');
+        $this->captura('fecha_nacimiento','date');
+        $this->captura('genero','varchar');
+        $this->captura('direccion','varchar');
+        $this->captura('tipo_documento','varchar');
+        $this->captura('expedicion','varchar');
+        $this->captura('id_tipo_doc_identificacion','integer');
+        $this->captura('nacionalidad','varchar');
+        $this->captura('id_lugar','integer');
+        $this->captura('discapacitado','varchar');
+        $this->captura('nombre_lugar','varchar');
+
+        $this->captura('fax','varchar');
+        $this->captura('pag_web','varchar');
+        $this->captura('observaciones','varchar');
+
+
+
+        //Ejecuta la funcion
+        $this->armarConsulta();
+        //var_dump($this->consulta());exit;
+        $this->ejecutarConsulta();
+
+
+        return $this->respuesta;
+
+    }
 
 }
 ?>

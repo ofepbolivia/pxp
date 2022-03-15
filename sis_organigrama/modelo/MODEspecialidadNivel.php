@@ -50,6 +50,8 @@ class MODEspecialidadNivel extends MODbase{
 		//Define los parametros para la funcion
 		$this->setParametro('codigo','codigo','varchar');
 		$this->setParametro('nombre','nombre','varchar');
+		$this->setParametro('abreviatura','abreviatura','varchar');
+		$this->setParametro('firma','firma','varchar');
 		$this->setParametro('estado_reg','estado_reg','varchar');
 
 		//Ejecuta la instruccion
@@ -70,6 +72,8 @@ class MODEspecialidadNivel extends MODbase{
 		$this->setParametro('id_especialidad_nivel','id_especialidad_nivel','int4');
 		$this->setParametro('codigo','codigo','varchar');
 		$this->setParametro('nombre','nombre','varchar');
+		$this->setParametro('abreviatura','abreviatura','varchar');
+		$this->setParametro('firma','firma','varchar');
 		$this->setParametro('estado_reg','estado_reg','varchar');
 
 		//Ejecuta la instruccion

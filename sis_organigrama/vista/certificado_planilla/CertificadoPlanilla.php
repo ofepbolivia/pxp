@@ -16,7 +16,7 @@ header("content-type: text/javascript; charset=UTF-8");
         title: 'Certificado',
         nombreVista: 'CertificadoPlanilla',
         constructor: function (config) {
-		this.tbarItems = ['-',this.cmbGestion,'-'];        	
+		this.tbarItems = ['-',this.cmbGestion,'-'];
             this.Atributos.unshift({
                 config: {
                     name: 'control',
@@ -43,7 +43,20 @@ header("content-type: text/javascript; charset=UTF-8");
             this.Atributos[this.getIndAtributo('impreso')].grid=false;
             Phx.vista.CertificadoPlanilla.superclass.constructor.call(this, config);
             this.grid.addListener('cellclick', this.oncellclick,this);
-            this.store.baseParams={tipo_interfaz:this.nombreVista};
+            this.store.baseParams={tipo_interfaz:this.nombreVista};            
+            Ext.Ajax.request({
+                url: '../../sis_parametros/control/Gestion/obtenerGestionByFecha',
+                params: {fecha: new Date()},
+                success: function (resp) {
+                    var reg = Ext.decode(Ext.util.Format.trim(resp.responseText));
+                    this.cmbGestion.setValue(reg.ROOT.datos.anho);
+                    this.cmbGestion.setRawValue(reg.ROOT.datos.anho);                    
+                    // this.load({params: {start: 0, limit: this.tam_pag}});
+                },
+                failure: this.conexionFailure,
+                timeout: this.timeout,
+                scope: this
+            });                            
             this.cmbGestion.on('select',this.capturarEventos, this);
             this.store.baseParams.pes_estado = 'borrador';
             var date = new Date();
@@ -117,20 +130,50 @@ header("content-type: text/javascript; charset=UTF-8");
             }
             return tb;
         },
-    cmbGestion : new Ext.form.ComboBox({
-        name:'gestion',
-        store:['2020', '2019','2018','2017','2016','2015','2014','2013','2012','2011','2010','2009','2008','2007','2006','2005','2004'],
-        typeAhead: true,
-        value: '2020',
-        mode: 'local',
-        triggerAction: 'all',
-        emptyText:'Géstion...',
-        selectOnFocus:true,
-        width:135,
-    }),
-    capturarEventos: function () {         	
-        this.store.baseParams.gestion=this.cmbGestion.getValue();     
+        cmbGestion: new Ext.form.ComboBox({
+            fieldLabel: 'Gestion',
+            allowBlank: false,
+            emptyText: 'Gestion...',
+            blankText: 'Año',
+            store: new Ext.data.JsonStore(
+                {
+                    url: '../../sis_parametros/control/Gestion/listarGestion',
+                    id: 'id_gestion',
+                    root: 'datos',
+                    sortInfo: {
+                        field: 'gestion',
+                        direction: 'DESC'
+                    },
+                    totalProperty: 'total',
+                    fields: ['id_gestion', 'gestion'],
+                    // turn on remote sorting
+                    remoteSort: true,
+                    baseParams: {par_filtro: 'gestion'}
+                }),
+            valueField: 'gestion',
+            triggerAction: 'all',
+            displayField: 'gestion',
+            hiddenName: 'id_gestion',
+            mode: 'remote',
+            pageSize: 5,
+            queryDelay: 500,
+            listWidth: '280',
+            width: 80
+        }),        
+    // cmbGestion : new Ext.form.ComboBox({
+    //     name:'gestion',
+    //     store:['2022', '2021', '2020', '2019','2018','2017','2016','2015','2014','2013','2012','2011','2010','2009','2008','2007','2006','2005','2004'],
+    //     typeAhead: true,
+    //     value: '2022',
+    //     mode: 'local',
+    //     triggerAction: 'all',
+    //     emptyText:'Géstion...',
+    //     selectOnFocus:true,
+    //     width:135,
+    // }),
+    capturarEventos: function () {        
+        this.store.baseParams.gestion=this.cmbGestion.getValue();
         this.load({params:{start:0, limit:this.tam_pag}});
-    },        
+    },
     }
 </script>

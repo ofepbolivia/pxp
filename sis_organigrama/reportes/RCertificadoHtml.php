@@ -9,28 +9,38 @@ class RCertificadoHtml{
             $tipo = 'del interesado';
             $gen = 'el';
             $tra = 'trabajor';
-            $tipol = 'al interesado';            
+            $tipol = 'al interesado';
         }else{
             $tipo = 'de la interesada';
             $gen = 'la';
             $tra = 'trabajadora';
             $tipol = 'a la interesada';
-            
+
         }
 
         //$fecha = date("d/m/Y");
-        $fecha = $datos['fecha_solicitud'];        
-        
-        if ($fecha >= '2019-12-18'){
-            $firma_gerente = '../../../sis_organigrama/media/firma_eduardo_degadillo_poepsel.png';
-            $w = 300;
-            $h = 140;
-            $cargo = 'Gerente Administrativo Financiero';  
-            $jefe = $datos['nuevo_jefe']; 
-            $gen_gerente = 'El suscrito';                     
-            $siglas = 'JDP';
-            $firma_responsable = $datos['nuevo_jefe'];
-        }else{
+        $fecha = $datos['fecha_solicitud'];
+
+        if ($fecha > '2020-12-04'){
+          $firma_gerente = '../../../sis_organigrama/media/firma.png';
+          $cargo = 'Jefe Departamento Talento Humano';
+          $w = 160;
+          $h = 120;
+          $jefe = $datos['jefa_recursos'];
+          $gen_gerente = 'La suscrita';
+          $siglas = 'GAG';
+          $firma_responsable = $datos['jefa_recursos'];
+        }else if ($fecha >= '2019-12-18' and $fecha <= '2020-12-04') {
+          $firma_gerente = '../../../sis_organigrama/media/firma_eduardo_degadillo_poepsel.png';
+          $w = 300;
+          $h = 140;
+          $cargo = 'Gerente Administrativo Financiero';
+          $jefe = $datos['nuevo_jefe'];
+          $gen_gerente = 'El suscrito';
+          $siglas = 'JDP';
+          $firma_responsable = $datos['nuevo_jefe'];
+        }
+        else{
             $firma_gerente = '../../../sis_organigrama/media/firma.png';
             $cargo = 'Jefe de Recursos Humanos';
             $w = 160;
@@ -40,11 +50,14 @@ class RCertificadoHtml{
             $siglas = 'GAG';
             $firma_responsable = $datos['jefa_recursos'];
         }
-        
+
 
         $cadena = 'Numero Tramite: '.$datos['nro_tramite']."\n".'Fecha Solicitud: '.$datos['fecha_solicitud']."\n".'Funcionario: '.$datos['nombre_funcionario']."\n".'Firmado Por: '.$firma_responsable."\n".'Emitido Por: '.$datos['fun_imitido'];
         $barcodeobj = new TCPDF2DBarcode($cadena, 'QRCODE,M');
-
+        $item = '';
+        if (intval($datos['nro_item']) > 0){
+            $item = ', con Nº de item '.$datos['nro_item'];
+        }
 
 
             $this->html.='<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -61,7 +74,7 @@ class RCertificadoHtml{
 		<br><br><br>
 ';
         if ($datos['tipo_certificado'] =='General') {
-            $this->html .= '			
+            $this->html .= '
 <br>
 <br>
 <br>';
@@ -87,7 +100,7 @@ class RCertificadoHtml{
 <tr>
 <td>&nbsp;</td>
 <td><p style="text-align: justify"><FONT FACE="Century Gothic" style="font-size: 12pt;" >Que, de la revisión de la carpeta que cursa en el Departamento de Recursos Humanos, se evidencia que '.$gen.' <b>'.$datos['genero'].'. '.$datos['nombre_funcionario'].'</b> con C.I. '.$datos['ci'].' '.$datos['expedicion'].', ingresó a la Empresa Pública Nacional Estratégica "Boliviana de Aviación - BoA"
-         el '.$this->obtenerFechaEnLetra($datos['fecha_contrato']).', y actualmente ejerce el cargo de <b>'.$datos['nombre_cargo'].', con Nº de item '.$datos['nro_item'].'</b>, dependiente de la '.$datos['nombre_unidad'].', con una remuneración mensual de Bs. '.number_format($datos['haber_basico'],2,",",".") .'.- ('.$datos['haber_literal'].' Bolivianos).</FONT></p>
+         el '.$this->obtenerFechaEnLetra($datos['fecha_contrato']).', y actualmente ejerce el cargo de <b>'.$datos['nombre_cargo'].$item.'</b>, dependiente de la '.$datos['nombre_unidad'].', con una remuneración mensual de Bs. '.number_format($datos['haber_basico'],2,",",".") .'.- ('.$datos['haber_literal'].' Bolivianos).</FONT></p>
 </td>
 <td>&nbsp;</td>
 </tr>';
@@ -105,24 +118,16 @@ class RCertificadoHtml{
         $this->html.='<tr>
 <td>&nbsp;</td>
 <td align="justify"><FONT FACE="Century Gothic" style="font-size: 12pt;">Es cuanto se certifica, para fines de derecho que convengan '.$tipol.'.<br><br>Cochabamba, '.$this->obtenerFechaEnLetra($datos['fecha_solicitud']).'.</FONT>
+<br>
+<table style="width: 100%;" border="0">
+<tr style="height: 80px;">
+<td align="center"> <img src = "../../../reportes_generados/'.$this->codigoQr ($cadena,$datos['nro_tramite']).'" align= "right " width="100" height="90" title="impreso"/></td>
+<td><FONT FACE="Century Gothic" SIZE=1 >'.$siglas.'/'.$datos['iniciales'].'<br/>Cc/Arch</FONT><td>
+<td align="center"  ><img src = "'.$firma_gerente.'" align= "right " width="'.$w.'" height="'.$h.'" title="impreso"/></td>
+</tr>
+</table>
 </td>
 <td>&nbsp;</td>
-</tr>
-</tbody>
-</table>
-<table style="width: 100%;" border="0">
-<tbody>
-<tr style="height: 80px;">
-
-<td></td>
-<td align="left"> <img src = "../../../reportes_generados/'.$this->codigoQr ($cadena,$datos['nro_tramite']).'" align= "right " width="90" height="90" title="impreso"/><br><br><FONT FACE="Century Gothic" SIZE=1 >'.$siglas.'/'.$datos['iniciales'].'<br/>Cc/Arch</FONT></td>
-<td align="center"  ><img src = "'.$firma_gerente.'" align= "right " width="'.$w.'" height="'.$h.'" title="impreso"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-</tr>
-<tr style="height: 50px;">
-
-<td align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-<td style="center: 38px; width: 20%;"></td>
-<td align="right"> </td>
 </tr>
 </tbody>
 </table>
@@ -136,18 +141,18 @@ class RCertificadoHtml{
 						End Sub
 						document.write "<object ID="WB" WIDTH=0 HEIGHT=0 CLASSID="CLSID:8856F961-340A-11D0-A96B-00C04FD705A2"></object>"
 </script>
-						
-						<script type="text/javascript"> 
+
+						<script type="text/javascript">
 						setTimeout(function(){
 							 self.print();
-							 
-							}, 1000);					
-						
+
+							}, 1000);
+
 						setTimeout(function(){
-							 self.close();							 
-							}, 2000);	
-						</script> 
-						
+							 self.close();
+							}, 2000);
+						</script>
+
 </body>
 </html>';
 

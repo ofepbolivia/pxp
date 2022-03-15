@@ -45,7 +45,8 @@ v_id_deptos  varchar;
 
 v_estacion			varchar;
 v_filtro_depto		varchar;
-
+v_id_funcionario_solicitante integer;
+v_id_usuario 		integer;
 
 BEGIN
 
@@ -271,6 +272,24 @@ BEGIN
 
            v_inner='';
 
+           /*Aumentando para recuperar datos del grupo EP desde la variable Global (Ismael Valdivia 28/10/2021)*/
+           if (pxp.f_existe_parametro(par_tabla,'desde_adquisiciones')) then
+           --raise exception 'Aqui llega data %',v_parametros.desde_adquisiciones;
+               if (v_parametros.desde_adquisiciones = 'si') then
+                    v_id_funcionario_solicitante = pxp.f_get_variable_global('funcionario_solicitante_gm');        	/**********************************************************************/
+
+                    select usu.id_usuario into v_id_usuario
+                    from orga.vfuncionario_persona per
+                    inner join segu.tusuario usu on usu.id_persona = per.id_persona
+                    where per.id_funcionario = v_id_funcionario_solicitante;
+                else
+                	v_id_usuario = par_id_usuario;
+                end if;
+             else
+               v_id_usuario = par_id_usuario;
+             end if;
+           /*****************************************************************************************************/
+
           IF   par_administrador != 1 THEN
 
               select
@@ -278,7 +297,7 @@ BEGIN
               into
               v_filadd
              from segu.tusuario_grupo_ep uge
-             where  uge.id_usuario = par_id_usuario;
+             where  uge.id_usuario = v_id_usuario;
 
 
              IF  v_filadd is NULL THEN
@@ -358,6 +377,25 @@ BEGIN
           v_inner='';
 
 
+           /*Aumentando para recuperar datos del grupo EP desde la variable Global (Ismael Valdivia 28/10/2021)*/
+           if (pxp.f_existe_parametro(par_tabla,'desde_adquisiciones')) then
+           --raise exception 'Aqui llega data %',v_parametros.desde_adquisiciones;
+               if (v_parametros.desde_adquisiciones = 'si') then
+                    v_id_funcionario_solicitante = pxp.f_get_variable_global('funcionario_solicitante_gm');        	/**********************************************************************/
+
+                    select usu.id_usuario into v_id_usuario
+                    from orga.vfuncionario_persona per
+                    inner join segu.tusuario usu on usu.id_persona = per.id_persona
+                    where per.id_funcionario = v_id_funcionario_solicitante;
+                else
+                	v_id_usuario = par_id_usuario;
+                end if;
+             else
+               v_id_usuario = par_id_usuario;
+             end if;
+           /*****************************************************************************************************/
+
+
          IF   par_administrador != 1 THEN
 
               select
@@ -365,7 +403,7 @@ BEGIN
               into
               v_filadd
              from segu.tusuario_grupo_ep uge
-             where  uge.id_usuario = par_id_usuario;
+             where  uge.id_usuario = v_id_usuario;
 
               IF  v_filadd is NULL THEN
 
@@ -813,7 +851,7 @@ BEGIN
                                   FROM param.tdepto DEPPTO
                                   INNER JOIN segu.tsubsistema SUBSIS on SUBSIS.id_subsistema=DEPPTO.id_subsistema
 
-                                  WHERE DEPPTO.estado_reg =''activo'' and DEPPTO.prioridad = 3 and '||v_filadd;
+                                  WHERE DEPPTO.estado_reg =''activo'' /*and DEPPTO.prioridad = 3*/ and '||v_filadd;
 
 
 
@@ -876,3 +914,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION param.ft_depto_sel (par_administrador integer, par_id_usuario integer, par_tabla varchar, par_transaccion varchar)
+  OWNER TO postgres;

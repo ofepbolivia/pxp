@@ -36,7 +36,8 @@ class MODEscalaSalarial extends MODbase{
 		$this->captura('fecha_mod','timestamp');
 		$this->captura('usr_reg','varchar');
 		$this->captura('usr_mod','varchar');
-		
+		$this->captura('tipo','varchar');
+
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
@@ -60,6 +61,7 @@ class MODEscalaSalarial extends MODbase{
 		$this->setParametro('nro_casos','nro_casos','int4');
 		$this->setParametro('codigo','codigo','varchar');
 		$this->setParametro('fecha_ini','fecha_ini','date');
+		$this->setParametro('tipo','tipo','varchar');
 
 
 		//Ejecuta la instruccion
@@ -86,6 +88,7 @@ class MODEscalaSalarial extends MODbase{
 		$this->setParametro('nombre','nombre','varchar');
 		$this->setParametro('nro_casos','nro_casos','int4');
 		$this->setParametro('codigo','codigo','varchar');
+        $this->setParametro('tipo','tipo','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();

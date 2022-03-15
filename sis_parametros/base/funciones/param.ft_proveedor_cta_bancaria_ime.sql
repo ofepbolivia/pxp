@@ -90,7 +90,9 @@ BEGIN
 			id_usuario_reg,
 			id_usuario_mod,
 			fecha_mod,
-            prioridad
+            prioridad,
+            observaciones
+
           	) values(
 			v_parametros.id_banco_beneficiario,
             v_parametros.fw_aba_cta,
@@ -106,8 +108,8 @@ BEGIN
 			p_id_usuario,
 			null,
 			null,
-			v_parametros.prioridad
-
+			v_parametros.prioridad,
+            v_parametros.observaciones
 
 			)RETURNING id_proveedor_cta_bancaria into v_id_proveedor_cta_bancaria;
 
@@ -139,14 +141,14 @@ BEGIN
                  inner join param.vproveedor vp on vp.id_proveedor = p.id_proveedor
                  where p.id_proveedor= v_parametros.id_proveedor;
 
-                IF   exists(select 1
+                /*IF   exists(select 1
                             from param.tproveedor_cta_bancaria p
                             where p.estado_reg = 'activo'
                             and  p.prioridad =  v_parametros.prioridad
                             and p.id_proveedor = v_parametros.id_proveedor) THEN
 
                    raise exception 'Prioridad ya registrado con el Número de Cuenta % y Proveedor %',v_nro_cuenta,UPPER(v_proveedor);
-               END IF;
+               END IF;*/
               --
 
 			--Sentencia de la modificacion
@@ -162,7 +164,8 @@ BEGIN
 			id_usuario_ai = v_parametros._id_usuario_ai,
 			usuario_ai = v_parametros._nombre_usuario_ai,
             estado_cta = v_parametros.estado_cta,
-            prioridad = v_parametros.prioridad
+            prioridad = v_parametros.prioridad,
+            observaciones = v_parametros.observaciones
 			where id_proveedor_cta_bancaria=v_parametros.id_proveedor_cta_bancaria;
 
 			--Definicion de la respuesta

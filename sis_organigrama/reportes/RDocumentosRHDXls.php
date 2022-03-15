@@ -115,22 +115,35 @@ class RDocumentosRHDXls
         $this->docexcel->getActiveSheet()->mergeCells('B1:B2');
         $this->docexcel->getActiveSheet()->mergeCells('C1:C2');
         $this->docexcel->getActiveSheet()->mergeCells('D1:D2');
+        $this->docexcel->getActiveSheet()->mergeCells('E1:E2');
+        $this->docexcel->getActiveSheet()->mergeCells('F1:F2');
+        $this->docexcel->getActiveSheet()->mergeCells('G1:G2');
 
-        //*************************************Cabecera*****************************************
+        /*************************************Cabecera*****************************************/
         $this->docexcel->getActiveSheet()->getColumnDimension($this->celdas[0])->setWidth(7);
         $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(0,1,'Nro');
         $this->docexcel->getActiveSheet()->getColumnDimension($this->celdas[1])->setWidth(40);
         $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(1,1,'GERENCIA');
         $this->docexcel->getActiveSheet()->getColumnDimension($this->celdas[2])->setWidth(40);
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(2,1,'NOMBRE Y APELLIDO');
-        $this->docexcel->getActiveSheet()->getColumnDimension($this->celdas[3])->setWidth(20);
-        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3,1,'CI');
 
-        $column = 3;
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(2,1,'REGIONAL');
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->celdas[2])->setWidth(20);
+
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3,1,'NOMBRE Y APELLIDO');
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->celdas[3])->setWidth(30);
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4,1,'CI');
+
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5,1,'CARGO');
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->celdas[3])->setWidth(30);
+
+        $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6,1,'FECHA NACIMIENTO');
+        $this->docexcel->getActiveSheet()->getColumnDimension($this->celdas[3])->setWidth(30);
+
+        $column = 6;
         $headers_size = 0;
         $codigo = '';
-        $inicio = 4;
-        $fin = 4;
+        $inicio = 5;
+        $fin = 5;
         $column_count = 0;
         $headers_range = array();
 
@@ -164,24 +177,27 @@ class RDocumentosRHDXls
         }
         $this->docexcel->getActiveSheet()->getStyle('A1:'.$this->celdas[$column].'2')->applyFromArray($styleTitulos);
         $range_end = $this->celdas[$column];
-        //*************************************Fin Cabecera*****************************************
+        /*************************************Fin Cabecera*****************************************/
 
         $fila = 3;
         $contador = 1;
         $tamano = count($datos)+2;
         $this->docexcel->getActiveSheet()->freezePaneByColumnAndRow(0,3);
-        
-        $column = 4;
+
+        $column = 7;
         $codigo = '';
         $duplicado = '';
-        /////////////////////***********************************Detalle***********************************************
+        /***********************************Detalle***********************************************/
 
         foreach($datos as $value) {
 
             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(0,$fila,$contador);
             $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(1,$fila,$value['gerencia']);
-            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(2,$fila,$value['desc_funcionario']);
-            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3,$fila,$value['ci']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(2,$fila,$value['lugar']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3,$fila,$value['desc_funcionario']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4,$fila,$value['ci']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5,$fila,$value['cargo']);
+            $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6,$fila,DateTime::createFromFormat('Y-m-d', $value['fecha_nacimiento'])->format('d/m/Y'));
 
             $file_content = json_decode($value['documento'])->files;
 
@@ -233,7 +249,13 @@ class RDocumentosRHDXls
                 continue;
             }
         }
-        //************************************************Fin Detalle***********************************************
+        /************************************************Fin Detalle***********************************************/
+    }
+
+    public function addHoja($name,$index){
+        $this->docexcel->createSheet($index)->setTitle($name);
+        $this->docexcel->setActiveSheetIndex($index);
+        return $this->docexcel;
     }
 
     function checkDate($date) {

@@ -1121,8 +1121,15 @@ Phx.CP = function() {
                 var ajax = {
                     success: function(resp) {
                         var regreso = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
-                        sw_auten_veri = false;
-                        if (regreso.success) {
+                        sw_auten_veri=false;
+                        if(regreso.success){
+
+                            //Aqui aumentamos el local storage para iniciar sesion automaticamente (Ismael Valdivia)
+                            localStorage.aut = JSON.stringify(regreso);
+                            /**************************************************************************************/
+
+
+
                             // copia configuracion inicial recuperada
                             Ext.apply(Phx.CP.config_ini, regreso);
                             //muestra nombre de usuario y base de datos

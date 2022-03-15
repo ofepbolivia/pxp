@@ -123,6 +123,15 @@ class ACTCargo extends ACTbase{
         $this->res=$this->objFunc->clonarPresupuesto($this->objParam);
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
+
+    //(franklin.espinoza) 05/08/2021
+    /**************************************************PRESUPUESTO**************************************************/
+    function loadCargoPresupuesto(){
+        $this->objFunc=$this->create('MODCargo');
+        $this->res=$this->objFunc->loadCargoPresupuesto($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+    /**************************************************PRESUPUESTO**************************************************/
 }
 
 ?>

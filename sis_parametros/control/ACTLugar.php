@@ -29,8 +29,35 @@ class ACTLugar extends ACTbase{
 		if ($this->objParam->getParametro('tipos') != '') {
 			$this->objParam->addFiltro("lug.tipo  in (". $this->objParam->getParametro('tipos') . ")");
 		}
+
+		if ($this->objParam->getParametro('id_lugar_fk') != '' && $this->objParam->getParametro('id_lugar_fk')!=0 ) {
+			$this->objParam->addFiltro("lug.id_lugar_fk  in (". $this->objParam->getParametro('id_lugar_fk') . ")");
+		}
+
+		if ($this->objParam->getParametro('id_lugar_fk2') != '') {
+			$this->objParam->addFiltro("lug.id_lugar_fk  in (". $this->objParam->getParametro('id_lugar_fk') . ")");
+		}
+
+		//21-02-2021 (may)
+		if ($this->objParam->getParametro('lugar_estacion') == 'Bol') {
+			$this->objParam->addFiltro("lug.id_lugar_fk in (1)");
+		}
+
+
 		$this->objFunc=$this->create('MODLugar');
 		$this->res=$this->objFunc->listarLugar();
+		if($this->objParam->getParametro('_adicionar')!=''){
+
+			$respuesta = $this->res->getDatos();
+
+	    array_unshift ( $respuesta, array(  'id_lugar'=>'0',
+								                          'id_lugar_fk'=>'0',
+									                        'codigo'=>'Todos',
+																					'nombre'=>'Todos',
+																					'tipo'=>'Todos'
+                                          ));
+			$this->res->setDatos($respuesta);
+		}
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
 
@@ -117,6 +144,31 @@ class ACTLugar extends ACTbase{
 	function eliminarLugar(){
 		$this->objFunc=$this->create('MODLugar');
 		$this->res=$this->objFunc->eliminarLugar();
+		$this->res->imprimirRespuesta($this->res->generarJson());
+	}
+
+	function listarLugarClasificado(){
+		$this->objParam->defecto('ordenacion','id_lugar');
+
+		$this->objParam->defecto('dir_ordenacion','asc');
+
+		if ($this->objParam->getParametro('es_regional') != '') {
+			$this->objParam->addFiltro("lug.es_regional  in (''". $this->objParam->getParametro('es_regional') . "'')");
+		}
+		/*Aumentando para listar solo los paises*/
+		if ($this->objParam->getParametro('pais') != '') {
+			$this->objParam->addFiltro("lug.id_sql_server is not null and lug.tipo = ''". $this->objParam->getParametro('pais') . "''");
+		}
+		/*******************************************/
+		if ($this->objParam->getParametro('tipo') != '') {
+			$this->objParam->addFiltro("lug.tipo  in (''". $this->objParam->getParametro('tipo') . "'')");
+		}
+
+		if ($this->objParam->getParametro('tipos') != '') {
+			$this->objParam->addFiltro("lug.tipo  in (". $this->objParam->getParametro('tipos') . ")");
+		}
+		$this->objFunc=$this->create('MODLugar');
+		$this->res=$this->objFunc->listarLugarClasificado();
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
 

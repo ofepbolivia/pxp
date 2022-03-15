@@ -723,7 +723,58 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 	   	  alert('en modo consulta no peude subir archivos');
 	   }
     },
-	
+    // ini breydi vasquez 20/02/2020
+    taskOne: function(record){
+
+        //Escaneados
+        var data = "id=" + record.data['id_documento_wf'];
+        data += "&extension=" + record.data['extension'];
+        data += "&sistema=sis_workflow";
+        data += "&clase=DocumentoWf";
+        data += "&url="+record.data['url'];
+        //return  String.format('{0}',"<div style='text-align:center'><a target=_blank href = '../../../lib/lib_control/CTOpenFile.php?"+ data+"' align='center' width='70' height='70'>Abrir</a></div>");
+        window.open('../../../lib/lib_control/CTOpenFile.php?' + data);
+    },
+
+    taskTwo: function(record){
+        Ext.Ajax.request({
+            url : '../../sis_workflow/control/DocumentoWf/insertarRegistroOpenDoc',
+            params : {
+                id_proceso_wf    		  : record.data.id_proceso_wf,
+                id_tipo_documento		  : record.data.id_tipo_documento,
+                id_documento_wf           : record.data.id_documento_wf,
+                historico                 : 'no',
+                id_documento_historico_wf : null,
+                url                       : record.data.url,
+                extension                 : record.data.extension,
+                action                    : record.data.action
+            },
+            success : function (resp) {
+                var reg = Ext.decode(Ext.util.Format.trim(resp.responseText));
+                if(!reg.ROOT.error) {
+                    this.reload();
+                }
+            },
+            failure : this.conexionFailure,
+            timeout : this.timeout,
+            scope : this
+        });
+    },
+
+    taskThree: function(record){
+        //Reportes/Formularios
+        Phx.CP.loadingShow();
+        Ext.Ajax.request({
+            url:'../../'+record.data.action,
+            params:{'id_proceso_wf':record.data.id_proceso_wf, 'action':record.data.action},
+            success: this.successExport,
+            failure: this.conexionFailure,
+            timeout:this.timeout,
+            scope:this
+        });
+    },
+    // fin breydi vasquez 20/02/2020
+
 	oncellclick : function(grid, rowIndex, columnIndex, e) {
 		
 	    var record = this.store.getAt(rowIndex),
@@ -745,14 +796,20 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 	    } 
 	    else if (fieldName == 'chequeado') {
 	    	if(record.data['extension'].length!=0) {
-	    		//Escaneados
-	            var data = "id=" + record.data['id_documento_wf'];
-	            data += "&extension=" + record.data['extension'];
-	            data += "&sistema=sis_workflow";
-	            data += "&clase=DocumentoWf";
-	            data += "&url="+record.data['url'];
-	            //return  String.format('{0}',"<div style='text-align:center'><a target=_blank href = '../../../lib/lib_control/CTOpenFile.php?"+ data+"' align='center' width='70' height='70'>Abrir</a></div>");
-	            window.open('../../../lib/lib_control/CTOpenFile.php?' + data);
+
+                // Modificado breydi vasquez 20/02/2020
+	    	    var that = this;
+
+	    	    async function main () {
+                    try {
+                        await Promise.all([that.taskOne(record), that.taskTwo(record)]);
+                    }catch (error) {
+                        alert(error+' Comuniquece con el Departamento de Sistemas');
+                    }
+                }
+                main();
+                // fin breydi vasquez 20/02/2020
+
 	        } else if(record.data.nombre_vista){
 	        	//Plantillas
 	        	Phx.CP.loadingShow();
@@ -773,16 +830,20 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 	        	
 	        	
 	        } else if (record.data['tipo_documento'] == 'generado') {
-	        	//Reportes/Formularios
-	        	Phx.CP.loadingShow();
-	       		Ext.Ajax.request({
-	                url:'../../'+record.data.action,
-	                params:{'id_proceso_wf':record.data.id_proceso_wf, 'action':record.data.action},
-	                success: this.successExport,
-	                failure: this.conexionFailure,
-	                timeout:this.timeout,
-	                scope:this
-	            });
+
+	    	    // Modificado breydi vasquez 20/02/2020
+                var that = this;
+
+                async function main() {
+                    try {
+                        await Promise.all([that.taskThree(record), that.taskTwo(record)]);
+                    }catch (error) {
+                        alert(error+' Comuniquece con el Departamento de Sistemas');
+                    }
+                }
+                main();
+                // fin breydi vasquez 20/02/2020
+
 	       	} else {
 	       		alert('No se ha subido ningun archivo para este documento');
 	       	} 
@@ -913,21 +974,29 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 	east:
          {
           url:'../../../sis_workflow/vista/documento_historico_wf/DocumentoHistoricoWf.php',
-          title:'Histórico', 
+          title:'Historial de Documentos',
           width: '30%',
           collapsed: true,
           cls:'DocumentoHistoricoWf'
          },
-         
-	south:
+    // Modificado Breydi vasquez 20/02/2020
+    south:
          {
           url: '../../../sis_workflow/vista/tipo_documento_estado/TipoDocumentoEstadoWF.php',
-          title: 'Estados por momento', 
+          title: 'Configuración del Documento',
           width: 400,
-           height:'40%',
-           collapsed:true,
+          height:'50%',
+          collapsed:true,
           cls: 'TipoDocumentoEstadoWF'
          },
+    west:{
+         url: '../../../sis_workflow/vista/documento_wf/HistorialDocumentosAbiertos.php',
+         width: '40%',
+         collapsed:true,
+         cls: 'HistorialDocumentosAbiertos',
+        title: 'Historial de Visualizaciones',
+         },
+    //fin Breydi vasquez 20/02/2020
 	
 	cambiarMomento:function(){
 	    Phx.CP.loadingShow();

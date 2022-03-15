@@ -1,30 +1,31 @@
 <?php
 /***
  Nombre: 	MODLog.php
- Proposito: Clase de Modelo, que contiene la definicion y llamada a funciones especificas relacionadas 
+ Proposito: Clase de Modelo, que contiene la definicion y llamada a funciones especificas relacionadas
  a la tabla tlog del esquema SEGU
  Autor:		Kplian
  Fecha:		04/06/2011
- */ 
+ */
 class MODLog extends MODbase{
-	
+
 	function __construct(CTParametro $pParam){
-		
+
 		parent::__construct($pParam);
-		
+
 	}
-	
+
 	function listarLog(){
 		//Definicion de variables para ejecucion del procedimientp
 		$this->procedimiento='segu.ft_log_sel';// nombre procedimiento almacenado
 		$this->transaccion='SEG_LOG_SEL';//nombre de la transaccion
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
-		
+
 		$this->setParametro('gestion','gestion','varchar');
 		$this->setParametro('periodo','periodo','varchar');
+		$this->setParametro('id_log_consul','id_log_consul','int4');
 		//Definicion de la lista del resultado del query
-	
-		
+
+
 		$this->captura('identificador','integer');
 		$this->captura('id_usuario','integer');
 		$this->captura('cuenta_usuario','varchar');
@@ -45,11 +46,12 @@ class MODLog extends MODbase{
 		$this->captura('descripcion_transaccion','text');
 		$this->captura('codigo_subsistema','varchar');
 		$this->captura('usuario_ai','varchar');
-				
+
 		//Ejecuta la funcion
 		$this->armarConsulta();
+		// echo $this->consulta;exit;
 		$this->ejecutarConsulta();
-		
+
 		return $this->respuesta;
 
 	}
@@ -59,12 +61,12 @@ class MODLog extends MODbase{
 		$this->procedimiento='segu.ft_log_sel';// nombre procedimiento almacenado
 		$this->transaccion='SEG_LOGHOR_SEL';//nombre de la transaccion
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
-		
+
 		$this->setParametro('gestion','gestion','varchar');
 		$this->setParametro('periodo','periodo','varchar');
 		//Definicion de la lista del resultado del query
-	
-		
+
+
 		$this->captura('identificador','integer');
 		$this->captura('id_usuario','integer');
 		$this->captura('cuenta_usuario','varchar');
@@ -86,26 +88,26 @@ class MODLog extends MODbase{
 		$this->captura('codigo_subsistema','varchar');
 		$this->captura('usuario_ai','varchar');
 		$this->captura('dia_semana','varchar');
-				
+
 		//Ejecuta la funcion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
-		
+
 		return $this->respuesta;
 
 	}
-	
+
 	function listarLogMonitor(){
 		//Definicion de variables para ejecucion del procedimientp
 		$this->procedimiento='segu.ft_log_sel';// nombre procedimiento almacenado
 		$this->transaccion='SEG_LOGMON_SEL';//nombre de la transaccion
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
-		
+
 		$this->arreglo=array("archivo_log" =>$_SESSION['_FOLDER_LOGS_BD'].$_SESSION['_NOMBRE_LOG_BD']);
 		$this->setParametro('archivo_log','archivo_log','varchar');
 		//Definicion de la lista del resultado del query
-	
-		
+
+
 		$this->captura('identificador','integer');
 		$this->captura('id_usuario','integer');
 		$this->captura('cuenta_usuario','varchar');
@@ -126,23 +128,23 @@ class MODLog extends MODbase{
 		$this->captura('descripcion_transaccion','text');
 		$this->captura('codigo_subsistema','varchar');
 		$this->captura('usuario_ai','varchar');
-		
-				
+
+
 		//Ejecuta la funcion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
-		
+
 		return $this->respuesta;
 
 	}
-	
+
 	function listarMonitorEsquema(){
 		//Definicion de variables para ejecucion del procedimientp
 		$this->procedimiento='segu.ft_monitor_bd_sel';// nombre procedimiento almacenado
 		$this->transaccion='SEG_MONESQ_SEL';//nombre de la transaccion
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
-		
-				
+
+
 		$this->captura('nspoid','integer');
 		$this->captura('schemaname','varchar');
 		$this->captura('usename','varchar');
@@ -168,13 +170,13 @@ class MODLog extends MODbase{
 		$this->captura('bloques_leidos_buffer_toast_indice','numeric');
 		$this->captura('kb_tablas','bigint');
 		$this->captura('kb_indices','bigint');
-		
-	  
-				
+
+
+
 		//Ejecuta la funcion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
-		
+
 		return $this->respuesta;
 
 	}
@@ -183,8 +185,8 @@ class MODLog extends MODbase{
 		$this->procedimiento='segu.ft_monitor_bd_sel';// nombre procedimiento almacenado
 		$this->transaccion='SEG_MONTAB_SEL';//nombre de la transaccion
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
-		
-				
+
+
 		$this->captura('oid','integer');
 		$this->captura('relnamespace','integer');
 		$this->captura('tablename','varchar');
@@ -215,13 +217,13 @@ class MODLog extends MODbase{
 		$this->captura('bloques_leidos_buffer_toast_indice','numeric');
 		$this->captura('kb_tabla','numeric');
 		$this->captura('kb_indices','numeric');
-		
-	  
-				
+
+
+
 		//Ejecuta la funcion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
-		
+
 		return $this->respuesta;
 
 	}
@@ -230,19 +232,19 @@ class MODLog extends MODbase{
 		$this->procedimiento='segu.ft_monitor_bd_sel';// nombre procedimiento almacenado
 		$this->transaccion='SEG_MONFUN_SEL';//nombre de la transaccion
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
-		
-				
+
+
 		$this->captura('oid','integer');
 		$this->captura('pronamespace','integer');
 		$this->captura('proname','varchar');
 		$this->captura('setuid','varchar');
 		$this->captura('usename','varchar');
-		  
-				
+
+
 		//Ejecuta la funcion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
-		
+
 		return $this->respuesta;
 
 	}
@@ -251,8 +253,8 @@ class MODLog extends MODbase{
 		$this->procedimiento='segu.ft_monitor_bd_sel';// nombre procedimiento almacenado
 		$this->transaccion='SEG_MONIND_SEL';//nombre de la transaccion
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
-		
-		$this->captura('relid','integer');		
+
+		$this->captura('relid','integer');
 		$this->captura('indexrelid','integer');
 		$this->captura('indexrelname','varchar');
 		$this->captura('numero_index_scan','bigint');
@@ -260,11 +262,11 @@ class MODLog extends MODbase{
 		$this->captura('numero_tuplas_vivas','bigint');
 		$this->captura('bloques_disco_leidos','bigint');
 		$this->captura('bloques_buffer_leidos','bigint');
-		
+
 		//Ejecuta la funcion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
-		
+
 		return $this->respuesta;
 
 	}
@@ -274,12 +276,12 @@ class MODLog extends MODbase{
 		$this->transaccion='SEG_MONREC_SEL';//nombre de la transaccion
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
 		$this->count=false;
-		
+
 		$this->captura('usuario_bd','varchar');
 		$this->captura('transaccion_actual','varchar');
 		$this->captura('funcion_actual','varchar');
 		$this->captura('consulta','text');
-		$this->captura('hora_inicio_proceso','text');		
+		$this->captura('hora_inicio_proceso','text');
 		$this->captura('hora_inicio_consulta','text');
 		$this->captura('pid_bd','integer');
 		$this->captura('comando_bd','varchar');
@@ -294,11 +296,11 @@ class MODLog extends MODbase{
 		$this->captura('pmem_web','numeric');
 		$this->captura('vmstat_web','varchar');
 		$this->captura('sid_web','text');
-			
+
 		//Ejecuta la funcion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
-		
+
 		return $this->respuesta;
 	}
 
@@ -308,20 +310,20 @@ class MODLog extends MODbase{
 		$this->transaccion='SEG_WTRANS_SEL';//nombre de la transaccion
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
 		$this->count=false;
-		
+
 		$this->setParametro('gestion','gestion','varchar');
 		$this->setParametro('transaccion','transaccion','varchar');
 		//Definicion de la lista del resultado del query
-	
-		
+
+
 		$this->captura('periodo','text');
 		$this->captura('exito','bigint');
 		$this->captura('error','bigint');
-				
+
 		//Ejecuta la funcion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();
-		
+
 		return $this->respuesta;
 
 	}
@@ -346,7 +348,7 @@ class MODLog extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
-	
-	
+
+
 }
 ?>

@@ -259,8 +259,9 @@ class RCorreosDeEmpleadosXls
                 if($estacion != $value['codigo']){
                     $this->addHoja($value['codigo'],$index);
                     $this->docexcel->getActiveSheet()->getTabColor()->setRGB($color_pestana[$index]);
-                    $this->docexcel->getActiveSheet()->getStyle('A1:F1')->getAlignment()->setWrapText(true);
-                    $this->docexcel->getActiveSheet()->getStyle('A1:F1')->applyFromArray($styleTitulos3);
+                    $this->docexcel->getActiveSheet()->freezePaneByColumnAndRow(0,2);
+                    $this->docexcel->getActiveSheet()->getStyle('A1:G1')->getAlignment()->setWrapText(true);
+                    $this->docexcel->getActiveSheet()->getStyle('A1:G1')->applyFromArray($styleTitulos3);
                     $fila=2;
                     $this->numero=1;
                     $this->docexcel->getActiveSheet()->setTitle($value['codigo']);
@@ -270,6 +271,7 @@ class RCorreosDeEmpleadosXls
                     $this->docexcel->getActiveSheet()->getColumnDimension('D')->setWidth(40);//funcionario
                     $this->docexcel->getActiveSheet()->getColumnDimension('E')->setWidth(35);//cargo
                     $this->docexcel->getActiveSheet()->getColumnDimension('F')->setWidth(25);//correo
+                    $this->docexcel->getActiveSheet()->getColumnDimension('G')->setWidth(25);//correo
 
                     $this->docexcel->getActiveSheet()->setCellValue('A1','Nro');
                     $this->docexcel->getActiveSheet()->setCellValue('B1','Gerencia');
@@ -277,6 +279,7 @@ class RCorreosDeEmpleadosXls
                     $this->docexcel->getActiveSheet()->setCellValue('D1','Funcionario');
                     $this->docexcel->getActiveSheet()->setCellValue('E1','Cargo');
                     $this->docexcel->getActiveSheet()->setCellValue('F1','Correo');
+                    $this->docexcel->getActiveSheet()->setCellValue('G1','Estado');
 
                     $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(0, $fila, $this->numero);
                     $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(1, $fila, $value['gerencia']);
@@ -284,6 +287,7 @@ class RCorreosDeEmpleadosXls
                     $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3, $fila, $value['desc_funcionario']);
                     $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4, $fila, $value['cargo']);
                     $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $fila, $value['email_empresa']);
+                    $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6, $fila, $value['estado_fun']);
                     $fila++;
                     $this->numero++;
                     $index++;
@@ -296,6 +300,7 @@ class RCorreosDeEmpleadosXls
                     $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(3, $fila, $value['desc_funcionario']);
                     $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(4, $fila, $value['cargo']);
                     $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $fila, $value['email_empresa']);
+                    $this->docexcel->getActiveSheet()->setCellValueByColumnAndRow(6, $fila, $value['estado_fun']);
                     $fila++;
                     $this->numero++;
                 }

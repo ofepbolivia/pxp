@@ -64,7 +64,7 @@ Phx.vista.DeptoUoEp=Ext.extend(Phx.gridInterfaz,{
                 baseParams:{presupuesta:'si'},
                 allowBlank:true,
                 gdisplayField:'desc_uo',//mapea al store del grid
-                gwidth:200,
+                gwidth:280,
                 renderer:function (value, p, record){return String.format('{0}', record.data['desc_uo']);}     },
                 type:'ComboRec',
                 id_grupo:0,
@@ -72,9 +72,25 @@ Phx.vista.DeptoUoEp=Ext.extend(Phx.gridInterfaz,{
                         pfiltro:'nombre_unidad',
                         type:'string'
                     },
-           
+
+            bottom_filter: true,
             grid:true,
             form:true
+        },
+        {
+            config:{
+                name: 'estado_reg_uo',
+                fieldLabel: 'Estado Unidad',
+                allowBlank: true,
+                anchor: '80%',
+                gwidth: 100,
+                maxLength:10
+            },
+            type:'TextField',
+            //filters:{pfiltro:'estado_reg_uo',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:false
         },
 		{
             config:{
@@ -187,12 +203,13 @@ Phx.vista.DeptoUoEp=Ext.extend(Phx.gridInterfaz,{
 		{name:'fecha_mod', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
 		{name:'id_usuario_mod', type: 'numeric'},
 		{name:'usr_reg', type: 'string'},
-		{name:'usr_mod', type: 'string'},'ep','desc_uo'
+		{name:'usr_mod', type: 'string'},'ep','desc_uo',
+        'estado_reg_uo'
 		
 	],
 	sortInfo:{
 		field: 'id_depto_uo_ep',
-		direction: 'ASC'
+		direction: 'DESC'
 	},
 	
 	sinc_ep:function(){

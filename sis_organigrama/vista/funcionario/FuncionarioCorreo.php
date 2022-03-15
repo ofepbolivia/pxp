@@ -26,7 +26,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 text: 'Reporte Correos',
                 iconCls: 'bfolder',
                 disabled: false,
-                grupo: [0,1],
+                grupo: [0,1,2],
                 handler: this.reporte,
                 style: 'background-color: white !important; background-image: none;',
                 tooltip: '<b>Reporte Correos</b><br><b>Nos muestra un formulario para generar reporte de los correos de la empresa<br> por estación o todas las oficinas.</br>'
@@ -39,19 +39,20 @@ header("content-type: text/javascript; charset=UTF-8");
                 disabled: false,
                 handler: this.altasBajas,
                 tooltip: '<b>Altas y Bajas</b><br><b>Permite visualizar las altas y bajas de los Funcionarios.</b>',
-                grupo: [0,1]
+                grupo: [0,1,2]
             });
         },
         bnewGroups:[],
-        beditGroups:[0,1],
+        beditGroups:[0,1,2],
         bdelGroups:[],
-        bactGroups:[0,1],
-        bexcelGroups:[0,1],
+        bactGroups:[0,1,2],
+        bexcelGroups:[0,1,2],
         btestGroups:[],
 
         gruposBarraTareas: [
-            {name:  'sin_correo', title: '<h1 style="text-align: center; color: red;">SIN CORREOS</h1>',grupo: 0, height: 0} ,
-            {name: 'con_correo', title: '<h1 style="text-align: center; color: green;">CON CORREOS</h1>', grupo: 1, height: 1}
+            {name:  'sin_correo', title: '<h1 style="text-align: center; color: #FF8F85;">SIN CORREOS</h1>',grupo: 0, height: 0} ,
+            {name: 'con_correo', title: '<h1 style="text-align: center; color: #00B167;">CON CORREOS</h1>', grupo: 1, height: 1},
+            {name: 'inactivo', title: '<h1 style="text-align: center; color: #4682B4;">BAJA</h1>', grupo: 2, height: 1},
         ],
 
         actualizarSegunTab: function(name, indice){
@@ -63,8 +64,8 @@ header("content-type: text/javascript; charset=UTF-8");
 
             Phx.vista.FuncionarioCorreo.superclass.onButtonEdit.call(this);
 
-            this.getComponente('estado_correo').setVisible(false);
-            this.getComponente('estado_correo').setValue('modificar_correo');
+            this.Cmp.estado_correo.setVisible(false);
+            this.Cmp.estado_correo.setValue('modificar_correo');
 
         },
 
@@ -128,7 +129,8 @@ header("content-type: text/javascript; charset=UTF-8");
                 config:{
                     labelSeparator:'',
                     inputType:'hidden',
-                    name: 'estado_correo'
+                    name: 'estado_correo',
+                    id_grupo:1
                 },
                 type:'Field',
                 form:true

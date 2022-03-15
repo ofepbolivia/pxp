@@ -65,6 +65,10 @@ else{
 }
 
 
+$fileName = 'downloaded';
+if(isset($_GET['name_file'])){
+	$fileName = $_GET['name_file'];
+}
 //abre el archivo si existe
 if (file_exists($ruta_archivo)){
 	if (strtolower($_GET['extension']) == 'pdf') {
@@ -79,7 +83,7 @@ if (file_exists($ruta_archivo)){
 		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 		header('Content-Description: File Transfer');
 		header('Content-Type: text/csv');
-		header('Content-Disposition: attachment; filename="downloaded.' . $_GET['extension']);
+		header('Content-Disposition: attachment; filename="'.$fileName.'.' . $_GET['extension']);
 		header('Content-Transfer-Encoding: binary'); 
 		readfile($ruta_archivo);
 	
@@ -88,7 +92,7 @@ if (file_exists($ruta_archivo)){
 	else {
 		header('Content-Description: File Transfer');
 		header('Content-Type: application/octet-stream');
-		header('Content-Disposition: attachment; filename="downloaded.' . $_GET['extension']);
+		header('Content-Disposition: attachment; filename="'.$fileName.'.' . $_GET['extension']);
 		header('Content-Transfer-Encoding: binary');
 		header('Connection: Keep-Alive');
 		header('Expires: 0');

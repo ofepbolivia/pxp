@@ -26,7 +26,7 @@ class ACTCargoPresupuesto extends ACTbase{
             $this->objParam->addFiltro("tca.id_uo = ". $this->objParam->getParametro('id_uo'));
         }
 
-        if($this->objParam->getParametro('id_funcionario') != ''){
+        if($this->objParam->getParametro('id_funcionario') != '' && $this->objParam->getParametro('id_funcionario') != '0'){
             $this->objParam->addFiltro("tuo.id_funcionario = ". $this->objParam->getParametro('id_funcionario'));
         }
 

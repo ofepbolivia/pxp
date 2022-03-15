@@ -19,6 +19,12 @@ class ACTFuncionario extends ACTbase{
         $this->objParam->defecto('dir_ordenacion','asc');
         //$this->objParam->addFiltro("FUNCIO.estado_reg = ''activo''");
 
+        if($this->objParam->getParametro('id_funcionario') != ''){
+            $this->objParam->addFiltro("FUNCIO.id_funcionario= ".$this->objParam->getParametro('id_funcionario'));
+        }
+        if($this->objParam->getParametro('id_persona') != ''){
+            $this->objParam->addFiltro("FUNCIO.id_persona= ".$this->objParam->getParametro('id_persona'));
+        }
 
         //si aplicar filtro de usuario, fitlramos el listado segun el funionario del usuario
         if($this->objParam->getParametro('tipo_filtro')=='usuario'){
@@ -45,7 +51,8 @@ class ACTFuncionario extends ACTbase{
         }else if($this->objParam->getParametro('estado_func')=='sin_asignacion'){
             $this->objParam->addFiltro("tuo.id_funcionario is null");
         }else{
-            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''activo'' and current_date <= coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date))");
+            if($this->objParam->getParametro('correo_func')=='' || $this->objParam->getParametro('correo_func') == null)
+                $this->objParam->addFiltro("(FUNCIO.estado_reg = ''activo'' and current_date <= coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date))");
         }
 
 
@@ -54,6 +61,8 @@ class ACTFuncionario extends ACTbase{
             $this->objParam->addFiltro("(FUNCIO.email_empresa = '''' or FUNCIO.email_empresa is null)");
         }else if($this->objParam->getParametro('correo_func')=='con_correo'){
             $this->objParam->addFiltro("(FUNCIO.email_empresa != '''' or FUNCIO.email_empresa is not null)");
+        }else if($this->objParam->getParametro('correo_func')=='inactivo'){
+            $this->objParam->addFiltro("(FUNCIO.estado_reg = ''inactivo'' or coalesce (tuo.fecha_finalizacion, ''31/12/9999''::date) < current_date)");
         }
 
         //crea el objetoFunSeguridad que contiene todos los metodos del sistema de seguridad
@@ -183,6 +192,8 @@ class ACTFuncionario extends ACTbase{
             $this->objParam->addFiltro("extract (month from PERSON.fecha_nacimiento) = " . $this->objParam->getParametro('mes'));
         }
 
+        $this->objParam->addFiltro("car.nombre != ''cadet Pilot''");
+
         //crea el objetoFunSeguridad que contiene todos los metodos del sistema de seguridad
         if ($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
             $this->objReporte=new Reporte($this->objParam, $this);
@@ -248,7 +259,7 @@ class ACTFuncionario extends ACTbase{
             $this->objParam->addFiltro("(FUNCAR.estado_reg_fun = ''inactivo'' or FUNCAR.fecha_finalizacion <= current_date)");
         }else if($this->objParam->getParametro('estado_func')=='act_desc'){
             $this->objParam->addFiltro("(
-            FUNCAR.estado_reg_fun in (''activo'', ''inactivo'') or (current_date <= coalesce (FUNCAR.fecha_finalizacion, ''31/12/9999''::date) or 
+            FUNCAR.estado_reg_fun in (''activo'', ''inactivo'') or (current_date <= coalesce (FUNCAR.fecha_finalizacion, ''31/12/9999''::date) or
             FUNCAR.fecha_finalizacion < current_date)
             )");
         }else{
@@ -310,21 +321,91 @@ class ACTFuncionario extends ACTbase{
 
 
     function guardarFuncionario(){
-        //var_dump('llega control guardar');exit;
         //crea el objetoFunSeguridad que contiene todos los metodos del sistema de seguridad
         $this->objFunSeguridad=$this->create('MODFuncionario');
 
         //preguntamos si se debe insertar o modificar
-        if($this->objParam->insertar('id_funcionario')){
+        if($this->objParam->getParametro('tipo_reg')=='new'){
 
             //ejecuta el metodo de insertar de la clase MODFuncionario a travez
             //de la intefaz objetoFunSeguridad
             $this->res=$this->objFunSeguridad->insertarFuncionario($this->objParam);
-        }
-        else{
+
+            $datos = $this->res->getDatos();
+
+            $host = 'http://172.17.45.127/GeneradorUsuario/Home/Generar';
+            $data = array('idEmpleadoENDE' => $datos['id_funcionario']);
+            $json_data = http_build_query($data);
+            $s = curl_init();
+            curl_setopt($s, CURLOPT_URL, $host);
+            curl_setopt($s, CURLOPT_POST, true);
+            curl_setopt($s, CURLOPT_POSTFIELDS, $json_data);
+            curl_setopt($s, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($s, CURLOPT_CONNECTTIMEOUT, 20);
+            $_out = curl_exec($s);
+            $status = curl_getinfo($s, CURLINFO_HTTP_CODE);
+            if (!$status) {
+                throw new Exception("No se pudo conectar con PERSONAL");
+            }
+            curl_close($s);
+            $res = json_decode($_out);
+
+            $this->res->datos['http_response'] = $res;
+        } else {
+            /*$json_data = json_encode($data);
+            $headers = array(
+                "Content-Type: application/json",
+                "Cache-Control: no-cache",
+                'Content-Length: ' . strlen($json_data)
+            );
+            $curl = curl_init();
+            $curl_array = array(
+                CURLOPT_URL =>  $host,//. "?" . http_build_query($data),
+                CURLOPT_POSTFIELDS => $json_data,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_HTTPHEADER => $headers
+
+            );
+            curl_setopt_array($curl,$curl_array);
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            //$http_code = curl_getinfo( $curl, CURLINFO_HTTP_CODE );
+            curl_close($curl);
+            //var_dump(curl_getinfo($curl));
+            $res = json_decode($response, true);*/
+
+            //var_dump('respuesta', $response, $res, $err);exit;
+
             //ejecuta el metodo de modificar funcionario de la clase MODFuncionario a travez
             //de la intefaz objetoFunSeguridad
+
             $this->res=$this->objFunSeguridad->modificarFuncionario($this->objParam);
+            /************************************* *************************************/
+            /*$datos = $this->res->getDatos();
+
+            $host = 'http://172.17.45.127/GeneradorUsuario/Home/Generar';
+            $data = array('idEmpleadoENDE' => $datos['id_funcionario']);
+            $json_data = http_build_query($data);
+            $s = curl_init();
+            curl_setopt($s, CURLOPT_URL, $host);
+            curl_setopt($s, CURLOPT_POST, true);
+            curl_setopt($s, CURLOPT_POSTFIELDS, $json_data);
+            curl_setopt($s, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($s, CURLOPT_CONNECTTIMEOUT, 20);
+            $_out = curl_exec($s);
+            $status = curl_getinfo($s, CURLINFO_HTTP_CODE);
+            if (!$status) {
+                throw new Exception("No se pudo conectar con PERSONAL");
+            }
+            curl_close($s);
+            $res = json_decode($_out);
+            $this->res->datos['http_response'] = $res;*/
+            /************************************* *************************************/
         }
 
         //imprime respuesta en formato JSON
@@ -473,6 +554,26 @@ class ACTFuncionario extends ACTbase{
 
         $this->objFunc=$this->create('MODFuncionario');
         $this->res=$this->objFunc->getLugarFuncionario($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
+    //{"franklin.espinoza":"11/08/2020", "descripcion":"Verifica y Replica Fin Contrato de todos los funcionarios que finzalizaron su contrato en el dia"}
+    function verificaReplicaFinContrato(){
+        $this->objFunc=$this->create('MODFuncionario');
+        $this->res=$this->objFunc->verificaReplicaFinContrato($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
+    function modificarFuncionarioREST() {
+        $this->objFunc = $this->create('MODFuncionario');
+        $this->res = $this->objFunc->modificarFuncionarioREST();
+        $this->res->imprimirRespuesta(json_encode($this->res->getDatos()));
+    }
+
+
+    function updateFechaIngreso(){
+        $this->objFunc=$this->create('MODFuncionario');
+        $this->res=$this->objFunc->updateFechaIngreso($this->objParam);
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
 

@@ -74,6 +74,7 @@ DECLARE
     v_mjs						varchar;
 	v_registro_eva    			varchar;
     v_estado_evaluacion			varchar;	
+    v_cod						varchar;
 
 BEGIN
 
@@ -798,9 +799,9 @@ BEGIN
                    ca.nombre_cargo
 
             into v_datos
-            from orga.vfuncionario_cargo ca
+            from orga.vfuncionario_ultimo_cargo ca
             inner join orga.tuo ger ON ger.id_uo = orga.f_get_uo_gerencia(ca.id_uo, NULL::integer, NULL::date)
-            where ca.id_funcionario = v_id_funcionario  and (ca.fecha_finalizacion is null or ca.fecha_finalizacion >= now()::date);
+            where ca.id_funcionario = v_id_funcionario; -- and (ca.fecha_finalizacion is null or ca.fecha_finalizacion >= now()::date);
 
     -- Modificado por (breydi.vasquez)19/11/2019
     -- control existencia de funcionario en la cabecera evaluacion, se modifica si la evaluacion esta en estado borrador
@@ -1095,6 +1096,18 @@ BEGIN
 
     IF  pxp.f_existe_parametro(p_tabla,'id_uo') THEN
 --solo los q ue no fueron enviado si estado es borrador
+      -- {dev:breydi.vasquez, date: 27/12/2021, desc: filtro momentaneo por restructuracion de gerencias}
+            SELECT codigo into v_cod
+            FROM orga.tuo
+            where id_uo = v_parametros.id_uo;
+
+            SELECT ev.id_uo into v_id_uo
+            FROM orga.tevaluacion_desempenio ev
+            INNER JOIN orga.tuo uo on uo.id_uo = ev.id_uo and uo.codigo = v_cod
+            WHERE ev.gestion = v_parametros.gestion
+            AND ev.id_uo is not null
+            limit 1;
+
             for v_registros_cer in (select f.id_funcionario,
             								initcap(f.desc_funcionario1) as nombre_funionaro,
                                             evd.gestion,
@@ -1109,7 +1122,8 @@ BEGIN
                                 inner join orga.vfuncionario_cargo f on f.id_funcionario = evd.id_funcionario and (f.fecha_finalizacion is null or f.fecha_asignacion>=now()::date)
 								inner join orga.vfuncionario_persona p on p.id_funcionario = f.id_funcionario
         						inner join segu.vpersona2 pe on pe.id_persona = p.id_persona
-                                where evd.id_uo = v_parametros.id_uo and evd.estado = 'borrador' and evd.gestion = v_parametros.gestion and (case
+                                where evd.id_uo = v_id_uo --v_parametros.id_uo 
+                                and evd.estado = 'borrador' and evd.gestion = v_parametros.gestion and (case
        	  																		 when v_parametros.rango = '0_70' then
                                                                                   evd.nota >= 0 and evd.nota <= 70
                                                                                  when v_parametros.rango = '71_80' then

@@ -1,5 +1,3 @@
---------------- SQL ---------------
-
 CREATE OR REPLACE FUNCTION param.ft_depto_uo_ep_sel (
   p_administrador integer,
   p_id_usuario integer,
@@ -59,7 +57,8 @@ BEGIN
 						usu1.cuenta as usr_reg,
 						usu2.cuenta as usr_mod,
                         ep.ep,
-                        ''(''||COALESCE(uo.codigo,'''')||'')''||COALESCE(uo.nombre_unidad,''nan'') as desc_uo
+                        ''(''||COALESCE(uo.codigo,'''')||'')''||COALESCE(uo.nombre_unidad,''nan'') as desc_uo,
+                        uo.estado_reg as estado_reg_uo
                         	
 						from param.tdepto_uo_ep due
 						inner join segu.tusuario usu1 on usu1.id_usuario = due.id_usuario_reg

@@ -232,6 +232,35 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 			form: true
 		},
 
+        {
+            config:{
+                name: 'categoria',
+                fieldLabel: 'Categoria Prog.',
+                gwidth: 160,
+                renderer:function (value, p, record){
+                    return String.format('{0}', "<div style='color: red'><b>"+value+"</b></div>");
+                }
+            },
+            type:'TextField',
+            filters:{pfiltro:'cp.codigo_categoria',type:'string'},
+            grid:true,
+            form:false
+        },
+        {
+            config:{
+                name: 'centro_costo',
+                fieldLabel: 'Centro Costo',
+                gwidth: 200,
+                renderer:function (value, p, record){
+                    return String.format('{0}', "<div style='color: green'><b>"+value+"</b></div>");
+                }
+            },
+            type:'TextField',
+            filters:{pfiltro:'vcc.codigo_tcc',type:'string'},
+            grid:false,
+            form:false
+        },
+
 		{
 			config:{
 				name: 'nro_documento_asignacion',
@@ -247,6 +276,42 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 				grid:true,
 				form:true
 		},
+
+        {
+            config:{
+                name: 'nro_contrato',
+                fieldLabel: 'N° Contrato',
+                allowBlank: true,
+                anchor: '100%',
+                gwidth: 200,
+                maxLength:50
+            },
+            type:'TextField',
+            filters:{pfiltro:'UOFUNC.nro_contrato',type:'string'},
+            id_grupo:2,
+            grid:true,
+            form:true
+        },
+
+        {
+            config:{
+                fieldLabel: "Fecha Contrato",
+                name: 'fecha_contrato',
+                allowBlank: true,
+                width:177,
+                gwidth: 150,
+                format: 'd/m/Y',
+                renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+            },
+            type:'DateField',
+            filters:{
+                pfiltro:'UOFUNC.fecha_contrato',
+                type:'date'
+            },
+            id_grupo:2,
+            grid:true,
+            form:true
+        },
 		
 		{
 		config:{
@@ -266,7 +331,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
         id_grupo:1,
 		grid:true,		
 		form:true
-	},
+	    },
 
         {
             config:{
@@ -330,12 +395,12 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 	       		mode: 'local',
 				gwidth: 150,
                 anchor:'100%',
-				store:['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia', 'renuncia_tacita' ,'transferencia', 'desvinculación']
+				store:['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia', 'renuncia_tacita' ,'transferencia', 'desvinculación', 'cambio_item', 'cambio_escala_salarial','fin_delegacion_interina', 'despido_indirecto', 'reestructura', 'artificio_beneficio']
 			},
 				type:'ComboBox',
 				filters:{	
 	       		         type: 'list',
-	       				 options: ['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia','renuncia_tacita','transferencia', 'desvinculación'],
+	       				 options: ['ampliacion','cambio_partida','desistimiento','fallecimiento','fin contrato','jubilacion','promocion','retiro','renuncia','renuncia_tacita','transferencia', 'desvinculación', 'cambio_item', 'cambio_escala_salarial','fin_delegacion_interina', 'despido_indirecto', 'reestructura', 'artificio_beneficio'],
 	       		 	},
 				id_grupo:0,
 				grid:true,
@@ -416,6 +481,18 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
                             id_grupo: 1
                         }
                     ]
+                },
+                {
+                    bodyStyle: 'padding-right:10px;',
+                    items: [
+                        {
+                            xtype: 'fieldset',
+                            title: '<b style="color: green;">DATOS CONTRATO<b>',
+                            autoHeight: true,
+                            items: [],
+                            id_grupo: 2
+                        }
+                    ]
                 }
 
             ]
@@ -449,7 +526,12 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
              'fecha_reg',
              'fecha_mod',
              'USUREG',
-             'USUMOD','correspondencia','codigo_ruta','estado_funcional','certificacion_presupuestaria','nombre_escala','haber_basico'],
+             'nro_contrato',
+             {name:'fecha_contrato', type: 'date',dateFormat:'Y-m-d'},
+             'USUMOD','correspondencia','codigo_ruta','estado_funcional','certificacion_presupuestaria','nombre_escala','haber_basico',
+             {name:'centro_costo', type: 'string'},
+             {name:'categoria', type: 'string'}
+    ],
 	sortInfo:{
 		field: 'desc_funcionario1',
 		direction: 'ASC',
@@ -465,6 +547,18 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 		//this.mostrarComponente(this.Cmp.estado_funcional);
 		//this.ocultarComponente(this.Cmp.fecha_finalizacion);
 
+        /*Ext.Ajax.request({
+            url: '../../sis_organigrama/control/UoFuncionario/recuperarNumeroContrato',
+            params: { momento:'new' },
+            success: function (resp) {
+                var reg =  Ext.decode(Ext.util.Format.trim(resp.responseText));
+                this.Cmp.nro_contrato.setValue(reg.ROOT.datos.v_numero_contrato);
+            },
+            failure: this.conexionFailure,
+            timeout: this.timeout,
+            scope: this
+        });*/
+
 		this.ocultarComponente(this.Cmp.observaciones_finalizacion);
 		Phx.vista.uo_funcionario.superclass.onButtonNew.call(this);
 		//seteamos un valor fijo que vienen de la vista maestro para id_gui 
@@ -472,13 +566,31 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 		
 	},onButtonEdit:function(){
 		//llamamos primero a la funcion new de la clase padre por que reseta el valor los componentes
-		this.ocultarComponente(this.Cmp.id_cargo);
+		//this.ocultarComponente(this.Cmp.id_cargo);
 		this.ocultarComponente(this.Cmp.id_funcionario);
 		//this.ocultarComponente(this.Cmp.fecha_asignacion);
-		this.ocultarComponente(this.Cmp.tipo);
+		//this.ocultarComponente(this.Cmp.tipo);
 		this.mostrarComponente(this.Cmp.fecha_finalizacion);
 		//this.mostrarComponente(this.Cmp.estado_funcional);
 		this.getComponente('fecha_finalizacion').visible=true;
+
+        let rec = this.getSelectedData();
+		/*if ( rec.nro_contrato == '' || rec.nro_contrato == null ) {
+            Ext.Ajax.request({
+                url: '../../sis_organigrama/control/UoFuncionario/recuperarNumeroContrato',
+                params: {id_uo_funcionario: rec.id_uo_funcionario, momento: 'edit'},
+                success: function (resp) {
+                    var reg = Ext.decode(Ext.util.Format.trim(resp.responseText));
+                    console.log('recuperar numero contrato', reg.ROOT.datos.v_numero_contrato);
+                    this.Cmp.nro_contrato.setValue(reg.ROOT.datos.v_numero_contrato);
+
+                },
+                failure: this.conexionFailure,
+                timeout: this.timeout,
+                scope: this
+            });
+        }*/
+
 
 		Phx.vista.uo_funcionario.superclass.onButtonEdit.call(this);
 
@@ -492,6 +604,16 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 			this.Cmp.observaciones_finalizacion.allowBlank = false;
 			this.mostrarComponente(this.Cmp.observaciones_finalizacion);
 		}
+
+        console.log('this.Cmp.tipo.getValue()', this.Cmp.tipo.getValue());
+        if(this.Cmp.tipo.getValue() == 'funcional') {
+            //this.Cmp.id_cargo.reset();
+            this.Cmp.id_cargo.allowBlank = true;
+        }else{
+            this.Cmp.id_cargo.allowBlank = false;
+        }
+
+
 	},
 	
 	/*funcion corre cuando el padre cambia el nodo maestero*/
@@ -520,7 +642,7 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 	},
 	loadValoresIniciales:function()
     {	
-        this.Cmp.tipo.setValue('oficial');  
+        this.Cmp.tipo.setValue('oficial');
         this.Cmp.tipo.fireEvent('select',this.Cmp.tipo);     
         Phx.vista.uo_funcionario.superclass.loadValoresIniciales.call(this);
     },
@@ -551,13 +673,19 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 			this.Cmp.id_cargo.store.setBaseParam('tipo',this.Cmp.tipo.getValue());
 			this.Cmp.id_cargo.tdata.tipo = this.Cmp.tipo.getValue();
 			this.Cmp.id_funcionario.tdata.tipo = this.Cmp.tipo.getValue();
-			
+
+            if(this.Cmp.tipo.getValue() == 'funcional') {
+                //this.Cmp.id_cargo.reset();
+                this.Cmp.id_cargo.allowBlank = true;
+            }else{
+                this.Cmp.id_cargo.allowBlank = false;
+            }
 		},this);
 
         this.getComponente('fecha_finalizacion').on('beforerender',function (combo) {
             var fecha_actual = new Date();
             fecha_actual.setMonth(fecha_actual.getMonth());
-            this.getComponente('fecha_finalizacion').setMinValue(new Date(fecha_actual.getFullYear(),fecha_actual.getMonth()-1,1));
+            //this.getComponente('fecha_finalizacion').setMinValue(new Date(fecha_actual.getFullYear(),fecha_actual.getMonth()-1,1));
         }, this);
 		
 		this.Cmp.fecha_finalizacion.on('blur', function () {
@@ -599,7 +727,12 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 			if(data.codigo_tipo_contrato == 'PLA') {
 				this.Cmp.fecha_finalizacion.reset();
 				this.Cmp.fecha_finalizacion.allowBlank = true;
-				this.ocultarComponente(this.Cmp.fecha_finalizacion);
+
+                if(this.Cmp.tipo.getValue() != 'funcional') {
+                    this.ocultarComponente(this.Cmp.fecha_finalizacion);
+                }
+
+
 			} else {
 				this.Cmp.fecha_finalizacion.allowBlank = false;
 				this.mostrarComponente(this.Cmp.fecha_finalizacion);
@@ -626,6 +759,16 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 		txt_fecha_fin=this.getComponente('fecha_finalizacion');
         //this.grid.topToolbar.el.dom.style.background="#89CBE0";
 
+
+        this.addButton('btnContrato', {
+            text : 'Generar Contrato',
+            grupo: [0,1],
+            iconCls : 'bpdf',
+            disabled : false,
+            hidden : false,
+            handler : this.onGenerarModeloContrato
+        });
+
 		this.init();
 		//this.tbar.el.dom.style.background='#5fe0f7';
 
@@ -642,7 +785,28 @@ Phx.vista.uo_funcionario=Ext.extend(Phx.gridInterfaz,{
 	preparaMenu:function(tb){
 		// llamada funcion clace padre
 		Phx.vista.uo_funcionario.superclass.preparaMenu.call(this,tb)
-	}
+        let rec = this.getSelectedData();
+        if (rec.tipo != 'funcional'){
+            this.getBoton('btnContrato').enable();
+        }
+	},
+    liberaMenu:function() {
+        Phx.vista.uo_funcionario.superclass.liberaMenu.call(this);
+        this.getBoton('btnContrato').disable();
+    },
+    onGenerarModeloContrato : function(){
+        let rec = this.getSelectedData();
+
+        Phx.CP.loadingShow();
+        Ext.Ajax.request({
+            url: '../../sis_organigrama/control/UoFuncionario/reporteModeloContrato',
+            params: {item : rec.codigo_cargo, tipo_anexo : rec.tipo_anexo, id_uo_funcionario: rec.id_uo_funcionario, funcionario : rec.desc_funcionario1},
+            success: this.successExport,
+            failure: this.conexionFailure,
+            timeout: this.timeout,
+            scope: this
+        });
+    }
 	
 
   }

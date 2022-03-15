@@ -66,7 +66,7 @@ BEGIN
                 	--raise exception  'Regional COBIJA';
                 	return 'Regional COBIJA';
                 elsif p_id_uo = any (string_to_array(btrim(orga.f_get_arbol_uo(9774),','),',')::integer[]) or p_id_uo = 9774 then
-                	return 'Responsable BoA Regionales >>> Regional UYUNI';
+                	return 'Regional UYUNI';--Responsable BoA Regionales >>>
                 elsif p_id_uo = any (string_to_array(btrim(orga.f_get_arbol_uo(9780),','),',')::integer[]) or p_id_uo = 9780 then
                 	return 'Regional ORURO';
                 elsif p_id_uo = any (string_to_array(btrim(orga.f_get_arbol_uo(9782),','),',')::integer[]) or p_id_uo = 9782 then

@@ -4,15 +4,19 @@ CREATE OR REPLACE FUNCTION orga.f_get_fechas_ini_historico (
 )
 RETURNS text AS
 $body$
-  DECLARE
+DECLARE
     g_registros record;
     g_fechas text;
     g_ultima_fecha_ini date;
     v_ultimo	varchar;
     v_fecha_reestructuracion	varchar;
+    v_resp	            	varchar;
+    v_nombre_funcion      	text;
   BEGIN
   	v_ultimo = 'normal';
     g_fechas = '';
+  	v_nombre_funcion = 'orga.f_get_fechas_ini_historico';
+  	--raise notice 'parametros [orga.f_get_fechas_ini_historico] -> p_id_funcionario %, p_fecha %',p_id_funcionario, p_fecha;
     for g_registros in execute ('
     select fecha_asignacion, ha.fecha_finalizacion,nro_documento_asignacion,count(*) over() as cantidad
             from orga.tuo_funcionario ha
@@ -20,27 +24,28 @@ $body$
             inner join orga.ttipo_contrato tcon on tcon.id_tipo_contrato=car.id_tipo_contrato
             where ha.estado_reg = ''activo'' and ha.id_funcionario = '||p_id_funcionario||' and tcon.id_tipo_contrato in (1,4) and ha.tipo = ''oficial'' and
             ha.fecha_asignacion <= ''' || p_fecha|| '''::date
-            order by fecha_asignacion desc')loop 
+            order by fecha_asignacion desc')loop
+        --raise notice 'dentro for [g_registros]: %',g_registros;
       if (g_fechas = '')then
         g_ultima_fecha_ini = g_registros.fecha_asignacion;
-        if ((g_registros.nro_documento_asignacion is null or g_registros.nro_documento_asignacion != 'reestructuracion')) then raise notice 'if uno';
+        if ((g_registros.nro_documento_asignacion is null or g_registros.nro_documento_asignacion != 'reestructuracion')) then --raise notice 'if uno';
           g_fechas = to_char(g_registros.fecha_asignacion,'DD/MM/YYYY');
           v_ultimo = 'normal';
-		else raise notice 'if dos';
+		else --raise notice 'if dos';
           v_ultimo = 'reestructuracion';
           v_fecha_reestructuracion = to_char(g_registros.fecha_asignacion,'DD/MM/YYYY');
-        end if; raise notice 'g_fechas if: %', g_fechas;
-      else raise notice 'entra else: %, %',g_registros.fecha_finalizacion,(g_ultima_fecha_ini - interval '1 day'); 
-        if ((g_ultima_fecha_ini::date - interval '1 day') = g_registros.fecha_finalizacion) then raise notice 'else uno';
+        end if; --raise notice 'g_fechas if: %', g_fechas;
+      else --raise notice 'entra else: %, %',g_registros.fecha_finalizacion,(g_ultima_fecha_ini - interval '1 day');
+        if ((g_ultima_fecha_ini::date - interval '1 day') = g_registros.fecha_finalizacion) then --raise notice 'else uno';
           g_ultima_fecha_ini = g_registros.fecha_asignacion;
           if (g_registros.nro_documento_asignacion is null or g_registros.nro_documento_asignacion != 'reestructuracion') then
             g_fechas = to_char(g_registros.fecha_asignacion,'DD/MM/YYYY') || ' ' || g_fechas;
 		  	v_ultimo = 'normal';
-          else raise notice 'else dos';
+          else --raise notice 'else dos';
           	v_ultimo = 'reestructuracion';
             v_fecha_reestructuracion = to_char(g_registros.fecha_asignacion,'DD/MM/YYYY');
-          	
-          end if; raise notice 'g_fechas else: %', g_fechas;
+
+          end if; --raise notice 'g_fechas else: %', g_fechas;
         else
           EXIT;
         end if;
@@ -48,10 +53,18 @@ $body$
 
     end loop;
 	if (v_ultimo = 'reestructuracion') then
-    	g_fechas = v_fecha_reestructuracion || ' ' || g_fechas; raise notice 'g_fechas reestructuracion: %', g_fechas;
-    end if;raise notice 'g_fechas retorno: %', g_fechas; 
+    	g_fechas = v_fecha_reestructuracion || ' ' || g_fechas; --raise notice 'g_fechas reestructuracion: %', g_fechas;
+    end if;--raise notice 'g_fechas retorno: %', g_fechas;
     return g_fechas;
-  END;
+EXCEPTION
+
+	WHEN OTHERS THEN
+		v_resp='';
+		v_resp = pxp.f_agrega_clave(v_resp,'mensaje',SQLERRM);
+		v_resp = pxp.f_agrega_clave(v_resp,'codigo_error',SQLSTATE);
+		v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
+		raise exception '% ID. EMPLEADO: %',v_resp,p_id_funcionario;
+END;
 $body$
 LANGUAGE 'plpgsql'
 VOLATILE

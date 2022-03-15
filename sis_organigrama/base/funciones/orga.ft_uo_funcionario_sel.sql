@@ -76,8 +76,20 @@ BEGIN
                                   UOFUNC.estado_funcional,
                                   UOFUNC.certificacion_presupuestaria,
                                   tes.nombre as nombre_escala,
-                                  tes.haber_basico
-                             FROM orga.tuo_funcionario UOFUNC
+                                  tes.haber_basico,
+                                  UOFUNC.nro_contrato,
+                                  UOFUNC.fecha_contrato,
+
+                                  (''(''||vcc.codigo_tcc ||'') '' ||vcc.descripcion_tcc)::varchar AS centro_costo,
+                        		  cp.codigo_categoria categoria,
+                                  usu1.cuenta as usr_reg,
+                            	  usu2.cuenta as usr_mod
+
+               				FROM orga.tuo_funcionario UOFUNC
+
+               				inner join segu.tusuario usu1 on usu1.id_usuario = UOFUNC.id_usuario_reg
+							left join segu.tusuario usu2 on usu2.id_usuario = UOFUNC.id_usuario_mod
+
                             INNER JOIN orga.tuo UO ON UO.id_uo=UOFUNC.id_uo
                             INNER JOIN orga.vfuncionario FUNCIO ON FUNCIO.id_funcionario=UOFUNC.id_funcionario
                             INNER JOIN segu.tusuario USUREG ON  UO.id_usuario_reg=USUREG.id_usuario
@@ -86,6 +98,12 @@ BEGIN
                             left join orga.tescala_salarial tes on tes.id_escala_salarial = cargo.id_escala_salarial
                             LEFT JOIN SEGU.tusuario USUMOD ON USUMOD.id_usuario=UO.id_usuario_mod
                             LEFT JOIN SEGU.vpersona PERMOD ON PERMOD.id_persona=USUMOD.id_persona
+
+                            left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = (select tg.id_gestion from param.tgestion tg where tg.gestion = date_part(''year'',UOFUNC.fecha_asignacion))
+                        	left join param.vcentro_costo vcc on vcc.id_centro_costo = tcp.id_centro_costo
+                        	left join pre.tpresupuesto pre on pre.id_centro_costo = tcp.id_centro_costo
+                        	left join pre.vcategoria_programatica cp on cp.id_categoria_programatica = pre.id_categoria_prog
+
                             WHERE  UOFUNC.estado_reg !=''inactivo'' and ';
 
 
@@ -116,6 +134,10 @@ BEGIN
                v_consulta:='SELECT
                                   count(UOFUNC.id_uo_funcionario)
                             FROM orga.tuo_funcionario UOFUNC
+
+                            inner join segu.tusuario usu1 on usu1.id_usuario = UOFUNC.id_usuario_reg
+							left join segu.tusuario usu2 on usu2.id_usuario = UOFUNC.id_usuario_mod
+
                             INNER JOIN orga.tuo UO ON UO.id_uo=UOFUNC.id_uo
                             INNER JOIN orga.vfuncionario FUNCIO ON FUNCIO.id_funcionario=UOFUNC.id_funcionario
                             INNER JOIN segu.tusuario USUREG ON  UO.id_usuario_reg=USUREG.id_usuario
@@ -123,6 +145,12 @@ BEGIN
                             LEFT JOIN orga.tcargo cargo ON cargo.id_cargo = UOFUNC.id_cargo
                             LEFT JOIN SEGU.tusuario USUMOD ON USUMOD.id_usuario=UO.id_usuario_mod
                             LEFT JOIN SEGU.vpersona PERMOD ON PERMOD.id_persona=USUMOD.id_persona
+
+                            left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = (select tg.id_gestion from param.tgestion tg where tg.gestion = date_part(''year'',UOFUNC.fecha_asignacion))
+                        	left join param.vcentro_costo vcc on vcc.id_centro_costo = tcp.id_centro_costo
+                        	left join pre.tpresupuesto pre on pre.id_centro_costo = tcp.id_centro_costo
+                        	left join pre.vcategoria_programatica cp on cp.id_categoria_programatica = pre.id_categoria_prog
+
                             WHERE UOFUNC.estado_reg !=''inactivo'' and ';
                v_id_padre:=v_parametros.id_uo;
 
@@ -157,8 +185,8 @@ BEGIN
                                   UOFUNC.fecha_reg,
                                   UOFUNC.id_usuario_mod,
                                   UOFUNC.id_usuario_reg,
-                                  PERREG.nombre_completo2 AS USUREG,
-                                  PERMOD.nombre_completo2 AS USUMOD,
+                                  USUREG.cuenta AS usr_reg,--PERREG
+                                  USUMOD.cuenta AS usr_mod,--PERMOD
                                   cargo.id_cargo,
                                   (coalesce(''Cod: '' || cargo.codigo || ''---Id: '' || cargo.id_cargo,  ''Id: '' || cargo.id_cargo)|| '' -- '' || cargo.nombre) ::text,
                                   UOFUNC.observaciones_finalizacion,
@@ -166,20 +194,31 @@ BEGIN
                                   UOFUNC.fecha_documento_asignacion,
                                   UOFUNC.tipo,
                                   tes.haber_basico,
-                                  tco.nombre as tipo_contrato
+                                  tco.nombre as tipo_contrato,
+
+                                  (''(''||vcc.codigo_tcc ||'') '' ||vcc.descripcion_tcc)::varchar AS centro_costo,
+                        		  cp.codigo_categoria categoria
 
                             FROM orga.tuo_funcionario UOFUNC
+                            INNER JOIN segu.tusuario USUREG ON  USUREG.id_usuario = UOFUNC.id_usuario_reg
+                            LEFT JOIN SEGU.tusuario USUMOD ON USUMOD.id_usuario = UOFUNC.id_usuario_mod
+
                             INNER JOIN orga.tuo UO ON UO.id_uo=UOFUNC.id_uo
                             INNER JOIN orga.vfuncionario FUNCIO ON FUNCIO.id_funcionario=UOFUNC.id_funcionario
-                            INNER JOIN segu.tusuario USUREG ON  UO.id_usuario_reg=USUREG.id_usuario
                             INNER JOIN SEGU.vpersona PERREG ON PERREG.id_persona=USUREG.id_persona
                             LEFT JOIN orga.tcargo cargo ON cargo.id_cargo = UOFUNC.id_cargo
-                            LEFT JOIN SEGU.tusuario USUMOD ON USUMOD.id_usuario=UO.id_usuario_mod
+
                             LEFT JOIN SEGU.vpersona PERMOD ON PERMOD.id_persona=USUMOD.id_persona
 
                             inner join orga.tcargo tcar on tcar.id_cargo = UOFUNC.id_cargo
                             inner join orga.tescala_salarial tes on tes.id_escala_salarial = tcar.id_escala_salarial
                             inner join orga.ttipo_contrato tco on tco.id_tipo_contrato = tcar.id_tipo_contrato
+
+                            left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = (select tg.id_gestion from param.tgestion tg where tg.gestion = date_part(''year'',UOFUNC.fecha_asignacion))
+                        	left join param.vcentro_costo vcc on vcc.id_centro_costo = tcp.id_centro_costo
+                        	left join pre.tpresupuesto pre on pre.id_centro_costo = tcp.id_centro_costo
+                        	left join pre.vcategoria_programatica cp on cp.id_categoria_programatica = pre.id_categoria_prog
+
                             WHERE  UOFUNC.estado_reg !=''inactivo'' and ';
 
 
@@ -210,17 +249,26 @@ BEGIN
                v_consulta:='SELECT
                                   count(UOFUNC.id_uo_funcionario)
                             FROM orga.tuo_funcionario UOFUNC
+                            INNER JOIN segu.tusuario USUREG ON  USUREG.id_usuario = UOFUNC.id_usuario_reg
+                            LEFT JOIN SEGU.tusuario USUMOD ON USUMOD.id_usuario = UOFUNC.id_usuario_mod
+
                             INNER JOIN orga.tuo UO ON UO.id_uo=UOFUNC.id_uo
                             INNER JOIN orga.vfuncionario FUNCIO ON FUNCIO.id_funcionario=UOFUNC.id_funcionario
-                            INNER JOIN segu.tusuario USUREG ON  UO.id_usuario_reg=USUREG.id_usuario
+
                             INNER JOIN SEGU.vpersona PERREG ON PERREG.id_persona=USUREG.id_persona
                             LEFT JOIN orga.tcargo cargo ON cargo.id_cargo = UOFUNC.id_cargo
-                            LEFT JOIN SEGU.tusuario USUMOD ON USUMOD.id_usuario=UO.id_usuario_mod
+
                             LEFT JOIN SEGU.vpersona PERMOD ON PERMOD.id_persona=USUMOD.id_persona
 
                             inner join orga.tcargo tcar on tcar.id_cargo = UOFUNC.id_cargo
                             inner join orga.tescala_salarial tes on tes.id_escala_salarial = tcar.id_escala_salarial
                             inner join orga.ttipo_contrato tco on tco.id_tipo_contrato = tcar.id_tipo_contrato
+
+                            left join orga.tcargo_presupuesto tcp on tcp.id_cargo = cargo.id_cargo and tcp.id_gestion = (select tg.id_gestion from param.tgestion tg where tg.gestion = date_part(''year'',UOFUNC.fecha_asignacion))
+                        	left join param.vcentro_costo vcc on vcc.id_centro_costo = tcp.id_centro_costo
+                        	left join pre.tpresupuesto pre on pre.id_centro_costo = tcp.id_centro_costo
+                        	left join pre.vcategoria_programatica cp on cp.id_categoria_programatica = pre.id_categoria_prog
+
                             WHERE UOFUNC.estado_reg !=''inactivo'' and ';
                --v_id_padre:=v_parametros.id_uo;
 
@@ -229,7 +277,22 @@ BEGIN
                --v_consulta:=v_consulta || ' and UOFUNC.id_uo='|| v_id_padre;
                return v_consulta;
          END;
+     /*******************************
+      #TRANSACCION:  RH_CONTRATO_RRHH_SEL
+      #DESCRIPCION:	Datos para la generación de Contrato Laboral
+      #AUTOR:		franklin.espinoza
+      #FECHA:		14/07/2021
+     ***********************************/
+     elsif(par_transaccion='RH_CONTRATO_RRHH_SEL')then
+          BEGIN
+               v_consulta:='select
+                            coalesce( orga.f_procesar_plantilla_documento_contrato (uofun.id_uo_funcionario, uofun.id_funcionario, uofun.id_uo, uofun.id_cargo, ''contrato''),''error_contrato'') contrato,
+                            coalesce( orga.f_procesar_plantilla_documento_contrato (uofun.id_uo_funcionario, uofun.id_funcionario, uofun.id_uo, uofun.id_cargo, ''anexo''),''error_anexo'') anexo
+                            from orga.tuo_funcionario uofun
+                            where uofun.id_uo_funcionario = '||v_parametros.id_uo_funcionario;
 
+               return v_consulta;
+         END;
      else
          raise exception 'No existe la opcion';
 
@@ -252,3 +315,6 @@ VOLATILE
 CALLED ON NULL INPUT
 SECURITY INVOKER
 COST 100;
+
+ALTER FUNCTION orga.ft_uo_funcionario_sel (par_administrador integer, par_id_usuario integer, par_tabla varchar, par_transaccion varchar)
+  OWNER TO postgres;

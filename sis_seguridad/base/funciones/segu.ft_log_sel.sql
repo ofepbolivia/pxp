@@ -11,18 +11,18 @@ $body$
 /**************************************************************************
  FUNCION: 		segu.ft_log_sel
  DESCRIPCIÓN:   listado de los eventos (log) del sistema
- AUTOR: 		KPLIAN(jrr)	
- FECHA:	        
- COMENTARIOS:	
+ AUTOR: 		KPLIAN(jrr)
+ FECHA:
+ COMENTARIOS:
 ***************************************************************************
  HISTORIA DE MODIFICACIONES:
 
  DESCRIPCION:
- AUTOR:		
- FECHA:	
+ AUTOR:
+ FECHA:
 ***************************************************************************/
 
-DECLARE                  
+DECLARE
 
 v_consulta    varchar;
 v_parametros  record;
@@ -30,7 +30,7 @@ v_resp          varchar;
 v_nombre_funcion   text;
 v_mensaje_error    text;
 v_res_actualiz    varchar;
-
+v_id_log		 varchar='';
 
 /*
 
@@ -47,11 +47,11 @@ BEGIN
      v_parametros:=pxp.f_get_record(p_tabla);
      v_nombre_funcion:='segu.f_t_log_sel';
 
-/*******************************    
+/*******************************
  #TRANSACCION:  SEG_LOGMON_SEL
  #DESCRIPCION:	Listado del monitoreo de eventos del  XPH sistema
- #AUTOR:		KPLIAN(jrr)	
- #FECHA:		
+ #AUTOR:		KPLIAN(jrr)
+ #FECHA:
 ***********************************/
      if(p_transaccion='SEG_LOGMON_SEL')then
 
@@ -80,7 +80,7 @@ BEGIN
                             logg.descripcion_transaccion,
                             logg.codigo_subsistema,
                             logg.usuario_ai
-                            
+
                         from segu.vlog logg
                         where  ';
               v_consulta:=v_consulta||v_parametros.filtro;
@@ -91,11 +91,11 @@ BEGIN
 
          END;
 
- /*******************************    
+ /*******************************
  #TRANSACCION:  SEG_LOGMON_CONT
  #DESCRIPCION:	Contar registros del monitor de enventos del sistema(Actualiza eventos de BD)
- #AUTOR:		KPLIAN(jrr)	
- #FECHA:		
+ #AUTOR:		KPLIAN(jrr)
+ #FECHA:
 ***********************************/
      elsif(p_transaccion='SEG_LOGMON_CONT')then
 
@@ -103,7 +103,7 @@ BEGIN
           BEGIN
                 /*Actualiza eventos de BD*/
                 v_res_actualiz=segu.f_actualizar_log_bd (v_parametros.archivo_log);
-                
+
                v_consulta:='select count(logg.id_log)
                               from segu.vlog logg
                            where  ';
@@ -123,6 +123,10 @@ BEGIN
                 and c.relkind='r' and
                 c.relname='tlog_'||v_parametros.gestion||'_'||v_parametros.periodo))then
                 raise exception 'No se tienen registros para la gestion y periodo seleccionados';
+            end if;
+
+            if (v_parametros.id_log_consul >= 0 or v_parametros.id_log_consul is not null) then
+                  	v_id_log = ' logg.id_log = '||v_parametros.id_log_consul||' and ';
             end if;
 
                v_consulta:='select logg.id_log as identificador,
@@ -147,7 +151,7 @@ BEGIN
                             logg.usuario_ai
 
                         from log.tlog_'||v_parametros.gestion||'_'||v_parametros.periodo||' logg
-                        where  si_log=1 and ';
+                        where  si_log=1 and '||v_id_log||' ';
               v_consulta:=v_consulta||v_parametros.filtro;
                v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' OFFSET ' || v_parametros.puntero;
                 --raise exception '%',v_parametros.puntero;
@@ -159,8 +163,8 @@ BEGIN
  /*******************************
  #TRANSACCION:  SEG_LOG_CONT
  #DESCRIPCION:	Contar  los eventos del sistema registrados
- #AUTOR:		KPLIAN(jrr)	
- #FECHA:		
+ #AUTOR:		KPLIAN(jrr)
+ #FECHA:
 ***********************************/
      elsif(p_transaccion='SEG_LOG_CONT')then
 
@@ -175,9 +179,14 @@ BEGIN
                     c.relname='tlog_'||v_parametros.gestion||'_'||v_parametros.periodo))then
                     raise exception 'No se tienen registros para la gestion y periodo seleccionados';
                 end if;
+
+                if (v_parametros.id_log_consul >= 0 or v_parametros.id_log_consul is not null) then
+                        v_id_log = ' logg.id_log = '||v_parametros.id_log_consul||' and ';
+                end if;
+
                v_consulta:='select count(logg.id_log)
                               from log.tlog_'||v_parametros.gestion||'_'||v_parametros.periodo||' logg
-                           where  si_log=1 and ';
+                           where  si_log=1 and '||v_id_log||' ';
                v_consulta:=v_consulta||v_parametros.filtro;
                return v_consulta;
          END;
@@ -185,8 +194,8 @@ BEGIN
  /*******************************
  #TRANSACCION:  SEG_LOGHOR_SEL
  #DESCRIPCION:	Lista eventos del sistema sucedidos fuera de horarios de trabajo
- #AUTOR:		KPLIAN(jrr)	
- #FECHA:		
+ #AUTOR:		KPLIAN(jrr)
+ #FECHA:
 ***********************************/
     elsif(p_transaccion='SEG_LOGHOR_SEL')then
 
@@ -254,8 +263,8 @@ BEGIN
  /*******************************
  #TRANSACCION:  SEG_LOGHOR_CONT
  #DESCRIPCION:	Contar  los eventos fuera de horario de trabajo
- #AUTOR:		KPLIAN(jrr)	
- #FECHA:		
+ #AUTOR:		KPLIAN(jrr)
+ #FECHA:
 ***********************************/
      elsif(p_transaccion='SEG_LOGHOR_CONT')then
 
@@ -307,7 +316,7 @@ BEGIN
                             and to_char(lo.fecha_reg,''yyyy'')::integer = ' ||v_parametros.gestion||'
                             order by 1';
                return v_consulta;
-         END;         
+         END;
 
      else
          raise exception 'No existe la opcion';

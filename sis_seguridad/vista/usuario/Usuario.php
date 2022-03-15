@@ -8,6 +8,31 @@
 */
 header("content-type: text/javascript; charset=UTF-8");
 ?>
+
+<style type="text/css" rel="stylesheet">
+    .x-selectable,
+    .x-selectable * {
+        -moz-user-select: text !important;
+        -khtml-user-select: text !important;
+        -webkit-user-select: text !important;
+    }
+
+    .x-grid-row td,
+    .x-grid-summary-row td,
+    .x-grid-cell-text,
+    .x-grid-hd-text,
+    .x-grid-hd,
+    .x-grid-row,
+
+    .x-grid-row,
+    .x-grid-cell,
+    .x-unselectable
+    {
+        -moz-user-select: text !important;
+        -khtml-user-select: text !important;
+        -webkit-user-select: text !important;
+    }
+</style>
 <script>
 Phx.vista.usuario=Ext.extend(Phx.gridInterfaz,{
 	constructor:function(config){
@@ -165,9 +190,9 @@ tabEnter:true,
 	       			anchor:'100%'
 	       		},
 	       		type:'TextField',
-	       		filters:{type:'string'},
+	       		filters:{pfiltro:'USUARI.cuenta',type:'string'},
 	       		id_grupo:0,
-				bottom_filter:true,
+						bottom_filter:true,
 	       		grid:true,
 	       		form:true
 	       	},
@@ -238,7 +263,7 @@ tabEnter:true,
 	       				allowBlank:false,
 	       				name:'fecha_caducidad',
 	       				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''},
-	       				anchor:'70%',
+	       				anchor:'60%',
 	       				format:'Y-m-d'
 	       			},
 	       			type:'DateField',
@@ -253,7 +278,7 @@ tabEnter:true,
 	       			fieldLabel:'Estilo Interfaz',
 	       			allowBlank:false,
 	       			emptyText:'Estilo...',
-
+							anchor:'60%',
 	       			typeAhead: true,
 	       		    triggerAction: 'all',
 	       		    lazyRender:true,
@@ -279,7 +304,7 @@ tabEnter:true,
 	       			fieldLabel:'Autentificación',
 	       			allowBlank:false,
 	       			emptyText:'Auten...',
-
+							anchor:'60%',
 	       			typeAhead: true,
 	       		    triggerAction: 'all',
 	       		    lazyRender:true,
@@ -299,20 +324,18 @@ tabEnter:true,
 	       		grid:true,
 	       		form:true
 	       	},
-
-	       	{
+					{
 	       		config:{
-	       				fieldLabel: "fecha_reg",
-	       				gwidth: 110,
-	       				name:'fecha_reg',
-	       				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+	       				fieldLabel: "Fecha Reg Completa",
+	       				gwidth: 130,
+	       				name:'fecha_reg_hora',
+	       				renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 	       			},
 	       			type:'DateField',
-	       			filters:{pfiltro:'USUARI.fecha_reg',type:'date'},
+	       			filters:{pfiltro:'USUARI.fecha_reg_hora',type:'date'},
 	       			grid:true,
 	       			form:false
 	       	},
-
 	    	{
        			config:{
        				name:'id_roles',
@@ -354,7 +377,100 @@ tabEnter:true,
        			id_grupo:0,
        			grid:false,
        			form:true
-       	}
+       	},
+				// {
+		    //     config: {
+		    //         name: 'estado_documento',
+		    //         fieldLabel: 'Estado Factura/recibo',
+		    //         typeAhead: true,
+		    //         allowBlank: true,
+		    //         triggerAction: 'all',
+		    //         emptyText: 'Tipo...',
+		    //         selectOnFocus: true,
+		    //         mode: 'local',
+		    //         store: new Ext.data.ArrayStore({
+		    //             fields: ['key', 'value'],
+		    //             data: [['usr_servicio', 'Usuario Servicio']
+		    //             ]
+		    //         }),
+		    //         valueField: 'key',
+		    //         displayField: 'value',
+		    //         width: 200,
+		    //     },
+		    //     type: 'ComboBox',
+		    //     id_grupo: 0,
+		    //     form: true
+		    // },
+				{
+					config:{
+						name: 'observaciones',
+						fieldLabel: 'Observaciones',
+						allowBlank: true,
+						anchor: '100%',
+						gwidth: 150,
+						maxLength:400
+					},
+						type:'TextArea',
+						id_grupo:0,
+						grid:true,
+						form:true
+				},
+				{
+					config:{
+							fieldLabel: "Fecha Reg",
+							gwidth: 110,
+							name:'fecha_reg',
+							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y'):''}
+						},
+						type:'DateField',
+						filters:{pfiltro:'USUARI.fecha_reg',type:'date'},
+						grid:true,
+						form:false
+				},
+				{
+						config:{
+								name: 'usr_reg',
+								fieldLabel: 'Creado por',
+								allowBlank: true,
+								anchor: '80%',
+								gwidth: 100
+						},
+						type:'NumberField',
+						filters:{pfiltro:'usu1.cuenta',type:'string'},
+						id_grupo:1,
+						grid:true,
+						form:false
+				},
+				{
+						config:{
+								name: 'usr_mod',
+								fieldLabel: 'Modificado por',
+								allowBlank: true,
+								anchor: '80%',
+								gwidth: 100
+						},
+						type:'NumberField',
+						filters:{pfiltro:'usu2.cuenta',type:'string'},
+						id_grupo:1,
+						grid:true,
+						form:false
+				},
+				{
+						config:{
+								name: 'fecha_mod',
+								fieldLabel: 'Fecha Modif.',
+								allowBlank: true,
+								anchor: '100%',
+								gwidth: 120,
+								format: 'd/m/Y',
+								renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
+						},
+						type:'DateField',
+						filters:{pfiltro:'USUARI.fecha_mod',type:'date'},
+						id_grupo:1,
+						grid:true,
+						form:false
+				},
         /*{
             config:{
                 name: 'usuario_externo',
@@ -390,7 +506,11 @@ tabEnter:true,
 	{name:'desc_person', type: 'string'},
 	{name:'descripcion', type: 'string'},
 	{name:'estilo'},
-	'id_roles','autentificacion'
+	{name:'usr_reg', type: 'string'},
+	{name:'usr_mod', type: 'string'},
+	{name:'fecha_mod', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
+	{name:'fecha_reg_hora', type: 'date',dateFormat:'Y-m-d H:i:s.u'},
+	'id_roles','autentificacion','observaciones'
       //  {name:'usuario_externo', type: 'string'}
 
 
@@ -401,7 +521,10 @@ tabEnter:true,
 	},
 
 
-
+	onButtonNew: function() {
+		this.window.setSize(550, 530);
+		Phx.vista.usuario.superclass.onButtonNew.call(this);
+	},
 	/*onButtonEdit:function(){
 		this.getComponente('conf_contrasena').disable();
 		Phx.vista.usuario.superclass.onButtonEdit.call(this);
