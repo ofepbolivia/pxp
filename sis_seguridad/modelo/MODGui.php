@@ -172,7 +172,8 @@
 		$this->tipo_procedimiento='SEL';
 		
 		$this->setCount(false);						
-		$this->setParametro('id_subsistema','id_subsistema','integer');			
+		$this->setParametro('id_subsistema','id_subsistema','integer');	
+        $this->setParametro('id_gui','id_gui','integer');		
 		//defino varialbes que se captran como retornod e la funcion
 		$this->captura('id_gui','integer');
 		$this->captura('nombre','varchar');		

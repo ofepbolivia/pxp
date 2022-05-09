@@ -204,7 +204,7 @@ Phx.vista.Subsistema=Ext.extend(Phx.gridInterfaz,{
 			Phx.CP.loadingShow();
 			Ext.Ajax.request({
 				url: '../../sis_seguridad/control/Funcion/sincFuncion',
-				params: {'id_subsistema':data},
+				params: {'id_subsistema':data, 'id_gui':-1},
 				success: this.successSinc,
 				failure: this.conexionFailure,
 				timeout: this.timeout,

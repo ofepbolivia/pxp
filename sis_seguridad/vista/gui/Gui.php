@@ -276,6 +276,25 @@ Phx.vista.gui=function(config) {
         }];
 		
 		Phx.vista.gui.superclass.constructor.call(this,config);
+
+        //26-04-2022 ANPM Adicion de Btn Sincronixar por grupo
+		this.addButton('sinc_func',{text:'Sincronizar',iconCls: 'blist',disabled:true, handler: sinc_func, tooltip: '<b>Sincronizar Funciones</b><br/>Sinc '});
+
+        function sinc_func(){
+            //var data=this.sm.getSelected().data.id_subsistema;
+            var nodo = this.id_subsistema;
+            var idGui = this.sm.getSelectedNode();
+            Phx.CP.loadingShow();
+            Ext.Ajax.request({
+                url: '../../sis_seguridad/control/Funcion/sincFuncion',
+                params: {'id_subsistema':nodo, 'id_gui':idGui.attributes.id_gui},
+                success: this.successSinc,
+                failure: this.conexionFailure,
+                timeout: this.timeout,
+                scope: this
+            });
+        };
+        ////////////////////////////////////////////////////////////////////////
 		
 			//inicia los eventos del formulario
 		this.iniciarEventos();
@@ -341,8 +360,14 @@ Ext.extend(Phx.vista.gui,Phx.arbInterfaz,{
 				else {
 					this.tbar.items.get('b-new-'+this.idContenedor).disable()
 				}
-			
-		
+
+			//26-04-2022 ANPM Se adicion condicion de habilitacion pata btn sincronizar
+            if(n.attributes.tipo_dato == 'carpeta') {
+                this.getBoton('sinc_func').enable();
+            } else {
+                this.getBoton('sinc_func').disable();
+            }
+            
 			// llamada funcion clace padre
 			Phx.vista.gui.superclass.preparaMenu.call(this,n)
 		},
@@ -444,6 +469,19 @@ Ext.extend(Phx.vista.gui,Phx.arbInterfaz,{
 				}
 			},this)
 		},
+
+        successSinc:function(resp){     
+			Phx.CP.loadingHide();
+			var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+			if(!reg.ROOT.error){
+				alert(reg.ROOT.detalle.mensaje)		
+			}else{
+				alert('ocurrio un error durante el proceso')
+			}
+			this.reload();
+			
+		},
+
 	/*
 	 * south:{ url:'../../sis_legal/vista/representante/representante.php',
 	 * title:'Representante', height:200 },

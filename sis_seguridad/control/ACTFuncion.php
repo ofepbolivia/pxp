@@ -306,7 +306,7 @@ class ACTFuncion extends ACTbase{
 			
 		}
 		if(count($m) > 0) {
-            if (strpos('.php',$m[1][0])) {//validacion para la extraccion de rutas .php
+            if (strpos($m[1][0], '.php')) {//validacion para la extraccion de rutas .php
                 return array('ruta_archivo'=>str_replace('../', '', $m[1][0]) , 'nombre'=> $m[1][1], 'descripcion'=>$m[1][1],'clase_vista'=>$m[1][2]);
             } else {
                 return array();
@@ -347,7 +347,6 @@ class ACTFuncion extends ACTbase{
 	function insertaProcedimientos($gui) {
 
 		$filename = '../../../' . $gui['ruta_archivo'];
-		//var_dump($filename);
 		//se abre el archivo
 		if (file_exists($filename) && is_readable ($filename)) {
 			
@@ -462,11 +461,13 @@ class ACTFuncion extends ACTbase{
 			    } else if ($codigoFuncion != '' && (strpos($line, '//') === FALSE || strpos(trim($line), '//') !== 0 ) && $comentado == 0) {
 			    	$codigoFuncion .= $line;
 			    	if (strpos($line, '{') !== FALSE) {
-						$llaves++;
+						//$llaves++;
+                        $llaves = $llaves + substr_count($line, '{');//20-04-2022 ANPM Se cuenta manual las llaves por condiciones extras
 					}
 					
 					if (strpos($line, '}') !== FALSE) {
-						$llaves--;
+						//$llaves--;
+                        $llaves = $llaves - substr_count($line, '}');//20-04-2022 ANPM Se cuenta manual las llaves por condiciones extras
 					}
 					if (strpos(str_replace(' ','',$line), '=$this->create(') !== FALSE) {// adicion de = a la condicional $this->create(, para mayor restriccion
 							
@@ -549,11 +550,13 @@ class ACTFuncion extends ACTbase{
 			    } else if ($codigoFuncion != '' && (strpos($line, '//') === FALSE || strpos(trim($line), '//') !== 0 ) && $comentado == 0) {
 			    	$codigoFuncion .= $line;
 			    	if (strpos($line, '{') !== FALSE) {
-						$llaves++;
+						//$llaves++;
+                        $llaves = $llaves + substr_count($line, '{');//20-04-2022 ANPM Se cuenta manual las llaves por condiciones extras
 					}
 					
 					if (strpos($line, '}') !== FALSE) {
-						$llaves--;
+						//$llaves--;
+                        $llaves = $llaves - substr_count($line, '}');//20-04-2022 ANPM Se cuenta manual las llaves por condiciones extras
 					}
 					if (strpos($line, '$this->procedimiento') !== FALSE) {
 						$arrtemp = explode('=', $line);
@@ -598,6 +601,7 @@ class ACTFuncion extends ACTbase{
 		
 		foreach($procedimientos as $procedimiento) {
 			foreach($procedimiento as $transaccion) {				
+                //var_dump($transaccion['transaccion'], $transaccion['procedimiento']);
 				$this->objParam->setTipoTran('IME');
 				$this->objParam->iniciaParametro();
 				$this->objParam->addParametro('transaccion', $transaccion['transaccion']);
