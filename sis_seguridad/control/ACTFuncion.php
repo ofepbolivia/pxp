@@ -300,6 +300,7 @@ class ACTFuncion extends ACTbase{
 	function getRelacion ($str) {
 		$m = array();
 		//echo $str;
+		$str = preg_replace("#<.+?>(.+?)</.+?>#", '', $str);
 		if (preg_match_all('/"([^"]+)"/', $str, $m)) {
     		 
 		} else if (preg_match_all('/\'([^\']+)\'/', $str, $m) ) {
