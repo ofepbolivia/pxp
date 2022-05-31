@@ -501,11 +501,15 @@ class MODValidacion
         }            
         json_decode($valor);
         switch (json_last_error()) {
-            case JSON_ERROR_NONE:
-            case JSON_ERROR_DEPTH:
-            case JSON_ERROR_STATE_MISMATCH:
-            case JSON_ERROR_CTRL_CHAR:
+            case JSON_ERROR_NONE: break;
+            case JSON_ERROR_DEPTH: throw new Exception("Excedido tamaño máximo de la pila: " . json_last_error_msg()); break;
+            case JSON_ERROR_STATE_MISMATCH: throw new Exception("Desbordamiento de buffer o los modos no coinciden: " . json_last_error_msg()); break;
+            case JSON_ERROR_CTRL_CHAR: throw new Exception("Encontrado carácter de control no esperado: " . json_last_error_msg()); break;
             case JSON_ERROR_SYNTAX:
+                if (!empty($valor)) {
+                    throw new Exception("Error de sintaxis, JSON mal formado: " . json_last_error_msg());
+                }
+                break;
             case JSON_ERROR_UTF8:
                 if (!empty($valor)) {
                     throw new Exception("Error en archvi JSON: " . json_last_error_msg());
