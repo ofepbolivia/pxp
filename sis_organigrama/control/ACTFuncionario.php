@@ -331,7 +331,8 @@ class ACTFuncionario extends ACTbase{
             //de la intefaz objetoFunSeguridad
             $this->res=$this->objFunSeguridad->insertarFuncionario($this->objParam);
 
-            $datos = $this->res->getDatos();
+	     // ANPM 03-06-2022 Procedimiento inecesario para el registro de funcionario
+            /*$datos = $this->res->getDatos();
 
             $host = 'http://172.17.45.127/GeneradorUsuario/Home/Generar';
             $data = array('idEmpleadoENDE' => $datos['id_funcionario']);
@@ -350,7 +351,7 @@ class ACTFuncionario extends ACTbase{
             curl_close($s);
             $res = json_decode($_out);
 
-            $this->res->datos['http_response'] = $res;
+            $this->res->datos['http_response'] = $res;*/
         } else {
             /*$json_data = json_encode($data);
             $headers = array(
