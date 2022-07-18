@@ -973,17 +973,17 @@ Phx.CP = function() {
             });
 
             if (host == "172.17.58.34") {
-                title_ = 'ERP BOA 2';
+                title_ = 'ERP OFEP 2';
             } else if (host == "172.17.97.132") {
                 title_ = 'ERP BOA - BUE';
 
             } else {
-                title_ = 'ERP BOA 2';
+                title_ = 'ERP OFEP 2';
             }
             //alert(host);
             // ventana para el login
             win_login = new Ext.Window({
-                //title: 'ERP BOA 2',
+                //title: 'ERP OFEP 2',
                 title: title_,
                 modal: true,
                 width: 320,
