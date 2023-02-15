@@ -333,6 +333,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 direction: 'ASC'
             },
 
+<<<<<<< HEAD
                         // 08-11-2022 ANPM Se setea la id_proveedor para la relación
                         loadValoresIniciales:function(){
     
@@ -340,6 +341,15 @@ header("content-type: text/javascript; charset=UTF-8");
     this.Cmp.id_proveedor.setValue(this.maestro.id_proveedor);
 
 },
+=======
+            // 08-11-2022 ANPM Se setea la id_proveedor para la relación
+            loadValoresIniciales:function(){
+    
+                Phx.vista.ProveedorCtaBancaria.superclass.loadValoresIniciales.call(this);
+                this.Cmp.id_proveedor.setValue(this.maestro.id_proveedor);
+
+            },
+>>>>>>> 0f3323c328684103b0eea1f9c82dd27bfd47b478
 
             onReloadPage:function(m){
                 this.maestro=m;
