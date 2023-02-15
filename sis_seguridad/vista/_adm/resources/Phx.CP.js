@@ -971,20 +971,10 @@ Phx.CP = function() {
                 },
                 failure: Phx.CP.conexionFailure
             });
-<<<<<<< HEAD
+
             //fRnk: add parametric title in login
             title_= document.getElementById('app-name').getAttribute('content');
-=======
-
-            if (host == "172.17.58.34") {
-                title_ = 'ERP OFEP 2';
-            } else if (host == "172.17.97.132") {
-                title_ = 'ERP BOA - BUE';
-
-            } else {
-                title_ = 'ERP OFEP 2';
-            }
->>>>>>> 0f3323c328684103b0eea1f9c82dd27bfd47b478
+            
             //alert(host);
             // ventana para el login
             win_login = new Ext.Window({
