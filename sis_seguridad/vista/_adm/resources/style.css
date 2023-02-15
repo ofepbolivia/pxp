@@ -365,12 +365,13 @@ div.hr {
 	 vertical-align: middle;
 	
 }
+/*fRnk: added px*/
 .xnd-text {
     font-weight:bold!important;
     font-size: 14px; 
 	vertical-align: middle;
-	padding-bottom: 5;
-    padding-top: 5;
+	padding-bottom: 5px;
+    padding-top: 5px;
 	}
 
 .xnd-text  a span{

@@ -27,9 +27,7 @@ header("content-type: text/javascript; charset=UTF-8");
       <td colspan="2"><div align="center"><img src="../../../sis_seguridad/vista/inicio/logos/image001.gif" width="347" height="200" /></div></td>
     </tr>
     -->
-
-    <?php echo $_SESSION['_PLANTIILA'];?>
-
+    <!--fRnk: eliminado session_plantilla-->
     <tr height="20%">
         <td colspan="2"><div align="center"><font color="#15467b" size="10pt">2da Versión</font></div></td>
     </tr>

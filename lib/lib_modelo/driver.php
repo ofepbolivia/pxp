@@ -1232,10 +1232,7 @@ class driver
 
 
 		$res['datos']=$res;
-
-
-		if(count($res['datos'])>0)
-			$aux=array_shift($res['datos']);
+/* fRnk: se comentó el código inecesario
 
 		if(count($res['datos'])>0)
 			$aux=array_shift($res['datos']);
@@ -1246,6 +1243,9 @@ class driver
 		if(count($res['datos'])>0)
 			$aux=array_shift($res['datos']);
 
+		if(count($res['datos'])>0)
+			$aux=array_shift($res['datos']);
+*/
 		//var_dump($aux);exit;
 
 		if($res['tipo_respuesta']=='EXITO'){

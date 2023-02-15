@@ -971,19 +971,12 @@ Phx.CP = function() {
                 },
                 failure: Phx.CP.conexionFailure
             });
-
-            if (host == "172.17.58.34") {
-                title_ = 'ERP BOA 2';
-            } else if (host == "172.17.97.132") {
-                title_ = 'ERP BOA - BUE';
-
-            } else {
-                title_ = 'ERP BOA 2';
-            }
+            //fRnk: add parametric title in login
+            title_= document.getElementById('app-name').getAttribute('content');
             //alert(host);
             // ventana para el login
             win_login = new Ext.Window({
-                //title: 'ERP BOA 2',
+                //title: 'ERP OFEP 2',
                 title: title_,
                 modal: true,
                 width: 320,

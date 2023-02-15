@@ -27,14 +27,16 @@ if(!isset($_SESSION["_SESION"])){
     $nueva_sesion=false;
 }
 ?>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-    <title><?php echo $_SESSION['_NOMBRE_SIS']; ?></title>
+    <!--fRnk: modificado parámetros del sistema, nombre título, email, etc. id="app-name" es importante para el login title-->
+    <title><?php echo $_SESSION['_TITULO_SIS_LARGO']; ?></title>
     <meta http-equiv="Content-Type" content="charset=UTF-8;text/html; " />
     <meta name="language" content="es"/>
-    <meta name="author" content="BOA" />
-    <meta name="subject" content="boa-institucional@boa.bo" />
-    <meta name="application-name" content="ERP - BOA"/>
+    <meta name="author" content="<?php echo $_SESSION['_TITULO_SIS_CORTO']; ?>" />
+    <meta name="subject" content="<?php echo $_SESSION['_SIS_EMAIL']; ?>" />
+    <meta name="application-name" id="app-name" content="<?php echo $_SESSION['_TITULO_SIS_CORTO']; ?>"/>
     <link rel="icon" type="image/x-icon" href="<?php echo $_SESSION['_DIR_FAV_ICON'] ?>" />
 
     <!-- overrides to base library  -->
@@ -49,8 +51,8 @@ if(!isset($_SESSION["_SESION"])){
     <link rel="stylesheet" type="text/css" href="../../../lib/ux/css/GroupSummary.css" />
     <link rel="stylesheet" type="text/css" href="../../../lib/ux/css/RowEditor.css" />
     <link rel="stylesheet" type="text/css" href="../../../lib/ux/treegrid/treegrid.css" />
-    <link rel="stylesheet" type="text/css" href="resources/docs.css"></link>
-    <link rel="stylesheet" type="text/css" href="resources/style.css"></link>
+    <link rel="stylesheet" type="text/css" href="resources/docs.css"/>
+    <link rel="stylesheet" type="text/css" href="resources/style.css"/>
     <link rel="stylesheet" type="text/css" href="../../../lib/ux/css/Portal.css" />
     <link rel="stylesheet" type="text/css" href="../../../lib/ext3/resources/css/ext-all.css"/>
     <link rel="stylesheet" type="text/css" href="../../../lib/imagenes/<?php echo $_SESSION['_ESTILO_MENU'];?>/menus.css"/>

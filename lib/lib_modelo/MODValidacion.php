@@ -381,7 +381,7 @@ class MODValidacion
 		if(filter_var($valor, FILTER_VALIDATE_REGEXP,array('options' => array('regexp' => "/((\%3C)|<)((\%2F)|\/)*[a-z0-9\%]+((\%3E)|>)/"))))
 		{
 			
-			throw new Exception("Error en validacion de caracteres en el campo $nombre, posible cross site scripting (elimine los caracteres especiales). Este evento sera reportado");
+			throw new Exception("$valor:Error en validacion de caracteres en el campo $nombre, posible cross site scripting (elimine los caracteres especiales). Este evento sera reportado");
 		}
 		
 		if(strpos($valor, "'") != false)

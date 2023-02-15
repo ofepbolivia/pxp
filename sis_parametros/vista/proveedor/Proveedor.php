@@ -13,8 +13,8 @@ header("content-type: text/javascript; charset=UTF-8");
 
         register: '',
         tipo: '',
-        fheight: '80%', //680,
-        fwidth: '63%',  //840,
+        fheight: '75%', //680,
+        fwidth: '810',  //840, 63%
         Grupos: [
             {
                 layout: 'column',
@@ -146,7 +146,8 @@ header("content-type: text/javascript; charset=UTF-8");
                     this.mostrarGrupo(5);
                     this.ocultarGrupo(4);
                 }else{
-                    this.mostrarGrupo(4);
+                    //fRnk: comentado el mostrarGrupo(4) para que no muestre el Alkym
+                    //this.mostrarGrupo(4);
                     this.ocultarGrupo(5);
                 }
 
@@ -2075,7 +2076,7 @@ header("content-type: text/javascript; charset=UTF-8");
                 this.ocultarGrupo(4);
 
             }else{
-                this.mostrarGrupo(4);
+                //this.mostrarGrupo(4);
                 this.ocultarGrupo(5);
             }
 

@@ -10,6 +10,12 @@
 class ACTTipoCambio extends ACTbase{    
 			
 	function listarTipoCambio(){
+		// fRnk: adicionado para llamar al ws de BCB
+		if(file_exists(dirname(__FILE__).'/TipoCambioWS.php')){
+			include dirname(__FILE__).'/TipoCambioWS.php';
+		}
+		//endws
+
 		$this->objParam->defecto('ordenacion','id_tipo_cambio');
 
 		$this->objParam->defecto('dir_ordenacion','asc');
