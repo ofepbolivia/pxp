@@ -187,6 +187,21 @@ Phx.vista.Gestion=Ext.extend(Phx.gridInterfaz,{
 			grid:true,
 			form:false
 		},
+        {
+            config:{
+                name: 'usr_reg',
+                fieldLabel: 'Usuario Creación', //fRnk: se cambió el label Creado por
+                allowBlank: true,
+                anchor: '80%',
+                gwidth: 100,
+                maxLength:4
+            },
+            type:'NumberField',
+            filters:{pfiltro:'usu1.cuenta',type:'string'},
+            id_grupo:1,
+            grid:true,
+            form:false
+        },
 		{
 			config:{
 				name: 'fecha_reg',
@@ -199,21 +214,6 @@ Phx.vista.Gestion=Ext.extend(Phx.gridInterfaz,{
 			},
 			type:'DateField',
 			filters:{pfiltro:'ges.fecha_reg',type:'date'},
-			id_grupo:1,
-			grid:true,
-			form:false
-		},
-		{
-			config:{
-				name: 'usr_reg',
-				fieldLabel: 'Creado por',
-				allowBlank: true,
-				anchor: '80%',
-				gwidth: 100,
-				maxLength:4
-			},
-			type:'NumberField',
-			filters:{pfiltro:'usu1.cuenta',type:'string'},
 			id_grupo:1,
 			grid:true,
 			form:false

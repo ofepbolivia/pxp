@@ -40,7 +40,7 @@ class MODEntidad extends MODbase{
 
 		$this->captura('identificador_min_trabajo','varchar');
 		$this->captura('identificador_caja_salud','varchar');
-		$this->captura('cod_iata_linea_aerea','varchar');
+		//$this->captura('cod_iata_linea_aerea','varchar');
 
 
 		//Ejecuta la instruccion
@@ -69,9 +69,7 @@ class MODEntidad extends MODbase{
 
 		$this->setParametro('identificador_min_trabajo','identificador_min_trabajo','varchar');
 		$this->setParametro('identificador_caja_salud','identificador_caja_salud','varchar');
-		$this->setParametro('cod_iata_linea_aerea','cod_iata_linea_aerea','varchar');
-
-
+		//fRnk: se quito cod_iata_linea_aerea, en insertar, modificar y listar
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -100,7 +98,6 @@ class MODEntidad extends MODbase{
 
 		$this->setParametro('identificador_min_trabajo','identificador_min_trabajo','varchar');
 		$this->setParametro('identificador_caja_salud','identificador_caja_salud','varchar');
-		$this->setParametro('cod_iata_linea_aerea','cod_iata_linea_aerea','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();

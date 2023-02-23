@@ -95,22 +95,7 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
 				grid:true,
 				form:true
 		},
-		{
-			config:{
-				name: 'cod_iata_linea_aerea',
-				fieldLabel: 'Codigo IATA Linea Aerea',
-				allowBlank: true,
-				anchor: '50%',
-				gwidth: 120,
-				maxLength:20
-			},
-				type:'TextField',
-				filters:{pfiltro:'ent.nit',type:'string'},
-				id_grupo:1,
-				grid:true,
-				form:true
-		},
-
+        //fRnk: se quitó cod_iata_linea_aerea, 'Codigo IATA Linea Aerea' de la vista y de las funciones
 		{
 			config:{
 				name: 'identificador_min_trabajo',
@@ -181,7 +166,7 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
         {
             config:{
                 name: 'estados_anulacion_venta',
-                fieldLabel: 'Estados Anulacion Venta',
+                fieldLabel: 'Estados Anulación Venta',
                 qtip:'Estados en los que se habilitara el boton para anular la venta(codigos separador por ,)',
                 anchor: '50%',
                 allowBlank: true,
@@ -195,7 +180,7 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
         },{
             config:{
                 name: 'pagina_entidad',
-                fieldLabel: 'Pagina Web',
+                fieldLabel: 'Página Web',
                 allowBlank: false,
                 anchor: '100%',
                 gwidth: 250,

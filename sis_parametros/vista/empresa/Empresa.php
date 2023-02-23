@@ -132,7 +132,7 @@ Phx.vista.Empresa=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'usr_reg',
-				fieldLabel: 'Creado por',
+				fieldLabel: 'Usuario Creación', //fRnk: se cambió el label Creado por
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,

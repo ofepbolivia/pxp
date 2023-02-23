@@ -360,7 +360,7 @@ header("content-type: text/javascript; charset=UTF-8");
 		}, {
 			config : {
 				name : 'usureg',
-				fieldLabel : 'Creado por',
+				fieldLabel : 'Usuario Creación', //fRnk: se cambió el label Creado por
 				allowBlank : true,
 				anchor : '80%',
 				gwidth : 100,
