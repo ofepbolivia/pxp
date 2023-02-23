@@ -974,7 +974,11 @@ Phx.CP = function() {
 
             //fRnk: add parametric title in login
             title_= document.getElementById('app-name').getAttribute('content');
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> a72100132cabf483f5d94e50a7a8fae3a771bba7
             //alert(host);
             // ventana para el login
             win_login = new Ext.Window({
