@@ -971,6 +971,7 @@ Phx.CP = function() {
                 },
                 failure: Phx.CP.conexionFailure
             });
+
             //fRnk: add parametric title in login
             title_= document.getElementById('app-name').getAttribute('content');
 
