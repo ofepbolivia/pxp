@@ -1,13 +1,16 @@
 --------------- SQL ---------------
 
 CREATE OR REPLACE FUNCTION param.ft_entidad_sel (
-  p_administrador integer,
-  p_id_usuario integer,
-  p_tabla varchar,
-  p_transaccion varchar
-)
-RETURNS varchar AS
-$body$
+	p_administrador integer,
+	p_id_usuario integer,
+	p_tabla character varying,
+	p_transaccion character varying)
+    RETURNS character varying
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE PARALLEL UNSAFE
+AS $BODY$
+
 /**************************************************************************
  SISTEMA:		Parametros Generales
  FUNCION: 		param.ft_entidad_sel
@@ -25,7 +28,7 @@ $body$
 
 DECLARE
 
-	v_consulta    		varchar;
+v_consulta    		varchar;
 	v_parametros  		record;
 	v_nombre_funcion   	text;
 	v_resp				varchar;
@@ -41,10 +44,10 @@ BEGIN
  	#AUTOR:		admin
  	#FECHA:		20-09-2015 19:11:44
 	***********************************/
-
+	--fRnk: se quitó cod_iata_linea_aerea
 	if(p_transaccion='PM_ENT_SEL')then
 
-    	begin
+begin
     		--Sentencia de la consulta
 			v_consulta:='select
 						ent.id_entidad,
@@ -65,8 +68,7 @@ BEGIN
 						ent.pagina_entidad,
             ent.direccion_matriz,
             ent.identificador_min_trabajo,
-            ent.identificador_caja_salud,
-            ent.cod_iata_linea_aerea
+            ent.identificador_caja_salud
 						from param.tentidad ent
 						inner join segu.tusuario usu1 on usu1.id_usuario = ent.id_usuario_reg
 						left join segu.tusuario usu2 on usu2.id_usuario = ent.id_usuario_mod
@@ -77,9 +79,9 @@ BEGIN
 			v_consulta:=v_consulta||' order by ' ||v_parametros.ordenacion|| ' ' || v_parametros.dir_ordenacion || ' limit ' || v_parametros.cantidad || ' offset ' || v_parametros.puntero;
 
 			--Devuelve la respuesta
-			return v_consulta;
+return v_consulta;
 
-		end;
+end;
 
 	/*********************************
  	#TRANSACCION:  'PM_ENT_CONT'
@@ -90,7 +92,7 @@ BEGIN
 
 	elsif(p_transaccion='PM_ENT_CONT')then
 
-		begin
+begin
 			--Sentencia de la consulta de conteo de registros
 			v_consulta:='select count(id_entidad)
 					    from param.tentidad ent
@@ -102,15 +104,15 @@ BEGIN
 			v_consulta:=v_consulta||v_parametros.filtro;
 
 			--Devuelve la respuesta
-			return v_consulta;
+return v_consulta;
 
-		end;
+end;
 
-	else
+else
 
 		raise exception 'Transaccion inexistente';
 
-	end if;
+end if;
 
 EXCEPTION
 
@@ -121,9 +123,4 @@ EXCEPTION
 			v_resp = pxp.f_agrega_clave(v_resp,'procedimientos',v_nombre_funcion);
 			raise exception '%',v_resp;
 END;
-$body$
-LANGUAGE 'plpgsql'
-VOLATILE
-CALLED ON NULL INPUT
-SECURITY INVOKER
-COST 100;
+$BODY$;
