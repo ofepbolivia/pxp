@@ -193,7 +193,7 @@ Ext.extend(Phx.vista.gui_rol,Phx.arbInterfaz,{
 			this.maestro=m;
 			//this.getComponente('id_subsistema').setValue(m.id_subsistema);
 			//this.getComponente('id_rol').setValue(m.id_rol);
-			if(this.maestro.id_subsistema!='' && this.maestro.id_subsistema!=undefined){
+			if(this.maestro.id_subsistema!='' || this.maestro.id_subsistema!=undefined){ //fRnk: se modificó && por || para el caso del error en Administrador
 				this.getBoton('act').enable();
 				this.loaderTree.baseParams={id_rol:this.maestro.id_rol,id_subsistema:this.maestro.id_subsistema};
 				this.root.reload();

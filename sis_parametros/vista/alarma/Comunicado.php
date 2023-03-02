@@ -48,6 +48,7 @@ Phx.vista.Comunicado=Ext.extend(Phx.gridInterfaz,{
 		{
    			config:{
        				name:'id_uos',
+                    fieldLabel: 'Unidad Organizacional', //fRnk: adicionado la etiqueta
        			    tinit:false,
        			    resizable:true,
        			    tasignacion:false,
