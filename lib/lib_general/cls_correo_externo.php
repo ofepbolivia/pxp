@@ -1,13 +1,13 @@
 <?php
 /****************************************************************************
- HISTORIAL DE MODIFICACIONES:
- ISSUE-FORK         FECHA       AUTHOR                  DESCRIPCION
- //#11-ENDETR          17/12/2018  CHRIS CHROS             Se cambió la forma de crear la URL para acceder a endesis
-
-****************************************************************************/
+ * HISTORIAL DE MODIFICACIONES:
+ * ISSUE-FORK         FECHA       AUTHOR                  DESCRIPCION
+ * //#11-ENDETR          17/12/2018  CHRIS CHROS             Se cambió la forma de crear la URL para acceder a endesis
+ ****************************************************************************/
 require_once dirname(__FILE__) . '/../lib_general/templates/template.class.php';
 define('DEFAULT_TEMPLATE', dirname(__FILE__) . '/../lib_general/templates/layout.tpl');
 define('NOTIFICATION', dirname(__FILE__) . '/../lib_general/templates/notification.tpl');
+
 class CorreoExterno
 {
     protected $mail_usuario;
@@ -32,47 +32,50 @@ class CorreoExterno
 
     public $servidor;
 
-    function __construct(){
+    function __construct()
+    {
 
-         $this->autentificacion = $_SESSION['_MAIL_AUTENTIFICACION'];
-         $this->mail_usuario = $_SESSION['_MAIL_USUARIO'];
-         $this->mail_password = $_SESSION['_MAIL_PASSWORD'];
-         $this->mail_servidor = $_SESSION['_MAIL_SERVIDOR'];
-         $this->mail_puerto = $_SESSION['_MAIL_PUERTO'];
-         $this->remitente = $_SESSION['_MAIL_REMITENTE'];
-         $this->nombre_remitente = $_SESSION['_NOMBER_REMITENTE'];
-         $this->SMTPSecure = $_SESSION['_SMTPSecure'];
-         $this->acceso_directo = '';
-         $this->acuse_recibo = False;
+        $this->autentificacion = $_SESSION['_MAIL_AUTENTIFICACION'];
+        $this->mail_usuario = $_SESSION['_MAIL_USUARIO'];
+        $this->mail_password = $_SESSION['_MAIL_PASSWORD'];
+        $this->mail_servidor = $_SESSION['_MAIL_SERVIDOR'];
+        $this->mail_puerto = $_SESSION['_MAIL_PUERTO'];
+        $this->remitente = $_SESSION['_MAIL_REMITENTE'];
+        $this->nombre_remitente = $_SESSION['_NOMBER_REMITENTE'];
+        $this->SMTPSecure = $_SESSION['_SMTPSecure'];
+        $this->acceso_directo = '';
+        $this->acuse_recibo = False;
 
-         $this->mail = new PHPMailer();
+        $this->mail = new PHPMailer();
 
-         $this->mail->IsSMTP();
-         $this->mail->CharSet = 'UTF-8';
-         $this->mail->Host = $this->mail_servidor;
-         $this->mail->Port = $this->mail_puerto;
-         $this->mail->From = $this->remitente;
-         $this->mail->FromName = $this->nombre_remitente;
-         $this->mail->Subject = $this->asunto;
-         $this->mail->SMTPDebug = false;
+        $this->mail->IsSMTP();
+        $this->mail->CharSet = 'UTF-8';
+        $this->mail->Host = $this->mail_servidor;
+        $this->mail->Port = $this->mail_puerto;
+        $this->mail->From = $this->remitente;
+        $this->mail->FromName = $this->nombre_remitente;
+        $this->mail->Subject = $this->asunto;
+        $this->mail->SMTPDebug = false;
 
-         //$this->servidor = $_SESSION["HOST_SERVIDOR"];
-         //$this->servidor = $_SERVER['REMOTE_ADDR'];
-         $this->servidor = $_SESSION["_HOST_SERVIDOR"];
-   }
+        //$this->servidor = $_SESSION["HOST_SERVIDOR"];
+        //$this->servidor = $_SERVER['REMOTE_ADDR'];
+        $this->servidor = $_SESSION["_HOST_SERVIDOR"];
+    }
 
 
-    function addDestinatario($dir_destinatario,$nom_destinatario=''){//desarrollo,produccion
+    function addDestinatario($dir_destinatario, $nom_destinatario = '')
+    {//desarrollo,produccion
 
-        if ($_SESSION["_ESTADO_SISTEMA"] == 'desarrollo' && isset($_SESSION["_MAIL_PRUEBAS"])) {
+        if ($_SESSION["_ESTADO_SISTEMA"] == 'desarrollo' && !empty($_SESSION["_MAIL_PRUEBAS"])) {
             $this->mail->AddAddress($_SESSION["_MAIL_PRUEBAS"], 'Prueba de Correo Pxp');
         } else {
             $this->mail->AddAddress($dir_destinatario, $nom_destinatario);
         }
     }
 
-    function addCC($dir_destinatario,$nom_destinatario=''){//desarrollo
-        if ($_SESSION["_ESTADO_SISTEMA"] == 'desarrollo' && isset($_SESSION["_MAIL_PRUEBAS"])) {
+    function addCC($dir_destinatario, $nom_destinatario = '')
+    {//desarrollo
+        if ($_SESSION["_ESTADO_SISTEMA"] == 'desarrollo' && !empty($_SESSION["_MAIL_PRUEBAS"])) {
             $this->mail->AddCC($_SESSION["_MAIL_PRUEBAS"], 'Prueba de Correo Pxp');
         } else {
             //var_dump('addCC');
@@ -81,7 +84,8 @@ class CorreoExterno
     }
 
 
-    function addBCC($dir_destinatario,$nom_destinatario=''){//desarrollo
+    function addBCC($dir_destinatario, $nom_destinatario = '')
+    {//desarrollo
         if ($_SESSION["_ESTADO_SISTEMA"] == 'desarrollo' && isset($_SESSION["_MAIL_PRUEBAS"])) {
             $this->mail->addBCC($_SESSION["_MAIL_PRUEBAS"], 'Prueba de Correo Pxp');
         } else {
@@ -92,164 +96,221 @@ class CorreoExterno
     }
 
 
-    function addAdjunto($archivo,$name = ''){
+    function addAdjunto($archivo, $name = '')
+    {
         if ($name == '')
             $this->mail->AddAttachment($archivo);
         else
-            $this->mail->AddAttachment($archivo,$name);
+            $this->mail->AddAttachment($archivo, $name);
 
     }
 
 
-    function enviarCorreo(){
-                if($this->autentificacion){
-                     $this->mail->SMTPAuth = $this->autentificacion;
-                     $this->mail->Password = $this->mail_password;
-                     $this->mail->Username = $this->mail_usuario;
-                     $this->mail->SMTPSecure = $this->SMTPSecure;
-                     //$this->mail->SMTPDebug  = 2;
-                  }
-
-                 //para cuando el visor no puede leer HTML en el cuerpo”;
-                   $this->mail->AltBody =  $this->mensaje;
-                 // si el cuerpo del mensaje es HTML
-                  $this->mail->MsgHTML($this->mensaje_html);
-
-
-                if(!$this->mail->Send()) {
-                     return $this->mail->ErrorInfo;
-                }
-                else{
-                      return "OK";
-                }
-
-
-    }
-
-    function setMensaje ($mensaje)
+    function enviarCorreo()
     {
-             $this->mensaje= $mensaje;
-              $this->mail->AltBody =  $this->mail->mensaje;
+        if ($this->autentificacion) {
+            $this->mail->SMTPAuth = $this->autentificacion;
+            $this->mail->Password = $this->mail_password;
+            $this->mail->Username = $this->mail_usuario;
+            $this->mail->SMTPSecure = $this->SMTPSecure;
+            //fRnk: añadido para evitar el error de conexión SMTP
+            $this->mail->SMTPOptions = array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                )
+            );
+            //$this->mail->SMTPDebug  = 2;
+        }
+
+        //para cuando el visor no puede leer HTML en el cuerpo”;
+        $this->mail->AltBody = $this->mensaje;
+        // si el cuerpo del mensaje es HTML
+        $this->mail->MsgHTML($this->mensaje_html);
+
+
+        if (!$this->mail->Send()) {
+            return $this->mail->ErrorInfo;
+        } else {
+            return "OK";
+        }
+
 
     }
 
-    function setAccesoDirecto ($acceso_directo)
+    function setMensaje($mensaje)
     {
-       $this->acceso_directo=$acceso_directo;
+        $this->mensaje = $mensaje;
+        $this->mail->AltBody = $this->mail->mensaje;
+
     }
 
-    function setTitulo ($titulo)
+    function setAccesoDirecto($acceso_directo)
     {
-             $this->titulo= $titulo;
+        $this->acceso_directo = $acceso_directo;
+    }
+
+    function setTitulo($titulo)
+    {
+        $this->titulo = $titulo;
 
 
     }
-    function enableAcuseRecibo(){
+
+    function enableAcuseRecibo()
+    {
         $this->acuse_recibo = True;
     }
 
-    function setMensajeAcuse($mensaje_acuse){
+    function setMensajeAcuse($mensaje_acuse)
+    {
         $this->mensaje_acuse = $mensaje_acuse;
     }
-    function setUrlAcuse($url_acuse){
+
+    function setUrlAcuse($url_acuse)
+    {
         $this->url_acuse = $url_acuse;
     }
-    function setTokenAcuse($id){
-        $this->token_acuse = md5('llave'.$id);
-    }
 
-     function setMensajeHtml ($mensaje)
+    function setTokenAcuse($id)
     {
-             $this->mensaje_html= $mensaje;
-             $this->mail->MsgHTML($this->mensaje_html);
+        $this->token_acuse = md5('llave' . $id);
     }
 
-    function setAsunto ($asunto)
+    function setMensajeHtml($mensaje)
     {
-             $this->asunto= $asunto;
-             $this->mail->Subject = $this->asunto;
+        $this->mensaje_html = $mensaje;
+        $this->mail->MsgHTML($this->mensaje_html);
+    }
+
+    function setAsunto($asunto)
+    {
+        $this->asunto = $asunto;
+        $this->mail->Subject = $this->asunto;
 
     }
+
     function setRemitente($remitente)
     {
-             $this->remitente= $remitente;
-             $this->mail->From = $this->remitente;
+        $this->remitente = $remitente;
+        $this->mail->From = $this->remitente;
 
     }
+
     function setUsuario($usuario)
     {
-             $this->mail_usuario= $usuario;
+        $this->mail_usuario = $usuario;
     }
 
-   function setPassword($password)
+    function setPassword($password)
     {
-             $this->mail_password= $password;
+        $this->mail_password = $password;
     }
 
     function setServidor($servidor)
     {
-             $this->mail_servidor= $servidor;
-              $this->mail->Host = $this->mail_servidor;
+        $this->mail_servidor = $servidor;
+        $this->mail->Host = $this->mail_servidor;
 
     }
 
     function setPuerto($puerto)
     {
-              $this->mail_puerto= $puerto;
-              $this->mail->Port=$this->mail_puerto;
+        $this->mail_puerto = $puerto;
+        $this->mail->Port = $this->mail_puerto;
 
     }
 
-    function setDefaultPlantilla(){
-            $acceso='';
+    function setDefaultPlantilla()
+    {
+        $acceso = '';
 
-            if($this->acceso_directo!=''){
+        if ($this->acceso_directo != '') {
 
-                //$actual_link = "http://$_SERVER[HTTP_HOST]".$_SESSION['_FOLDER']."/sis_seguridad/vista/_adm/index.php#alerta:".$this->acceso_directo;
-                $actual_link = "http://".$this->servidor.$_SESSION['_FOLDER']."/sis_seguridad/vista/_adm/index.php#alerta:".$this->acceso_directo;//#11
-                $acceso = ' <!--[if mso]>
+            //$actual_link = "http://$_SERVER[HTTP_HOST]".$_SESSION['_FOLDER']."/sis_seguridad/vista/_adm/index.php#alerta:".$this->acceso_directo;
+            $actual_link = "http://" . $this->servidor . $_SESSION['_FOLDER'] . "/sis_seguridad/vista/_adm/index.php#alerta:" . $this->acceso_directo;//#11
+            $acceso = ' <!--[if mso]>
                             <v:roundrect xmlns_v="urn:schemas-microsoft-com:vml" xmlns_w="urn:schemas-microsoft-com:office:word" href="' . $actual_link . '" style="height:36px;v-text-anchor:middle;width:150px;" arcsize="5%" strokecolor="#021d70" fillcolor="#021d70">
                                  <w:anchorlock/>
                                  <center style="color:#ffffff;font-family:Helvetica, Arial,sans-serif;font-size:16px;">Acceso Directo</center>
                             </v:roundrect>
                             <![endif]-->';
 
-                $acceso .= ' <a href="' . $actual_link . '" target="_blank" style="mso-hide:all;padding-top: 8px;padding-bottom:8px; border: 1px solid #021d70;border-radius: 2px;font-family: Helvetica, Arial, sans-serif;font-size: 12px; color: #f9bd00;text-decoration: none;font-weight:bold;display: block;">
+            $acceso .= ' <a href="' . $actual_link . '" target="_blank" style="mso-hide:all;padding-top: 8px;padding-bottom:8px; border: 1px solid #021d70;border-radius: 2px;font-family: Helvetica, Arial, sans-serif;font-size: 12px; color: #f9bd00;text-decoration: none;font-weight:bold;display: block;">
                             Acceso Directo
                             </a>';
+        }
+        $acuse = '';
+        if ($this->acuse_recibo) {
+
+
+            $mensaje_acuse = "Por  favor para confirmar la recepción  de este mensaje y continuar con el trámite,  haga clic en el botón de abajo: <br><br>";
+            //$url_acuse = "http://$_SERVER[HTTP_HOST]".$_SESSION['_FOLDER']."/sis_parametros/vista/alarma/acuse/acuserecibo.php";
+            $url_acuse = "http://" . $this->servidor . $_SESSION['_FOLDER'] . "/sis_parametros/vista/alarma/acuse/acuserecibo.php";//#11
+
+
+            if (!isset($this->mensaje_acuse) || trim($this->mensaje_acuse) == '') {
+                $this->mensaje_acuse = $mensaje_acuse;
             }
-            $acuse='';
-            if($this->acuse_recibo){
+
+            if (!isset($this->url_acuse) || trim($this->url_acuse) == '') {
+                $this->url_acuse = $url_acuse;
+            }
+
+            $this->url_acuse = $this->url_acuse . "?token=" . $this->token_acuse;
 
 
-                $mensaje_acuse = "Por  favor para confirmar la recepción  de este mensaje y continuar con el trámite,  haga clic en el botón de abajo: <br><br>";
-                //$url_acuse = "http://$_SERVER[HTTP_HOST]".$_SESSION['_FOLDER']."/sis_parametros/vista/alarma/acuse/acuserecibo.php";
-                $url_acuse = "http://".$this->servidor.$_SESSION['_FOLDER']."/sis_parametros/vista/alarma/acuse/acuserecibo.php";//#11
+            //$boton_acuse = '<td style="background:#ff4800; padding:12px 10px; border:6px solid rgb(239,239,239);"><a href="'.$this->url_acuse.'" style="text-decoration:none; font-family:Arial, Helvetica, sans-serif; color:#fff; background:#ff4800; text-align:center;"><span class="btn-inner" style="text-decoration:none !important; color:#fff; font-size:16px; line-height:28px; text-align:center; display:block;">&nbsp;&nbsp; Confirmar &nbsp;&nbsp;</span></a></td>'
 
-
-                if(!isset($this->mensaje_acuse) ||  trim($this->mensaje_acuse) ==''){
-                    $this->mensaje_acuse = $mensaje_acuse;
-                }
-
-                if(!isset($this->url_acuse) || trim($this->url_acuse) ==''){
-                    $this->url_acuse = $url_acuse;
-                }
-
-                $this->url_acuse = $this->url_acuse."?token=".$this->token_acuse;
-
-
-                //$boton_acuse = '<td style="background:#ff4800; padding:12px 10px; border:6px solid rgb(239,239,239);"><a href="'.$this->url_acuse.'" style="text-decoration:none; font-family:Arial, Helvetica, sans-serif; color:#fff; background:#ff4800; text-align:center;"><span class="btn-inner" style="text-decoration:none !important; color:#fff; font-size:16px; line-height:28px; text-align:center; display:block;">&nbsp;&nbsp; Confirmar &nbsp;&nbsp;</span></a></td>'
-
-                $boton_acuse = $this->mensaje_acuse.'<BR><BR><BR><form method="get" action="'.$this->url_acuse.'">
-                                <input type="hidden" name="token" value="'.$this->token_acuse.'">
+            $boton_acuse = $this->mensaje_acuse . '<BR><BR><BR><form method="get" action="' . $this->url_acuse . '">
+                                <input type="hidden" name="token" value="' . $this->token_acuse . '">
                                 <input type="submit" value="Enviar acuse" />
-                                </form><br>(Si  no funciona, por favor copie y pegue el enlace completo en su navegador) <br>'.$this->url_acuse.'<br>';
+                                </form><br>(Si  no funciona, por favor copie y pegue el enlace completo en su navegador) <br>' . $this->url_acuse . '<br>';
 
 
+            //$acuse = $this->mensaje_acuse.'<BR/><a href="'.$this->url_acuse.'">'.$this->url_acuse.'</a>';
 
-                //$acuse = $this->mensaje_acuse.'<BR/><a href="'.$this->url_acuse.'">'.$this->url_acuse.'</a>';
+        }
 
-            }
+        //fRnk: se agregó nuevos parámetros para que obtenga de la configuración
+        $rrss_face = $rrss_twit = $rrss_link = '';
+        if (!empty($_SESSION['_RRSS_LINKEDIN'])) {
+            $rrss_link = '<span><a href="' . $_SESSION['_RRSS_LINKEDIN'] . '" target="_blank">
+							    <img border="0" width="16" src="' . __DIR__ . '/templates/assets/img/ln.png" alt="linkedin"
+                                style="margin-right:5px; margin-bottom:1px; border:0; width:16px; height:16px;"></a>&nbsp;
+						  </span>';
+        }
+        if (!empty($_SESSION['_RRSS_TWITTER'])) {
+            $rrss_twit = '<span><a href="' . $_SESSION['_RRSS_TWITTER'] . '" target="_blank">
+								<img border="0" width="16" src="' . __DIR__ . '/templates/assets/img/tt.png" alt="twitter"
+                                style="margin-right:5px; margin-bottom:1px; border:0; width:16px; height:16px;"></a>&nbsp;
+						  </span>';
+        }
+        if (!empty($_SESSION['_RRSS_FACEBOOK'])) {
+            $rrss_face = '<span><a href="' . $_SESSION['_RRSS_FACEBOOK'] . '" target="_blank">
+							    <img border="0" width="16" src="' . __DIR__ . '/templates/assets/img/fb.png" alt="facebook"
+                                style="margin-right:5px; margin-bottom:1px; border:0; width:16px; height:16px;"></a>&nbsp;
+						  </span>';
+        }
+        $type = pathinfo(__DIR__ . '/../' . $_SESSION['_DIR_LOGO'], PATHINFO_EXTENSION);
+        $data = file_get_contents(__DIR__ . '/../' . $_SESSION['_DIR_LOGO']);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        $logo = '<img border="0" alt="Logo" width="130" style="width:130px; height:auto; border:0;" src="' . $base64 . '">';
+
+        $sitio_web = $sis_titulo = $direccion = '';
+        try {
+            $cone = new conexion();
+            $link = $cone->conectarpdo();
+            $sql = "select nombre, pagina_entidad, direccion_matriz from param.tentidad limit 1";
+            $consulta = $link->query($sql);
+            $consulta->execute();
+            $entidad = $consulta->fetchAll(PDO::FETCH_ASSOC)[0];
+            $sis_titulo = $entidad["nombre"];
+            $sitio_web = strpos($entidad["pagina_entidad"], 'http') === false ? trim($entidad["pagina_entidad"]) : explode("//", $entidad["pagina_entidad"])[1];
+            $direccion = $entidad["direccion_matriz"];
+        } catch (Exception $exc) {
+        }
 
         $notification = new Template(NOTIFICATION);
         $notification->set('template_path', __DIR__);
@@ -257,26 +318,32 @@ class CorreoExterno
         $notification->set('mensaje', $this->mensaje);
         $notification->set('titulo', $this->titulo);
         $notification->set('boton_acuse', $this->acuse_recibo);
+        $notification->set('sis_email', $_SESSION['_SIS_EMAIL']);
+        $notification->set('sitio_web', $sitio_web);
+        $notification->set('rrss_face', $rrss_face);
+        $notification->set('rrss_twit', $rrss_twit);
+        $notification->set('rrss_link', $rrss_link);
+        $notification->set('direccion', $direccion);
+        $notification->set('logo', $logo);
+        $notification->set('sis_titulo', $sis_titulo);
         $layout = new Template(DEFAULT_TEMPLATE);
         $layout->set('template_path', __DIR__);
         $layout->set("content", $notification->output());
         $this->mensaje_html = $layout->output();
     }
 
-    function validateEmail($email){
-            //list($userName, $mailDomain) = split("@", $email);
-            list($userName, $mailDomain) = explode("@", $email);//RCM cambio de split por explode, split esta deprecado
-            if (checkdnsrr($mailDomain, "MX")) {
-               return true;
-            }
-            else {
-               return false;
-            }
+    function validateEmail($email)
+    {
+        //list($userName, $mailDomain) = split("@", $email);
+        list($userName, $mailDomain) = explode("@", $email);//RCM cambio de split por explode, split esta deprecado
+        if (checkdnsrr($mailDomain, "MX")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
-
-
-
 }
+
 ?>
