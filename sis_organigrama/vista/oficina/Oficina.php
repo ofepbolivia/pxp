@@ -138,7 +138,8 @@ Phx.vista.Oficina=Ext.extend(Phx.gridInterfaz,{
 	       		lazyRender:true,
 	       		mode: 'local',
 				gwidth: 100,
-				store:['si','no']
+				store:['si','no'],
+                hidden:true
 			},
 				type:'ComboBox',
 				filters:{	
@@ -153,8 +154,8 @@ Phx.vista.Oficina=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'direccion',
-				fieldLabel: 'direccion',
-				allowBlank: true,
+				fieldLabel: 'Dirección',
+				allowBlank: false,
 				anchor: '80%',
 				gwidth: 100,
 				maxLength:255
@@ -168,7 +169,7 @@ Phx.vista.Oficina=Ext.extend(Phx.gridInterfaz,{
         {
             config:{
                 name: 'telefono',
-                fieldLabel: 'Telefono',
+                fieldLabel: 'Teléfono',
                 allowBlank: true,
                 anchor: '80%',
                 gwidth: 100,
@@ -211,7 +212,8 @@ Phx.vista.Oficina=Ext.extend(Phx.gridInterfaz,{
 	       		lazyRender:true,
 	       		mode: 'local',
 				gwidth: 100,
-				store:['si','no']
+				store:['si','no'],
+                hidden:true
 			},
 				type:'ComboBox',
 				filters:{	
