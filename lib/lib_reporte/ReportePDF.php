@@ -206,7 +206,7 @@ class ReportePDF extends MYPDF
 		$this->Cell($ancho, 0, $_SESSION['_REP_NOMBRE_SISTEMA'], '', 0, 'R');
 		$this->Ln();
 		$fecha_rep = date("d-m-Y H:i:s");
-		$this->Cell($ancho, 0, "Fecha Impresion : ".$fecha_rep, '', 0, 'L');
+		$this->Cell($ancho, 0, "Fecha Impresión : ".$fecha_rep, '', 0, 'L'); //fRnk: corrección tilde
 		$this->Ln($line_width);
 		$this->Ln();
 		$barcode = $this->getBarcode();
@@ -940,8 +940,10 @@ class ReportePDF extends MYPDF
 		        $this->Cell(40, $height, '', 1, 0, 'C', false, '', 0, false, 'T', 'C');
 				/*$e=dirname(__FILE__).'/lib/'.$_SESSION['_DIR_LOGO'];
 				echo $e; exit;*/
-		        $this->Image(dirname(__FILE__).'/../'.$_SESSION['_DIR_LOGO'], 26, 8, 20);
-		        
+				//fRnk: corrección de dimensión logo
+		        //$this->Image(dirname(__FILE__).'/../'.$_SESSION['_DIR_LOGO'], 26, 8, 20);
+		        $this->Image(dirname(__FILE__).'/../'.$_SESSION['_DIR_LOGO'], 16, 8, 32);
+
 		        $x = $this->GetX();
 		        $y = $this->GetY();
 		        $this->SetFontSize(14);
@@ -1019,7 +1021,7 @@ class ReportePDF extends MYPDF
 					echo 'EL LOGO TIPO NO ES UNA IMAGEN';
 					exit;
 				}
-				
+
 				
 				$this->Image($image_file, $align, 5, 35, '',$var_tipo, '', 'T', false, 300, '', false, false, 0, false, false, false);
 				// Set font
@@ -1040,8 +1042,10 @@ class ReportePDF extends MYPDF
 		        $y = $this->GetY();
 		        $this->SetXY($x, $y);
 		        $this->Cell(40, $height, '', 1, 0, 'C', false, '', 0, false, 'T', 'C');
-		        $this->Image(dirname(__FILE__).'/../'.$_SESSION['_DIR_LOGO'], 26, 8, 20);
-		        
+		        //$this->Image(dirname(__FILE__).'/../'.$_SESSION['_DIR_LOGO'], 26, 8, 20);
+				//fRnk: corrección dimensión de logo
+		        $this->Image(dirname(__FILE__).'/../'.$_SESSION['_DIR_LOGO'], 16, 8, 32);
+
 		        $x = $this->GetX();
 		        $y = $this->GetY();
 		        $this->SetFontSize(14);
