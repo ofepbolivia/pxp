@@ -206,7 +206,15 @@ Phx.vista.Subsistema=Ext.extend(Phx.gridInterfaz,{
 				url: '../../sis_seguridad/control/Funcion/sincFuncion',
 				params: {'id_subsistema':data, 'id_gui':-1},
 				success: this.successSinc,
-				failure: this.conexionFailure,
+				failure: function (resp1, resp2, resp3, resp4, resp5) {
+                    //fRnk: añadido debido al timeout
+                    if(resp1.status==-1){
+                        Phx.CP.loadingHide();
+                        alert('Proceso exitoso, la tarea se seguirá ejecutando en segundo plano.');
+                    }else{
+                        this.conexionFailure(resp1, resp2, resp3, resp4, resp5)
+                    }
+                    },
 				timeout: this.timeout,
 				scope: this
 			});
