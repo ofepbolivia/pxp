@@ -29,7 +29,7 @@ class MODProyecto extends MODbase{
 		$this->captura('nombre_proyecto','varchar');
 		$this->captura('nombre_corto','varchar');
 		$this->captura('id_proyecto_actif','int4');
-		$this->captura('codigo_sisin','int8');
+		$this->captura('codigo_sisin','varchar'); //fRnk: cambio tipo de dato int8 a varchar
 		$this->captura('fecha_reg','timestamp');
 		$this->captura('id_usuario_reg','int4');
 		$this->captura('fecha_mod','timestamp');
@@ -60,7 +60,7 @@ class MODProyecto extends MODbase{
 		$this->setParametro('nombre_proyecto','nombre_proyecto','varchar');
 		$this->setParametro('nombre_corto','nombre_corto','varchar');
 		$this->setParametro('id_proyecto_actif','id_proyecto_actif','int4');
-		$this->setParametro('codigo_sisin','codigo_sisin','int4');
+		$this->setParametro('codigo_sisin','codigo_sisin','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -86,7 +86,7 @@ class MODProyecto extends MODbase{
 		$this->setParametro('nombre_proyecto','nombre_proyecto','varchar');
 		$this->setParametro('nombre_corto','nombre_corto','varchar');
 		$this->setParametro('id_proyecto_actif','id_proyecto_actif','int4');
-		$this->setParametro('codigo_sisin','codigo_sisin','int8');
+		$this->setParametro('codigo_sisin','codigo_sisin','varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();

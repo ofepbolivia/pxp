@@ -108,12 +108,13 @@ Phx.vista.Proyecto=Ext.extend(Phx.gridInterfaz,{
 		},
 		{
 			config:{
+                //fRnk: cambio de longitud del Código Sisin y tipo de dato a varchar, tanto en base de datos, funciones y parámetros
 				name: 'codigo_sisin',
 				fieldLabel: 'Código Sisin',
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
-				maxLength:8
+				maxLength:14
 			},
 			type:'TextField',
 			filters:{pfiltro:'proy.codigo_sisin',type:'string'},

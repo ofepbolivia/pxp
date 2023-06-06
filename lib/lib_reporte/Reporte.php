@@ -28,15 +28,17 @@ class Reporte
 			$this->titulo=$this->objParam->getParametro('titulo');
 		}
 		
-		//Genera el nombre del archivo (aleatorio + titulo)
-		$this->nombreArchivo=uniqid(md5(session_id()).$this->titulo);
+		//Genera el nombre del archivo (aleatorio + titulo), fRnk: añadido $compl_titulo para evitar error en caracteres especiales
+		$compl_titulo=strpos($this->titulo, '<')===false?$this->titulo:'';
+		$this->nombreArchivo=uniqid(md5(session_id())).$compl_titulo;
 
 		//Si es un reporte de excel que se genera desde el grid
 		if($this->objParam->getParametro('tipoReporte')=='excel_grid'){
 			//Agrega la extensión al nombre de archivo
 			$this->nombreArchivo.='.xls';
 			//Instancia la clase de excel
-			$this->objReporteFormato=new ReporteXLS($this->nombreArchivo,$this->titulo);
+			$tituloXLS=preg_replace('/[^a-zA-Z0-9 ]/m','',strip_tags($this->titulo)); //fRnk: evitar errores con caracteres especiales
+			$this->objReporteFormato=new ReporteXLS($this->nombreArchivo,$tituloXLS);
 			//Se definen las columnas que se van a mostrar
 			$this->objReporteFormato->defineDatosMostrar($this->objParam->getColumnasReporte());
 		} 
