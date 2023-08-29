@@ -77,7 +77,7 @@ Phx.vista.TipoDocumento=Ext.extend(Phx.gridInterfaz,{
         {
             config:{
                 name: 'codigo',
-                fieldLabel: 'Codigo',
+                fieldLabel: 'Código',
                 allowBlank: true,
                 anchor: '80%',
                 gwidth: 100,
@@ -109,7 +109,7 @@ Phx.vista.TipoDocumento=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'descripcion',
-				fieldLabel: 'Descripcion',
+				fieldLabel: 'Descripción',
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
@@ -172,7 +172,7 @@ Phx.vista.TipoDocumento=Ext.extend(Phx.gridInterfaz,{
         {
             config:{
                 name: 'solo_lectura',
-                fieldLabel: 'Solo Llectura ',
+                fieldLabel: 'Solo lectura ',
                 allowBlank: false,
                 anchor: '70%',
                 gwidth: 150,
@@ -260,7 +260,7 @@ Phx.vista.TipoDocumento=Ext.extend(Phx.gridInterfaz,{
         {
             config:{
                     name:'categoria_documento',
-                    fieldLabel:'Categoria',
+                    fieldLabel:'Categoría',
                     qtip:'Sirve para clasificar las categorías del documento',
                     tinit:false,
                     resizable:true,

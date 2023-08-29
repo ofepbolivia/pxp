@@ -401,7 +401,7 @@ class MODDocumentoWf extends MODbase{
 	      
     }
 
-	function eliminarArchivo(){ 
+	function eliminarArchivo($remove=true){ //fRnk: add parametro para evitar error en rename HR878
                     
             $cone = new conexion();
 			$link = $cone->conectarpdo('','segu');
@@ -435,8 +435,10 @@ class MODDocumentoWf extends MODbase{
 	            
 	            
 				if($resp_procedimiento['tipo_respuesta'] == 'EXITO'){
-					$respuesta = $resp_procedimiento['datos'];				   
-				   	$this->copyFile($this->objParam->getParametro('url'), $respuesta['url_destino']);
+					$respuesta = $resp_procedimiento['datos'];
+					//fRnk: adicionado remove para evitar que elimine el archivo o en su defecto elimine si es true
+				   	if($remove)$this->copyFile($this->objParam->getParametro('url'), $respuesta['url_destino']);
+					else copy($this->objParam->getParametro('url'), $respuesta['url_destino']);
 	            }
 				
 				$link->commit();

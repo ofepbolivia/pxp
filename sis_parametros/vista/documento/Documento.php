@@ -109,7 +109,7 @@ Phx.vista.Documento=function(config){
 						console.log('rec',record.data.ruta_plantilla)
 						/*meta.style=(record.data.ruta_plantilla)?'background:red; color:#fff;':'';*/
 						//meta.css = record.get('online') ? 'user-online' : 'user-offline';
-						resp=(record.data.ruta_plantilla != '')? value+' <i class="fa fa-file-word-o fa-2x"></i>': value;
+						resp=(record.data.ruta_plantilla != '')? value+' <i class="fa fa-file-o fa-2x"></i>': value; //fRnk: modificado tipo de archivo
 
 						return resp;
 					}
@@ -295,7 +295,7 @@ Phx.vista.Documento=function(config){
 	this.iniciarEventos();
 	
 	this.addButton('addPlantilla', {
-				text : 'addPlantilla',
+				text : 'Ad.Plantilla',
 				iconCls : 'bundo',
 				disabled : false,
 				handler : this.addPlantilla,
@@ -304,7 +304,7 @@ Phx.vista.Documento=function(config){
 
 
 	this.addButton('VerPlantilla', {
-		text: 'VerPlantilla',
+		text: 'Ver Plantilla',
 		iconCls: 'bsee',
 		disabled: false,
 		handler: this.VerPlantilla,
@@ -322,16 +322,21 @@ Phx.vista.Documento=function(config){
                 handler: this.expProceso,
                 tooltip: '<b>Exportar</b><br/>Exporta a archivo SQL la plantilla de calculo'
             }
-        );		
-
+        );
+    this.addButton('btnQuitarPlantilla',// fRnk: adicionado HR876
+        {
+            text: 'Quitar Plantilla',
+            iconCls: 'bcancelfile',
+            disabled: true,
+            handler: this.quitarPlantilla,
+            tooltip: '<b>Quitar Plantilla</b><br/>Elimina archivo Plantilla<br/>'
+        }
+    );
 	
 	this.load({params:{start:0, limit:50}});
 }
 
 Ext.extend(Phx.vista.Documento,Phx.gridInterfaz,{
-	
-	
-		
 	title:'Documentos',
 	ActSave:'../../sis_parametros/control/Documento/guardarDocumento',
 	ActDel:'../../sis_parametros/control/Documento/eliminarDocumento',
@@ -428,8 +433,12 @@ Ext.extend(Phx.vista.Documento,Phx.gridInterfaz,{
 		var data = this.getSelectedData();
 		if(data.ruta_plantilla != ''){
 			this.getBoton('VerPlantilla').enable();
+			this.getBoton('btnQuitarPlantilla').enable();
+			this.getBoton('addPlantilla').disable();
 		}else{
 			this.getBoton('VerPlantilla').disable();
+			this.getBoton('btnQuitarPlantilla').disable();
+			this.getBoton('addPlantilla').enable();
 		}
 	},
 	
@@ -464,19 +473,26 @@ Ext.extend(Phx.vista.Documento,Phx.gridInterfaz,{
 	
 	
 	VerPlantilla : function() {
-
-
 			var rec = this.sm.getSelected();
 			console.log(rec);
 			window.open(rec.data.ruta_plantilla);
-			
-			
-			
-
-			
-
 	},
-	
-		 
+    quitarPlantilla : function() {
+        if(confirm('¿Está seguro de quitar la Plantilla?')) {
+            var data = this.sm.getSelected().data;
+            Phx.CP.loadingShow();
+            Ext.Ajax.request({
+                url: '../../sis_parametros/control/Documento/quitarPlantilla',
+                params: {'id_documento': data.id_documento,'ruta_plantilla': data.ruta_plantilla},
+                success: function (resp) {
+                    Phx.CP.loadingHide();
+                    this.reload();
+                },
+                failure: this.conexionFailure,
+                timeout: this.timeout,
+                scope: this
+            });
+        }
+    },
 })
 </script>

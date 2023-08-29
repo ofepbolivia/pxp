@@ -1,122 +1,147 @@
 <?php
 /**
-*@package pXP
-*@file gen-ACTDocumentoWf.php
-*@author  (admin)
-*@date 15-01-2014 13:52:19
-*@description Clase que recibe los parametros enviados por la vista para mandar a la capa de Modelo
-*/
+ * @package pXP
+ * @file gen-ACTDocumentoWf.php
+ * @author  (admin)
+ * @date 15-01-2014 13:52:19
+ * @description Clase que recibe los parametros enviados por la vista para mandar a la capa de Modelo
+ */
 
-class ACTDocumentoWf extends ACTbase{    
-			
-	function listarDocumentoWf(){
-		$this->objParam->defecto('ordenacion','id_documento_wf');
+class ACTDocumentoWf extends ACTbase
+{
 
-		$this->objParam->defecto('dir_ordenacion','asc');
-		/*$this->objParam->addFiltro("tewf.nombre_estado != ''anulado''");
-		$this->objParam->addFiltro("tewf.nombre_estado != ''cancelado''");*/
-		
-		if ($this->objParam->getParametro('anulados') == 'no') {
-			$this->objParam->addFiltro("tewf.codigo not in (''anulada'',''anulado'',''cancelado'')");
-		}
-		
-		if ($this->objParam->getParametro('modoConsulta') == 'si') {
-			$this->objParam->addFiltro(" (dwf.chequeado = ''si'' or  td.action != '''') ");
-		}
-		
-		if ($this->objParam->getParametro('categoria') != '') {
-			$this->objParam->addFiltro("(''".$this->objParam->getParametro('categoria')."'' =ANY(td.categoria_documento) or td.categoria_documento is NULL or td.categoria_documento = ''{}'')" );
-		}
-		
-		if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
-			$this->objReporte = new Reporte($this->objParam,$this);
-			$this->res = $this->objReporte->generarReporteListado('MODDocumentoWf','listarDocumentoWf');
-		} else{
-			$this->objFunc=$this->create('MODDocumentoWf');
-			
-			$this->res=$this->objFunc->listarDocumentoWf($this->objParam);
-			foreach($this->res->getDatos() as $documento){
-				if($documento["tipo_documento"]=='generado'){					
-					$_SESSION["permisos_temporales"][trim(str_replace('../','',$documento["action"]))] = 'si';					
-				}
-			}
-		}
-		$this->res->imprimirRespuesta($this->res->generarJson());
-	}
+    function listarDocumentoWf()
+    {
+        $this->objParam->defecto('ordenacion', 'id_documento_wf');
 
-    function getRutaDocumento(){
-        $this->objParam->defecto('ordenacion','id_documento_wf');
-
-        $this->objParam->defecto('dir_ordenacion','asc');
+        $this->objParam->defecto('dir_ordenacion', 'asc');
         /*$this->objParam->addFiltro("tewf.nombre_estado != ''anulado''");
         $this->objParam->addFiltro("tewf.nombre_estado != ''cancelado''");*/
-        $this->objParam->addParametro('dominio',$_SERVER['HTTP_HOST'] . $_SESSION["_FOLDER"]);
+
+        if ($this->objParam->getParametro('anulados') == 'no') {
+            $this->objParam->addFiltro("tewf.codigo not in (''anulada'',''anulado'',''cancelado'')");
+        }
+
+        if ($this->objParam->getParametro('modoConsulta') == 'si') {
+            $this->objParam->addFiltro(" (dwf.chequeado = ''si'' or  td.action != '''') ");
+        }
+
+        if ($this->objParam->getParametro('categoria') != '') {
+            $this->objParam->addFiltro("(''" . $this->objParam->getParametro('categoria') . "'' =ANY(td.categoria_documento) or td.categoria_documento is NULL or td.categoria_documento = ''{}'')");
+        }
+
+        if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {
+            $this->objReporte = new Reporte($this->objParam, $this);
+            $this->res = $this->objReporte->generarReporteListado('MODDocumentoWf', 'listarDocumentoWf');
+        } else {
+            $this->objFunc = $this->create('MODDocumentoWf');
+
+            $this->res = $this->objFunc->listarDocumentoWf($this->objParam);
+            foreach ($this->res->getDatos() as $documento) {
+                if ($documento["tipo_documento"] == 'generado') {
+                    $_SESSION["permisos_temporales"][trim(str_replace('../', '', $documento["action"]))] = 'si';
+                }
+            }
+        }
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
+    function getRutaDocumento()
+    {
+        $this->objParam->defecto('ordenacion', 'id_documento_wf');
+
+        $this->objParam->defecto('dir_ordenacion', 'asc');
+        /*$this->objParam->addFiltro("tewf.nombre_estado != ''anulado''");
+        $this->objParam->addFiltro("tewf.nombre_estado != ''cancelado''");*/
+        $this->objParam->addParametro('dominio', $_SERVER['HTTP_HOST'] . $_SESSION["_FOLDER"]);
         if ($this->objParam->getParametro('id_documento_wf') != '') {
             $this->objParam->addFiltro("dwf.id_documento_wf = " . $this->objParam->getParametro('id_documento_wf'));
         }
 
 
-        $this->objFunc=$this->create('MODDocumentoWf');
-        $this->res=$this->objFunc->getRutaDocumento($this->objParam);
+        $this->objFunc = $this->create('MODDocumentoWf');
+        $this->res = $this->objFunc->getRutaDocumento($this->objParam);
 
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
-				
-	function insertarDocumentoWf(){
-		$this->objFunc=$this->create('MODDocumentoWf');	
-		if($this->objParam->insertar('id_documento_wf')){
-			$this->res=$this->objFunc->insertarDocumentoWf($this->objParam);			
-		} else{			
-			$this->res=$this->objFunc->modificarDocumentoWf($this->objParam);
-		}
-		$this->res->imprimirRespuesta($this->res->generarJson());
-	}
-						
-	function eliminarDocumentoWf(){
-			$this->objFunc=$this->create('MODDocumentoWf');	
-		$this->res=$this->objFunc->eliminarDocumentoWf($this->objParam);
-		$this->res->imprimirRespuesta($this->res->generarJson());
-	}
-	
-	function subirArchivoWf(){
-        $this->objFunc=$this->create('MODDocumentoWf');
-        $this->res=$this->objFunc->subirDocumentoWfArchivo();
-        $this->res->imprimirRespuesta($this->res->generarJson());
-    }
-    
-    function cambiarMomento(){
-        $this->objFunc=$this->create('MODDocumentoWf'); 
-        $this->res=$this->objFunc->cambiarMomento($this->objParam);
-        $this->res->imprimirRespuesta($this->res->generarJson());
-    }
-	
-	function verificarConfiguracion(){
-        $this->objFunc=$this->create('MODDocumentoWf'); 
-        $this->res=$this->objFunc->verificarConfiguracion($this->objParam);
-        $this->res->imprimirRespuesta($this->res->generarJson());
-    }
-    
-    function insertarRegistroOpenDoc(){
-        $this->objFunc=$this->create('MODDocumentoWf');
-        $this->res=$this->objFunc->insertarRegistroOpenDoc($this->objParam);
+
+    function insertarDocumentoWf()
+    {
+        $this->objFunc = $this->create('MODDocumentoWf');
+        if ($this->objParam->insertar('id_documento_wf')) {
+            $this->res = $this->objFunc->insertarDocumentoWf($this->objParam);
+        } else {
+            $this->res = $this->objFunc->modificarDocumentoWf($this->objParam);
+        }
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
 
-    function listarDocumentsOpens(){
+    function eliminarDocumentoWf()
+    {
+        $this->objFunc = $this->create('MODDocumentoWf');
+        $this->res = $this->objFunc->eliminarDocumentoWf($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 
-	    $this->objParam->getParametro('id_documento_wf')!='' && $this->objParam->addFiltro("dop.id_documento_wf = ".$this->objParam->getParametro('id_documento_wf'));
+    function subirArchivoWf()
+    {
+        $this->objFunc = $this->create('MODDocumentoWf');
+        $this->res = $this->objFunc->subirDocumentoWfArchivo();
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 
-        if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
-            $this->objReporte = new Reporte($this->objParam,$this);
-            $this->res = $this->objReporte->generarReporteListado('MODDocumentoWf','listarDocumentsOpens');
-        } else{
-            $this->objFunc=$this->create('MODDocumentoWf');
-            $this->res=$this->objFunc->listarDocumentsOpens($this->objParam);
+    //fRnk: Adicionado para quitar archivos en Formulación del presupuesto->Documentos, HR878
+    function quitarArchivoWf()
+    {
+        //var_dump($this->objParam->arreglo_parametros);exit();
+        $this->objFunc = $this->create('MODDocumentoWf');
+        if (isset($this->objParam->arreglo_parametros)) {
+            foreach ($this->objParam->arreglo_parametros as $item) {
+                $this->objParam->addParametro('url', $item['url']);
+                $this->objParam->addParametro('id_documento_wf', $item['id_documento_wf']);
+                $this->res = $this->objFunc->eliminarArchivo(false);
+            }
+        }
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
+    function cambiarMomento()
+    {
+        $this->objFunc = $this->create('MODDocumentoWf');
+        $this->res = $this->objFunc->cambiarMomento($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
+    function verificarConfiguracion()
+    {
+        $this->objFunc = $this->create('MODDocumentoWf');
+        $this->res = $this->objFunc->verificarConfiguracion($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
+    function insertarRegistroOpenDoc()
+    {
+        $this->objFunc = $this->create('MODDocumentoWf');
+        $this->res = $this->objFunc->insertarRegistroOpenDoc($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
+
+    function listarDocumentsOpens()
+    {
+
+        $this->objParam->getParametro('id_documento_wf') != '' && $this->objParam->addFiltro("dop.id_documento_wf = " . $this->objParam->getParametro('id_documento_wf'));
+
+        if ($this->objParam->getParametro('tipoReporte') == 'excel_grid' || $this->objParam->getParametro('tipoReporte') == 'pdf_grid') {
+            $this->objReporte = new Reporte($this->objParam, $this);
+            $this->res = $this->objReporte->generarReporteListado('MODDocumentoWf', 'listarDocumentsOpens');
+        } else {
+            $this->objFunc = $this->create('MODDocumentoWf');
+            $this->res = $this->objFunc->listarDocumentsOpens($this->objParam);
         }
 
         $this->res->imprimirRespuesta($this->res->generarJson());
     }
-			
+
 }
 
 ?>

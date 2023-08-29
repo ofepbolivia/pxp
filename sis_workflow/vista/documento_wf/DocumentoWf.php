@@ -23,12 +23,12 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 	 bactGroups:[0,1,2,3],
 	 btestGroups:[0,1,2,3],
 	 bexcelGroups:[0,1,2,3],
-	 stateful: false, 
+	 stateful: false,
 	 //CheckSelectionModel: true,
 	 //checkGrid: true,
-	 
+
 	 constructor: function(config){
-	 	
+
 	 	Ext.apply(this,config);
 	 	this.esperarEventos = true;
 	 	//busca  la configuracion de la interface, si necesita documentos fisicos, si necesita modifica, insercion pestañas
@@ -43,44 +43,44 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
             timeout:this.timeout,
             scope:this
         });
-        
-        
-	 	
-	 	
+
+
+
+
 	 },
 	 successInit:function(resp){
 	 	var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
 	 	Phx.CP.loadingHide();
-	 	
-	 	
+
+
 	 	if(!resp.argument.config.gruposBarraTareas && reg.ROOT.datos.json_grupo_doc != ''){
 	 		resp.argument.config.gruposBarraTareas = Ext.util.JSON.decode(Ext.util.Format.trim(reg.ROOT.datos.json_grupo_doc));
 	 	 }
-	 	 
+
 	 	 this.arrayDefaultColumHidden = ['fecha_reg','fecha_mod','usr_reg','usr_mod','usr_upload','fecha_upload','estado_reg','fecha_reg'];
-			 
+
 	 	 if(this.modoConsulta == 'no'){
-	 	 
+
 		 	if(reg.ROOT.datos.sw_tiene_fisico == 'no'){
 		 	 	  this.arrayDefaultColumHidden.push('chequeado_fisico');
 		 	 	  this.bedit = false;
-		 	 }  
+		 	 }
 		 	 else{
 		 	 	 this.bedit = true;
 		 	 }
-		 	 
+
 		 	 if(reg.ROOT.datos.sw_tiene_insertar == 'no'){
 		 	 	 this.bnew = false;
-		 	 }  
+		 	 }
 		 	 else{
 		 	 	 this.bnew = true;
 		 	 	 this.documentos_insertables = reg.ROOT.datos.id_tipo_documentos;
 		 	 }
-		 	 
+
 		 	 if(reg.ROOT.datos.sw_tiene_modificar == 'no'){
 		 	 	 this.arrayDefaultColumHidden.push('modificar')
 		 	 }
-		 	 
+
 	 	 }
 	 	 else{
 	 	 	 this.bnew = false;
@@ -88,13 +88,13 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 	 	 	 this.arrayDefaultColumHidden.push('chequeado_fisico');
 	 	 	 this.arrayDefaultColumHidden.push('modificar');
 	 	 	 this.arrayDefaultColumHidden.push('upload');
-		 	 
+
 	 	 }
-		
+
 		this.initconstructor(resp.argument.config);
-	 	
+
 	 },
-	 
+
 	 cmpCheckModo : new Ext.form.Checkbox({
 	 	        name: 'modo',
 	 	        grupo:[0,1,2,3],
@@ -105,23 +105,23 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
                 style : {height:'37px', width:'37px'},
                 gwidth: 65
 	 	}),
-	 	
-	 
-	
-	 initconstructor:function(config){		
-		
+
+
+
+	 initconstructor:function(config){
+
 		 //declaracion de eventos
         this.addEvents('finalizarsol');
         this.addEvents('sigestado');
         this.maestro = config;
-        this.initButtons = [{  
+        this.initButtons = [{
         	style: {
                 'marginLeft': '10px',
                 'marginRight': '10px',
                 'font-size': '30px'
-                
+
             },xtype: 'label', grupo:[0,1,2,3], text: ' Modo Consulta: '},this.cmpCheckModo];
-          
+
 		this.anulados = 'no';
         this.tbarItems = ['-',
            {
@@ -129,23 +129,23 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
             enableToggle: true,
             pressed: false,
             toggleHandler: function(btn, pressed) {
-               
+
                 if(pressed){
                 	this.anulados = 'si';
                 }
                 else{
-                   this.anulados = 'no' 
+                   this.anulados = 'no'
                 }
-                
+
                 this.store.baseParams.anulados = this.anulados;
                 this.onButtonAct();
              },
             scope: this
            }];
-           
-           
+
+
            var me = this;
-           
+
            this.Atributos = [
 		{
 			//configuracion del componente
@@ -155,7 +155,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 					name: 'id_documento_wf'
 			},
 			type:'Field',
-			form:true 
+			form:true
 		},
 		{
 			//configuracion del componente
@@ -165,7 +165,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 					name: 'id_proceso_wf'
 			},
 			type:'Field',
-			form:true 
+			form:true
 		},
 		{
        			config:{
@@ -206,7 +206,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
        			id_grupo:2,
        			grid:false,
        			form:true
-       	},		
+       	},
         {
             config:{
                 name: 'modificar',
@@ -215,8 +215,8 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
                 anchor: '80%',
                 gwidth: 65,
                 scope: this,
-                renderer:function (value, p, record, rowIndex, colIndex){  
-                	     
+                renderer:function (value, p, record, rowIndex, colIndex){
+
                 	       //check or un check row
                 	       var checked = '',
                 	       	    momento = 'no';
@@ -224,7 +224,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 	                	        	checked = 'checked';
 	                	        	momento = 'si';
 	                	   }
-                	       
+
                 	        if(record.data['modificar'] == 'si'){
                 	       	   return  String.format('<div style="vertical-align:middle;text-align:center;"><input style="height:37px;width:37px;" type="checkbox"  {0}></div>',checked);
                 	        }else{
@@ -237,7 +237,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
             id_grupo:1,
             grid:true,
             form:false
-        },		
+        },
         {
             config:{
                 name: 'chequeado',
@@ -246,20 +246,21 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
                 anchor: '80%',
                 gwidth: 65,
                 scope: this,
-                renderer:function (value, p, record, rowIndex, colIndex){  
-                	     
+                renderer:function (value, p, record, rowIndex, colIndex){
+
                 	       if(record.data['chequeado'] == 'si') {
                             	return "<div style='text-align:center'><img border='0' style='-webkit-user-select:auto;cursor:pointer;' title='Abrir Documento' src = '../../../lib/imagenes/icono_awesome/awe_print_good.png' align='center' width='30' height='30'></div>";
                             } else if(record.data.nombre_vista) {
                             	return "<div style='text-align:center'><img border='0' style='-webkit-user-select:auto;cursor:pointer;' title='Generar Plantilla' src = '../../../lib/imagenes/icono_awesome/awe_template.png' align='center' width='30' height='30'></div>";
-                            } 
+                            }
                             else if (record.data['action'] != '') {
                                 return "<div style='text-align:center'><img border='0' style='-webkit-user-select:auto;cursor:pointer;' title='Vista Previa Documento Generado' src = '../../../lib/imagenes/icono_awesome/awe_print_good.png' align='center' width='30' height='30'></div>";
-                            } else{ 
-                            	return  String.format('{0}',"<div style='text-align:center'><img title='Documento No Escaneado' src = '../../../lib/imagenes/icono_awesome/awe_wrong.png' align='center' width='30' height='30'/></div>");  
+                            } else{
+                            	return  String.format('{0}',"<div style='text-align:center'><img title='Documento No Escaneado' src = '../../../lib/imagenes/icono_awesome/awe_wrong.png' align='center' width='30' height='30'/></div>");
                             }
                         },
-            },
+            }
+            ,
             type:'Checkbox',
             filters:{pfiltro:'dwf.chequeado',type:'string'},
             id_grupo:1,
@@ -273,11 +274,11 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
                 allowBlank: true,
                 width: 65,
                 gwidth: 65,
-                valueField: 'momento',                  
+                valueField: 'momento',
                 store:['si','no'],
                 triggerAction: 'all',
                 lazyRender:true,
-                renderer:function (value, p, record){  
+                renderer:function (value, p, record){
                             if(record.data['chequeado_fisico'] == 'si')
                                 return  String.format('{0}',"<div style='text-align:center'><img title='Documento No Escaneado' src = '../../../lib/imagenes/icono_awesome/awe_ok.png' align='center' width='30' height='30'/></div>");
                             else
@@ -299,7 +300,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
                 anchor: '80%',
                 gwidth: 65,
                 maxLength:255,
-                renderer:function (value, p, record){  
+                renderer:function (value, p, record){
                             if(record.data['momento'] == 'exigir')
                                 return  String.format('{0}',"<div style='text-align:center'><img src = '../../../lib/imagenes/icono_dibu/dibu_lock.png' align='center' width='45' height='45'/></div>");
                             else
@@ -312,27 +313,27 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
                 grid:true,
                 form:false
         },*/
-		
-		
+
+
         {
             config:{
                 fieldLabel: "Subir",
                 gwidth: 65,
                 inputType:'file',
                 name: 'upload',
-                buttonText: '',   
+                buttonText: '',
                 maxLength:150,
                 anchor:'100%',
                 renderer:function (value, p, record){
-                		if (record.data['solo_lectura'] == 'no' && !record.data['id_proceso_wf_ori']) {  
-                            if(record.data['extension'].length!=0) {                                
+                		if (record.data['solo_lectura'] == 'no' && !record.data['id_proceso_wf_ori']) {
+                            if(record.data['extension'].length!=0) {
                                 return  String.format('{0}',"<div style='text-align:center'><img border='0' style='-webkit-user-select:auto;cursor:pointer;' title='Reemplazar Archivo' src = '../../../lib/imagenes/icono_awesome/awe_upload.png' align='center' width='30' height='30'></div>");
                             } else {
                             	return  String.format('{0}',"<div style='text-align:center'><img border='0' style='-webkit-user-select:auto;cursor:pointer;' title='Subir Archivo' src = '../../../lib/imagenes/icono_awesome/awe_upload.png' align='center' width='30' height='30'></div>");
                             }
                         }
-               },  
-                
+               },
+
             },
             type:'Field',
             sortable:false,
@@ -355,7 +356,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
                         else{
                             return String.format('{0}', value);
                         }},
-                
+
             },
                 type:'TextField',
                 filters:{pfiltro:'td.nombre',type:'string'},
@@ -364,7 +365,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
                 form:false,
 				bottom_filter : true
         },
-        
+
         {
             config:{
                 name: 'descripcion_proceso_wf',
@@ -380,7 +381,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
                             return String.format('{0}', value);
                         }
                  }
-                
+
             },
                 type:'TextField',
                 filters:{pfiltro:'pw.descripcion',type:'string'},
@@ -389,7 +390,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
                 form:false,
 				bottom_filter : true
         },
-        
+
         {
             config:{
                 name: 'nro_tramite_ori',
@@ -398,8 +399,8 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
                 anchor: '80%',
                 gwidth: 120,
                 maxLength:200,
-                renderer:function (value, p, record){  
-                            if(record.data['id_proceso_wf_ori']) {                                
+                renderer:function (value, p, record){
+                            if(record.data['id_proceso_wf_ori']) {
                                 return  String.format("<div style='text-align:center'><a target=_blank align='center' width='70' height='70'>{0}</a></div>",record.data['nro_tramite_ori']);
                             }
                         },
@@ -410,7 +411,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
                 grid:true,
                 form:false
         },
-		
+
 		{
 			config:{
 				name: 'fecha_reg',
@@ -418,7 +419,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
-							format: 'd/m/Y', 
+							format: 'd/m/Y',
 							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 				type:'DateField',
@@ -464,7 +465,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 				allowBlank: true,
 				anchor: '80%',
 				gwidth: 100,
-							format: 'd/m/Y', 
+							format: 'd/m/Y',
 							renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
 			},
 				type:'DateField',
@@ -495,7 +496,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
                 allowBlank: true,
                 anchor: '80%',
                 gwidth: 100,
-                            format: 'd/m/Y', 
+                            format: 'd/m/Y',
                             renderer:function (value,p,record){return value?value.dateFormat('d/m/Y H:i:s'):''}
             },
                 type:'DateField',
@@ -520,13 +521,13 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
                 form:false
         }
 	];
-	    
-	    
-	   
+
+
+
     	//llama al constructor de la clase padre
 		Phx.vista.DocumentoWf.superclass.constructor.call(this,config);
-		this.esperarEventos = false; 
-		
+		this.esperarEventos = false;
+
 		//boton filtro del proceso
 		this.addButton('btnDocProceso', {
 				text : this.lblDocProcCf,
@@ -537,13 +538,23 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 				handler : this.onDocProceso,
 				tooltip : '<b>Mostrar +/- Documentos</b> Aplica o quita el filtro de documentos del trámite'
 			});
-			
+
+         this.addButton('btnQuitarAdjunto', {
+             //fRnk: botón adicionado HR878
+             text : 'Quitar adjunto',
+             grupo:[0,1,2,3],
+             iconCls : 'bcancelfile',
+             disabled : false,
+             enableToggle : true,
+             handler : this.onButtonQuitarAdjunto,
+             tooltip : '<b>Elimina un documento adjunto</b>'
+         });
 		if(this.todos_documentos == 'no'){
 		   this.getBoton('btnDocProceso').toggle(true,true)	;
 		}
-			
-		this.cambiarIconoDocPro(); 
-               
+
+		this.cambiarIconoDocPro();
+
 
         //this.grid.addListener('celldblclick', this.oncelldblclick, this);
         this.grid.addListener('cellclick', this.oncellclick,this);
@@ -554,106 +565,106 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
         	this.addButton('fin_solcom',{ grupo:[0,1,2,3], text:'Solo Guardar', iconCls: 'bok', disabled: false,
 							        	  handler: function(){
 							        	 	 this.panel.destroy();
-							        	  }, 
+							        	  },
 							        	  tooltip: '<b>Solo guardar</b><br>Deja la sollicitud en borrador, permite continuar despues'});
-            
+
         	this.addButton('fin_requerimiento',{ grupo:[0,1,2,3],  text:'Finalizar Solicitud', iconCls: 'badelante', disabled: false,
 									        	 handler: function(){
 									        	 	this.fireEvent('finalizarsol', this, this.maestro, true);
-									        	 
-									        	 }, 
+
+									        	 },
 									        	 tooltip: '<b>Finalizar</b><br>Finaliza la solicitud y la manda para aprobación'});
-        	 
-        	
-        	
+
+
+
         }
         if(config.tipo === 'proins'){
-        	this.tbar.add('->');        	
+        	this.tbar.add('->');
         	this.addButton('siguiente_estado',{ grupo:[0,1,2,3], text:'Siguiente Etapa', iconCls: 'badelante', disabled: false,
 									        	 handler: function(){
 									        	 	this.fireEvent('sigestado', this, this.maestro, true);
 									        	 	this.panel.destroy();
-									        	 }, 
+									        	 },
 									        	 tooltip: '<b>Siguiente</b><br>Pasa el proceso a la siguiente etapa'});
-        	    	
-        	
+
+
         }
-        
+
         if(config.tipo === 'wizard'){
-        	this.tbar.add('->');        	
+        	this.tbar.add('->');
         	this.addButton('siguiente_estado',{ grupo:[0,1,2,3], text:'Siguiente Etapa', iconCls: 'badelante', disabled: false,
 									        	 handler: function(){
 									        	 	this.fireEvent('loadWizard', this, this.maestro, true);
 									        	 	this.panel.destroy();
-									        	 }, 
+									        	 },
 									        	 tooltip: '<b>Siguiente</b><br>Pasa el proceso a la siguiente etapa'});
-        	    	
-        	
+
+
         }
-        
+
         if(config.tipo === 'plan_pago'){
-        	this.tbar.add('->');        	
+        	this.tbar.add('->');
         	this.addButton('btnPagoRel',
 	            {
 	                text: 'Pagos Relacionados',
-	                grupo:[0,1,2,3], 
+	                grupo:[0,1,2,3],
 	                iconCls: 'binfo',
 	                disabled: false,
 	                handler: this.loadPagosRelacionados,
 	                tooltip: '<b>Pagos Relacionados</b><br/>Abre una venta con pagos similares o relacionados.'
 	            }
 	        );
-	        
+
 	    }
-	    
-	    
-        this.init(); 
-        
-        
-                
-        cm = this.grid.getColumnModel();       
+
+
+        this.init();
+
+
+
+        cm = this.grid.getColumnModel();
         if(this.gruposBarraTareas && this.gruposBarraTareas.length == 0){
          	this.actualizarBasicos();
-        } 
+        }
         else{
         	this.store.baseParams.categoria = this.gruposBarraTareas[0].name;
     	    this.actualizarBasicos();
         }
-        
+
        this.finCons = true;
-       
-       
+
+
        if(this.modoConsulta == 'si'){
        	 this.cmpCheckModo.setValue(true);
        	 this.cmpCheckModo.disable();
        }
-       
+
        this.cmpCheckModo.on('check',function(cmp,checked){
-       	
+
 	       	 this.modoConsulta = checked?'si':'no';
 	       	 this.actualizarBasicos();
-       	
+
        },this);
-      
-          	
-          
+
+
+
     },
 	 onDocProceso: function(b,e){
-	 	  
-	 	  
+
+
 	 	  if (this.todos_documentos == 'si'){
 	 	  	 this.todos_documentos = 'no';
 	 	  }
 	 	  else{
-	 	  	 this.todos_documentos = 'si' 
+	 	  	 this.todos_documentos = 'si'
 	 	  }
 	 	  this.cambiarIconoDocPro();
 	 	  this.store.baseParams.todos_documentos = this.todos_documentos;
           this.onButtonAct();
-	 	  
-	 	
+
+
 	 },
-	
+
 	cambiarIconoDocPro: function(){
 		var btnPro = this.getBoton('btnDocProceso');
 		if(this.todos_documentos == 'si'){
@@ -662,29 +673,35 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 			//btnSwitchEstado.setTooltip('<b>Cerrar Periodo</b>');
 		}
 		else{
-			
+
 			btnPro.setIconClass('bend');
 			btnPro.setText(this.lblDocProcCf) ;
 			//btnSwitchEstado.setTooltip('<b>Abrir Periodo</b>');
 		}
-		
+
 	},
-	
+
 	actualizarBasicos:function(){
 		this.store.baseParams.modoConsulta = this.modoConsulta;
 		this.store.baseParams.todos_documentos = this.todos_documentos;
         this.store.baseParams.anulados = this.anulados;
         this.store.baseParams.id_proceso_wf = this.id_proceso_wf;
         this.load({params:{
-            start: 0, 
-            limit: 50           
+            start: 0,
+            limit: 50
             }});
-        
-       if(this.maestro.esconder_toogle == 'si'){  
+       if(this.maestro.esconder_toogle == 'si'){
              this.getBoton('btnDocProceso').hide();
-       }     
+       }
+
+       if(this.modoConsulta=='si'){
+           //fRnk: added for btn
+           this.getBoton('btnQuitarAdjunto').disable();
+       }else{
+           this.getBoton('btnQuitarAdjunto').enable();
+       }
 	},
-	
+
 	actualizarSegunTab: function(name, indice){
 		if(this.finCons) {
 			 this.store.baseParams.categoria = name;
@@ -698,18 +715,18 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 	            '<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Usuario de Registro:&nbsp;&nbsp;</b> {usr_reg}</p>',
 	            '<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Estado:&nbsp;&nbsp;</b> {estado_reg}</p>',
 	            '<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Fecha Ult. Modificacion:&nbsp;&nbsp;</b> {fecha_mod:date("d/m/Y")}</p>',
-	            '<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Usuario Ult. Modificacion:&nbsp;&nbsp;</b> {usr_mod}</p>',	            
+	            '<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Usuario Ult. Modificacion:&nbsp;&nbsp;</b> {usr_mod}</p>',
 	            '<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Fecha Subida:&nbsp;&nbsp;</b> {fecha_upload:date("d/m/Y")}</p>',
 	            '<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Usuario Subida:&nbsp;&nbsp;</b> {usr_upload}</p><br>'
 	        )
     }),
-    
+
     arrayDefaultColumHidden:['fecha_reg','fecha_mod','usr_reg','usr_mod','usr_upload','fecha_upload',
 							'estado_reg','fecha_reg'],
 
-    
+
 	SubirArchivo : function(rec)
-    {                   
+    {
         if(this.modoConsulta =='no'){
         	Phx.CP.loadWindows('../../../sis_workflow/vista/documento_wf/SubirArchivoWf.php',
 	        'Subir ' + rec.data.nombre_tipo_documento,
@@ -776,7 +793,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
     // fin breydi vasquez 20/02/2020
 
 	oncellclick : function(grid, rowIndex, columnIndex, e) {
-		
+
 	    var record = this.store.getAt(rowIndex),
 	        fieldName = grid.getColumnModel().getDataIndex(columnIndex); // Get field name
 
@@ -789,11 +806,11 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 	    	}
 	    } else if(fieldName == 'modificar') {
 	       	if(record.data['modificar'] == 'si'){
-	       	
+
 	       	   this.cambiarMomentoClick(record);
-	       	   		
+
 	       	}
-	    } 
+	    }
 	    else if (fieldName == 'chequeado') {
 	    	if(record.data['extension'].length!=0) {
 
@@ -827,8 +844,8 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 					timeout : this.timeout,
 					scope : this
 				});
-	        	
-	        	
+
+
 	        } else if (record.data['tipo_documento'] == 'generado') {
 
 	    	    // Modificado breydi vasquez 20/02/2020
@@ -846,13 +863,13 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 
 	       	} else {
 	       		alert('No se ha subido ningun archivo para este documento');
-	       	} 
+	       	}
 	    }
-		
+
 	},
-	
+
 	loadCheckDocumentosSolWf:function(rec) {
-           
+
             Phx.CP.loadWindows('../../../sis_workflow/vista/documento_wf/DocumentoWf.php',
                     'Documentos de Origen',
                     {
@@ -866,8 +883,8 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
                     'DocumentoWf'
         )
     },
-	
-	tam_pag:50,	
+
+	tam_pag:50,
 	title:'Documento',
 	ActSave:'../../sis_workflow/control/DocumentoWf/insertarDocumentoWf',
 	ActDel:'../../sis_workflow/control/DocumentoWf/eliminarDocumentoWf',
@@ -908,17 +925,17 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
         {name:'fecha_upload', type: 'date',dateFormat:'Y-m-d H:i:s.u'},'modificar','insertar','eliminar','demanda',
         'nombre_vista','esquema_vista','nombre_archivo_plantilla'
 	],
-	
+
     onButtonDel: function(){
     	if(confirm('¿Está seguro de eliminar estos documentos?')){
 			//recupera los registros seleccionados
 			var filas=this.sm.getSelections();
 			var data= {},aux={};
 			//console.log(filas,i)
-			
+
             //arma una matriz de los identificadores de registros que se van a eliminar
             this.agregarArgsExtraSubmit();
-            
+
 			for(var i=0;i<this.sm.getCount();i++){
 				if(filas[i].data['eliminar'] == 'si'){
 					aux={};
@@ -926,14 +943,14 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 					data[i]=aux;
 					data[i]._fila=this.store.indexOf(filas[i])+1
 					//rac 22032012
-					
+
 					Ext.apply(data[i],this.argumentExtraSubmit);
 				}
-				
-				
-				
+
+
+
 			}
-			
+
 	        Phx.CP.loadingShow();
 			//llama el metodo en la capa de control para eliminación
 			Ext.Ajax.request({
@@ -946,31 +963,63 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
 			})
 		}
     },
-    
-   
+    onButtonQuitarAdjunto: function(){
+        var filas=this.sm.getSelections();
+        if(filas.length>0) {
+            if(confirm('¿Está seguro de eliminar el documento adjunto?')) {
+                var data= {},aux={};
+                this.agregarArgsExtraSubmit();
+                for(var i=0;i<filas.length;i++){
+                    if(filas[i].data['url'] != ''){
+                        aux={};
+                        aux[this.id_store]=filas[i].data[this.id_store];
+                        data[i]=aux;
+                        data[i]._fila=this.store.indexOf(filas[i])+1;
+                        data[i].url=filas[i].data['url'];
+                        Ext.apply(data[i],this.argumentExtraSubmit);
+                    }
+                }
+                if(!objIsEmpty(data)){
+                    Phx.CP.loadingShow();
+                    Ext.Ajax.request({
+                        url:'../../sis_workflow/control/DocumentoWf/quitarArchivoWf',
+                        success:this.successDel,
+                        failure:this.conexionFailure,
+                        params:{_tipo:'matriz','row':Ext.util.JSON.encode(data)},
+                        timeout:this.timeout,
+                        scope:this
+                    })
+                }
+
+            }
+        } else {
+            alert('Debe seleccionar el registro del documento adjunto que desea quitar.');
+        }
+    },
+
     preparaMenu:function(tb){
         Phx.vista.DocumentoWf.superclass.preparaMenu.call(this,tb)
         var data = this.getSelectedData();
         if(data['eliminar'] ==  'si' ){
             this.getBoton('del').enable();
-         
+
          }
          else{
               this.getBoton('del').disable();
-         } 
-	        
+         }
+
     },
-    
+
     liberaMenu:function(tb){
         Phx.vista.DocumentoWf.superclass.liberaMenu.call(this,tb);
-                    
+
     },
-	
+
 	sortInfo:{
 		field: 'id_documento_wf',
 		direction: 'ASC'
 	},
-	
+
 	east:
          {
           url:'../../../sis_workflow/vista/documento_historico_wf/DocumentoHistoricoWf.php',
@@ -997,7 +1046,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
         title: 'Historial de Visualizaciones',
          },
     //fin Breydi vasquez 20/02/2020
-	
+
 	cambiarMomento:function(){
 	    Phx.CP.loadingShow();
 	    var d = this.sm.getSelected().data;
@@ -1008,8 +1057,8 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
             failure: this.conexionFailure,
             timeout: this.timeout,
             scope: this
-        }); 
-	    
+        });
+
 	},
 	cambiarMomentoClick: function(record){
 		Phx.CP.loadingShow();
@@ -1021,7 +1070,7 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
             failure: this.conexionFailure,
             timeout: this.timeout,
             scope: this
-        }); 
+        });
 	},
 	successMomento:function(resp){
        Phx.CP.loadingHide();
@@ -1030,30 +1079,30 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
          this.reload();
        }
     },
-    
+
     onButtonNew:function(){
-    	Phx.vista.DocumentoWf.superclass.onButtonNew.call(this); 
+    	Phx.vista.DocumentoWf.superclass.onButtonNew.call(this);
     	this.Cmp.id_tipo_documentos.store.baseParams.id_tipo_documentos = this.documentos_insertables;
     	this.Cmp.id_tipo_documentos.enable();
     	this.Cmp.id_tipo_documentos.show();
     	this.Cmp.chequeado_fisico.disable()
     	this.Cmp.chequeado_fisico.hide()
-    	
+
     },
     onButtonEdit:function(){
-    	Phx.vista.DocumentoWf.superclass.onButtonEdit.call(this); 
+    	Phx.vista.DocumentoWf.superclass.onButtonEdit.call(this);
     	this.Cmp.id_tipo_documentos.disable();
     	this.Cmp.id_tipo_documentos.hide();
     	this.Cmp.chequeado_fisico.enable()
     	this.Cmp.chequeado_fisico.show()
-    	
+
     },
     loadValoresIniciales:function(){
         this.Cmp.id_proceso_wf.setValue(this.id_proceso_wf);
         Phx.vista.DocumentoWf.superclass.loadValoresIniciales.call(this);
-        
+
     },
-    
+
      loadPagosRelacionados:  function() {
             Phx.CP.loadWindows('../../../sis_tesoreria/vista/plan_pago/RepFilPlanPago.php',
                     'Pagos similares',
@@ -1066,12 +1115,21 @@ Phx.vista.DocumentoWf=Ext.extend(Phx.gridInterfaz,{
                     'RepFilPlanPago'
         )
     },
-    
-      
+
+
 	bdel:true,
 	bsave:false
 	}
 )
+
+function objIsEmpty(obj) {
+    for (const prop in obj) {
+        if (Object.hasOwn(obj, prop)) {
+            return false;
+        }
+    }
+    return true;
+}
 </script>
 		
 		

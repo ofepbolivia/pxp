@@ -65,9 +65,11 @@ Phx.vista.subirPlantilla=Ext.extend(Phx.frmInterfaz,{
 					maxLength:150,
 					anchor:'100%',
 					validateValue:function(archivo){
-						var extension = (archivo.substring(archivo.lastIndexOf("."))).toLowerCase(); 
-						if(extension!='.docx' && extension!='.DOCX'){
-								this.markInvalid('solo se admiten archivos WORD');
+						var extension = (archivo.substring(archivo.lastIndexOf("."))).toLowerCase();
+                        //fRnk: añadido para que acepte archivos Word, Excel y PDF, HR876
+                        var extPerm=['.docx', '.doc', '.xlsx', '.xls', '.pdf'];
+						if(extPerm.indexOf(extension.toLowerCase())==-1){
+								this.markInvalid('Sólo se admiten archivos Word, Excel y PDF');
 								return false
 						}
 						else{

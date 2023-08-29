@@ -105,7 +105,7 @@ class MODCatalogo extends MODbase{
 	function listarCatalogoCombo(){
 		//Definicion de variables para ejecucion del procedimientp
 		$this->procedimiento='param.ft_catalogo_sel';
-		$this->transaccion='PM_CATCMB_SEL';
+		$this->transaccion='PM_CATCMB2_SEL'; //fRnk: modificado a solicitud HR915
 		$this->tipo_procedimiento='SEL';//tipo de transaccion
 				
 		//Definicion de la lista del resultado del query

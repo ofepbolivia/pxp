@@ -132,8 +132,13 @@ class ACTDocumento extends ACTbase{
 		
 		return $fileName;
 	}
-	
-	
+
+    function quitarPlantilla() { //fRnk: adicionado HR876
+        unlink($this->objParam->getParametro('ruta_plantilla'));
+        $this->objFunSeguridad=$this->create('MODDocumento');
+        $this->res=$this->objFunSeguridad->quitarPlantilla($this->objParam);
+        $this->res->imprimirRespuesta($this->res->generarJson());
+    }
 
 }
 

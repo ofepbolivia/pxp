@@ -2,7 +2,7 @@
 /**
 *@package pXP
 *@file    SubirArchivo.php
-*@author  Freddy Rojas 
+*@author  Freddy Rojas
 *@date    22-03-2012
 *@description permites subir archivos a la tabla de documento_sol
 */
@@ -13,27 +13,30 @@ Phx.vista.SubirArchivoWf=Ext.extend(Phx.frmInterfaz,{
     ActSave:'../../sis_workflow/control/DocumentoWf/subirArchivoWf',
 
     constructor:function(config)
-    {   
+    {
         Phx.vista.SubirArchivoWf.superclass.constructor.call(this,config);
-        this.init();    
+        this.init();
         this.loadValoresIniciales();
     },
-    
+
     loadValoresIniciales:function()
-    {        
+    {
         Phx.vista.SubirArchivoWf.superclass.loadValoresIniciales.call(this);
-        this.getComponente('id_documento_wf').setValue(this.id_documento_wf); 
-        this.getComponente('num_tramite').setValue(this.num_tramite);     
+        this.getComponente('id_documento_wf').setValue(this.id_documento_wf);
+        this.getComponente('num_tramite').setValue(this.num_tramite);
+        if(this.tipo_documento=='escaneado'){ //fRnk: Añadido a solicitud HR:878
+            this.getComponente('archivo').fieldLabel='Documento (archivo PDF)';
+        }
     },
-    
+
     successSave:function(resp)
     {
         Phx.CP.loadingHide();
         Phx.CP.getPagina(this.idContenedorPadre).reload();
         this.panel.close();
     },
-                
-    
+
+
     Atributos:[
         {
             config:{
@@ -60,17 +63,17 @@ Phx.vista.SubirArchivoWf=Ext.extend(Phx.frmInterfaz,{
                 inputType: 'file',
                 name: 'archivo',
                 allowBlank: false,
-                buttonText: '', 
+                buttonText: '',
                 maxLength: 150,
-                anchor:'100%'                   
+                anchor:'100%'
             },
             type:'Field',
-            form:true 
-        },      
+            form:true
+        },
     ],
-    title:'Subir Archivo',    
+    title:'Subir Archivo',
     fileUpload:true
-    
+
 }
-)    
+)
 </script>

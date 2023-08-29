@@ -248,7 +248,16 @@ class MODDocumento extends MODbase{
 		$this->ejecutarConsulta(); 
 		return $this->respuesta;		
 	
-	}	
-	
+	}
+
+    function quitarPlantilla() { //fRnk: adicionado HR876
+        $this->procedimiento='param.ft_documento_ime';
+        $this->transaccion='PM_DOCUME_ELIPL';
+        $this->tipo_procedimiento='IME';
+        $this->setParametro('id_documento','id_documento','integer');
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
 }
 ?>
