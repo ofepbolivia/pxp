@@ -993,7 +993,8 @@ Phx.vista.FormEstadoWf=Ext.extend(Phx.frmInterfaz,{
 	                   id_funcionario_wf: this.Cmp.id_funcionario_wf.getValue(),
 	                   id_depto_wf: this.Cmp.id_depto_wf.getValue(),
 	                   obs: this.Cmp.obs.getValue(),
-	                   procesos: []
+	                   procesos: [],
+                       estados: this.Cmp.id_tipo_estado.store.data.items //fRnk: adicionado para saber si el estado tiene Firma Digital
 	            }
 	        
 	        for (var obj = 0; obj < this.configExtra.length; obj++) { 

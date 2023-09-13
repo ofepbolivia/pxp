@@ -322,7 +322,7 @@ Phx.vista.TipoEstado=Ext.extend(Phx.gridInterfaz,{
 			config:{
 				name: 'tipo_asignacion',
 				fieldLabel: 'Tipo Asignación',
-				qtip: 'define la forma de obtener el funcionario responsable, <br/> funcion_listadi: lo obtiene de lo funcionarios asignados al estado <br/>funcion_listado: funcion customizada ',
+				qtip: 'define la forma de obtener el funcionario responsable, <br/> funcion_listadi: lo obtiene de lo funcionarios asignados al estado <br/>funcion_listado: función customizada ',
 				allowBlank: false,
 				anchor: '70%',
 				gwidth: 150,
@@ -429,7 +429,7 @@ Phx.vista.TipoEstado=Ext.extend(Phx.gridInterfaz,{
             config:{
                 name: 'mobile',
                 fieldLabel: 'Mobile',
-                qtip:'este estado es accesible desde la interface de visto bueno mobile?, si es asi posiblemente tambien necesite indicar la funcion de inicio y retroceso',
+                qtip:'este estado es accesible desde la interface de visto bueno mobile?, si es asi posiblemente tambien necesite indicar la función de inicio y retroceso',
                 allowBlank: false,
                 anchor: '40%',
                 gwidth: 50,
@@ -455,8 +455,8 @@ Phx.vista.TipoEstado=Ext.extend(Phx.gridInterfaz,{
         {
             config:{
                 name: 'funcion_inicial',
-                fieldLabel: 'Funcion Inicial',
-                qtip:'Esta funcion se ejecuta cuando llega a este estado en flujo normal, solo corre en interface mobile o interface Visto bueno WF (generica) ejemplo tes.tes.f_fun_inicio_plan_pago_wf( p_id_usuario, v_parametros._id_usuario_ai, v_parametros._nombre_usuario_ai, v_parametros.id_estado_wf_act, v_parametros.id_proceso_wf_act, v_codigo_estado_siguiente)',
+                fieldLabel: 'Función Inicial',
+                qtip:'Esta función se ejecuta cuando llega a este estado en flujo normal, solo corre en interface mobile o interface Visto bueno WF (generica) ejemplo tes.tes.f_fun_inicio_plan_pago_wf( p_id_usuario, v_parametros._id_usuario_ai, v_parametros._nombre_usuario_ai, v_parametros.id_estado_wf_act, v_parametros.id_proceso_wf_act, v_codigo_estado_siguiente)',
                 allowBlank: true,
                 anchor: '80%',
                 gwidth: 100,
@@ -471,8 +471,8 @@ Phx.vista.TipoEstado=Ext.extend(Phx.gridInterfaz,{
         {
             config:{
                 name: 'funcion_regreso',
-                fieldLabel: 'Funcion Regreso',
-                qtip:'Esta funcion se ejecuta cuando en el flujo retrocede a este estado, solo corre en interface mobile o interface Visto bueno WF (generica) ejemplo tes.tes.f_fun_regeso_plan_pago_wf( p_id_usuario, v_parametros._id_usuario_ai, v_parametros._nombre_usuario_ai, v_parametros.id_estado_wf_act, v_parametros.id_proceso_wf_act, v_codigo_estado_siguiente)',
+                fieldLabel: 'Función Regreso',
+                qtip:'Esta función se ejecuta cuando en el flujo retrocede a este estado, solo corre en interface mobile o interface Visto bueno WF (generica) ejemplo tes.tes.f_fun_regeso_plan_pago_wf( p_id_usuario, v_parametros._id_usuario_ai, v_parametros._nombre_usuario_ai, v_parametros.id_estado_wf_act, v_parametros.id_proceso_wf_act, v_codigo_estado_siguiente)',
                 allowBlank: true,
                 anchor: '80%',
                 gwidth: 100,
@@ -520,7 +520,7 @@ Phx.vista.TipoEstado=Ext.extend(Phx.gridInterfaz,{
             config:{
                 name: 'tipo_noti',
                 fieldLabel: 'Tipo de alerta',
-                qtip:'Tipo de alerta, porde fecto notificacion',
+                qtip:'Tipo de alerta, porde fecto notificación',
                 allowBlank: true,
                 anchor: '80%',
                 gwidth: 100,
@@ -723,7 +723,7 @@ Phx.vista.TipoEstado=Ext.extend(Phx.gridInterfaz,{
 		{
 			config:{
 				name: 'tiempo_estado',
-				fieldLabel: 'Tiempo limite por Estado',
+				fieldLabel: 'Tiempo límite por Estado',
 				qtip: 'Tiempo que estara el tramite en un estado. Una vez superado, automaticamente pasara al siguiente estado segun su flujo.',
 				allowBlank: true,
 				anchor: '40%',
@@ -748,8 +748,8 @@ Phx.vista.TipoEstado=Ext.extend(Phx.gridInterfaz,{
         {
             config:{
                 name: 'tipo_accion',
-                fieldLabel: 'Tiempo Concluido, accion a ejecutar.',
-                qtip:'Este campo habilita el combo de correos o el de funcion de accion.',
+                fieldLabel: 'Tiempo Concluido, acción a ejecutar.',
+                qtip:'Este campo habilita el combo de correos o el de función de accion.',
                 allowBlank: true,
                 anchor: '40%',
                 gwidth: 50,                
@@ -790,7 +790,7 @@ Phx.vista.TipoEstado=Ext.extend(Phx.gridInterfaz,{
         {
 			config: {
 				name: 'id_funcionario_cc',
-				fieldLabel: 'Notificacion Funcionario',
+				fieldLabel: 'Notificación Funcionario',
 				allowBlank: true,
 				emptyText: 'Elija una opción...',                        
 				store: new Ext.data.JsonStore({
@@ -835,6 +835,35 @@ Phx.vista.TipoEstado=Ext.extend(Phx.gridInterfaz,{
 			form: true
         },                      		
         //fin
+        //fRnk: Firma digital 24/08/2023
+        {
+            config:{
+                name: 'firma_digital',
+                fieldLabel: 'Firma Digital',
+                qtip:'Este campo habilita la opción de Firma Digital en el Reporte de salida',
+                allowBlank: true,
+                anchor: '40%',
+                gwidth: 50,
+                maxLength:2,
+                emptyText:'si/no...',
+                typeAhead: true,
+                triggerAction: 'all',
+                lazyRender:true,
+                mode: 'local',
+                valueField: 'firma_digital',
+                store:['si','no'],
+                valorInicial: 'no'
+            },
+            type:'ComboBox',
+            id_grupo:1,
+            filters:{
+                type: 'list',
+                pfiltro:'tipes.firma_digital',
+                options: ['si','no'],
+            },
+            grid:true,
+            form:true
+        },
 		{
 			config:{
 				name: 'estado_reg',
@@ -939,6 +968,7 @@ Phx.vista.TipoEstado=Ext.extend(Phx.gridInterfaz,{
 		{name:'usr_reg', type: 'string'},
 		{name:'usr_mod', type: 'string'},
 		{name:'desc_tipo_proceso', type: 'string'},
+        {name:'firma_digital', type: 'string'},
 		'alerta','pedir_obs', 'codigo_estado','obs','depto_asignacion','fin','nombre_depto_func_list',
 		'plantilla_mensaje_asunto','plantilla_mensaje','cargo_depto','funcion_inicial','funcion_regreso',
 		'mobile','acceso_directo_alerta', 'nombre_clase_alerta', 'tipo_noti', 

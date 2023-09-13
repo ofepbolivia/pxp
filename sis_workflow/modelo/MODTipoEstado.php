@@ -69,6 +69,7 @@ class MODTipoEstado extends MODbase{
         $this->captura('funcion_cambio_estado', 'varchar');
         $this->captura('id_funcionario_cc','varchar');
         $this->captura('email_cc','varchar');
+        $this->captura('firma_digital','varchar'); //fRnk: adicionado la opción de Firma Digital
 		
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -178,7 +179,8 @@ class MODTipoEstado extends MODbase{
         $this->setParametro('tiempo_estado','tiempo_estado','varchar');
         $this->setParametro('tipo_accion', 'tipo_accion', 'varchar');
         $this->setParametro('funcion_cambio_estado', 'funcion_cambio_estado', 'varchar');
-        $this->setParametro('id_funcionario_cc', 'id_funcionario_cc', 'varchar'); 
+        $this->setParametro('id_funcionario_cc', 'id_funcionario_cc', 'varchar');
+        $this->setParametro('firma_digital', 'firma_digital', 'varchar');
                
 		//Ejecuta la instruccion
 		$this->armarConsulta();
@@ -229,7 +231,8 @@ class MODTipoEstado extends MODbase{
         $this->setParametro('tiempo_estado','tiempo_estado','varchar');
         $this->setParametro('tipo_accion', 'tipo_accion', 'varchar');
         $this->setParametro('funcion_cambio_estado', 'funcion_cambio_estado', 'varchar');
-        $this->setParametro('id_funcionario_cc', 'id_funcionario_cc', 'varchar'); 
+        $this->setParametro('id_funcionario_cc', 'id_funcionario_cc', 'varchar');
+        $this->setParametro('firma_digital', 'firma_digital', 'varchar');
 
 		//Ejecuta la instruccion
 		$this->armarConsulta();

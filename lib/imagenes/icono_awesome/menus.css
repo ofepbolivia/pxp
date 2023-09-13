@@ -356,4 +356,9 @@
 .baction {
 	background-image:url(touch_finger_white.png) !important;
 }
-
+.blist-firma-digital {
+	background-image:url(list_firma_digital.png) !important;
+}
+.bfirma-digital {
+	background-image:url(firma_digital.png) !important;
+}

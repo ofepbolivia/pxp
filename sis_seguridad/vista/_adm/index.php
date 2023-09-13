@@ -1,6 +1,11 @@
 <?php
+//fRnk: parámetros de seguridad
+header( 'X-Content-Type-Options: nosniff' );
+header( 'X-Frame-Options: SAMEORIGIN' );
+header( 'X-XSS-Protection: 1;mode=block' );
 //include_once '../../../lib/lib_control/session_secure.inc.php';
 //session_secure();
+
 include('../../../lib/lib_control/CTSesion.php');
 session_start();
 include(dirname(__FILE__).'/../../../lib/DatosGenerales.php');

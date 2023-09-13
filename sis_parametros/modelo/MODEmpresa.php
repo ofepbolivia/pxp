@@ -123,7 +123,8 @@ class MODEmpresa extends MODbase{
 		$verion = $this->arreglo['version'] +1;
 		$this->arreglo['version']=$verion;
 		$ruta_dir = './../../sis_parametros/control/_archivo/';
-		$this->arreglo['ruta_archivo']=$ruta_dir.'/docLog'.$this->arreglo['id_empresa'].'.'.$this->arreglo['extension'];
+        //fRnk: se removió un '/' en la ruta, además de debe dar permiso a /sis_parametros/control/_archivo
+		$this->arreglo['ruta_archivo']=$ruta_dir.'docLog'.$this->arreglo['id_empresa'].'.'.$this->arreglo['extension'];
 		//Define los parametros para la funcion	
 		$this->setParametro('id_empresa','id_empresa','integer');	
 		$this->setParametro('ruta_archivo','ruta_archivo','varchar');
