@@ -1056,7 +1056,7 @@ class ReportePDF extends MYPDF
 		        $this->SetFont('','B');        
 		        //$this->Cell(105, $height/2,$this->titulo1 , 1, 2, 'C', false, '', 0, false, 'T', 'C');
 				//fRnk: se reemplazó la linea anterior con las 2 siguientes lineas para que acepte formato HTML
-				$this->writeHTMLCell(105, $height/2, $x, $y, $this->titulo1, 1, 0, 0, true, 'C', true);
+				$this->writeHTMLCell(105, $height/2, $x, $y, $this->titulo1, 'T', 0, 0, true, 'C', true);
 				$this->setXY($x,$y+($height/2));
 				$this->SetFontSize(10);
 		        $this->Cell(105,$height/2, $this->objParam->getParametro('titulo2'),1,0,'C',false,'',1,false,'T','C');
