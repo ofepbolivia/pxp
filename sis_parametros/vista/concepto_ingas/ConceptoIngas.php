@@ -188,8 +188,8 @@ Phx.vista.ConceptoIngas=Ext.extend(Phx.gridInterfaz,{
 			type:'TextField',
 			filters:{pfiltro:'conig.nandina',type:'string'},
 			id_grupo:1,
-			grid:true,
-			form:true,
+			grid:false,
+			form:false, //fRnk: oculto HR 1590
 			bottom_filter : true
 		},
 	    {
