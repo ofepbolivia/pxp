@@ -233,9 +233,9 @@ function getSesionHost(){
 			$_SESSION["_SESION"]->setIdUsuario($this->datos['id_usuario']);
 			//cambia el estado del Objeto de sesion activa
 			$_SESSION["_SESION"]->setEstado("activa");
-			
-			
-			
+
+
+
 		    if($_SESSION["_ESTADO_SISTEMA"]=='desarrollo'){
 	          $_SESSION["mensaje_tec"]=true;
 	     	}
