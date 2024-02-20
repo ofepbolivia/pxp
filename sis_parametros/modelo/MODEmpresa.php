@@ -43,6 +43,38 @@ class MODEmpresa extends MODbase{
 		//Devuelve la respuesta
 		return $this->respuesta;
 	}
+
+	function listarNombreEmpresa(){
+		
+		//Definicion de variables para ejecucion del procedimientp
+		$this->procedimiento='param.f_empresa_sel';
+		$this->transaccion='NOM_EMP_SEL';
+		$this->tipo_procedimiento='SEL';//tipo de transaccion
+				
+		//Definicion de la lista del resultado del query
+		$this->captura('id_empresa','int4');
+		$this->captura('estado_reg','varchar');
+		$this->captura('logo','varchar');
+		$this->captura('nombre','varchar');
+		$this->captura('nit','varchar');
+		$this->captura('id_usuario_reg','int4');
+		$this->captura('fecha_reg','timestamp');
+		$this->captura('id_usuario_mod','int4');
+		$this->captura('fecha_mod','timestamp');
+		$this->captura('usr_reg','varchar');
+		$this->captura('usr_mod','varchar');
+		$this->captura('codigo','varchar');
+		
+		//Ejecuta la instruccion
+		$this->armarConsulta();
+		
+		$this->ejecutarConsulta();
+		
+		
+		//Devuelve la respuesta
+		return $this->respuesta;
+	}
+
 			
 	function insertarEmpresa(){
 		//Definicion de variables para ejecucion del procedimiento
