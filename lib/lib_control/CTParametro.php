@@ -835,6 +835,137 @@ class CTParametro{
 		return $this->aPostFiles;
 	}
 
+    /**
+     * Nombre funcion:	armarWhere
+     * Proposito:		Arma el predicado where
+     * Autor: wherrera
+     *
+     * Fecha creacion:	09/02/2024
+     * @param array filter
+     * @return varchar filtro
+     *
+     */
+    public function armarWhere($filter)
+    {
+        $where = " 0 = 0 ";
+        $qs = '';
+
+		if (isset($filter)) { //#43 NUEVO
+			for ($i = 0; $i < count($filter); $i++) {
+				switch ($filter[$i]['type']) {
+					case 'string':
+						switch ($filter[$i]['comparison']) {
+							case 'eq':
+								if (isset($filter[$i]['value']) && ( trim($filter[$i]['value']) != '')) {
+									$qs .= " AND " . $filter[$i]['field'] . "::varchar = ''" . trim($filter[$i]['value']
+									) . "'' ";										
+								}
+								break;
+							case 'like':
+								if (isset($filter[$i]['value']) && ( trim($filter[$i]['value']) != '')) {
+									$fldsLike = explode('#', $filter[$i]['field']);
+									if ($fldsLike !== '' and count($fldsLike) > 0) {
+										if (count($fldsLike) == 1) {
+											$qs .= " AND " . $filter[$i]['field'] . "::varchar ILIKE ''" . trim($filter[$i]['value']) . "%'' ";
+										} else {
+											$qs .= " AND (1=0 ";
+											for ($q = 0; $q < count($fldsLike); $q++) {
+												$fldLike = trim($fldsLike[$q]);
+												if ($fldLike != '') {
+													$qs .= " OR " . $fldLike . "::varchar ILIKE ''" . trim($filter[$i]['value']) . "%'' ";
+												}
+											}
+											$qs .= " )";
+										}
+									}
+								}								
+								break;
+							default:
+								$paramfiltro = explode('#', $filter[$i]['field']);
+
+								$qs .= '';
+								$filteraux = trim($filter[$i]['field']);
+								$contador = count($paramfiltro);
+								$qs .= " AND ( 1=0 ";
+								if ($filteraux != '') {
+									for ($k = 0; $k < $contador; $k++) {
+	
+										$qs .= " OR ((" . $paramfiltro[$k] . "::varchar ILIKE ''%" . $filter[$i]['value'] . "%'')";
+										$qs .= " OR( to_tsvector(" . $paramfiltro[$k] . "::varchar) @@ plainto_tsquery(''spanish'',''" . $filter[$i]['value'] . "'')))";
+									}
+								}
+								$qs .= " )"; 
+
+								break;
+						}
+						break;
+
+					case 'list':
+						$valFld = trim($filter[$i]['value']  ?? '');
+						$arrayvals = explode(',', $valFld);
+						if ($valFld !== '' and count($arrayvals) > 0) {
+							for ($q = 0; $q < count($arrayvals); $q++) {
+								$fi[$q] = "''" . $arrayvals[$q] . "''";
+							}
+							$fi_cadena = implode(',', $fi);
+							$qs .= " AND " . $filter[$i]['field'] . " IN (" . $fi_cadena . ")";							
+						} 
+						break;
+					case 'boolean':
+						if (isset($filter[$i]['value']) && ( trim($filter[$i]['value']) != '')) {
+							$qs .= " AND " . $filter[$i]['field'] . " = " . ($filter[$i]['value']);
+						}
+						break;
+					case 'numeric':
+						if (isset($filter[$i]['value']) && ( trim($filter[$i]['value']) != '')) {
+							switch ($filter[$i]['comparison']) {
+								case 'ne':
+									$qs .= " AND " . $filter[$i]['field'] . " != " . $filter[$i]['value'];
+									break;
+								case 'eq':
+									$qs .= " AND " . $filter[$i]['field'] . " = " . $filter[$i]['value'];
+									break;
+								case 'lt':
+									$qs .= " AND " . $filter[$i]['field'] . " < " . $filter[$i]['value'];
+									break;
+								case 'gt':
+									$qs .= " AND " . $filter[$i]['field'] . " > " . $filter[$i]['value'];
+									break;
+							}                                
+						}
+						break;
+					case 'date':
+						if (isset($filter[$i]['value']) && ( trim($filter[$i]['value']) != '')) {
+							switch ($filter[$i]['comparison']) {
+								case 'ne':
+									$qs .= " AND " . $filter[$i]['field'] . " != ''" . date('d-m-Y', strtotime($filter[$i]['value'])) . "''";
+									break;
+								case 'eq':
+									$qs .= " AND " . $filter[$i]['field'] . " = ''" . date('d-m-Y', strtotime($filter[$i]['value'])) . "''";
+									break;
+								case 'lt':
+									$qs .= " AND " . $filter[$i]['field'] . " < ''" . date('d-m-Y', strtotime($filter[$i]['value'])) . "''";
+									break;
+								case 'gt':
+									$qs .= " AND " . $filter[$i]['field'] . " > ''" . date('d-m-Y', strtotime($filter[$i]['value'])) . "''";
+									break;
+								case 'lte':
+									$qs .= " AND " . $filter[$i]['field'] . " <= ''" . date('d-m-Y', strtotime($filter[$i]['value'])) . "''";
+									break;
+								case 'gte':
+									$qs .= " AND " . $filter[$i]['field'] . " >= ''" . date('d-m-Y', strtotime($filter[$i]['value'])) . "''";
+									break;                                    
+							}                                
+						}
+						break;
+				}
+			}
+		}
+        $where .= $qs;
+        //echo $where;exit;
+        return $where;
+    }
+
 
 }
 ?>

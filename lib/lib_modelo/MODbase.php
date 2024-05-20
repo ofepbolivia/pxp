@@ -650,10 +650,16 @@ class MODbase extends driver
 	    }				
 
 	}
-	
-	
-	
-	
+    function addUpdParametro($nombre, $valor, $tipo, $blank = true, $tamano = '', $opciones = null, $tipo_archivo = null)
+    {
+        $key = array_search($nombre,$this->variables);
+        $this->validacion->validarfiltrosql($nombre, $valor);        
 
+        if ($key === false) {
+            $this->addParametro($nombre, $valor, $tipo,$blank, $tamano, $opciones, $tipo_archivo);
+        } else {
+            $this->tipos[$key] = $tipo;
+            $this->valores[$key] = $valor;
+        };
+    }    
 }
-?>
