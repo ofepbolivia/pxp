@@ -731,7 +731,7 @@ class ReportePDF extends MYPDF
 		}
 	}
 
-	function generarReporte(){ 
+	function generarReporte(){
 		if($this->tipoReporte=='pdf'){
 			//Da formato al array de las etiquetas a clave valor
 			for($i=0;$i<count($this->aDetalleKeys);$i++) {
@@ -1153,9 +1153,9 @@ class ReportePDF extends MYPDF
 	 }
 
 	function _json_decode($string) {
-		if (get_magic_quotes_gpc()) {
+		/*if (get_magic_quotes_gpc()) {
 			$string = stripslashes($string);
-		}
+		}*/
 
 		return json_decode($string,true);
 	}
@@ -1164,7 +1164,7 @@ class ReportePDF extends MYPDF
  		#22	EndeEtr		 06-06-2019 			MZM				Adicion de funcion para manejo de reporte multilinea	
  	*/
  function grillaDatos($datas,$alto_grupo, $border=1, $cant_col=10, $alto_col=2.5, $align='R',$tam_letra=7) {
-		
+
 		$ancho_uti=0;
 		$id_break=$datas[0];
 		$cont=0;

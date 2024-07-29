@@ -512,13 +512,13 @@ class Mensaje
 			$error=true;
 		}
 		
-		if(get_magic_quotes_gpc()) {
+		/*if(get_magic_quotes_gpc()) {
 			$this->mensaje_tec = addslashes($this->mensaje_tec);
 		}
 
 		if(get_magic_quotes_gpc()) {
 			$this->mensaje = addslashes($this->mensaje);
-		}
+		}*/
 
 		$root_array=array();
 		$cuerpo_array=array();
@@ -548,9 +548,9 @@ class Mensaje
 
 		$res=json_encode($root_array);
 
-		if (get_magic_quotes_gpc()) {
+		/*if (get_magic_quotes_gpc()) {
 			$res = stripslashes($res);
-		}		
+		}*/
 		return $res;
 	}
 
