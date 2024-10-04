@@ -3,6 +3,9 @@
 header( 'X-Content-Type-Options: nosniff' );
 header( 'X-Frame-Options: SAMEORIGIN' );
 header( 'X-XSS-Protection: 1;mode=block' );
+header('Referrer-Policy: same-origin');
+header("Content-Security-Policy: media-src 'self';");
+header("Permissions-Policy: accelerometer=(), camera=(), geolocation=(), microphone=();");
 //include_once '../../../lib/lib_control/session_secure.inc.php';
 //session_secure();
 
@@ -11,7 +14,8 @@ session_start();
 include(dirname(__FILE__).'/../../../lib/DatosGenerales.php');
 
 if($_SESSION["_FORSSL"]==="SI"){
-    session_set_cookie_params (0,$_SESSION["_FOLDER"], '' ,true ,false);
+    session_set_cookie_params (0,$_SESSION["_FOLDER"], '' ,true ,true);
+    header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
 }
 else{
     session_set_cookie_params (0,$_SESSION["_FOLDER"], '' ,false ,false);

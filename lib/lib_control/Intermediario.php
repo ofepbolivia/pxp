@@ -13,7 +13,7 @@ include_once('../lib_general/Errores.php');
 //estable aprametros ce la cookie de sesion
 $_SESSION["_CANTIDAD_ERRORES"]=0;//inicia control cantidad de error anidados
 if($_SESSION["_FORSSL"]=='SI'){
-	session_set_cookie_params (0,$_SESSION["_FOLDER"], '' ,true ,false);
+	session_set_cookie_params (0,$_SESSION["_FOLDER"], '' ,true ,true);
 }
 else{
 	session_set_cookie_params (0,$_SESSION["_FOLDER"], '' ,false ,false);

@@ -23,14 +23,20 @@ along with PXP.  If not, see <http://www.gnu.org/licenses/>.
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: SAMEORIGIN');
+header('X-XSS-Protection: 1;mode=block');
+header('Referrer-Policy: same-origin');
+header("Content-Security-Policy: media-src 'self';");
+header("Permissions-Policy: accelerometer=(), camera=(), geolocation=(), microphone=();");
 ?>
-<html> 
-<head> 
-<title>WEB</title> 	
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<script type="text/javascript">
-window.location='sis_seguridad/vista/_adm/index.php';
-</script>
+<html>
+<head>
+    <title>WEB</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script type="text/javascript">
+        window.location = 'sis_seguridad/vista/_adm/index.php';
+    </script>
 </head>
 <body>
 </body>
