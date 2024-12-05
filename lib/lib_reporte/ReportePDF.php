@@ -338,6 +338,8 @@ class ReportePDF extends MYPDF
 	
 	
 	function Header(){
+		ini_set("memory_limit",-1);
+		set_time_limit(1200);
 		if($this->orientacion=='P'){
 			if($this->alinearCabecera=='L'){
 				$align=0;

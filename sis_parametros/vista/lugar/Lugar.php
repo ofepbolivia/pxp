@@ -235,13 +235,13 @@ Phx.vista.Lugar=Ext.extend(Phx.arbInterfaz,{
 		{name:'usr_mod', type: 'string'},
 		
 	],
-		
+	/* //fRnk: comentado a solicitud 04122024
 	east:{
 		  url:'../../../sis_parametros/vista/lugar/mapaLugar.php',
 		  title:'Ubicacion Lugar', 
 		  width:'50%',
 		  cls:'mapaLugar'
-		 },
+		 },*/
 	
 	sortInfo:{
 		field: 'id_lugar',
