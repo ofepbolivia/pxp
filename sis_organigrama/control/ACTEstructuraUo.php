@@ -6,6 +6,8 @@
  Autor:	Kplian
  Fecha:	24/05/2011
  */
+require_once(dirname(__FILE__) . '/../reportes/REstructuraUo.php');
+require_once(dirname(__FILE__) . '/../reportes/REstructuraUoXls.php');
 class ACTEstructuraUo extends ACTbase {
 
 	/*
@@ -589,6 +591,37 @@ class ACTEstructuraUo extends ACTbase {
             $this->res = $this->objFunSeguridad->procesarDragDropOperativo($this->objParam);
             $this->res->imprimirRespuesta($this->res->generarJson());
         }
+    }
+
+    function listarEstructuraUoExp(){//fRnk: nuevo reporte HR01765
+        $this->objFunc = $this->create('MODEstructuraUo');
+        $datos = $this->objFunc->listarEstructuraUoExp();
+        $tamano = 'LETTER';
+        $orientacion = 'P';
+        $titulo = 'Estructura Organizacional';
+        $this->objParam->addParametro('orientacion', $orientacion);
+        $this->objParam->addParametro('tamano', $tamano);
+        $this->objParam->addParametro('titulo_archivo', $titulo);
+
+        if($this->objParam->getParametro('tipo')=='xls'){
+            $nombreArchivo = 'EstructuraUo' . uniqid(md5(session_id())) . '.xls';
+            $this->objParam->addParametro('nombre_archivo', $nombreArchivo);
+            $this->objParam->addParametro('datos',$datos->getDatos());
+            $this->objReporte = new REstructuraUoXls($this->objParam);
+            $this->objReporte->generarReporte();
+        }else{
+            $nombreArchivo = 'EstructuraUo' . uniqid(md5(session_id())) . '.pdf';
+            $this->objParam->addParametro('nombre_archivo', $nombreArchivo);
+            $reporte = new REstructuraUo($this->objParam);
+            $reporte->datosHeader($datos->getDatos());
+            $reporte->generarReporte();
+            $reporte->output($reporte->url_archivo, 'F');
+        }
+
+        $this->mensajeExito = new Mensaje();
+        $this->mensajeExito->setMensaje('EXITO', 'Reporte.php', 'Reporte generado', 'Se generó con éxito el reporte: ' . $nombreArchivo, 'control');
+        $this->mensajeExito->setArchivoGenerado($nombreArchivo);
+        $this->mensajeExito->imprimirRespuesta($this->mensajeExito->generarJson());
     }
 }
 ?>

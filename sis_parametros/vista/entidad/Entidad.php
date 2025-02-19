@@ -15,6 +15,7 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
 		this.maestro=config.maestro;
     	//llama al constructor de la clase padre
 		Phx.vista.Entidad.superclass.constructor.call(this,config);
+	/* comment request on HR OFEP/2024-01440
         this.addButton('btnRepresentante',
             {
                 text: 'Representante Legal',
@@ -24,7 +25,7 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
                 handler: this.onBtnRepresentante,
                 tooltip: 'Representante Legal BoA.'
             }
-        );
+        );*/
 		this.init();
 		this.load({params:{start:0, limit:this.tam_pag}})
 	},
@@ -45,11 +46,11 @@ Phx.vista.Entidad=Ext.extend(Phx.gridInterfaz,{
     },
 
     preparaMenu:function() {
-        this.getBoton('btnRepresentante').enable();
+        // this.getBoton('btnRepresentante').enable();
         Phx.vista.Entidad.superclass.preparaMenu.call(this);
     },
     liberaMenu:function() {
-        this.getBoton('btnRepresentante').disable();
+        // this.getBoton('btnRepresentante').disable();
         Phx.vista.Entidad.superclass.liberaMenu.call(this);
     },
 

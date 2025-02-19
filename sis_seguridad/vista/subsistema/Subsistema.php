@@ -117,12 +117,13 @@ Phx.vista.Subsistema=Ext.extend(Phx.gridInterfaz,{
 		  width:400,
 		  cls:'funcion'
 		 },
-         {
+        /*  comment by HR OFEP/2024-01440
+	{
           url:'../../../sis_seguridad/vista/video/Video.php',
           title:'Video', 
           width:400,
           cls:'Video'
-         }
+         }*/
           
         ],
 

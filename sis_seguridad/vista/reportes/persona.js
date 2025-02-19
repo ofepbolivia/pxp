@@ -14,7 +14,88 @@ Phx.vista.repPersona=Ext.extend(Phx.frmInterfaz,{
 			name: 'id_persona'
 		},
 		type:'Field'
-	},{
+	},
+	{
+		config:{
+		   labelSeparator:'',
+		   inputType:'hidden',
+		   name: 'expedicion'
+	   },
+	   type:'Field'
+   },
+	{
+		config:{
+		   labelSeparator:'',
+		   inputType:'hidden',
+		   name: 'fecha_nacimiento'
+	   },
+	   type:'Field'
+   },
+	{
+		config:{
+		   labelSeparator:'',
+		   inputType:'hidden',
+		   name: 'genero'
+	   },
+	   type:'Field'
+   },
+	{
+		config:{
+		   labelSeparator:'',
+		   inputType:'hidden',
+		   name: 'direccion'
+	   },
+	   type:'Field'
+   },
+	{
+		config:{
+		   labelSeparator:'',
+		   inputType:'hidden',
+		   name: 'id_lugar'
+	   },
+	   type:'Field'
+   },
+	{
+		config:{
+		   labelSeparator:'',
+		   inputType:'hidden',
+		   name: 'estado_civil'
+	   },
+	   type:'Field'
+   },
+	{
+		config:{
+		   labelSeparator:'',
+		   inputType:'hidden',
+		   name: 'nacionalidad'
+	   },
+	   type:'Field'
+   },
+	{
+		config:{
+		   labelSeparator:'',
+		   inputType:'hidden',
+		   name: 'discapacitado'
+	   },
+	   type:'Field'
+   },
+	{
+		config:{
+		   labelSeparator:'',
+		   inputType:'hidden',
+		   name: 'carnet_discapacitado'
+	   },
+	   type:'Field'
+   },
+	{
+		config:{
+		   labelSeparator:'',
+		   inputType:'hidden',
+		   name: 'id_tipo_doc_identificacion'
+	   },
+	   type:'Field'
+   },
+	{
 		config:{
 			fieldLabel: "Nombre",
 			name: 'nombre',

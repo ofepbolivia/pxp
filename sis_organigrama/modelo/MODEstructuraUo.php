@@ -170,5 +170,18 @@ class MODEstructuraUo extends MODbase {
         $this->ejecutarConsulta();
         return $this->respuesta;
     }
+
+    function listarEstructuraUoExp() {//fRnk: HR01765-2024
+        $this->procedimiento='orga.ft_estructura_uo_sel';
+        $this->transaccion='RH_ESTRUOEXP_SEL';
+        $this->tipo_procedimiento='SEL';
+        $this->setCount(false);
+        $this->captura('grupo','varchar');
+        $this->captura('subgrupo','varchar');
+        $this->captura('nombre_unidad','varchar');
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
 }
 ?>

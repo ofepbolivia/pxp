@@ -43,6 +43,12 @@ class ACTConceptoIngas extends ACTbase{
 			$this->objFunc=$this->create('MODConceptoIngas');
 
 			$this->res=$this->objFunc->listarConceptoIngas($this->objParam);
+
+            if(!empty($this->objParam->getParametro('_adicionar'))){ //fRnk: adicionado HR00856-2024
+                $respuesta = $this->res->getDatos();
+                array_unshift ( $respuesta, array('id_concepto_ingas'=>'0','desc_ingas'=>'Todos','tipo'=>'Todos','movimiento'=>'Todos'));
+                $this->res->setDatos($respuesta);
+            }
 		}
 		$this->res->imprimirRespuesta($this->res->generarJson());
 	}
@@ -100,7 +106,11 @@ class ACTConceptoIngas extends ACTbase{
          }
 
         if($this->objParam->getParametro('id_partida')!=''){
-            $this->objParam->addFiltro("par.id_partida =''".$this->objParam->getParametro('id_partida')."''");
+            if($this->objParam->getParametro('memoria_calculo')){ //fRnk: HR00856-2024,
+                $this->objParam->addFiltro("conig.id_concepto_ingas in (select id_concepto_ingas from pre.tmemoria_calculo where estado_reg=''activo'' and id_presupuesto = " . $this->objParam->getParametro('id_presupuesto') . " and id_partida = " . $this->objParam->getParametro('id_partida') . ") ");
+            }else{
+                $this->objParam->addFiltro("par.id_partida =''".$this->objParam->getParametro('id_partida')."''");
+            }
         }
 
          /*Aumentando para filtrar solo los conceptos que seran para gestion de materiales (Ismael Valdivia 18/02/2020)*/
