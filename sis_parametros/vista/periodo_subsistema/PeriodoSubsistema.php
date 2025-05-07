@@ -17,7 +17,7 @@ header("content-type: text/javascript; charset=UTF-8");
 			this.initButtons=[this.cmbGestion];
 			Phx.vista.PeriodoSubsistema.superclass.constructor.call(this, config);
 			this.init();
-			
+
 			
 			this.addButton('btnSwitchEstadoPeriodo', {
 				text : '',
@@ -66,7 +66,8 @@ header("content-type: text/javascript; charset=UTF-8");
 				pageSize:50,
 				queryDelay:500,
 				listWidth:'280',
-				width:80
+				width:80,
+                cls:'fkgestion', //fRnk: a) HR01765-2024
 			}),
 			
 		

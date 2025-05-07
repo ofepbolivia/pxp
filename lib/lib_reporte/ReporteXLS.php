@@ -113,7 +113,8 @@ class ReporteXLS
 
 			foreach ($this->columnas as $data){ 
 				$this->docexcel->setActiveSheetIndex($indice)->setCellValueByColumnAndRow($columna,$m_fila,$fila[$data['name']]);
-		   		// $this->docexcel->getActiveSheet()->setTitle('Exportacion Pag. '.$indice.'');
+                $this->docexcel->getActiveSheet()->getStyleByColumnAndRow($columna, $m_fila, $fila[$data['name']])->getNumberFormat()->setFormatCode('0');//fRnk: format string para números HR01765-2024
+                // $this->docexcel->getActiveSheet()->setTitle('Exportacion Pag. '.$indice.'');
 				/*$this->docexcel->setActiveSheetIndex(0)
 						->setCellValueByColumnAndRow($columna,$this->fila,$data['label']);*/
 				$columna++;	
