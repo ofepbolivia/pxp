@@ -49,9 +49,15 @@ class ACTTipoEstado extends ACTbase{
 	
 	
 	function listarFuncionarioWf(){
-            
+
         $this->objParam->defecto('ordenacion','id_funcionario');
         $this->objParam->defecto('dir_ordenacion','asc');
+		
+        //NMQ: Se agregó para que se pueda filtrar por cod_movimiento = devol HR 2025-01033
+        if($this->objParam->getParametro('cod_movimiento')=='devol' && $this->objParam->getParametro('sig_estado')=='vbfun'){
+            $this->objParam->addFiltro("fun.id_funcionario = ''".$this->objParam->getParametro('id_funcionario')."''");    
+        }
+
         if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
             $this->objReporte = new Reporte($this->objParam,$this);
             $this->res = $this->objReporte->generarReporteListado('MODTipoEstado','listarFuncionarioWf');

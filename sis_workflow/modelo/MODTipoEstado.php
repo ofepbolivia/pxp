@@ -70,7 +70,7 @@ class MODTipoEstado extends MODbase{
         $this->captura('id_funcionario_cc','varchar');
         $this->captura('email_cc','varchar');
         $this->captura('firma_digital','varchar'); //fRnk: adicionado la opción de Firma Digital
-		
+
 		//Ejecuta la instruccion
 		$this->armarConsulta();
 		$this->ejecutarConsulta();

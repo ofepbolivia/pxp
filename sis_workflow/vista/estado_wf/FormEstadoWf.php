@@ -46,7 +46,6 @@ Phx.vista.FormEstadoWf=Ext.extend(Phx.frmInterfaz,{
             this.reclaim = config.data.reclaim;    
         }
         
-        
      },
      siguienteDocumento : function () {
      	this.banderaCerrar = false;
@@ -410,7 +409,7 @@ Phx.vista.FormEstadoWf=Ext.extend(Phx.frmInterfaz,{
    
    checkNextState:function(){
         //llamada ajax para cargar los caminos posible de flujo
-        
+
          Phx.CP.loadingShow();
          Ext.Ajax.request({
                 url:this.url_check_state,
@@ -421,6 +420,10 @@ Phx.vista.FormEstadoWf=Ext.extend(Phx.frmInterfaz,{
                 timeout:this.timeout,
                 scope:this
             }); 
+
+         this.getComponente('id_funcionario_wf').store.baseParams.id_funcionario = this.config.data.id_funcionario; //NMQ: Se agregó para que se pueda filtrar por id_funcionario
+         this.getComponente('id_funcionario_wf').store.baseParams.cod_movimiento = this.config.data.cod_movimiento; //NMQ: Se agregó para que se pueda filtrar por id_funcionario cuando el cod_movimiento sea devo
+         this.getComponente('id_funcionario_wf').store.baseParams.sig_estado = this.Cmp.id_tipo_estado.getRawValue(); //NMQ: Se agregó para que se pueda filtrar por id_funcionario cuando el sig_estado sea vbfun
     },
     
     successNextState:function(resp){
@@ -942,7 +945,7 @@ Phx.vista.FormEstadoWf=Ext.extend(Phx.frmInterfaz,{
                             fields: ['id_funcionario','desc_funcionario','prioridad'],
                             // turn on remote sorting
                             remoteSort: true,
-                            baseParams:{par_filtro:'fun.desc_funcionario1'}
+                            baseParams:{par_filtro:'fun.desc_funcionario1', id_funcionario:'', cod_movimiento:'', sig_estado:''} // NMQ: adicionado para enviar el id del funcionario por HR 2025-01033
                         }),
                         valueField: 'id_funcionario',
                         displayField: 'desc_funcionario',
@@ -994,7 +997,7 @@ Phx.vista.FormEstadoWf=Ext.extend(Phx.frmInterfaz,{
 	                   id_depto_wf: this.Cmp.id_depto_wf.getValue(),
 	                   obs: this.Cmp.obs.getValue(),
 	                   procesos: [],
-                       estados: this.Cmp.id_tipo_estado.store.data.items //fRnk: adicionado para saber si el estado tiene Firma Digital
+                       estados: this.Cmp.id_tipo_estado.store.data.items, //fRnk: adicionado para saber si el estado tiene Firma Digital
 	            }
 	        
 	        for (var obj = 0; obj < this.configExtra.length; obj++) { 
