@@ -104,9 +104,27 @@ class ACTConceptoIngas extends ACTbase{
 		 if($this->objParam->getParametro('id_concepto_ingas')!=''){
               $this->objParam->addFiltro("conig.id_concepto_ingas =''".$this->objParam->getParametro('id_concepto_ingas')."''");
          }
+         
+        
+        
+        if ($this->objParam->getParametro('id_centro_costo') != '') {//Teffo: 22/07/2025 HR01232-2024
+            $this->objParam->addFiltro(
+                "conig.id_concepto_ingas in (
+                    select mc.id_concepto_ingas
+                    from pre.tmemoria_calculo mc
+                    inner join pre.tpresupuesto p on p.id_presupuesto = mc.id_presupuesto
+                    where p.id_centro_costo = " . $this->objParam->getParametro('id_centro_costo') . "
+                    and mc.estado_reg = ''activo''
+                )"
+            );
+        }
+
+
 
         if($this->objParam->getParametro('id_partida')!=''){
+             
             if($this->objParam->getParametro('memoria_calculo')){ //fRnk: HR00856-2024,
+               
                 $this->objParam->addFiltro("conig.id_concepto_ingas in (select id_concepto_ingas from pre.tmemoria_calculo where estado_reg=''activo'' and id_presupuesto = " . $this->objParam->getParametro('id_presupuesto') . " and id_partida = " . $this->objParam->getParametro('id_partida') . ") ");
             }else{
                 $this->objParam->addFiltro("par.id_partida =''".$this->objParam->getParametro('id_partida')."''");

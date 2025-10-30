@@ -201,14 +201,21 @@ class ACTCentroCosto extends ACTbase{
 			}
             
         }
-
+		// var_dump($this->objParam->getParametro('estado'));
+		// exit;
         if($this->objParam->getParametro('id_uo')!=''){
             $this->objParam->addFiltro("cec.id_uo = ".$this->objParam->getParametro('id_uo'));    
+        }
+
+		 if($this->objParam->getParametro('estado')!=''){//Teffo 25/07/2025 HR01232-2024
+			$tip_estado = "(''aprobado'')"; 
+            $this->objParam->addFiltro("cec.estado in ".$tip_estado);    
         }
 		
         if($this->objParam->getParametro('id_gestion')!=''){
             $this->objParam->addFiltro("cec.id_gestion = ".$this->objParam->getParametro('id_gestion'));    
         }
+		
         if($this->objParam->getParametro('tipoReporte')=='excel_grid' || $this->objParam->getParametro('tipoReporte')=='pdf_grid'){
             $this->objReporte = new Reporte($this->objParam,$this);
             $this->res = $this->objReporte->generarReporteListado('MODCentroCosto','listarCentroCostoFiltradoXDepto');
