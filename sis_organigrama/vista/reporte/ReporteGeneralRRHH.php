@@ -33,10 +33,28 @@ header("content-type: text/javascript; charset=UTF-8");
                     this.Cmp.tipo_archivo.setVisible(true);
                     this.Cmp.tipo_archivo.allowBlank = false;
 
+                    this.Cmp.id_uo.setVisible(false);
+                    this.Cmp.id_uo.reset();
+                    this.Cmp.id_uo.allowBlank = true;
+                    this.Cmp.id_uo.modificado = true;
+
                     this.Cmp.oficina.setVisible(false);
                     this.Cmp.oficina.reset();
                     this.Cmp.oficina.modificado = true;
-                }else{
+                } else if(rec.data.tipo == 'cargosunidad') {
+                    this.Cmp.tipo_archivo.setVisible(false);
+                    this.Cmp.tipo_archivo.reset();
+                    this.Cmp.tipo_archivo.allowBlank = true;
+                    this.Cmp.tipo_archivo.modificado = true;
+
+                    this.Cmp.id_uo.setVisible(true);
+                    this.Cmp.id_uo.allowBlank = false;
+                } else {
+                    this.Cmp.id_uo.setVisible(false);
+                    this.Cmp.id_uo.reset();
+                    this.Cmp.id_uo.allowBlank = true;
+                    this.Cmp.id_uo.modificado = true;
+
                     this.Cmp.tipo_archivo.setVisible(false);
                     this.Cmp.tipo_archivo.reset();
                     this.Cmp.tipo_archivo.allowBlank = true;
@@ -60,7 +78,7 @@ header("content-type: text/javascript; charset=UTF-8");
                     mode : 'local',
                     store : new Ext.data.ArrayStore({
                         fields : ['tipo', 'valor'],
-                        data : [['documentos', 'Documentos RRHH'], ['informacion', 'Información Rapida RRHH']]
+                        data : [['estructurauo', 'Estructura Organizacional'], ['funcionarios', 'Funcionarios Activos'], ['cargosunidad', 'Detalle de cargos por Unidad'], ['documentos', 'Documentos RRHH'], ['informacion', 'Información Rapida RRHH']]
                     }),
                     anchor : '70%',
                     valueField : 'tipo',
@@ -162,6 +180,50 @@ header("content-type: text/javascript; charset=UTF-8");
                 id_grupo : 0,
                 grid : true,
                 form : true
+            },
+            {
+                config : {
+                    name : 'id_uo',
+                    fieldLabel : 'Unidad Organizacional',
+                    allowBlank : false,
+                    emptyText : 'Seleccione...',
+                    hidden: true,
+                    store: new Ext.data.JsonStore({
+                        url: '../../sis_organigrama/control/Reporte/listarEstructuraOrganizacional',
+                        id: 'id_uo',
+                        root: 'datos',
+                        fields: ['id_uo','unidad_organizacional'],
+                        totalProperty: 'total',
+                        /*sortInfo: {
+                            field: 'codigo',
+                            direction: 'ASC'
+                        },*/
+                        //baseParams:{par_filtro:'tipar.codigo#tipar.descripcion', tabla: 'orga.tuo_funcionario'}
+                    }),
+                    tpl: new Ext.XTemplate([
+                        '<tpl for=".">',
+                        '<div class="x-combo-list-item">',
+                        '<p> <span>{unidad_organizacional}<span> </p>',
+                        '</div>',
+                        '</div></tpl>'
+                    ]),
+                    valueField: 'id_uo',
+                    displayField: 'unidad_organizacional',
+                    //forceSelection: false,
+                    //typeAhead: false,
+                    triggerAction: 'all',
+                    lazyRender: true,
+                    mode: 'remote',
+                    //pageSize: 15,
+                    queryDelay: 1000,
+                    //minChars: 2,
+                    anchor : '70%',
+                    //enableMultiSelect: false
+                },
+                type : 'ComboBox',
+                id_grupo : 0,
+                //grid : true,
+                form : true
             }
 
         ],
@@ -178,10 +240,12 @@ header("content-type: text/javascript; charset=UTF-8");
             Phx.vista.ReporteGeneralRRHH.superclass.onSubmit.call(this,o);
         },
 
-        /*agregarArgsExtraSubmit: function() {
-            this.argumentExtraSubmit.configuracion_reporte = this.Cmp.configuracion_reporte.getValue();
-            this.argumentExtraSubmit.tipo_archivo = this.Cmp.tipo_archivo.getValue();
-        },*/
+        agregarArgsExtraSubmit: function() {
+            /*this.argumentExtraSubmit.configuracion_reporte = this.Cmp.configuracion_reporte.getValue();
+            this.argumentExtraSubmit.tipo_archivo = this.Cmp.tipo_archivo.getValue();*/
+            this.argumentExtraSubmit.estado_func = 'activo';
+            this.argumentExtraSubmit.unidad = this.Cmp.id_uo.getRawValue();
+        },
 
         tipo : 'reporte',
         clsSubmit : 'bprint',

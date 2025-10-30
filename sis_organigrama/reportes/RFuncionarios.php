@@ -1,25 +1,13 @@
 <?php
-//fRnk: nuevo reporte HR01765-2024
+//Adalid: reporte de funcionarios HR01218-2025
 
-class REstructuraUo extends ReportePDF
+class RFuncionarios extends ReportePDF
 {
     var $dataMaster;
-    var $datos_detalle;
     var $ancho_hoja;
-    var $titulo_documento = 'Estructura Organizacional';
     var $numeracion;
     var $ancho_sin_totales;
     var $posY;
-
-    function getDataSource()
-    {
-        return $this->datos_detalle;
-    }
-
-    function setTitulo($titulo)
-    {
-        $this->titulo_documento = $titulo;
-    }
 
     function datosHeader($maestro)
     {
@@ -35,7 +23,7 @@ class REstructuraUo extends ReportePDF
                     &nbsp;<img  style="width: 120px;" src="./../../../lib/' . $_SESSION['_DIR_LOGO'] . '" alt="Logo">
                 </td>		
                 <td style="width: 52%; color: #444444;text-align: center" rowspan="2">
-                   <h1 style="font-size: 16px">'.$this->titulo_documento.'</h1>
+                   <h1 style="font-size: 16px">FUNCIONARIOS ACTIVOS</h1>
                 </td>
                 <td style="width: 25%; color: #444444; text-align: left;height: 30px">&nbsp;&nbsp;<b>Revisión:</b> 1</td>
             </tr>
@@ -46,52 +34,36 @@ class REstructuraUo extends ReportePDF
         $this->writeHTML($content, false, false, true, false, '');
     }
 
-    function generarReporte()
-    {
+    function generarReporte() {
+        $cantidad = 1;
         $this->setFontSubsetting(false);
         $this->AddPage();
         $this->SetFontSize(7);
         $html = '<table border="0.5" cellpadding="2" cellspacing="0">';
-        $html .= '<tr style="background-color: #cccccc;font-size: 10px;text-align: center">
-                    <td width="20%"><b>Grupo</b></td>
-                    <td width="20%"><b>Subgrupo</b></td>
-                    <td width="60%"><b>Descripción</b></td></tr>';
-        foreach ($this->dataMaster as $row) {
-            $html .= '<tr>';
-            $html .= '<td>' . $row['grupo'] . '</td>';
-            $html .= '<td>' . $row['subgrupo'] . '</td>';
-            $html .= '<td>' . $row['nombre_unidad'] . '</td>';
-            $html .= '</tr>';
-        }
-        $html .= '</table>';
-        $this->writeHTML($html, false, false, true, false, '');
-        $this->Ln(10);
-    }
-
-    function generarEstructuraOrganizacional() {
-        $nro = 1;
-        $this->setFontSubsetting(false);
-        $this->AddPage();
-        $this->SetFontSize(7);
-        $html = '<table border="0.5" cellpadding="2" cellspacing="0">';
-        $html .= '<tr style="background-color: #cccccc;font-size: 10px;text-align: center">
-                    <td width="4%"><b>N°</b></td>
-                    <td width="8%"><b>CÓDIGO</b></td>
-                    <td width="30%"><b>UNIDAD ORGANIZACIONAL</b></td>
-                    <td width="30%"><b>UNIDAD DE LA QUE DEPENDE</b></td>
-                    <td width="13%"><b>NIVEL ORGANIZACIONAL</b></td>
-                    <td width="15%"><b>CENTRO DE COSTO</b></td></tr>';
+        $html .= '<tr style="background-color: #cccccc;font-size: 10px;text-align: center;vertical-align: middle;">
+                    <td width="5%"><b>N°</b></td>
+                    <td width="25%" style="vertical-align: middle;"><b>NOMBRE PERSONA</b></td>
+                    <td width="17%"><b>CARGO</b></td>
+                    <td width="8%"><b>FECHA DE ASIGNACIÓN</b></td>
+                    <td width="10%"><b>ÍTEM/CONTRATO</b></td>
+                    <td width="5%"><b>N° ÍTEM</b></td>
+                    <td width="10%"><b>LUGAR OFICINA</b></td>
+                    <td width="12%"><b>CENTRO DE COSTO</b></td>
+                    <td width="8%"><b>HABER BÁSICO</b></td></tr>';
         if (is_array($this->dataMaster) && count($this->dataMaster) > 0) {
             foreach ($this->dataMaster as $row) {
                 $html .= '<tr>';
-                $html .= '<td>' . $nro . '</td>';
-                $html .= '<td>' . $row['codigo'] . '</td>';
-                $html .= '<td>' . $row['unidad_organizacional'] . '</td>';
-                $html .= '<td>' . $row['unidad_depende'] . '</td>';
-                $html .= '<td>' . $row['nivel_organizacional'] . '</td>';
-                $html .= '<td></td>';//' . $row['centro_costo'] . '
+                $html .= '<td>' . $cantidad . '</td>';
+                $html .= '<td>' . $row['nombre'] .' '. $row['ap_paterno'] .' '. $row['ap_materno'] . '</td>';
+                $html .= '<td>' . $row['nombre_cargo'] . '</td>';
+                $html .= '<td align="center">' . date('d/m/Y', strtotime($row['fecha_asignacion'])) . '</td>';
+                $html .= '<td>' . $row['item_contrato'] . '</td>';
+                $html .= '<td>' . $row['item'] . '</td>';
+                $html .= '<td>' . $row['nombre_lugar'] . '</td>';
+                $html .= '<td>' . $row['centro_costo'] . '</td>';
+                $html .= '<td align="right">' . number_format($row['haber_basico'], 2, ',', '.') . '</td>';
                 $html .= '</tr>';
-                $nro++;
+                $cantidad++;
             }
         } else {
             $html .= '<tr>';

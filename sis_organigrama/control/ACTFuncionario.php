@@ -90,13 +90,8 @@ class ACTFuncionario extends ACTbase{
             $this->res->setDatos($respuesta);
         }
 
-
-
         //imprime respuesta en formato JSON para enviar lo a la interface (vista)
         $this->res->imprimirRespuesta($this->res->generarJson());
-
-
-
     }
 
     function listarSinAsignacionFuncionario(){

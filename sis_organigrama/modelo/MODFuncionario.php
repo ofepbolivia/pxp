@@ -79,6 +79,9 @@ class MODFuncionario extends MODbase{
         $this->captura('fecha_asignacion','date');
         $this->captura('fecha_finalizacion','date');
         $this->captura('nombre_cargo','varchar');
+        $this->captura('item','varchar');
+        $this->captura('item_contrato','varchar');
+        $this->captura('haber_basico','numeric');
         $this->captura('nombre_oficina','varchar');
         $this->captura('nombre_lugar_ofi','varchar');
         $this->captura('codigo_rc_iva','varchar');
@@ -241,6 +244,7 @@ class MODFuncionario extends MODbase{
         $this->captura('desc_funcionario2','text');
         $this->captura('id_uo','integer');
         $this->captura('nombre_cargo','varchar');
+        //$this->captura('haber_basico','varchar');
         $this->captura('fecha_asignacion','date');
         $this->captura('fecha_finalizacion','date');
         $this->captura('num_doc','integer');
@@ -593,7 +597,7 @@ class MODFuncionario extends MODbase{
 
         $this->captura('fecha_asignacion','date');
         $this->captura('fecha_finalizacion','date');
-        $this->captura('nombre_cargo','varchar');
+        //$this->captura('nombre_cargo','varchar');
         $this->captura('nombre_oficina','varchar');
         $this->captura('nombre_lugar_ofi','varchar');
 

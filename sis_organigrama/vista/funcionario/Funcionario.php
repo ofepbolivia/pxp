@@ -50,7 +50,6 @@ header("content-type: text/javascript; charset=UTF-8");
 
             /*this.store.baseParams.estado_func = 'activo';
             this.load({params:{start:0, limit:50}});*/
-
             this.addButton('btnCuenta',
                 {
                     text: 'Cuenta Bancaria',
@@ -533,7 +532,19 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid:true,
                 form:true
             },
-
+            {
+                config:{
+                    name: 'haber_basico',
+                    fieldLabel: 'Haber Básico',
+                    allowBlank: true,
+                    anchor: '80%',
+                    gwidth: 100
+                },
+                type:'TextField',
+                id_grupo:0,
+                grid:true,
+                form:false
+            },
             {
                 config:{
                     fieldLabel: "Tiempo Empresa",
@@ -1525,8 +1536,6 @@ header("content-type: text/javascript; charset=UTF-8");
                 grid:true,
                 form:false
             }
-
-
         ],
 
         /*onPersona: function(c,r,e){
@@ -1591,6 +1600,7 @@ header("content-type: text/javascript; charset=UTF-8");
             {name:'fecha_asignacion', type: 'date', dateFormat:'Y-m-d'},
             {name:'fecha_finalizacion', type: 'date', dateFormat:'Y-m-d'},
             'nombre_cargo',
+            'haber_basico',
             'nombre_oficina',
             'nombre_lugar_ofi',
             'codigo_rc_iva',

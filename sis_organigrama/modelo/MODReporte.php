@@ -168,5 +168,21 @@ class MODReporte extends MODbase{
         //Devuelve la respuesta
         return $this->respuesta;
     }
+
+    function reporteExtructuraOrganizacional() { //Adalid: reporte HR 2025-01218
+        $this->procedimiento='orga.ft_estructura_uo_sel';
+        $this->transaccion='RH_ESTRUORGEXP_SEL';
+        $this->tipo_procedimiento='SEL';
+        $this->setCount(false);
+        $this->captura('id_uo','integer');
+        $this->captura('codigo','varchar');
+        $this->captura('unidad_organizacional','varchar');
+        $this->captura('unidad_depende','varchar');
+        $this->captura('nivel_organizacional','varchar');
+        $this->captura('centro_costo','varchar');
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
 }
 ?>

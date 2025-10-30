@@ -65,6 +65,33 @@ class MODUoFuncionario extends MODbase{
 
     }
 
+    function reportarUoFuncionario(){
+        //Definicion de variables para ejecucion del procedimiento
+        $this->procedimiento='orga.ft_uo_funcionario_sel';// nombre procedimiento almacenado
+        $this->transaccion='RH_CARGO_FUNC_SEL';//nombre de la transaccion
+        $this->tipo_procedimiento='SEL';//tipo de transaccion
+        $this->setParametro('id_uo','id_uo','integer');
+        //Definicion de la lista del resultado del query
+        $this->captura('ci','varchar');
+        $this->captura('codigo','varchar');
+        $this->captura('fecha_asignacion','date');
+        $this->captura('desc_funcionario1','text');
+        $this->captura('desc_funcionario2','text');
+        $this->captura('num_doc','integer');
+        $this->captura('item','varchar');
+        $this->captura('cargo','varchar');
+        $this->captura('observaciones_finalizacion','varchar');
+        $this->captura('nro_documento_asignacion','varchar');
+        //$this->captura('nombre_escala','varchar');
+        //$this->captura('haber_basico','numeric');
+        $this->captura('tipo','varchar');
+        $this->captura('estado_funcional','varchar');
+
+        $this->armarConsulta();
+        $this->ejecutarConsulta();
+        return $this->respuesta;
+    }
+
     function insertarUoFuncionario(){
 
         //Definicion de variables para ejecucion del procedimiento
