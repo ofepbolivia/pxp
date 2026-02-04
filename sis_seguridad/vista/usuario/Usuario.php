@@ -38,7 +38,7 @@ Phx.vista.usuario=Ext.extend(Phx.gridInterfaz,{
 	constructor:function(config){
 	this.maestro=config.maestro;
 
-
+    this.obtenerVariableGlobal('segu_pol_password');
 
 //function render_id_rol(value, p, record){return String.format('{0}', record.data['rol']);}
     //llama al constructor de la clase padre
@@ -199,21 +199,21 @@ tabEnter:true,
 	       	{
 	       		config:{
 	       			id:'contrasena_'+this.idContenedor,
-	       			fieldLabel: "Contrasena",
+	       			fieldLabel: "Contraseña",
 	       			name: 'contrasena',
 	       			allowBlank:false,
 	       			maxLength:100,
 	       			minLength:1,
 	       			anchor:'100%',
 	       			inputType:'password',
-	       			/*validator:function(value){
-	       				var texto= new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
+	       			validator:function(value){
+	       				/*var texto= new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
 	       				if(texto.test(value)){
 	       					return true;
 	       				}else{
 	       					return 'La contraseña es demasiado débil (Debe tener un mínimo de 8 caracteres y contener mayusculas, minusculas, números y caracteres especiales)';
-	       				}
-	       			}*/
+	       				}*/
+	       			}
 
 	       		},
 	       		type:'TextField',
@@ -224,7 +224,7 @@ tabEnter:true,
 	       	},
 	       	{
 	       		config:{
-	       			fieldLabel: "Confirmar Contrasena",
+	       			fieldLabel: "Confirmar Contraseña",
 	       			name: 'conf_contrasena',
 	       			mapeo:'contrasena',
 	       			allowBlank:false,
@@ -543,12 +543,41 @@ tabEnter:true,
 	bsave:true,// boton para eliminar
 
 	onSubmit : function(o) {
-		  this.Cmp.contrasena_old.setValue(encodeURIComponent(this.Cmp.contrasena_old.getValue()));
-		  this.Cmp.contrasena.setValue(encodeURIComponent(this.Cmp.contrasena.getValue()));
-		  this.Cmp.conf_contrasena.setValue(encodeURIComponent(this.Cmp.conf_contrasena.getValue()));
+		  //this.Cmp.contrasena_old.setValue(encodeURIComponent(this.Cmp.contrasena_old.getValue()));
+		  //this.Cmp.contrasena.setValue(encodeURIComponent(this.Cmp.contrasena.getValue()));
+		  //this.Cmp.conf_contrasena.setValue(encodeURIComponent(this.Cmp.conf_contrasena.getValue()));
 		  Phx.vista.usuario.superclass.onSubmit.call(this,o);
 	},
 
+    obtenerVariableGlobal: function(param) { //fRnk: Seguridad HR00946-2025
+        Ext.Ajax.request({
+            url:'../../sis_seguridad/control/Subsistema/obtenerVariableGlobal',
+            params:{
+                codigo: param
+            },
+            success: function(resp){
+                Phx.CP.loadingHide();
+                var reg = Ext.util.JSON.decode(Ext.util.Format.trim(resp.responseText));
+                if (reg.ROOT.error) {
+                    Ext.Msg.alert('Error','Error a recuperar la variable global')
+                } else {
+                    if(reg.ROOT.datos.valor != 'NULL' && reg.ROOT.datos.valor == 'si'){
+                        this.Cmp.contrasena.validator = function(value){
+                            var texto= new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\\W).*$", "g");
+                            if(texto.test(value)){
+                                return true;
+                            }else{
+                                return 'La contraseña es demasiado débil (Debe tener un mínimo de 8 caracteres y contener mayusculas, minusculas, números y caracteres especiales)';
+                            }
+                        };
+                    }
+                }
+            },
+            failure: this.conexionFailure,
+            timeout: this.timeout,
+            scope:this
+        });
+    },
 
     tabeast:[
          {

@@ -308,6 +308,9 @@ class ExcelInput{
             case "dd-mm-yyyy":
                 $fechaFormateada = $fecha;
                 break;
+            case "yyyy-mm-dd":
+                $fechaFormateada = $fecha;
+                break;
             case "dd/mm/yyyy":
                 $fechaFormateada = $fecha;
                 break;

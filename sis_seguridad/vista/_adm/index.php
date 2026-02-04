@@ -6,6 +6,9 @@ header( 'X-XSS-Protection: 1;mode=block' );
 header('Referrer-Policy: same-origin');
 header("Content-Security-Policy: media-src 'self';");
 header("Permissions-Policy: accelerometer=(), camera=(), geolocation=(), microphone=();");
+//header("Cross-Origin-Resource-Policy: same-origin");
+//header("Cross-Origin-Opener-Policy: same-origin");
+//header("Cross-Origin-Embedder-Policy: require-corp");
 //include_once '../../../lib/lib_control/session_secure.inc.php';
 //session_secure();
 
